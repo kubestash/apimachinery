@@ -1,0 +1,17 @@
+domain: stash.appscode.com
+layout:
+- go.kubebuilder.io/v3
+multigroup: true
+projectName: kubestash
+repo: stash.appscode.dev/kubestash
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: stash.appscode.com
+  group: stash
+  kind: BackupStorage
+  path: stash.appscode.dev/kubestash/apis/stash/v1beta2
+  version: v1beta2
+version: "3"
