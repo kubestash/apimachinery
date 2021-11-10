@@ -1,11 +1,11 @@
 /*
-Copyright AppsCode Inc. and Contributors
+Copyright 2021.
 
-Licensed under the AppsCode Free Trial License 1.0.0 (the "License");
+Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Free-Trial-1.0.0.md
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,8 +31,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	stashv1beta2 "stash.appscode.dev/kubestash/apis/stash/v1beta2"
-	stashcontrollers "stash.appscode.dev/kubestash/controllers/stash"
+	addonv1alpha1 "stash.appscode.dev/kubestash/apis/addon/v1alpha1"
+	backupv1alpha1 "stash.appscode.dev/kubestash/apis/backup/v1alpha1"
+	restorev1alpha1 "stash.appscode.dev/kubestash/apis/restore/v1alpha1"
+	storagev1alpha1 "stash.appscode.dev/kubestash/apis/storage/v1alpha1"
+	templatev1alpha1 "stash.appscode.dev/kubestash/apis/template/v1alpha1"
+	backupcontrollers "stash.appscode.dev/kubestash/controllers/backup"
+	restorecontrollers "stash.appscode.dev/kubestash/controllers/restore"
+	storagecontrollers "stash.appscode.dev/kubestash/controllers/storage"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -44,7 +50,11 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(stashv1beta2.AddToScheme(scheme))
+	utilruntime.Must(storagev1alpha1.AddToScheme(scheme))
+	utilruntime.Must(backupv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(restorev1alpha1.AddToScheme(scheme))
+	utilruntime.Must(addonv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(templatev1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -71,18 +81,67 @@ func main() {
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "e8d6c3dc.stash.appscode.com",
+		LeaderElectionID:       "cba9d7ad.kubestash.com",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
 
-	if err = (&stashcontrollers.BackupStorageReconciler{
+	if err = (&storagecontrollers.SnapshotReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Snapshot")
+		os.Exit(1)
+	}
+	if err = (&storagecontrollers.RetentionPolicyReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "RetentionPolicy")
+		os.Exit(1)
+	}
+	if err = (&storagecontrollers.BackupStorageReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "BackupStorage")
+		os.Exit(1)
+	}
+	if err = (&storagecontrollers.RepositoryReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Repository")
+		os.Exit(1)
+	}
+	if err = (&backupcontrollers.BackupBatchReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "BackupBatch")
+		os.Exit(1)
+	}
+	if err = (&backupcontrollers.BackupSessionReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "BackupSession")
+		os.Exit(1)
+	}
+	if err = (&backupcontrollers.BackupConfigurationReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "BackupConfiguration")
+		os.Exit(1)
+	}
+	if err = (&restorecontrollers.RestoreSessionReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "RestoreSession")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
