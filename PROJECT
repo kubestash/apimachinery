@@ -1,17 +1,112 @@
-domain: stash.appscode.com
+domain: kubestash.com
 layout:
 - go.kubebuilder.io/v3
 multigroup: true
-projectName: kubestash
+projectName: kstash
 repo: stash.appscode.dev/kubestash
 resources:
 - api:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: stash.appscode.com
-  group: stash
+  domain: kubestash.com
+  group: storage
+  kind: Snapshot
+  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubestash.com
+  group: storage
+  kind: RetentionPolicy
+  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubestash.com
+  group: storage
   kind: BackupStorage
-  path: stash.appscode.dev/kubestash/apis/stash/v1beta2
-  version: v1beta2
+  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubestash.com
+  group: storage
+  kind: Repository
+  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubestash.com
+  group: backup
+  kind: BackupBatch
+  path: stash.appscode.dev/kubestash/apis/backup/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubestash.com
+  group: backup
+  kind: BackupSession
+  path: stash.appscode.dev/kubestash/apis/backup/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubestash.com
+  group: backup
+  kind: BackupConfiguration
+  path: stash.appscode.dev/kubestash/apis/backup/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubestash.com
+  group: restore
+  kind: RestoreSession
+  path: stash.appscode.dev/kubestash/apis/restore/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: kubestash.com
+  group: addon
+  kind: Addon
+  path: stash.appscode.dev/kubestash/apis/addon/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: kubestash.com
+  group: addon
+  kind: Function
+  path: stash.appscode.dev/kubestash/apis/addon/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: kubestash.com
+  group: template
+  kind: HookTemplate
+  path: stash.appscode.dev/kubestash/apis/template/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: kubestash.com
+  group: template
+  kind: BackupBlueprint
+  path: stash.appscode.dev/kubestash/apis/template/v1alpha1
+  version: v1alpha1
 version: "3"
