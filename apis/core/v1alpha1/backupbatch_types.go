@@ -23,17 +23,17 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// BackupStorageSpec defines the desired state of BackupStorage
-type BackupStorageSpec struct {
+// BackupBatchSpec defines the desired state of BackupBatch
+type BackupBatchSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of BackupStorage. Edit backupstorage_types.go to remove/update
+	// Foo is an example field of BackupBatch. Edit backupbatch_types.go to remove/update
 	Foo string `json:"foo,omitempty"`
 }
 
-// BackupStorageStatus defines the observed state of BackupStorage
-type BackupStorageStatus struct {
+// BackupBatchStatus defines the observed state of BackupBatch
+type BackupBatchStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -41,24 +41,24 @@ type BackupStorageStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// BackupStorage is the Schema for the backupstorages API
-type BackupStorage struct {
+// BackupBatch is the Schema for the backupbatches API
+type BackupBatch struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   BackupStorageSpec   `json:"spec,omitempty"`
-	Status BackupStorageStatus `json:"status,omitempty"`
+	Spec   BackupBatchSpec   `json:"spec,omitempty"`
+	Status BackupBatchStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// BackupStorageList contains a list of BackupStorage
-type BackupStorageList struct {
+// BackupBatchList contains a list of BackupBatch
+type BackupBatchList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []BackupStorage `json:"items"`
+	Items           []BackupBatch `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&BackupStorage{}, &BackupStorageList{})
+	SchemeBuilder.Register(&BackupBatch{}, &BackupBatchList{})
 }

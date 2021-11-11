@@ -2,27 +2,9 @@ domain: kubestash.com
 layout:
 - go.kubebuilder.io/v3
 multigroup: true
-projectName: kstash
+projectName: kubestash
 repo: stash.appscode.dev/kubestash
 resources:
-- api:
-    crdVersion: v1
-    namespaced: true
-  controller: true
-  domain: kubestash.com
-  group: storage
-  kind: Snapshot
-  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
-  version: v1alpha1
-- api:
-    crdVersion: v1
-    namespaced: true
-  controller: true
-  domain: kubestash.com
-  group: storage
-  kind: RetentionPolicy
-  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
-  version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
@@ -46,67 +28,69 @@ resources:
     namespaced: true
   controller: true
   domain: kubestash.com
-  group: backup
-  kind: BackupBatch
-  path: stash.appscode.dev/kubestash/apis/backup/v1alpha1
+  group: storage
+  kind: Snapshot
+  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
   controller: true
   domain: kubestash.com
-  group: backup
-  kind: BackupSession
-  path: stash.appscode.dev/kubestash/apis/backup/v1alpha1
-  version: v1alpha1
-- api:
-    crdVersion: v1
-    namespaced: true
-  controller: true
-  domain: kubestash.com
-  group: backup
-  kind: BackupConfiguration
-  path: stash.appscode.dev/kubestash/apis/backup/v1alpha1
-  version: v1alpha1
-- api:
-    crdVersion: v1
-    namespaced: true
-  controller: true
-  domain: kubestash.com
-  group: restore
-  kind: RestoreSession
-  path: stash.appscode.dev/kubestash/apis/restore/v1alpha1
+  group: storage
+  kind: RetentionPolicy
+  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
   domain: kubestash.com
-  group: addon
+  group: addons
   kind: Addon
-  path: stash.appscode.dev/kubestash/apis/addon/v1alpha1
+  path: stash.appscode.dev/kubestash/apis/addons/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
   domain: kubestash.com
-  group: addon
+  group: addons
   kind: Function
-  path: stash.appscode.dev/kubestash/apis/addon/v1alpha1
+  path: stash.appscode.dev/kubestash/apis/addons/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
+  controller: true
   domain: kubestash.com
-  group: template
-  kind: HookTemplate
-  path: stash.appscode.dev/kubestash/apis/template/v1alpha1
+  group: core
+  kind: BackupConfiguration
+  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
+  controller: true
   domain: kubestash.com
-  group: template
-  kind: BackupBlueprint
-  path: stash.appscode.dev/kubestash/apis/template/v1alpha1
+  group: core
+  kind: BackupSession
+  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubestash.com
+  group: core
+  kind: BackupBatch
+  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubestash.com
+  group: core
+  kind: RestoreSession
+  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
 version: "3"

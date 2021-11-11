@@ -31,13 +31,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	addonv1alpha1 "stash.appscode.dev/kubestash/apis/addon/v1alpha1"
-	backupv1alpha1 "stash.appscode.dev/kubestash/apis/backup/v1alpha1"
-	restorev1alpha1 "stash.appscode.dev/kubestash/apis/restore/v1alpha1"
+	addonsv1alpha1 "stash.appscode.dev/kubestash/apis/addons/v1alpha1"
+	corev1alpha1 "stash.appscode.dev/kubestash/apis/core/v1alpha1"
 	storagev1alpha1 "stash.appscode.dev/kubestash/apis/storage/v1alpha1"
-	templatev1alpha1 "stash.appscode.dev/kubestash/apis/template/v1alpha1"
-	backupcontrollers "stash.appscode.dev/kubestash/controllers/backup"
-	restorecontrollers "stash.appscode.dev/kubestash/controllers/restore"
+	corecontrollers "stash.appscode.dev/kubestash/controllers/core"
 	storagecontrollers "stash.appscode.dev/kubestash/controllers/storage"
 	//+kubebuilder:scaffold:imports
 )
@@ -51,10 +48,8 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(storagev1alpha1.AddToScheme(scheme))
-	utilruntime.Must(backupv1alpha1.AddToScheme(scheme))
-	utilruntime.Must(restorev1alpha1.AddToScheme(scheme))
-	utilruntime.Must(addonv1alpha1.AddToScheme(scheme))
-	utilruntime.Must(templatev1alpha1.AddToScheme(scheme))
+	utilruntime.Must(addonsv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(corev1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -88,20 +83,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&storagecontrollers.SnapshotReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Snapshot")
-		os.Exit(1)
-	}
-	if err = (&storagecontrollers.RetentionPolicyReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "RetentionPolicy")
-		os.Exit(1)
-	}
 	if err = (&storagecontrollers.BackupStorageReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -116,28 +97,42 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Repository")
 		os.Exit(1)
 	}
-	if err = (&backupcontrollers.BackupBatchReconciler{
+	if err = (&storagecontrollers.SnapshotReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "BackupBatch")
+		setupLog.Error(err, "unable to create controller", "controller", "Snapshot")
 		os.Exit(1)
 	}
-	if err = (&backupcontrollers.BackupSessionReconciler{
+	if err = (&storagecontrollers.RetentionPolicyReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "BackupSession")
+		setupLog.Error(err, "unable to create controller", "controller", "RetentionPolicy")
 		os.Exit(1)
 	}
-	if err = (&backupcontrollers.BackupConfigurationReconciler{
+	if err = (&corecontrollers.BackupConfigurationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "BackupConfiguration")
 		os.Exit(1)
 	}
-	if err = (&restorecontrollers.RestoreSessionReconciler{
+	if err = (&corecontrollers.BackupSessionReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "BackupSession")
+		os.Exit(1)
+	}
+	if err = (&corecontrollers.BackupBatchReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "BackupBatch")
+		os.Exit(1)
+	}
+	if err = (&corecontrollers.RestoreSessionReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {

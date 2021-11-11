@@ -23,17 +23,17 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// BackupStorageSpec defines the desired state of BackupStorage
-type BackupStorageSpec struct {
+// AddonSpec defines the desired state of Addon
+type AddonSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of BackupStorage. Edit backupstorage_types.go to remove/update
+	// Foo is an example field of Addon. Edit addon_types.go to remove/update
 	Foo string `json:"foo,omitempty"`
 }
 
-// BackupStorageStatus defines the observed state of BackupStorage
-type BackupStorageStatus struct {
+// AddonStatus defines the observed state of Addon
+type AddonStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -41,24 +41,24 @@ type BackupStorageStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// BackupStorage is the Schema for the backupstorages API
-type BackupStorage struct {
+// Addon is the Schema for the addons API
+type Addon struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   BackupStorageSpec   `json:"spec,omitempty"`
-	Status BackupStorageStatus `json:"status,omitempty"`
+	Spec   AddonSpec   `json:"spec,omitempty"`
+	Status AddonStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// BackupStorageList contains a list of BackupStorage
-type BackupStorageList struct {
+// AddonList contains a list of Addon
+type AddonList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []BackupStorage `json:"items"`
+	Items           []Addon `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&BackupStorage{}, &BackupStorageList{})
+	SchemeBuilder.Register(&Addon{}, &AddonList{})
 }
