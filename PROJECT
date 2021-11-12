@@ -93,4 +93,20 @@ resources:
   kind: RestoreSession
   path: stash.appscode.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: kubestash.com
+  group: core
+  kind: HookTemplate
+  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: kubestash.com
+  group: core
+  kind: BackupBlueprint
+  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
+  version: v1alpha1
 version: "3"
