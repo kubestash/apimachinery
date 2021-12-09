@@ -20,34 +20,36 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // RetentionPolicySpec defines the desired state of RetentionPolicy
 type RetentionPolicySpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of RetentionPolicy. Edit retentionpolicy_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Default             bool                          `json:"default,omitempty"`
+	MaxRetentionPeriod  string                        `json:"maxRetentionPeriod,omitempty"`
+	UsagePolicy         UsagePolicy                   `json:"usagePolicy,omitempty"`
+	SuccessfulSnapshots SuccessfulSnapshotsKeepPolicy `json:"successfulSnapshots,omitempty"`
+	FailedSnapshots     FailedSnapshotsKeepPolicy     `json:"failedSnapshots,omitempty"`
 }
 
-// RetentionPolicyStatus defines the observed state of RetentionPolicy
-type RetentionPolicyStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+type SuccessfulSnapshotsKeepPolicy struct {
+	Last    int32 `json:"last,omitempty"`
+	Hourly  int32 `json:"hourly,omitempty"`
+	Daily   int32 `json:"daily,omitempty"`
+	Weekly  int32 `json:"weekly,omitempty"`
+	Monthly int32 `json:"monthly,omitempty"`
+	Yearly  int32 `json:"yearly,omitempty"`
+}
+
+type FailedSnapshotsKeepPolicy struct {
+	Last int32 `json:"last,omitempty"`
 }
 
 //+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
 
 // RetentionPolicy is the Schema for the retentionpolicies API
 type RetentionPolicy struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   RetentionPolicySpec   `json:"spec,omitempty"`
-	Status RetentionPolicyStatus `json:"status,omitempty"`
+	Spec RetentionPolicySpec `json:"spec,omitempty"`
 }
 
 //+kubebuilder:object:root=true

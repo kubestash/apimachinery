@@ -20,22 +20,29 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // BackupStorageSpec defines the desired state of BackupStorage
 type BackupStorageSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of BackupStorage. Edit backupstorage_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Storage        Backend        `json:"storage"`
+	UsagePolicy    UsagePolicy    `json:"usagePolicy,omitempty"`
+	Default        bool           `json:"default,omitempty"`
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 }
 
 // BackupStorageStatus defines the observed state of BackupStorage
 type BackupStorageStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Ready        bool               `json:"ready,omitempty"`
+	TotalSize    string             `json:"totalSize,omitempty"`
+	Repositories []RepositoryInfo   `json:"repositories,omitempty"`
+	Conditions   []metav1.Condition `json:"conditions,omitempty"`
+}
+
+type RepositoryInfo struct {
+	Name      string  `json:"name,omitempty"`
+	Namespace string  `json:"namespace,omitempty"`
+	Path      string  `json:"path,omitempty"`
+	Size      string  `json:"size,omitempty"`
+	Synced    bool    `json:"synced,omitempty"`
+	Error     *string `json:"error,omitempty"`
 }
 
 //+kubebuilder:object:root=true

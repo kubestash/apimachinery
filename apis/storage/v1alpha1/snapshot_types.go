@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -25,17 +26,73 @@ import (
 
 // SnapshotSpec defines the desired state of Snapshot
 type SnapshotSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Snapshot. Edit snapshot_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	ULID           string                         `json:"ulid,omitempty"`
+	Repository     string                         `json:"repository,omitempty"`
+	Session        string                         `json:"session,omitempty"`
+	Version        string                         `json:"version,omitempty"`
+	AppReference   core.TypedLocalObjectReference `json:"appRef,omitempty"`
+	DeletionPolicy DeletionPolicy                 `json:"deletionPolicy,omitempty"`
+	Paused         bool                           `json:"paused,omitempty"`
 }
 
 // SnapshotStatus defines the observed state of Snapshot
 type SnapshotStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Phase              SnapshotPhase      `json:"phase,omitempty"`
+	VerificationStatus VerificationStatus `json:"verificationStatus,omitempty"`
+	SnapshotTime       string             `json:"snapshotTime,omitempty"`
+	LastUpdateTime     string             `json:"lastUpdateTime,omitempty"`
+	Size               string             `json:"size,omitempty"`
+	Integrity          bool               `json:"integrity,omitempty"`
+	Components         []ComponentStatus  `json:"components,omitempty"`
+	BackupSession      string             `json:"backupSession,omitempty"`
+}
+
+type SnapshotPhase string
+
+const (
+	SnapshotSucceeded SnapshotPhase = "Succeeded"
+	SnapshotRunning   SnapshotPhase = "Running"
+	SnapshotFailed    SnapshotPhase = "Failed"
+	SnapshotPending   SnapshotPhase = "Pending"
+)
+
+type VerificationStatus string
+
+const (
+	SnapshotVerified           VerificationStatus = "Verified"
+	SnapshotNotVerified        VerificationStatus = "NotVerified"
+	SnapshotVerificationFailed VerificationStatus = "VerificationFailed"
+)
+
+type ComponentStatus struct {
+	Name        string         `json:"name,omitempty"`
+	Path        string         `json:"path,omitempty"`
+	Phase       ComponentPhase `json:"phase,omitempty"`
+	Driver      Driver         `json:"driver,omitempty"`
+	ResticStats ResticStats    `json:"resticStats,omitempty"`
+}
+
+type ComponentPhase string
+
+const (
+	ComponentPhasePending   ComponentPhase = "Pending"
+	ComponentPhaseRunning   ComponentPhase = "Running"
+	ComponentPhaseSucceeded ComponentPhase = "Succeeded"
+	ComponentPhaseFailed    ComponentPhase = "Failed"
+)
+
+type Driver string
+
+const (
+	DriverRestic Driver = "Restic"
+	DriverWalG   Driver = "WalG"
+)
+
+type ResticStats struct {
+	Id        string `json:"id,omitempty"`
+	Uploaded  string `json:"uploaded,omitempty"`
+	Size      string `json:"size,omitempty"`
+	Integrity bool   `json:"integrity,omitempty"`
 }
 
 //+kubebuilder:object:root=true

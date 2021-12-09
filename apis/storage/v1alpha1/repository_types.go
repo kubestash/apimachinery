@@ -17,25 +17,35 @@ limitations under the License.
 package v1alpha1
 
 import (
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // RepositorySpec defines the desired state of Repository
 type RepositorySpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Repository. Edit repository_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	AppRef           core.TypedLocalObjectReference `json:"appRef,omitempty"`
+	BackupStorageRef TypedObjectReference           `json:"backupStorageRef,omitempty"`
+	Path             string                         `json:"path,omitempty"`
+	DeletionPolicy   DeletionPolicy                 `json:"deletionPolicy"`
+	Paused           bool                           `json:"paused,omitempty"`
 }
 
 // RepositoryStatus defines the observed state of Repository
 type RepositoryStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	LastBackupTime  string         `json:"lastBackupTime,omitempty"`
+	Integrity       bool           `json:"integrity,omitempty"`
+	SnapshotCount   int32          `json:"snapshotCount,omitempty"`
+	Size            string         `json:"size,omitempty"`
+	RecentSnapshots []SnapshotInfo `json:"recentSnapshots,omitempty"`
+}
+
+type SnapshotInfo struct {
+	Name         string  `json:"name,omitempty"`
+	Phase        string  `json:"phase,omitempty"`
+	Session      string  `json:"session,omitempty"`
+	Size         string  `json:"size,omitempty"`
+	SnapshotTime string  `json:"snapshotTime,omitempty"`
+	Error        *string `json:"error,omitempty"`
 }
 
 //+kubebuilder:object:root=true
