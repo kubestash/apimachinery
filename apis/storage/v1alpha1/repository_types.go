@@ -19,12 +19,13 @@ package v1alpha1
 import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"stash.appscode.dev/kubestash/apis"
 )
 
 // RepositorySpec defines the desired state of Repository
 type RepositorySpec struct {
 	AppRef           core.TypedLocalObjectReference `json:"appRef,omitempty"`
-	BackupStorageRef TypedObjectReference           `json:"backupStorageRef,omitempty"`
+	BackupStorageRef apis.TypedObjectReference      `json:"backupStorageRef,omitempty"`
 	Path             string                         `json:"path,omitempty"`
 	DeletionPolicy   DeletionPolicy                 `json:"deletionPolicy"`
 	Paused           bool                           `json:"paused,omitempty"`

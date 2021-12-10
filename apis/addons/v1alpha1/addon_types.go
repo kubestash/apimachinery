@@ -32,14 +32,14 @@ type AddonSpec struct {
 }
 
 type Task struct {
-	Name              string                `json:"name,omitempty"`
-	Function          string                `json:"function,omitempty"`
-	Driver            apis.Driver           `json:"driver,omitempty"`
-	Executor          TaskExecutor          `json:"executor,omitempty"`
-	Parameters        []ParameterDefinition `json:"parameters,omitempty"`
-	VolumeTemplate    []VolumeTemplate      `json:"volumeTemplate,omitempty"`
-	VolumeMounts      []core.VolumeMount    `json:"volumeMounts,omitempty"`
-	PassThroughMounts []core.VolumeMount    `json:"passThroughMounts,omitempty"`
+	Name              string                     `json:"name,omitempty"`
+	Function          string                     `json:"function,omitempty"`
+	Driver            apis.Driver                `json:"driver,omitempty"`
+	Executor          TaskExecutor               `json:"executor,omitempty"`
+	Parameters        []apis.ParameterDefinition `json:"parameters,omitempty"`
+	VolumeTemplate    []VolumeTemplate           `json:"volumeTemplate,omitempty"`
+	VolumeMounts      []core.VolumeMount         `json:"volumeMounts,omitempty"`
+	PassThroughMounts []core.VolumeMount         `json:"passThroughMounts,omitempty"`
 }
 
 type TaskExecutor string
@@ -50,13 +50,6 @@ const (
 	ExecutorEphemeralContainer TaskExecutor = "EphemeralContainer"
 	ExecutorMultiLevelJob      TaskExecutor = "MultiLevelJob"
 )
-
-type ParameterDefinition struct {
-	Name     string `json:"name,omitempty"`
-	Usage    string `json:"usage,omitempty"`
-	Required bool   `json:"required,omitempty"`
-	Default  string `json:"default,omitempty"`
-}
 
 type VolumeTemplate struct {
 	Name   string             `json:"name,omitempty"`

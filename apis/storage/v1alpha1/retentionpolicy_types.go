@@ -18,13 +18,14 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"stash.appscode.dev/kubestash/apis"
 )
 
 // RetentionPolicySpec defines the desired state of RetentionPolicy
 type RetentionPolicySpec struct {
 	Default             bool                          `json:"default,omitempty"`
 	MaxRetentionPeriod  string                        `json:"maxRetentionPeriod,omitempty"`
-	UsagePolicy         UsagePolicy                   `json:"usagePolicy,omitempty"`
+	UsagePolicy         apis.UsagePolicy              `json:"usagePolicy,omitempty"`
 	SuccessfulSnapshots SuccessfulSnapshotsKeepPolicy `json:"successfulSnapshots,omitempty"`
 	FailedSnapshots     FailedSnapshotsKeepPolicy     `json:"failedSnapshots,omitempty"`
 }

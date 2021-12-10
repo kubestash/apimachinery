@@ -17,26 +17,69 @@ limitations under the License.
 package v1alpha1
 
 import (
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
+	storage "stash.appscode.dev/kubestash/apis/storage/v1alpha1"
 )
-
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // BackupSessionSpec defines the desired state of BackupSession
 type BackupSessionSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of BackupSession. Edit backupsession_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Invoker core.TypedLocalObjectReference `json:"invoker,omitempty"`
+	Session string                         `json:"session,omitempty"`
 }
 
 // BackupSessionStatus defines the observed state of BackupSession
 type BackupSessionStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Phase           BackupSessionPhase           `json:"phase,omitempty"`
+	Duration        string                       `json:"duration,omitempty"`
+	Snapshots       []SnapshotStatus             `json:"snapshots,omitempty"`
+	Hooks           []HookExecutionStatus        `json:"hooks,omitempty"`
+	Verifications   []VerificationStatus         `json:"verifications,omitempty"`
+	RetentionPolicy []RetentionPolicyApplyStatus `json:"retentionPolicy,omitempty"`
 }
+
+type BackupSessionPhase string
+
+const (
+	BackupSessionPending BackupSessionPhase = "Pending"
+	BackupSessionRunning BackupSessionPhase = "Running"
+	BackupSessionFailed  BackupSessionPhase = "Failed"
+	BackupSessionSkipped BackupSessionPhase = "Skipped"
+)
+
+type SnapshotStatus struct {
+	Name       string                     `json:"name,omitempty"`
+	Phase      storage.SnapshotPhase      `json:"phase,omitempty"`
+	AppRef     *core.LocalObjectReference `json:"appRef,omitempty"`
+	Repository string                     `json:"repository,omitempty"`
+}
+
+type VerificationStatus struct {
+	Name  string                  `json:"name,omitempty"`
+	Phase BackupVerificationPhase `json:"phase,omitempty"`
+}
+
+type BackupVerificationPhase string
+
+const (
+	VerificationSucceeded BackupVerificationPhase = "Succeeded"
+	VerificationFailed    BackupVerificationPhase = "Failed"
+)
+
+type RetentionPolicyApplyStatus struct {
+	Ref   kmapi.ObjectReference     `json:"ref,omitempty"`
+	Phase RetentionPolicyApplyPhase `json:"phase,omitempty"`
+	Error string                    `json:"error,omitempty"`
+}
+
+type RetentionPolicyApplyPhase string
+
+const (
+	RetentionPolicyPending       RetentionPolicyApplyPhase = "Pending"
+	RetentionPolicyApplied       RetentionPolicyApplyPhase = "Applied"
+	RetentionPolicyFailedToApply RetentionPolicyApplyPhase = "FailedToApply"
+)
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status

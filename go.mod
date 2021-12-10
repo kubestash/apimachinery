@@ -9,7 +9,9 @@ require (
 	k8s.io/api v0.22.1
 	k8s.io/apimachinery v0.22.1
 	k8s.io/client-go v0.22.1
+	kmodules.xyz/client-go v0.0.0-20211013093146-1fbfd52e78c9
 	kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf
+	kmodules.xyz/prober v0.0.0-20211207173543-44f2ab31fdd5
 	sigs.k8s.io/controller-runtime v0.10.0
 )
 

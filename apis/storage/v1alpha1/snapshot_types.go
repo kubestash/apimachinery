@@ -51,10 +51,10 @@ type SnapshotStatus struct {
 type SnapshotPhase string
 
 const (
-	SnapshotSucceeded SnapshotPhase = "Succeeded"
-	SnapshotRunning   SnapshotPhase = "Running"
-	SnapshotFailed    SnapshotPhase = "Failed"
 	SnapshotPending   SnapshotPhase = "Pending"
+	SnapshotRunning   SnapshotPhase = "Running"
+	SnapshotSucceeded SnapshotPhase = "Succeeded"
+	SnapshotFailed    SnapshotPhase = "Failed"
 )
 
 type VerificationStatus string
