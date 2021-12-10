@@ -17,7 +17,9 @@ limitations under the License.
 package v1alpha1
 
 import (
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"stash.appscode.dev/kubestash/apis"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -25,29 +27,51 @@ import (
 
 // AddonSpec defines the desired state of Addon
 type AddonSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Addon. Edit addon_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	BackupTasks  []Task `json:"backupTasks,omitempty"`
+	RestoreTasks []Task `json:"restoreTasks,omitempty"`
 }
 
-// AddonStatus defines the observed state of Addon
-type AddonStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+type Task struct {
+	Name              string                `json:"name,omitempty"`
+	Function          string                `json:"function,omitempty"`
+	Driver            apis.Driver           `json:"driver,omitempty"`
+	Executor          TaskExecutor          `json:"executor,omitempty"`
+	Parameters        []ParameterDefinition `json:"parameters,omitempty"`
+	VolumeTemplate    []VolumeTemplate      `json:"volumeTemplate,omitempty"`
+	VolumeMounts      []core.VolumeMount    `json:"volumeMounts,omitempty"`
+	PassThroughMounts []core.VolumeMount    `json:"passThroughMounts,omitempty"`
+}
+
+type TaskExecutor string
+
+const (
+	ExecutorJob                TaskExecutor = "Job"
+	ExecutorSidecar            TaskExecutor = "Sidecar"
+	ExecutorEphemeralContainer TaskExecutor = "EphemeralContainer"
+	ExecutorMultiLevelJob      TaskExecutor = "MultiLevelJob"
+)
+
+type ParameterDefinition struct {
+	Name     string `json:"name,omitempty"`
+	Usage    string `json:"usage,omitempty"`
+	Required bool   `json:"required,omitempty"`
+	Default  string `json:"default,omitempty"`
+}
+
+type VolumeTemplate struct {
+	Name   string             `json:"name,omitempty"`
+	Usage  string             `json:"usage,omitempty"`
+	Source *apis.VolumeSource `json:"source,omitempty"`
 }
 
 //+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
 
 // Addon is the Schema for the addons API
 type Addon struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   AddonSpec   `json:"spec,omitempty"`
-	Status AddonStatus `json:"status,omitempty"`
+	Spec AddonSpec `json:"spec,omitempty"`
 }
 
 //+kubebuilder:object:root=true

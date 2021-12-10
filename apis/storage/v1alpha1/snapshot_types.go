@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"stash.appscode.dev/kubestash/apis"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -68,7 +69,7 @@ type ComponentStatus struct {
 	Name        string         `json:"name,omitempty"`
 	Path        string         `json:"path,omitempty"`
 	Phase       ComponentPhase `json:"phase,omitempty"`
-	Driver      Driver         `json:"driver,omitempty"`
+	Driver      apis.Driver    `json:"driver,omitempty"`
 	ResticStats ResticStats    `json:"resticStats,omitempty"`
 }
 
@@ -79,13 +80,6 @@ const (
 	ComponentPhaseRunning   ComponentPhase = "Running"
 	ComponentPhaseSucceeded ComponentPhase = "Succeeded"
 	ComponentPhaseFailed    ComponentPhase = "Failed"
-)
-
-type Driver string
-
-const (
-	DriverRestic Driver = "Restic"
-	DriverWalG   Driver = "WalG"
 )
 
 type ResticStats struct {
