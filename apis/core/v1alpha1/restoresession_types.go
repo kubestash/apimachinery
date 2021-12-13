@@ -23,12 +23,24 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+
+// RestoreSession is the Schema for the restoresessions API
+type RestoreSession struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   RestoreSessionSpec   `json:"spec,omitempty"`
+	Status RestoreSessionStatus `json:"status,omitempty"`
+}
+
 // RestoreSessionSpec defines the desired state of RestoreSession
 type RestoreSessionSpec struct {
 	Target        *core.TypedLocalObjectReference `json:"target,omitempty"`
-	DataSource    RestoreDataSource               `json:"dataSource,omitempty"`
-	Addon         AddonInfo                       `json:"addon,omitempty"`
-	Hooks         RestoreHooks                    `json:"hooks,omitempty"`
+	DataSource    *RestoreDataSource              `json:"dataSource,omitempty"`
+	Addon         *AddonInfo                      `json:"addon,omitempty"`
+	Hooks         *RestoreHooks                   `json:"hooks,omitempty"`
 	FailurePolicy apis.FailurePolicy              `json:"failurePolicy,omitempty"`
 	RetryConfig   *apis.RetryConfig               `json:"retryConfig,omitempty"`
 }
@@ -71,23 +83,12 @@ const (
 type ComponentRestoreStatus struct {
 	Name  string       `json:"name,omitempty"`
 	Phase RestorePhase `json:"phase,omitempty"`
+	Error string       `json:"error,omitempty"`
 }
 
 type BackupPausedStatus struct {
-	Paused  bool                           `json:"paused,omitempty"`
-	Invoker core.TypedLocalObjectReference `json:"invoker,omitempty"`
-}
-
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
-// RestoreSession is the Schema for the restoresessions API
-type RestoreSession struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   RestoreSessionSpec   `json:"spec,omitempty"`
-	Status RestoreSessionStatus `json:"status,omitempty"`
+	Paused  bool                            `json:"paused,omitempty"`
+	Invoker *core.TypedLocalObjectReference `json:"invoker,omitempty"`
 }
 
 //+kubebuilder:object:root=true

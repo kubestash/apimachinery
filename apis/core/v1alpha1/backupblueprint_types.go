@@ -20,12 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// BackupBlueprintSpec defines the desired state of BackupBlueprint
-type BackupBlueprintSpec struct {
-	Backends []BackendReference `json:"backends,omitempty"`
-	Sessions []Session          `json:"sessions,omitempty"`
-}
-
 //+kubebuilder:object:root=true
 
 // BackupBlueprint is the Schema for the backupblueprints API
@@ -34,6 +28,12 @@ type BackupBlueprint struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec BackupBlueprintSpec `json:"spec,omitempty"`
+}
+
+// BackupBlueprintSpec defines the desired state of BackupBlueprint
+type BackupBlueprintSpec struct {
+	Backends []BackendReference `json:"backends,omitempty"`
+	Sessions []Session          `json:"sessions,omitempty"`
 }
 
 //+kubebuilder:object:root=true

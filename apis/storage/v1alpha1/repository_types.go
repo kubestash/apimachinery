@@ -22,33 +22,6 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
-// RepositorySpec defines the desired state of Repository
-type RepositorySpec struct {
-	AppRef           core.TypedLocalObjectReference `json:"appRef,omitempty"`
-	BackupStorageRef apis.TypedObjectReference      `json:"backupStorageRef,omitempty"`
-	Path             string                         `json:"path,omitempty"`
-	DeletionPolicy   DeletionPolicy                 `json:"deletionPolicy"`
-	Paused           bool                           `json:"paused,omitempty"`
-}
-
-// RepositoryStatus defines the observed state of Repository
-type RepositoryStatus struct {
-	LastBackupTime  string         `json:"lastBackupTime,omitempty"`
-	Integrity       bool           `json:"integrity,omitempty"`
-	SnapshotCount   int32          `json:"snapshotCount,omitempty"`
-	Size            string         `json:"size,omitempty"`
-	RecentSnapshots []SnapshotInfo `json:"recentSnapshots,omitempty"`
-}
-
-type SnapshotInfo struct {
-	Name         string  `json:"name,omitempty"`
-	Phase        string  `json:"phase,omitempty"`
-	Session      string  `json:"session,omitempty"`
-	Size         string  `json:"size,omitempty"`
-	SnapshotTime string  `json:"snapshotTime,omitempty"`
-	Error        *string `json:"error,omitempty"`
-}
-
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
@@ -59,6 +32,32 @@ type Repository struct {
 
 	Spec   RepositorySpec   `json:"spec,omitempty"`
 	Status RepositoryStatus `json:"status,omitempty"`
+}
+
+// RepositorySpec defines the desired state of Repository
+type RepositorySpec struct {
+	AppRef         core.TypedLocalObjectReference `json:"appRef,omitempty"`
+	StorageRef     apis.TypedObjectReference      `json:"storageRef,omitempty"`
+	Path           string                         `json:"path,omitempty"`
+	DeletionPolicy DeletionPolicy                 `json:"deletionPolicy"`
+	Paused         bool                           `json:"paused,omitempty"`
+}
+
+// RepositoryStatus defines the observed state of Repository
+type RepositoryStatus struct {
+	LastBackupTime  string         `json:"lastBackupTime,omitempty"`
+	Integrity       *bool          `json:"integrity,omitempty"`
+	SnapshotCount   *int32         `json:"snapshotCount,omitempty"`
+	Size            string         `json:"size,omitempty"`
+	RecentSnapshots []SnapshotInfo `json:"recentSnapshots,omitempty"`
+}
+
+type SnapshotInfo struct {
+	Name         string `json:"name,omitempty"`
+	Phase        string `json:"phase,omitempty"`
+	Session      string `json:"session,omitempty"`
+	Size         string `json:"size,omitempty"`
+	SnapshotTime string `json:"snapshotTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true

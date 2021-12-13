@@ -23,19 +23,29 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
+//+kubebuilder:object:root=true
+
+// HookTemplate is the Schema for the hooktemplates API
+type HookTemplate struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec HookTemplateSpec `json:"spec,omitempty"`
+}
+
 // HookTemplateSpec defines the desired state of HookTemplate
 type HookTemplateSpec struct {
-	UsagePolicy apis.UsagePolicy
-	Params      apis.ParameterDefinition `json:"params,omitempty"`
-	Action      *prober.Handler          `json:"action,omitempty"`
-	TimeOut     string                   `json:"timeOut,omitempty"`
-	Executor    HookExecutor             `json:"executor,omitempty"`
+	UsagePolicy *apis.UsagePolicy           `json:"usagePolicy,omitempty"`
+	Params      *[]apis.ParameterDefinition `json:"params,omitempty"`
+	Action      *prober.Handler             `json:"action,omitempty"`
+	TimeOut     string                      `json:"timeOut,omitempty"`
+	Executor    *HookExecutor               `json:"executor,omitempty"`
 }
 
 type HookExecutor struct {
-	Type     HookExecutorType         `json:"type,omitempty"`
-	Function FunctionHookExecutorSpec `json:"function,omitempty"`
-	Pod      PodHookExecutorSpec      `json:"pod,omitempty"`
+	Type     HookExecutorType          `json:"type,omitempty"`
+	Function *FunctionHookExecutorSpec `json:"function,omitempty"`
+	Pod      *PodHookExecutorSpec      `json:"pod,omitempty"`
 }
 
 type HookExecutorType string
@@ -54,7 +64,7 @@ type FunctionHookExecutorSpec struct {
 }
 
 type PodHookExecutorSpec struct {
-	Selector string                   `json:"selector,omitempty"`
+	Selector string                   `json:"selector,omitempty"` // TODO: Use metav1.LabelSelector?
 	Owner    *metav1.OwnerReference   `json:"owner,omitempty"`
 	Strategy PodHookExecutionStrategy `json:"strategy,omitempty"`
 }
@@ -65,16 +75,6 @@ const (
 	ExecuteOnOnce PodHookExecutionStrategy = "ExecuteOnOnce"
 	ExecuteOnAll  PodHookExecutionStrategy = "ExecuteOnAll"
 )
-
-//+kubebuilder:object:root=true
-
-// HookTemplate is the Schema for the hooktemplates API
-type HookTemplate struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec HookTemplateSpec `json:"spec,omitempty"`
-}
 
 //+kubebuilder:object:root=true
 

@@ -22,8 +22,17 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+
+// Snapshot is the Schema for the snapshots API
+type Snapshot struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   SnapshotSpec   `json:"spec,omitempty"`
+	Status SnapshotStatus `json:"status,omitempty"`
+}
 
 // SnapshotSpec defines the desired state of Snapshot
 type SnapshotSpec struct {
@@ -31,7 +40,7 @@ type SnapshotSpec struct {
 	Repository     string                         `json:"repository,omitempty"`
 	Session        string                         `json:"session,omitempty"`
 	Version        string                         `json:"version,omitempty"`
-	AppReference   core.TypedLocalObjectReference `json:"appRef,omitempty"`
+	AppRef         core.TypedLocalObjectReference `json:"appRef,omitempty"`
 	DeletionPolicy DeletionPolicy                 `json:"deletionPolicy,omitempty"`
 	Paused         bool                           `json:"paused,omitempty"`
 }
@@ -43,7 +52,7 @@ type SnapshotStatus struct {
 	SnapshotTime       string             `json:"snapshotTime,omitempty"`
 	LastUpdateTime     string             `json:"lastUpdateTime,omitempty"`
 	Size               string             `json:"size,omitempty"`
-	Integrity          bool               `json:"integrity,omitempty"`
+	Integrity          *bool              `json:"integrity,omitempty"`
 	Components         []ComponentStatus  `json:"components,omitempty"`
 	BackupSession      string             `json:"backupSession,omitempty"`
 }
@@ -86,19 +95,7 @@ type ResticStats struct {
 	Id        string `json:"id,omitempty"`
 	Uploaded  string `json:"uploaded,omitempty"`
 	Size      string `json:"size,omitempty"`
-	Integrity bool   `json:"integrity,omitempty"`
-}
-
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
-// Snapshot is the Schema for the snapshots API
-type Snapshot struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   SnapshotSpec   `json:"spec,omitempty"`
-	Status SnapshotStatus `json:"status,omitempty"`
+	Integrity *bool  `json:"integrity,omitempty"`
 }
 
 //+kubebuilder:object:root=true

@@ -26,6 +26,18 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+
+// BackupConfiguration is the Schema for the backupconfigurations API
+type BackupConfiguration struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   BackupConfigurationSpec   `json:"spec,omitempty"`
+	Status BackupConfigurationStatus `json:"status,omitempty"`
+}
+
 // BackupConfigurationSpec defines the desired state of BackupConfiguration
 type BackupConfigurationSpec struct {
 	Target   *core.TypedLocalObjectReference `json:"target,omitempty"`
@@ -34,21 +46,25 @@ type BackupConfigurationSpec struct {
 }
 
 type BackendReference struct {
-	Name          string                    `json:"name,omitempty"`
-	BackupStorage apis.TypedObjectReference `json:"backupStorage,omitempty"`
+	Name       string                    `json:"name,omitempty"`
+	StorageRef apis.TypedObjectReference `json:"storageRef,omitempty"`
 }
 
 type Session struct {
+	*SessionConfig
+	Addon        *AddonInfo       `json:"addon,omitempty"`
+	Repositories []RepositoryInfo `json:"repositories,omitempty"`
+}
+
+type SessionConfig struct {
 	Name                   string                 `json:"name,omitempty"`
-	Scheduler              SchedulerSpec          `json:"scheduler,omitempty"`
-	Repositories           []RepositoryInfo       `json:"repositories,omitempty"`
-	Addon                  AddonInfo              `json:"addon,omitempty"`
-	RetentionPolicy        kmapi.ObjectReference  `json:"retentionPolicy,omitempty"`
+	Scheduler              *SchedulerSpec         `json:"scheduler,omitempty"`
+	RetentionPolicy        *kmapi.ObjectReference `json:"retentionPolicy,omitempty"`
 	VerificationStrategies []VerificationStrategy `json:"verificationStrategies,omitempty"`
-	Hooks                  BackupHooks            `json:"hooks,omitempty"`
+	Hooks                  *BackupHooks           `json:"hooks,omitempty"`
 	FailurePolicy          apis.FailurePolicy     `json:"failurePolicy,omitempty"`
 	RetryConfig            *apis.RetryConfig      `json:"retryConfig,omitempty"`
-	SessionHistoryLimit    *int32                 `json:"sessionHistoryLimit,omitempty"`
+	SessionHistoryLimit    int32                  `json:"sessionHistoryLimit,omitempty"`
 }
 
 type SchedulerSpec struct {
@@ -74,7 +90,7 @@ type SchedulerSpec struct {
 	Suspend *bool `json:"suspend,omitempty" protobuf:"varint,4,opt,name=suspend"`
 
 	// Specifies the job that will be created when executing a CronJob.
-	JobTemplate batchv1.JobTemplateSpec `json:"jobTemplate" protobuf:"bytes,5,opt,name=jobTemplate"`
+	JobTemplate JobTemplate `json:"jobTemplate" protobuf:"bytes,5,opt,name=jobTemplate"`
 
 	// The number of successful finished jobs to retain. Value must be non-negative integer.
 	// Defaults to 3.
@@ -186,7 +202,7 @@ type TaskReference struct {
 	Name          string                `json:"name,omitempty"`
 	Variables     []core.EnvVar         `json:"variables,omitempty"`
 	Params        *runtime.RawExtension `json:"params,omitempty"`
-	TargetVolumes TargetVolumeInfo      `json:"targetVolumes,omitempty"`
+	TargetVolumes *TargetVolumeInfo     `json:"targetVolumes,omitempty"`
 	AddonVolumes  []apis.VolumeSource   `json:"addonVolumes,omitempty"`
 }
 
@@ -196,12 +212,13 @@ type TargetVolumeInfo struct {
 }
 
 type VerificationStrategy struct {
-	Name        string                    `json:"name,omitempty"`
-	Repository  string                    `json:"repository,omitempty"`
-	Verifier    apis.TypedObjectReference `json:"verifier,omitempty"`
-	Params      *runtime.RawExtension     `json:"params,omitempty"`
-	VerifyEvery int32                     `json:"verifyEvery,omitempty"`
-	OnFailure   apis.FailurePolicy        `json:"onFailure,omitempty"`
+	Name        string                     `json:"name,omitempty"`
+	Repository  string                     `json:"repository,omitempty"`
+	Verifier    *apis.TypedObjectReference `json:"verifier,omitempty"`
+	Params      *runtime.RawExtension      `json:"params,omitempty"`
+	VerifyEvery int32                      `json:"verifyEvery,omitempty"`
+	OnFailure   apis.FailurePolicy         `json:"onFailure,omitempty"`
+	RetryConfig *apis.RetryConfig
 }
 
 type BackupHooks struct {
@@ -211,8 +228,12 @@ type BackupHooks struct {
 
 // BackupConfigurationStatus defines the observed state of BackupConfiguration
 type BackupConfigurationStatus struct {
+	*OffshootStatus
+	Target ResourceFoundStatus `json:"target,omitempty"`
+}
+
+type OffshootStatus struct {
 	Ready         bool                  `json:"ready,omitempty"`
-	Target        ResourceFoundStatus   `json:"target,omitempty"`
 	Backends      []BackendStatus       `json:"backends,omitempty"`
 	Addons        []ResourceFoundStatus `json:"addons,omitempty"`
 	Repositories  []RepoStatus          `json:"repositories,omitempty"`
@@ -234,21 +255,9 @@ type RepoStatus struct {
 }
 
 type SessionStatus struct {
-	Name         string `json:"name,omitempty"`
-	NextSchedule string `json:"nextSchedule,omitempty"`
-	Conditions   []kmapi.Condition
-}
-
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
-// BackupConfiguration is the Schema for the backupconfigurations API
-type BackupConfiguration struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   BackupConfigurationSpec   `json:"spec,omitempty"`
-	Status BackupConfigurationStatus `json:"status,omitempty"`
+	Name         string            `json:"name,omitempty"`
+	NextSchedule string            `json:"nextSchedule,omitempty"`
+	Conditions   []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 //+kubebuilder:object:root=true

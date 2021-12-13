@@ -21,11 +21,21 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
+//+kubebuilder:object:root=true
+
+// RetentionPolicy is the Schema for the retentionpolicies API
+type RetentionPolicy struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec RetentionPolicySpec `json:"spec,omitempty"`
+}
+
 // RetentionPolicySpec defines the desired state of RetentionPolicy
 type RetentionPolicySpec struct {
 	Default             bool                          `json:"default,omitempty"`
 	MaxRetentionPeriod  string                        `json:"maxRetentionPeriod,omitempty"`
-	UsagePolicy         apis.UsagePolicy              `json:"usagePolicy,omitempty"`
+	UsagePolicy         *apis.UsagePolicy             `json:"usagePolicy,omitempty"`
 	SuccessfulSnapshots SuccessfulSnapshotsKeepPolicy `json:"successfulSnapshots,omitempty"`
 	FailedSnapshots     FailedSnapshotsKeepPolicy     `json:"failedSnapshots,omitempty"`
 }
@@ -41,16 +51,6 @@ type SuccessfulSnapshotsKeepPolicy struct {
 
 type FailedSnapshotsKeepPolicy struct {
 	Last int32 `json:"last,omitempty"`
-}
-
-//+kubebuilder:object:root=true
-
-// RetentionPolicy is the Schema for the retentionpolicies API
-type RetentionPolicy struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec RetentionPolicySpec `json:"spec,omitempty"`
 }
 
 //+kubebuilder:object:root=true

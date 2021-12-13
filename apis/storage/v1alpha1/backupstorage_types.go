@@ -18,14 +18,27 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"stash.appscode.dev/kubestash/apis"
 )
+
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+
+// BackupStorage is the Schema for the backupstorages API
+type BackupStorage struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   BackupStorageSpec   `json:"spec,omitempty"`
+	Status BackupStorageStatus `json:"status,omitempty"`
+}
 
 // BackupStorageSpec defines the desired state of BackupStorage
 type BackupStorageSpec struct {
-	Storage        Backend        `json:"storage"`
-	UsagePolicy    UsagePolicy    `json:"usagePolicy,omitempty"`
-	Default        bool           `json:"default,omitempty"`
-	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
+	Storage        Backend           `json:"storage,omitempty"`
+	UsagePolicy    *apis.UsagePolicy `json:"usagePolicy,omitempty"`
+	Default        bool              `json:"default,omitempty"`
+	DeletionPolicy DeletionPolicy    `json:"deletionPolicy,omitempty"`
 }
 
 // BackupStorageStatus defines the observed state of BackupStorage
@@ -43,18 +56,6 @@ type RepositoryInfo struct {
 	Size      string  `json:"size,omitempty"`
 	Synced    bool    `json:"synced,omitempty"`
 	Error     *string `json:"error,omitempty"`
-}
-
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
-// BackupStorage is the Schema for the backupstorages API
-type BackupStorage struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   BackupStorageSpec   `json:"spec,omitempty"`
-	Status BackupStorageStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

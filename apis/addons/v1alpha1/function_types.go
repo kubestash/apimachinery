@@ -22,6 +22,16 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
+//+kubebuilder:object:root=true
+
+// Function is the Schema for the functions API
+type Function struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec FunctionSpec `json:"spec,omitempty"`
+}
+
 type FunctionSpec struct {
 	// Docker image name.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
@@ -81,16 +91,6 @@ type FunctionSpec struct {
 	// RuntimeSettings allow to specify Resources, LivenessProbe, ReadinessProbe, Lifecycle, SecurityContext etc.
 	// +optional
 	RuntimeSettings *ofst.ContainerRuntimeSettings `json:"runtimeSettings,omitempty" protobuf:"bytes,8,opt,name=runtimeSettings"`
-}
-
-//+kubebuilder:object:root=true
-
-// Function is the Schema for the functions API
-type Function struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec FunctionSpec `json:"spec,omitempty"`
 }
 
 //+kubebuilder:object:root=true

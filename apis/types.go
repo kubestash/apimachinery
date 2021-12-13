@@ -34,6 +34,13 @@ type RetryConfig struct {
 	Delay    string `json:"delay,omitempty"`
 }
 
+type ParameterDefinition struct {
+	Name     string `json:"name,omitempty"`
+	Usage    string `json:"usage,omitempty"`
+	Required bool   `json:"required,omitempty"`
+	Default  string `json:"default,omitempty"`
+}
+
 type UsagePolicy struct {
 	AllowedNamespaces AllowedNamespaces `json:"allowedNamespaces,omitempty"`
 }
@@ -74,11 +81,4 @@ type AllowedNamespaces struct {
 	//
 	// +optional
 	Selector *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,2,opt,name=selector"`
-}
-
-type ParameterDefinition struct {
-	Name     string `json:"name,omitempty"`
-	Usage    string `json:"usage,omitempty"`
-	Required bool   `json:"required,omitempty"`
-	Default  string `json:"default,omitempty"`
 }

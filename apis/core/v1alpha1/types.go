@@ -3,24 +3,20 @@ package v1alpha1
 import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
 type HookInfo struct {
-	Name            string                `json:"name,omitempty"`
-	HookTemplate    HookReference         `json:"hookTemplate,omitempty"`
-	Params          *runtime.RawExtension `json:"params,omitempty"`
-	MaxRetry        int32                 `json:"maxRetry,omitempty"`
-	ExecutionPolicy HookExecutionPolicy   `json:"executionPolicy,omitempty"`
-	Variables       []core.EnvVar         `json:"variables,omitempty"`
-	VolumeMounts    []core.VolumeMount    `json:"volumeMounts,omitempty"`
-	Volumes         []core.Volume         `json:"volumes,omitempty"`
-	RuntimeSettings ofst.RuntimeSettings  `json:"runtimeSettings,omitempty"`
-}
-
-type HookReference struct {
-	Name      string `json:"name,omitempty"`
-	Namespace string `json:"namespace,omitempty"`
+	Name            string                 `json:"name,omitempty"`
+	HookTemplate    *kmapi.ObjectReference `json:"hookTemplate,omitempty"`
+	Params          *runtime.RawExtension  `json:"params,omitempty"`
+	MaxRetry        int32                  `json:"maxRetry,omitempty"`
+	ExecutionPolicy HookExecutionPolicy    `json:"executionPolicy,omitempty"`
+	Variables       []core.EnvVar          `json:"variables,omitempty"`
+	VolumeMounts    []core.VolumeMount     `json:"volumeMounts,omitempty"`
+	Volumes         []core.Volume          `json:"volumes,omitempty"`
+	RuntimeSettings *ofst.RuntimeSettings  `json:"runtimeSettings,omitempty"`
 }
 
 type HookExecutionPolicy string

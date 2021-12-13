@@ -23,29 +23,42 @@ import (
 	storage "stash.appscode.dev/kubestash/apis/storage/v1alpha1"
 )
 
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+
+// BackupSession is the Schema for the backupsessions API
+type BackupSession struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   BackupSessionSpec   `json:"spec,omitempty"`
+	Status BackupSessionStatus `json:"status,omitempty"`
+}
+
 // BackupSessionSpec defines the desired state of BackupSession
 type BackupSessionSpec struct {
-	Invoker core.TypedLocalObjectReference `json:"invoker,omitempty"`
-	Session string                         `json:"session,omitempty"`
+	Invoker *core.TypedLocalObjectReference `json:"invoker,omitempty"`
+	Session string                          `json:"session,omitempty"`
 }
 
 // BackupSessionStatus defines the observed state of BackupSession
 type BackupSessionStatus struct {
-	Phase           BackupSessionPhase           `json:"phase,omitempty"`
-	Duration        string                       `json:"duration,omitempty"`
-	Snapshots       []SnapshotStatus             `json:"snapshots,omitempty"`
-	Hooks           []HookExecutionStatus        `json:"hooks,omitempty"`
-	Verifications   []VerificationStatus         `json:"verifications,omitempty"`
-	RetentionPolicy []RetentionPolicyApplyStatus `json:"retentionPolicy,omitempty"`
+	Phase           BackupSessionPhase          `json:"phase,omitempty"`
+	Duration        string                      `json:"duration,omitempty"`
+	Snapshots       []SnapshotStatus            `json:"snapshots,omitempty"`
+	Hooks           []HookExecutionStatus       `json:"hooks,omitempty"`
+	Verifications   []VerificationStatus        `json:"verifications,omitempty"`
+	RetentionPolicy *RetentionPolicyApplyStatus `json:"retentionPolicy,omitempty"`
 }
 
 type BackupSessionPhase string
 
 const (
-	BackupSessionPending BackupSessionPhase = "Pending"
-	BackupSessionRunning BackupSessionPhase = "Running"
-	BackupSessionFailed  BackupSessionPhase = "Failed"
-	BackupSessionSkipped BackupSessionPhase = "Skipped"
+	BackupSessionPending   BackupSessionPhase = "Pending"
+	BackupSessionRunning   BackupSessionPhase = "Running"
+	BackupSessionSucceeded BackupSessionPhase = "Succeeded"
+	BackupSessionFailed    BackupSessionPhase = "Failed"
+	BackupSessionSkipped   BackupSessionPhase = "Skipped"
 )
 
 type SnapshotStatus struct {
@@ -80,18 +93,6 @@ const (
 	RetentionPolicyApplied       RetentionPolicyApplyPhase = "Applied"
 	RetentionPolicyFailedToApply RetentionPolicyApplyPhase = "FailedToApply"
 )
-
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
-// BackupSession is the Schema for the backupsessions API
-type BackupSession struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   BackupSessionSpec   `json:"spec,omitempty"`
-	Status BackupSessionStatus `json:"status,omitempty"`
-}
 
 //+kubebuilder:object:root=true
 
