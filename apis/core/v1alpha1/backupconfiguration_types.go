@@ -45,9 +45,10 @@ type Session struct {
 	Addon                  AddonInfo              `json:"addon,omitempty"`
 	RetentionPolicy        kmapi.ObjectReference  `json:"retentionPolicy,omitempty"`
 	VerificationStrategies []VerificationStrategy `json:"verificationStrategies,omitempty"`
-	Hook                   BackupHook             `json:"hook,omitempty"`
+	Hooks                  BackupHooks            `json:"hooks,omitempty"`
 	FailurePolicy          apis.FailurePolicy     `json:"failurePolicy,omitempty"`
 	RetryConfig            *apis.RetryConfig      `json:"retryConfig,omitempty"`
+	SessionHistoryLimit    *int32                 `json:"sessionHistoryLimit,omitempty"`
 }
 
 type SchedulerSpec struct {
@@ -168,9 +169,10 @@ type JobTemplate struct {
 }
 
 type RepositoryInfo struct {
-	Name      string `json:"name,omitempty"`
-	Backend   string `json:"backend,omitempty"`
-	Directory string `json:"directory,omitempty"`
+	Name             string `json:"name,omitempty"`
+	Backend          string `json:"backend,omitempty"`
+	Directory        string `json:"directory,omitempty"`
+	EncryptionSecret string `json:"encryptionSecret,omitempty"`
 }
 
 type AddonInfo struct {
@@ -202,7 +204,7 @@ type VerificationStrategy struct {
 	OnFailure   apis.FailurePolicy        `json:"onFailure,omitempty"`
 }
 
-type BackupHook struct {
+type BackupHooks struct {
 	PreBackup  []HookInfo `json:"preBackup,omitempty"`
 	PostBackup []HookInfo `json:"postBackup,omitempty"`
 }

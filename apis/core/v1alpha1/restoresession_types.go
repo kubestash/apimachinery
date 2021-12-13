@@ -17,25 +17,65 @@ limitations under the License.
 package v1alpha1
 
 import (
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
+	"stash.appscode.dev/kubestash/apis"
 )
-
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // RestoreSessionSpec defines the desired state of RestoreSession
 type RestoreSessionSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Target        *core.TypedLocalObjectReference `json:"target,omitempty"`
+	DataSource    RestoreDataSource               `json:"dataSource,omitempty"`
+	Addon         AddonInfo                       `json:"addon,omitempty"`
+	Hooks         RestoreHooks                    `json:"hooks,omitempty"`
+	FailurePolicy apis.FailurePolicy              `json:"failurePolicy,omitempty"`
+	RetryConfig   *apis.RetryConfig               `json:"retryConfig,omitempty"`
+}
 
-	// Foo is an example field of RestoreSession. Edit restoresession_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+type RestoreDataSource struct {
+	Repository string   `json:"repository,omitempty"`
+	Snapshot   string   `json:"snapshot,omitempty"`
+	PITR       PITR     `json:"pitr,omitempty"`
+	Components []string `json:"components,omitempty"`
+}
+
+type PITR struct {
+	TargetTime string `json:"targetTime,omitempty"`
+	Exclusive  bool   `json:"exclusive,omitempty"`
+}
+
+type RestoreHooks struct {
+	PreRestore  []HookInfo `json:"preRestore,omitempty"`
+	PostRestore []HookInfo `json:"postRestore,omitempty"`
 }
 
 // RestoreSessionStatus defines the observed state of RestoreSession
 type RestoreSessionStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Phase      RestorePhase             `json:"phase,omitempty"`
+	Components []ComponentRestoreStatus `json:"components,omitempty"`
+	Hooks      []HookExecutionStatus    `json:"hooks,omitempty"`
+	Backup     *BackupPausedStatus      `json:"backup,omitempty"`
+	Conditions []kmapi.Condition        `json:"conditions,omitempty"`
+}
+
+type RestorePhase string
+
+const (
+	RestorePending RestorePhase = "Pending"
+	RestoreRunning RestorePhase = "Running"
+	RestoreFailed  RestorePhase = "Failed"
+	RestoreSkipped RestorePhase = "Skipped"
+)
+
+type ComponentRestoreStatus struct {
+	Name  string       `json:"name,omitempty"`
+	Phase RestorePhase `json:"phase,omitempty"`
+}
+
+type BackupPausedStatus struct {
+	Paused  bool                           `json:"paused,omitempty"`
+	Invoker core.TypedLocalObjectReference `json:"invoker,omitempty"`
 }
 
 //+kubebuilder:object:root=true
