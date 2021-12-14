@@ -27,7 +27,7 @@ import (
 // Postgres addon specifies backup capabilities for PostgreSQL database.
 // An Addon CR defines the backup and restore tasks that can be performed by this addon.
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=addons,singular=addon,categories={kubestash,appscode,all}
+// +kubebuilder:resource:path=addons,singular=addon,scope=Cluster,categories={kubestash,appscode,all}
 type Addon struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

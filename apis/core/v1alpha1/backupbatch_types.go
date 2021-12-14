@@ -37,13 +37,19 @@ type BackupBatch struct {
 // and the session configuration which specifies the when and how to take the backup.
 type BackupBatchSpec struct {
 	// Backends specifies a list of storage references where the backed up data will be stored.
+	// The respective BackupStorages can be in a different namespace than the BackupBatch.
+	// However, it must be allowed by the `usagePolicy` of the BackupStorage to refer from this namespace.
+	//
+	// This field is optional, if you don't provide any backend here, Stash will use the default BackupStorage for the namespace.
+	// If a default BackupStorage does not exist in the same namespace, then Stash will look for a default BackupStorage
+	// in other namespaces that allows using it from the BackupBatch namespace.
 	// +optional
 	Backends []BackendReference `json:"backends,omitempty"`
 
 	// Targets specifies a list of targets that are subject to backup.
 	Targets []TargetReference `json:"targets,omitempty"`
 
-	// Session specifies a list of session configuration that specifies when and how to take backup.
+	// Session defines a list of session configuration that specifies when and how to take backup.
 	Sessions []BatchSession `json:"sessions,omitempty"`
 }
 

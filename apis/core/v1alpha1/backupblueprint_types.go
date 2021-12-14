@@ -18,11 +18,13 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"stash.appscode.dev/kubestash/apis"
 )
 
+// BackupBlueprint let you define a common template for taking backup for all the similar applications.
+// Then, you can just apply some annotations in the targeted application to enable backup.
+// Stash will automatically resolve the template and create a BackupConfiguration for the targeted application.
 //+kubebuilder:object:root=true
-
-// BackupBlueprint is the Schema for the backupblueprints API
 type BackupBlueprint struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -32,8 +34,24 @@ type BackupBlueprint struct {
 
 // BackupBlueprintSpec defines the desired state of BackupBlueprint
 type BackupBlueprintSpec struct {
+	// Backends specifies a list of storage references where the backed up data will be stored.
+	// The respective BackupStorages can be in a different namespace than the BackupConfiguration.
+	// However, it must be allowed by the `usagePolicy` of the BackupStorage to refer from this namespace.
+	//
+	// This field is optional, if you don't provide any backend here, Stash will use the default BackupStorage for the namespace.
+	// If a default BackupStorage does not exist in the same namespace, then Stash will look for a default BackupStorage
+	// in other namespaces that allows using it from the BackupConfiguration namespace.
+	// +optional
 	Backends []BackendReference `json:"backends,omitempty"`
-	Sessions []Session          `json:"sessions,omitempty"`
+
+	// Sessions specifies a list of session template for backup. You can use custom variables
+	// in your template then provide the variable value through annotations.
+	Sessions []Session `json:"sessions,omitempty"`
+
+	// UsagePolicy specifies a policy of how this BackupBlueprint will be used. For example,
+	// you can use `allowedNamespaces` policy to restrict the usage of this BackupBlueprint to particular namespaces.
+	// +optional
+	UsagePolicy *apis.UsagePolicy `json:"usagePolicy,omitempty"`
 }
 
 //+kubebuilder:object:root=true

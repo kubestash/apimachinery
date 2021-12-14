@@ -29,7 +29,7 @@ import (
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// BackupConfiguration is the Schema for the backupconfigurations API
+// BackupConfiguration specifies the configuration for taking backup of a target application.
 type BackupConfiguration struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -38,43 +38,100 @@ type BackupConfiguration struct {
 	Status BackupConfigurationStatus `json:"status,omitempty"`
 }
 
-// BackupConfigurationSpec defines the desired state of BackupConfiguration
+// BackupConfigurationSpec defines the target of backup, the backends where the data will be stored,
+// and the sessions that specifies when and how to take backup.
 type BackupConfigurationSpec struct {
-	Target   *core.TypedLocalObjectReference `json:"target,omitempty"`
-	Backends []BackendReference              `json:"backends,omitempty"`
-	Sessions []Session                       `json:"sessions,omitempty"`
+	// Target refers to the target of backup. The target must be in the same namespace as the BackupConfiguration.
+	Target *core.TypedLocalObjectReference `json:"target,omitempty"`
+
+	// Backends specifies a list of storage references where the backed up data will be stored.
+	// The respective BackupStorages can be in a different namespace than the BackupConfiguration.
+	// However, it must be allowed by the `usagePolicy` of the BackupStorage to refer from this namespace.
+	//
+	// This field is optional, if you don't provide any backend here, Stash will use the default BackupStorage for the namespace.
+	// If a default BackupStorage does not exist in the same namespace, then Stash will look for a default BackupStorage
+	// in other namespaces that allows using it from the BackupConfiguration namespace.
+	// +optional
+	Backends []BackendReference `json:"backends,omitempty"`
+
+	// Session defines a list of session configuration that specifies when and how to take backup.
+	Sessions []Session `json:"sessions,omitempty"`
 }
 
+// BackendReference specifies reference to a storage where the backed up data will be stored.
 type BackendReference struct {
-	Name       string                    `json:"name,omitempty"`
+	// Name provides an identifier for this storage.
+	Name string `json:"name,omitempty"`
+
+	// StorageRef refers to the CR that holds the information of a  storage.
+	// You can refer to the BackupStorage CR of a different namespace as long as it is allowed
+	// by the `usagePolicy` of the BackupStorage.`
 	StorageRef apis.TypedObjectReference `json:"storageRef,omitempty"`
 }
 
+// Session specifies a backup session configuration for the target
 type Session struct {
 	*SessionConfig
-	Addon        *AddonInfo       `json:"addon,omitempty"`
+
+	// Addon specifies addon configuration that will be used to backup the target.
+	Addon *AddonInfo `json:"addon,omitempty"`
+
+	// Repositories specifies a list of repository information where the backed up data will be stored.
+	// Stash will create the respective Repository CRs using this information.
 	Repositories []RepositoryInfo `json:"repositories,omitempty"`
 }
 
+// SessionConfig specifies common session configurations
 type SessionConfig struct {
-	Name                   string                 `json:"name,omitempty"`
-	Scheduler              *SchedulerSpec         `json:"scheduler,omitempty"`
-	RetentionPolicy        *kmapi.ObjectReference `json:"retentionPolicy,omitempty"`
+	// Name specifies the name of the session
+	Name string `json:"name,omitempty"`
+
+	// Scheduler specifies the configuration for backup triggering CronJob
+	Scheduler *SchedulerSpec `json:"scheduler,omitempty"`
+
+	// RetentionPolicy refers to a RetentionPolicy CRs which defines how to cleanup the old Snapshots.
+	// This field is optional. If you don't provide this field, Stash will use the default RetentionPolicy for
+	// the namespace. If there is no default RetentionPolicy for the namespace, then Stash will find a
+	// RetentionPolicy from other namespaces that is allowed to use from the current namespace.
+	// +optional
+	RetentionPolicy *kmapi.ObjectReference `json:"retentionPolicy,omitempty"`
+
+	// VerificationStrategies specifies a list of backup verification configurations
+	// +optional
 	VerificationStrategies []VerificationStrategy `json:"verificationStrategies,omitempty"`
-	Hooks                  *BackupHooks           `json:"hooks,omitempty"`
-	FailurePolicy          apis.FailurePolicy     `json:"failurePolicy,omitempty"`
-	RetryConfig            *apis.RetryConfig      `json:"retryConfig,omitempty"`
-	SessionHistoryLimit    int32                  `json:"sessionHistoryLimit,omitempty"`
+
+	// Hooks specifies the backup hooks that should be executed before and/or after the backup.
+	// +optional
+	Hooks *BackupHooks `json:"hooks,omitempty"`
+
+	// FailurePolicy specifies what to do if the backup fail.
+	// Valid values are:
+	// - "Fail": Stash should mark the backup as failed if any component fail to complete it's backup. This is the default behavior.
+	// - "Retry": Stash will retry to backup the failed component according to the `retryConfig`.
+	// +kubebuilder:default=Fail
+	// +optional
+	FailurePolicy apis.FailurePolicy `json:"failurePolicy,omitempty"`
+
+	// RetryConfig specifies the behavior of retry in case of a backup failure.
+	// +optional
+	RetryConfig *apis.RetryConfig `json:"retryConfig,omitempty"`
+
+	// SessionHistoryLimit specifies how many backup Jobs and associate resources Stash should keep for debugging purpose.
+	// The default value is 1.
+	// +kubebuilder:default=1
+	// +optional
+	SessionHistoryLimit int32 `json:"sessionHistoryLimit,omitempty"`
 }
 
+// SchedulerSpec specifies the configuration for the backup triggering CronJob for a session.
 type SchedulerSpec struct {
 	// The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
-	Schedule string `json:"schedule" protobuf:"bytes,1,opt,name=schedule"`
+	Schedule string `json:"schedule"`
 
 	// Optional deadline in seconds for starting the job if it misses scheduled
 	// time for any reason.  Missed jobs executions will be counted as failed ones.
 	// +optional
-	StartingDeadlineSeconds *int64 `json:"startingDeadlineSeconds,omitempty" protobuf:"varint,2,opt,name=startingDeadlineSeconds"`
+	StartingDeadlineSeconds *int64 `json:"startingDeadlineSeconds,omitempty"`
 
 	// Specifies how to treat concurrent executions of a Job.
 	// Valid values are:
@@ -82,27 +139,28 @@ type SchedulerSpec struct {
 	// - "Forbid": forbids concurrent runs, skipping next run if previous run hasn't finished yet;
 	// - "Replace": cancels currently running job and replaces it with a new one
 	// +optional
-	ConcurrencyPolicy batchv1.ConcurrencyPolicy `json:"concurrencyPolicy,omitempty" protobuf:"bytes,3,opt,name=concurrencyPolicy,casttype=ConcurrencyPolicy"`
+	ConcurrencyPolicy batchv1.ConcurrencyPolicy `json:"concurrencyPolicy,omitempty"`
 
 	// This flag tells the controller to suspend subsequent executions, it does
 	// not apply to already started executions.  Defaults to false.
 	// +optional
-	Suspend *bool `json:"suspend,omitempty" protobuf:"varint,4,opt,name=suspend"`
+	Suspend *bool `json:"suspend,omitempty"`
 
 	// Specifies the job that will be created when executing a CronJob.
-	JobTemplate JobTemplate `json:"jobTemplate" protobuf:"bytes,5,opt,name=jobTemplate"`
+	JobTemplate JobTemplate `json:"jobTemplate"`
 
 	// The number of successful finished jobs to retain. Value must be non-negative integer.
 	// Defaults to 3.
 	// +optional
-	SuccessfulJobsHistoryLimit *int32 `json:"successfulJobsHistoryLimit,omitempty" protobuf:"varint,6,opt,name=successfulJobsHistoryLimit"`
+	SuccessfulJobsHistoryLimit *int32 `json:"successfulJobsHistoryLimit,omitempty"`
 
 	// The number of failed finished jobs to retain. Value must be non-negative integer.
 	// Defaults to 1.
 	// +optional
-	FailedJobsHistoryLimit *int32 `json:"failedJobsHistoryLimit,omitempty" protobuf:"varint,7,opt,name=failedJobsHistoryLimit"`
+	FailedJobsHistoryLimit *int32 `json:"failedJobsHistoryLimit,omitempty"`
 }
 
+// JobTemplate specifies the template for the Job created by the scheduler CronJob.
 type JobTemplate struct {
 	// Specifies the maximum desired number of pods the job should
 	// run at any given time. The actual number of pods running in steady state will
@@ -110,7 +168,7 @@ type JobTemplate struct {
 	// i.e. when the work left to do is less than max parallelism.
 	// More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
 	// +optional
-	Parallelism *int32 `json:"parallelism,omitempty" protobuf:"varint,1,opt,name=parallelism"`
+	Parallelism *int32 `json:"parallelism,omitempty"`
 
 	// Specifies the desired number of successfully finished pods the
 	// job should be run with.  Setting to nil means that the success of any
@@ -119,7 +177,7 @@ type JobTemplate struct {
 	// pod signals the success of the job.
 	// More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
 	// +optional
-	Completions *int32 `json:"completions,omitempty" protobuf:"varint,2,opt,name=completions"`
+	Completions *int32 `json:"completions,omitempty"`
 
 	// Specifies the duration in seconds relative to the startTime that the job
 	// may be continuously active before the system tries to terminate it; value
@@ -127,15 +185,16 @@ type JobTemplate struct {
 	// update), this timer will effectively be stopped and reset when the Job is
 	// resumed again.
 	// +optional
-	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty" protobuf:"varint,3,opt,name=activeDeadlineSeconds"`
+	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty"`
 
 	// Specifies the number of retries before marking this job failed.
 	// Defaults to 6
 	// +optional
-	BackoffLimit *int32 `json:"backoffLimit,omitempty" protobuf:"varint,7,opt,name=backoffLimit"`
+	BackoffLimit *int32 `json:"backoffLimit,omitempty"`
 
 	// Describes the pod that will be created when executing a job.
-	Template ofst.PodTemplateSpec `json:"template" protobuf:"bytes,6,opt,name=template"`
+	// +optional
+	Template ofst.PodTemplateSpec `json:"template"`
 
 	// ttlSecondsAfterFinished limits the lifetime of a Job that has finished
 	// execution (either Complete or Failed). If this field is set,
@@ -147,7 +206,7 @@ type JobTemplate struct {
 	// This field is alpha-level and is only honored by servers that enable the
 	// TTLAfterFinished feature.
 	// +optional
-	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty" protobuf:"varint,8,opt,name=ttlSecondsAfterFinished"`
+	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
 
 	// CompletionMode specifies how Pod completions are tracked. It can be
 	// `NonIndexed` (default) or `Indexed`.
@@ -169,7 +228,7 @@ type JobTemplate struct {
 	// If the Job controller observes a mode that it doesn't recognize, the
 	// controller skips updates for the Job.
 	// +optional
-	CompletionMode *batchv1.CompletionMode `json:"completionMode,omitempty" protobuf:"bytes,9,opt,name=completionMode,casttype=CompletionMode"`
+	CompletionMode *batchv1.CompletionMode `json:"completionMode,omitempty"`
 
 	// Suspend specifies whether the Job controller should create Pods or not. If
 	// a Job is created with suspend set to true, no Pods are created by the Job
@@ -181,83 +240,145 @@ type JobTemplate struct {
 	// requires the SuspendJob feature gate to be enabled; otherwise this field
 	// may not be set to true. Defaults to false.
 	// +optional
-	Suspend *bool `json:"suspend,omitempty" protobuf:"varint,10,opt,name=suspend"`
+	Suspend *bool `json:"suspend,omitempty"`
 }
 
+// RepositoryInfo specifies information about the repository where the backed up data will be stored.
+// Stash will create the respective Repository CR from this information.
 type RepositoryInfo struct {
-	Name             string `json:"name,omitempty"`
-	Backend          string `json:"backend,omitempty"`
-	Directory        string `json:"directory,omitempty"`
-	EncryptionSecret string `json:"encryptionSecret,omitempty"`
+	// Name specifies the name of the Repository
+	Name string `json:"name,omitempty"`
+
+	// Backend specifies the name of the backend where this repository will be initialized.
+	// This should point to a backend name specified in `.spec.backends` section.
+	// For using a default backend, keep this field empty.
+	// +optional
+	Backend string `json:"backend,omitempty"`
+
+	// Directory specifies the path inside the backend where the backed up data will be stored.
+	Directory string `json:"directory,omitempty"`
+
+	// EncryptionSecret refers to the Secret containing the encryption key which will be used to encode/decode the backed up dta.
+	// You can refer to a Secret of a different namespace.
+	// If you don't provide the namespace field, Stash will look for the Secret in the same namespace as the BackupConfiguration / BackupBatch.
+	EncryptionSecret *kmapi.ObjectReference `json:"encryptionSecret,omitempty"`
 }
 
-type AddonInfo struct {
-	Name                     string                         `json:"name,omitempty"`
-	Tasks                    []TaskReference                `json:"tasks,omitempty"`
-	ContainerRuntimeSettings *ofst.ContainerRuntimeSettings `json:"containerRuntimeSettings,omitempty"`
-	JobTemplate              *ofst.PodTemplateSpec          `json:"jobTemplate,omitempty"`
-}
-
-type TaskReference struct {
-	Name          string                `json:"name,omitempty"`
-	Variables     []core.EnvVar         `json:"variables,omitempty"`
-	Params        *runtime.RawExtension `json:"params,omitempty"`
-	TargetVolumes *TargetVolumeInfo     `json:"targetVolumes,omitempty"`
-	AddonVolumes  []apis.VolumeSource   `json:"addonVolumes,omitempty"`
-}
-
-type TargetVolumeInfo struct {
-	Volumes      []core.Volume      `json:"volumes,omitempty"`
-	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
-}
-
+// VerificationStrategy specifies a strategy to verify the backed up data.
 type VerificationStrategy struct {
-	Name        string                     `json:"name,omitempty"`
-	Repository  string                     `json:"repository,omitempty"`
-	Verifier    *apis.TypedObjectReference `json:"verifier,omitempty"`
-	Params      *runtime.RawExtension      `json:"params,omitempty"`
-	VerifyEvery int32                      `json:"verifyEvery,omitempty"`
-	OnFailure   apis.FailurePolicy         `json:"onFailure,omitempty"`
+	// Name indicate the name of this strategy
+	Name string `json:"name,omitempty"`
+
+	// Repository specifies the name of the repository which data will be verified
+	Repository string `json:"repository,omitempty"`
+
+	// Verifier refers to the BackupVerification CR that defines how to verify this particular data
+	Verifier *apis.TypedObjectReference `json:"verifier,omitempty"`
+
+	// Params specifies the parameters that will be used by the verifier
+	// +optional
+	Params *runtime.RawExtension `json:"params,omitempty"`
+
+	// VerifyEvery specifies the frequency of backup verification
+	VerifyEvery int32 `json:"verifyEvery,omitempty"`
+
+	// OnFailure specifies what to do if the verification fail.
+	// +optional
+	OnFailure apis.FailurePolicy `json:"onFailure,omitempty"`
+
+	// RetryConfig specify the behavior of the retry mechanism in case of a verification failure
+	// +optional
 	RetryConfig *apis.RetryConfig
 }
 
+// BackupHooks specifies the hooks that will be executed before and/or after backup
 type BackupHooks struct {
-	PreBackup  []HookInfo `json:"preBackup,omitempty"`
+	// PreBackup specifies a list of hooks that will be executed before backup
+	// +optional
+	PreBackup []HookInfo `json:"preBackup,omitempty"`
+
+	// PostBackup specifies a list of hooks that will be executed after backup
+	// +optional
 	PostBackup []HookInfo `json:"postBackup,omitempty"`
 }
 
 // BackupConfigurationStatus defines the observed state of BackupConfiguration
 type BackupConfigurationStatus struct {
 	*OffshootStatus
+
+	// Target specifies whether the backup target exist or not
+	// +optional
 	Target ResourceFoundStatus `json:"target,omitempty"`
 }
 
+// OffshootStatus specifies the status that are common between BackupConfiguration and BackupBatch
 type OffshootStatus struct {
-	Ready         bool                  `json:"ready,omitempty"`
-	Backends      []BackendStatus       `json:"backends,omitempty"`
-	Addons        []ResourceFoundStatus `json:"addons,omitempty"`
-	Repositories  []RepoStatus          `json:"repositories,omitempty"`
-	Verifiers     []ResourceFoundStatus `json:"verifiers,omitempty"`
+	// Ready specifies whether the backup has been configured successfully or not
+	// +optional
+	Ready bool `json:"ready,omitempty"`
+
+	// Backends specifies whether the backends exist or not
+	// +optional
+	Backends []BackendStatus `json:"backends,omitempty"`
+
+	// Addons specifies whether the addons exist or not
+	// +optional
+	Addons []ResourceFoundStatus `json:"addons,omitempty"`
+
+	// Repositories specifies whether the repositories have been successfully initialized or not
+	// +optional
+	Repositories []RepoStatus `json:"repositories,omitempty"`
+
+	// Verifiers specifies whether the backup verifiers exist or not
+	// +optional
+	Verifiers []ResourceFoundStatus `json:"verifiers,omitempty"`
+
+	// HookTemplates specifies whether the HookTemplates exist or not
+	// +optional
 	HookTemplates []ResourceFoundStatus `json:"hookTemplates,omitempty"`
-	Sessions      []SessionStatus       `json:"sessions,omitempty"`
+
+	// Sessions specifies status of the session specific resources
+	// +optional
+	Sessions []SessionStatus `json:"sessions,omitempty"`
 }
 
+// BackendStatus specifies the status of the backends
 type BackendStatus struct {
-	Name  string `json:"name,omitempty"`
-	Found bool   `json:"found,omitempty"`
-	Ready bool   `json:"ready,omitempty"`
+	// Name indicates the backend name
+	Name string `json:"name,omitempty"`
+
+	// Found indicate whether the respective BackupStorage was found or not
+	Found bool `json:"found,omitempty"`
+
+	// Ready indicates whether the respective BackupStorage is ready or not
+	Ready bool `json:"ready,omitempty"`
 }
 
+// RepoStatus specifies the status of a Repository
 type RepoStatus struct {
-	Name        string `json:"name,omitempty"`
-	Initialized bool   `json:"initialized,omitempty"`
-	Error       string `json:"error,omitempty"`
+	// Name indicate the name of the Repository
+	Name string `json:"name,omitempty"`
+
+	// Initialized indicate whether the repository was properly initialized or not
+	Initialized bool `json:"initialized,omitempty"`
+
+	// Error provides a message indicating the reason when the repository can not be initialized properly
+	// +optional
+	Error string `json:"error,omitempty"`
 }
 
+// SessionStatus specifies the status of a session specific fields.
 type SessionStatus struct {
-	Name         string            `json:"name,omitempty"`
-	NextSchedule string            `json:"nextSchedule,omitempty"`
-	Conditions   []kmapi.Condition `json:"conditions,omitempty"`
+	// Name indicates the name of the session
+	Name string `json:"name,omitempty"`
+
+	// NextSchedule specifies when the next backup will execute for this session
+	// +optional
+	NextSchedule string `json:"nextSchedule,omitempty"`
+
+	// Conditions specifies a list of conditions related to this session
+	// +optional
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 //+kubebuilder:object:root=true

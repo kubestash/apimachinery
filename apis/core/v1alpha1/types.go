@@ -5,7 +5,28 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
+	"stash.appscode.dev/kubestash/apis"
 )
+
+type AddonInfo struct {
+	Name                     string                         `json:"name,omitempty"`
+	Tasks                    []TaskReference                `json:"tasks,omitempty"`
+	ContainerRuntimeSettings *ofst.ContainerRuntimeSettings `json:"containerRuntimeSettings,omitempty"`
+	JobTemplate              *ofst.PodTemplateSpec          `json:"jobTemplate,omitempty"`
+}
+
+type TaskReference struct {
+	Name          string                `json:"name,omitempty"`
+	Variables     []core.EnvVar         `json:"variables,omitempty"`
+	Params        *runtime.RawExtension `json:"params,omitempty"`
+	TargetVolumes *TargetVolumeInfo     `json:"targetVolumes,omitempty"`
+	AddonVolumes  []apis.VolumeSource   `json:"addonVolumes,omitempty"`
+}
+
+type TargetVolumeInfo struct {
+	Volumes      []core.Volume      `json:"volumes,omitempty"`
+	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
+}
 
 type HookInfo struct {
 	Name            string                 `json:"name,omitempty"`

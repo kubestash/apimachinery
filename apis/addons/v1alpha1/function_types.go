@@ -22,7 +22,9 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=functions,singular=function,scope=Cluster,shortName=fn,categories={kubestash,appscode,all}
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // Function is the Schema for the functions API
 type Function struct {
