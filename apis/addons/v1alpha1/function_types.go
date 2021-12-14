@@ -38,7 +38,7 @@ type FunctionSpec struct {
 	// This field is optional to allow higher level config management to default or override
 	// container images in workload controllers like Deployments and StatefulSets.
 	// +optional
-	Image string `json:"image,omitempty" protobuf:"bytes,1,opt,name=image"`
+	Image string `json:"image,omitempty"`
 	// Entrypoint array. Not executed within a shell.
 	// The docker image's ENTRYPOINT is used if this is not provided.
 	// Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
@@ -48,7 +48,7 @@ type FunctionSpec struct {
 	// Cannot be updated.
 	// More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
 	// +optional
-	Command []string `json:"command,omitempty" protobuf:"bytes,2,rep,name=command"`
+	Command []string `json:"command,omitempty"`
 	// Arguments to the entrypoint.
 	// The docker image's CMD is used if this is not provided.
 	// Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
@@ -58,13 +58,13 @@ type FunctionSpec struct {
 	// Cannot be updated.
 	// More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
 	// +optional
-	Args []string `json:"args,omitempty" protobuf:"bytes,3,rep,name=args"`
+	Args []string `json:"args,omitempty"`
 	// Container's working directory.
 	// If not specified, the container runtime's default will be used, which
 	// might be configured in the container image.
 	// Cannot be updated.
 	// +optional
-	WorkingDir string `json:"workingDir,omitempty" protobuf:"bytes,4,opt,name=workingDir"`
+	WorkingDir string `json:"workingDir,omitempty"`
 	// List of ports to expose from the container. Exposing a port here gives
 	// the system additional information about the network connections a
 	// container uses, but is primarily informational. Not specifying a port here
@@ -75,22 +75,22 @@ type FunctionSpec struct {
 	// +optional
 	// +patchMergeKey=containerPort
 	// +patchStrategy=merge
-	Ports []core.ContainerPort `json:"ports,omitempty" patchStrategy:"merge" patchMergeKey:"containerPort" protobuf:"bytes,5,rep,name=ports"`
+	Ports []core.ContainerPort `json:"ports,omitempty" patchStrategy:"merge" patchMergeKey:"containerPort"`
 	// Pod volumes to mount into the container's filesystem.
 	// Cannot be updated.
 	// +optional
 	// +patchMergeKey=mountPath
 	// +patchStrategy=merge
-	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty" patchStrategy:"merge" patchMergeKey:"mountPath" protobuf:"bytes,6,rep,name=volumeMounts"`
+	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty" patchStrategy:"merge" patchMergeKey:"mountPath"`
 	// volumeDevices is the list of block devices to be used by the container.
 	// This is an alpha feature and may change in the future.
 	// +patchMergeKey=devicePath
 	// +patchStrategy=merge
 	// +optional
-	VolumeDevices []core.VolumeDevice `json:"volumeDevices,omitempty" patchStrategy:"merge" patchMergeKey:"devicePath" protobuf:"bytes,7,rep,name=volumeDevices"`
+	VolumeDevices []core.VolumeDevice `json:"volumeDevices,omitempty" patchStrategy:"merge" patchMergeKey:"devicePath"`
 	// RuntimeSettings allow to specify Resources, LivenessProbe, ReadinessProbe, Lifecycle, SecurityContext etc.
 	// +optional
-	RuntimeSettings *ofst.ContainerRuntimeSettings `json:"runtimeSettings,omitempty" protobuf:"bytes,8,opt,name=runtimeSettings"`
+	RuntimeSettings *ofst.ContainerRuntimeSettings `json:"runtimeSettings,omitempty"`
 }
 
 //+kubebuilder:object:root=true
