@@ -106,7 +106,7 @@ type SessionConfig struct {
 
 	// FailurePolicy specifies what to do if the backup fail.
 	// Valid values are:
-	// - "Fail": Stash should mark the backup as failed if any component fail to complete it's backup. This is the default behavior.
+	// - "Fail": Stash should mark the backup as failed if any component fail to complete its backup. This is the default behavior.
 	// - "Retry": Stash will retry to backup the failed component according to the `retryConfig`.
 	// +kubebuilder:default=Fail
 	// +optional
