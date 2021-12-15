@@ -26,7 +26,8 @@ import (
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// BackupSession is the Schema for the backupsessions API
+// BackupSession represent one backup run for the target(s) pointed by the
+// respective BackupConfiguration or BackupBatch
 type BackupSession struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -35,22 +36,45 @@ type BackupSession struct {
 	Status BackupSessionStatus `json:"status,omitempty"`
 }
 
-// BackupSessionSpec defines the desired state of BackupSession
+// BackupSessionSpec specifies the information related to the respective backup invoker and session.
 type BackupSessionSpec struct {
+	// Invoker points to the respective BackupConfiguration or BackupBatch
+	// which is responsible for triggering this backup.
 	Invoker *core.TypedLocalObjectReference `json:"invoker,omitempty"`
-	Session string                          `json:"session,omitempty"`
+
+	// Session specifies the name of the session that triggered this backup
+	Session string `json:"session,omitempty"`
 }
 
 // BackupSessionStatus defines the observed state of BackupSession
 type BackupSessionStatus struct {
-	Phase           BackupSessionPhase          `json:"phase,omitempty"`
-	Duration        string                      `json:"duration,omitempty"`
-	Snapshots       []SnapshotStatus            `json:"snapshots,omitempty"`
-	Hooks           []HookExecutionStatus       `json:"hooks,omitempty"`
-	Verifications   []VerificationStatus        `json:"verifications,omitempty"`
+	// Phase represents the current state of the backup process.
+	// +optional
+	Phase BackupSessionPhase `json:"phase,omitempty"`
+
+	// Duration specifies the time required to complete the backup process
+	// +optional
+	Duration string `json:"duration,omitempty"`
+
+	// Snapshots specifies the Snapshots status
+	// +optional
+	Snapshots []SnapshotStatus `json:"snapshots,omitempty"`
+
+	// Hooks specifies the hook execution status
+	// +optional
+	Hooks []HookExecutionStatus `json:"hooks,omitempty"`
+
+	// Verifications specifies the backup verification status
+	// +optional
+	Verifications []VerificationStatus `json:"verifications,omitempty"`
+
+	// RetentionPolicy specifies whether the retention policy was properly applied or not
+	// +optional
 	RetentionPolicy *RetentionPolicyApplyStatus `json:"retentionPolicy,omitempty"`
 }
 
+// BackupSessionPhase specifies the current state of the backup process
+// +kubebuilder:validation:Enum=Pending;Running;Succeeded;Failed;Skipped
 type BackupSessionPhase string
 
 const (
@@ -61,31 +85,58 @@ const (
 	BackupSessionSkipped   BackupSessionPhase = "Skipped"
 )
 
+// SnapshotStatus represents the current state of respective the Snapshot
 type SnapshotStatus struct {
-	Name       string                     `json:"name,omitempty"`
-	Phase      storage.SnapshotPhase      `json:"phase,omitempty"`
-	AppRef     *core.LocalObjectReference `json:"appRef,omitempty"`
-	Repository string                     `json:"repository,omitempty"`
+	// Name indicate to the name of the Snapshot
+	Name string `json:"name,omitempty"`
+
+	// Phase indicate the phase of the Snapshot
+	// +optional
+	Phase storage.SnapshotPhase `json:"phase,omitempty"`
+
+	// AppRef indicate to the application that is being backed up in this Snapshot
+	AppRef *core.LocalObjectReference `json:"appRef,omitempty"`
+
+	// Repository indicates the name of the Repository where the Snapshot is being stored.
+	Repository string `json:"repository,omitempty"`
 }
 
+// VerificationStatus specifies the status of a backup verification
 type VerificationStatus struct {
-	Name  string                  `json:"name,omitempty"`
+	// Name indicates the name of the respective verification strategy
+	Name string `json:"name,omitempty"`
+
+	// Phase represents the state of the verification process
+	// +optional
 	Phase BackupVerificationPhase `json:"phase,omitempty"`
 }
 
+// BackupVerificationPhase represents the state of the backup verification process
+// +kubebuilder:validation:Enum=Verified;NotVerified;VerificationFailed
 type BackupVerificationPhase string
 
 const (
-	VerificationSucceeded BackupVerificationPhase = "Succeeded"
-	VerificationFailed    BackupVerificationPhase = "Failed"
+	Verified           BackupVerificationPhase = "Verified"
+	NotVerified        BackupVerificationPhase = "NotVerified"
+	VerificationFailed BackupVerificationPhase = "VerificationFailed"
 )
 
+// RetentionPolicyApplyStatus represents the state of the applying retention policy
 type RetentionPolicyApplyStatus struct {
-	Ref   kmapi.ObjectReference     `json:"ref,omitempty"`
+	// Ref points to the RetentionPolicy CR that is being used to cleanup the old Snapshots for this session.
+	Ref kmapi.ObjectReference `json:"ref,omitempty"`
+
+	// Phase specifies the state of retention policy apply process
+	// +optional
 	Phase RetentionPolicyApplyPhase `json:"phase,omitempty"`
-	Error string                    `json:"error,omitempty"`
+
+	// Error represents the reason if the retention policy applying fail
+	// +optional
+	Error string `json:"error,omitempty"`
 }
 
+// RetentionPolicyApplyPhase represents the state of the retention policy apply process
+// +kubebuilder:validation:Enum=Pending;Applied;FailedToApply
 type RetentionPolicyApplyPhase string
 
 const (
