@@ -50,6 +50,7 @@ type BackupBlueprintSpec struct {
 
 	// UsagePolicy specifies a policy of how this BackupBlueprint will be used. For example,
 	// you can use `allowedNamespaces` policy to restrict the usage of this BackupBlueprint to particular namespaces.
+	// This field is optional. If you don't provide this usagePolicy, then it can be used only from the current namespace.
 	// +optional
 	UsagePolicy *apis.UsagePolicy `json:"usagePolicy,omitempty"`
 }

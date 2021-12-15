@@ -25,7 +25,12 @@ import (
 
 //+kubebuilder:object:root=true
 
-// HookTemplate is the Schema for the hooktemplates API
+// HookTemplate defines a template for some action that will be executed before or/and after backup/restore process.
+// For example, there could be a HookTemplate that pause an application before backup and another HookTemplate
+// that resume the application after backup.
+//
+// This is a namespaced CRD. However, you can use it from other namespaces. You can control which
+// namespaces are allowed to use it using the `usagePolicy` section.
 type HookTemplate struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -33,21 +38,56 @@ type HookTemplate struct {
 	Spec HookTemplateSpec `json:"spec,omitempty"`
 }
 
-// HookTemplateSpec defines the desired state of HookTemplate
+// HookTemplateSpec defines the template for the operation that will be performed by this hook
 type HookTemplateSpec struct {
-	UsagePolicy *apis.UsagePolicy           `json:"usagePolicy,omitempty"`
-	Params      *[]apis.ParameterDefinition `json:"params,omitempty"`
-	Action      *prober.Handler             `json:"action,omitempty"`
-	TimeOut     string                      `json:"timeOut,omitempty"`
-	Executor    *HookExecutor               `json:"executor,omitempty"`
+	// UsagePolicy specifies a policy of how this HookTemplate will be used. For example,
+	// you can use `allowedNamespaces` policy to restrict the usage of this HookTemplate to particular namespaces.
+	//
+	// This field is optional. If you don't provide this usagePolicy, then it can be used only from the current namespace.
+	// +optional
+	UsagePolicy *apis.UsagePolicy `json:"usagePolicy,omitempty"`
+
+	// Parameters defines a list of parameters that is used by the HookTemplate to execute its logic.
+	// +optional
+	Params *[]apis.ParameterDefinition `json:"params,omitempty"`
+
+	// Action specifies the operation that is performed by this HookTemplate
+	// Valid values are:
+	// - "exec": Execute command in a shell
+	// - "httpGet": Do an HTTP GET request
+	// - "httpPost": Do an HTTP POST request
+	// - "tcpSocket": Check if a TCP socket open or not
+	Action *prober.Handler `json:"action,omitempty"`
+
+	// Timeout specifies a duration in seconds that Stash should wait for the hook execution to be completed.
+	// If the hook execution does not finish within this time period, Stash will consider this hook execution as failure.
+	// +optional
+	TimeOut *int32 `json:"timeOut,omitempty"`
+
+	// Executor specifies the entity where the hook will be executed.
+	Executor *HookExecutor `json:"executor,omitempty"`
 }
 
+// HookExecutor specifies the entity specification which is responsible for executing the hook
 type HookExecutor struct {
-	Type     HookExecutorType          `json:"type,omitempty"`
+	// Type indicate the types of entity that will execute the hook.
+	// Valid values are:
+	// - "Function": Stash will create a job with the provided information in `function` section. The job will execute the hook.
+	// - "Pod": Stash will select the pod that matches the selector provided in `pod` section. This pod(s) will execute the hook.
+	// - "Operator": Stash operator itself will execute the hook.
+	Type HookExecutorType `json:"type,omitempty"`
+
+	// Function specifies the function information which will be used to create the hook executor job.
+	// +optional
 	Function *FunctionHookExecutorSpec `json:"function,omitempty"`
-	Pod      *PodHookExecutorSpec      `json:"pod,omitempty"`
+
+	// Pod specifies the criteria to use to select the hook executor pods
+	// +optional
+	Pod *PodHookExecutorSpec `json:"pod,omitempty"`
 }
 
+// HookExecutorType specifies the type of entity that will execute the hook
+// +kubebuilder:validation:Enum=Function;Pod;Operator
 type HookExecutorType string
 
 const (
@@ -56,24 +96,49 @@ const (
 	HookExecutorOperator HookExecutorType = "Operator"
 )
 
+// FunctionHookExecutorSpec defines function and its parameters that will be used to create hook executor job
 type FunctionHookExecutorSpec struct {
-	Name         string             `json:"name,omitempty"`
-	Variables    []core.EnvVar      `json:"variables,omitempty"`
+	// Name indicate the name of the Function that contains the container definition for executing the hook logic
+	Name string `json:"name,omitempty"`
+
+	// EnvVariables specifies a list of environment variables that will be passed to the executor container
+	// +optional
+	EnvVariables []core.EnvVar `json:"env,omitempty"`
+
+	// VolumeMounts specifies the volumes mounts for the executor container
+	// +optional
 	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
-	Volumes      []core.Volume      `json:"volumes,omitempty"`
+
+	// Volumes specifies the volumes that will be mounted in the executor container
+	// +optional
+	Volumes []core.Volume `json:"volumes,omitempty"`
 }
 
+// PodHookExecutorSpec specifies the criteria that will be used to select the pod which will execute the hook
 type PodHookExecutorSpec struct {
-	Selector string                   `json:"selector,omitempty"` // TODO: Use metav1.LabelSelector?
-	Owner    *metav1.OwnerReference   `json:"owner,omitempty"`
+	// Selector specifies list of key value pair that will be used as label selector to select the desired pods.
+	// You can use comma to separate multiple labels (i.e. "app=my-app,env=prod")
+	Selector string `json:"selector,omitempty"`
+
+	// Owner specifies a template for owner reference that will be used to filter the selected pods.
+	// +optional
+	Owner *metav1.OwnerReference `json:"owner,omitempty"`
+
+	// Strategy specifies what should be the behavior when multiple pods are selected
+	// Valid values are:
+	// - "ExecuteOnOne": Execute hook on only one of the selected pods. This is default behavior
+	// - "ExecuteOnAll": Execute hook on all the selected pods.
+	// +kubebuilder:validation:default=ExecuteOnOne
 	Strategy PodHookExecutionStrategy `json:"strategy,omitempty"`
 }
 
+// PodHookExecutionStrategy specifies the strategy to follow when multiple pods are selected for hook execution
+// +kubebuilder:validation:Enum=ExecuteOnOne;ExecuteOnAll
 type PodHookExecutionStrategy string
 
 const (
-	ExecuteOnOnce PodHookExecutionStrategy = "ExecuteOnOnce"
-	ExecuteOnAll  PodHookExecutionStrategy = "ExecuteOnAll"
+	ExecuteOnOne PodHookExecutionStrategy = "ExecuteOnOne"
+	ExecuteOnAll PodHookExecutionStrategy = "ExecuteOnAll"
 )
 
 //+kubebuilder:object:root=true
