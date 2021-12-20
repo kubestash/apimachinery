@@ -23,7 +23,11 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=hooktemplates,singular=hooktemplate,categories={kubestash,appscode,all}
+// +kubebuilder:printcolumn:name="Executor",type="string",JSONPath=".spec.executor.type"
+// +kubebuilder:printcolumn:name="Timeout",type="string",JSONPath=".spec.timeout"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // HookTemplate defines a template for some action that will be executed before or/and after backup/restore process.
 // For example, there could be a HookTemplate that pause an application before backup and another HookTemplate
@@ -62,7 +66,7 @@ type HookTemplateSpec struct {
 	// Timeout specifies a duration in seconds that Stash should wait for the hook execution to be completed.
 	// If the hook execution does not finish within this time period, Stash will consider this hook execution as failure.
 	// +optional
-	TimeOut *int32 `json:"timeOut,omitempty"`
+	Timeout *int32 `json:"timeout,omitempty"`
 
 	// Executor specifies the entity where the hook will be executed.
 	Executor *HookExecutor `json:"executor,omitempty"`

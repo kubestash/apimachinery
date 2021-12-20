@@ -22,8 +22,17 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:path=snapshots,singular=snapshot,categories={kubestash,appscode}
+// +kubebuilder:printcolumn:name="App",type="string",JSONPath=".spec.appRef.Kind/.spec.appRef.name"
+// +kubebuilder:printcolumn:name="Repository",type="string",JSONPath=".spec.repository"
+// +kubebuilder:printcolumn:name="Session",type="string",JSONPath=".spec.session"
+// +kubebuilder:printcolumn:name="Snapshot-Time",type="string",JSONPath=".status.snapshotTime"
+// +kubebuilder:printcolumn:name="Deletion-Policy",type="string",JSONPath=".spec.deletionPolicy"
+// +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Verification-Status",type="string",JSONPath=".status.verificationStatus"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // Snapshot represents the state of a backup run to a particular Repository.
 // Multiple components of the same target may be backed up in the same Snapshot.

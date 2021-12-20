@@ -22,12 +22,14 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=addons,singular=addon,scope=Cluster,categories={kubestash,appscode,all}
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+
 // Addon specifies the backup and restore capabilities for a particular resource.
 // For example, MySQL addon specifies the backup and restore capabilities of MySQL database where
 // Postgres addon specifies backup and restore capabilities for PostgreSQL database.
 // An Addon CR defines the backup and restore tasks that can be performed by this addon.
-// +kubebuilder:object:root=true
-// +kubebuilder:resource:path=addons,singular=addon,scope=Cluster,categories={kubestash,appscode,all}
 type Addon struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

@@ -23,8 +23,14 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:path=restoresessions,singular=restoresession,shortName=restore,categories={kubestash,appscode,all}
+// +kubebuilder:printcolumn:name="Repository",type="string",JSONPath=".spec.dataSource.repository"
+// +kubebuilder:printcolumn:name="Failure-Policy",type="string",JSONPath=".spec.failurePolicy"
+// +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Duration",type="string",JSONPath=".status.duration"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // RestoreSession represents one restore run for the targeted application
 type RestoreSession struct {
@@ -115,6 +121,10 @@ type RestoreSessionStatus struct {
 	// +optional
 	Phase RestorePhase `json:"phase,omitempty"`
 
+	// Duration specify total time taken to complete the restore process
+	// +optional
+	Duration string `json:"duration,omitempty"`
+
 	// Components represents the individual component restore status
 	// +optional
 	Components []ComponentRestoreStatus `json:"components,omitempty"`
@@ -152,6 +162,10 @@ type ComponentRestoreStatus struct {
 	// Phase represents the restore phase of the component
 	// +optional
 	Phase RestorePhase `json:"phase,omitempty"`
+
+	// Duration specify total time taken to complete the restore process for this component
+	// +optional
+	Duration string `json:"duration,omitempty"`
 
 	// Error specifies the reason in case of restore failure for the component
 	// +optional

@@ -22,8 +22,16 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:path=repositories,singular=repository,shortName=repo,categories={kubestash,appscode,all}
+// +kubebuilder:printcolumn:name="App",type="string",JSONPath=".spec.appRef.Kind/.spec.appRef.name"
+// +kubebuilder:printcolumn:name="BackupStorage",type="string",JSONPath=".spec.storageRef.namespace/.spec.storageRef.name"
+// +kubebuilder:printcolumn:name="Integrity",type="boolean",JSONPath=".status.integrity"
+// +kubebuilder:printcolumn:name="Snapshot-Count",type="integer",JSONPath=".status.snapshotCount"
+// +kubebuilder:printcolumn:name="Size",type="string",JSONPath=".status.size"
+// +kubebuilder:printcolumn:name="Last-Successful-Backup",type="date",format="date-time",JSONPath=".status.lastBackupTime"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // Repository specifies the information about the targeted application that has been backed up
 // and the BackupStorage where the backed up data is being stored. It also holds a list of recent

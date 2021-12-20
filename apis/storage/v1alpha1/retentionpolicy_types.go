@@ -21,7 +21,11 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=retentionpolicies,singular=retentionpolicy,categories={kubestash,appscode}
+// +kubebuilder:printcolumn:name="Max-Retention-Period",type="string",JSONPath=".spec.maxRetentionPeriod"
+// +kubebuilder:printcolumn:name="Default",type="boolean",JSONPath=".spec.default"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // RetentionPolicy specifies how the old Snapshots should be cleaned up.
 // This is a namespaced CRD. However, you can refer it from other namespaces

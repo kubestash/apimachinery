@@ -21,10 +21,13 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=backupblueprints,singular=backupblueprint,categories={kubestash,appscode,all}
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+
 // BackupBlueprint lets you define a common template for taking backup for all the similar applications.
 // Then, you can just apply some annotations in the targeted application to enable backup.
 // Stash will automatically resolve the template and create a BackupConfiguration for the targeted application.
-//+kubebuilder:object:root=true
 type BackupBlueprint struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

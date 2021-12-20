@@ -21,12 +21,19 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:path=backupstorages,singular=backupstorage,categories={kubestash,appscode,all}
+// +kubebuilder:printcolumn:name="Default",type="boolean",JSONPath=".spec.default"
+// +kubebuilder:printcolumn:name="Deletion-Policy",type="string",JSONPath=".spec.deletionPolicy"
+// +kubebuilder:printcolumn:name="Ready",type="boolean",JSONPath=".status.ready"
+// +kubebuilder:printcolumn:name="Total-Size",type="string",JSONPath=".status.totalSize"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+
 // BackupStorage specifies the backend information where the backed up data of different applications will be stored.
 // You can consider BackupStorage as a representation of a bucket in Kubernetes native way.
 // This is a namespaced object. However, you can use the BackupStorage from any namespace
 // as long as it is permitted by the `.spec.usagePolicy` field.
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
 type BackupStorage struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

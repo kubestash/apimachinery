@@ -26,8 +26,11 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 )
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:path=backupconfigurations,singular=backupconfiguration,shortName=bc,categories={kubestash,appscode,all}
+// +kubebuilder:printcolumn:name="Paused",type="boolean",JSONPath=".spec.paused"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // BackupConfiguration specifies the configuration for taking backup of a target application.
 type BackupConfiguration struct {
@@ -56,6 +59,12 @@ type BackupConfigurationSpec struct {
 
 	// Sessions defines a list of session configuration that specifies when and how to take backup.
 	Sessions []Session `json:"sessions,omitempty"`
+
+	// Paused indicates that the BackupConfiguration has been paused from taking backup. Default value is 'false'.
+	// If you set `paused` field to `true`, Stash will suspend the respective backup triggering CronJob and
+	// skip processing any further events for this BackupConfiguration.
+	// +optional
+	Paused bool `json:"paused,omitempty"`
 }
 
 // BackendReference specifies reference to a storage where the backed up data will be stored.
