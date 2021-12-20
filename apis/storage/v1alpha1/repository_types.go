@@ -72,7 +72,7 @@ type RepositoryStatus struct {
 	// +optional
 	LastBackupTime string `json:"lastBackupTime,omitempty"`
 
-	// Integrity specifies whether the backed up data of this Repository has been tampered or not
+	// Integrity specifies whether the backed up data of this Repository has been corrupted or not
 	// +optional
 	Integrity *bool `json:"integrity,omitempty"`
 

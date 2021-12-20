@@ -5,6 +5,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// Driver specifies the name of underlying tool that is being used to upload the backed up data.
+// +kubebuilder:validation:Enum=Restic;WalG
 type Driver string
 
 const (
@@ -12,16 +14,26 @@ const (
 	DriverWalG   Driver = "WalG"
 )
 
+// TypedObjectReference let you reference an object from different namespace
 type TypedObjectReference struct {
 	core.TypedLocalObjectReference
+	// Namespace points to the namespace of the targeted object.
+	// If you don't provide this field, the object will be looked up in the local namespace.
+	// +optional
 	Namespace string `json:"namespace,omitempty"`
 }
 
+// VolumeSource specifies the source of volume to mount in the backup/restore executor
 type VolumeSource struct {
 	core.VolumeSource
+
+	// VolumeClaimTemplate specifies a template for volume to use by the backup/restore executor
+	// +optional
 	VolumeClaimTemplate *core.PersistentVolumeClaimTemplate `json:"volumeClaimTemplate,omitempty"`
 }
 
+// FailurePolicy specifies what to do if a backup/restore fails
+// +kubebuilder:validation:Enum=Fail;Retry
 type FailurePolicy string
 
 const (
@@ -29,56 +41,75 @@ const (
 	FailurePolicyRetry FailurePolicy = "Retry"
 )
 
+// RetryConfig specifies the behavior of retry
 type RetryConfig struct {
-	MaxRetry int32  `json:"maxRetry,omitempty"`
-	Delay    string `json:"delay,omitempty"`
+	// MaxRetry specifies the maximum number of times Stash should retry the backup/restore process.
+	// By default, Stash will retry only 1 time.
+	// +kubebuilder:validation:default=1
+	MaxRetry int32 `json:"maxRetry,omitempty"`
+
+	// Delay specifies a duration to wait until next retry.
+	// By default, Stash will retry immediately.
+	// +optional
+	Delay string `json:"delay,omitempty"`
 }
 
+// ParameterDefinition defines the parameter names, their usage, their requirements etc.
 type ParameterDefinition struct {
-	Name     string `json:"name,omitempty"`
-	Usage    string `json:"usage,omitempty"`
-	Required bool   `json:"required,omitempty"`
-	Default  string `json:"default,omitempty"`
+	// Name specifies the name of the parameter
+	Name string `json:"name,omitempty"`
+
+	// Usage specifies the usage of this parameter
+	Usage string `json:"usage,omitempty"`
+
+	// Required specify whether this parameter is required or not
+	// +optional
+	Required bool `json:"required,omitempty"`
+
+	// Default specifies a default value for the parameter
+	// +optional
+	Default string `json:"default,omitempty"`
 }
 
+// UsagePolicy specifies a policy that restrict the usage of a resource across namespaces.
 type UsagePolicy struct {
+	// AllowedNamespaces specifies which namespaces are allowed to use the resource
+	// +optional
 	AllowedNamespaces AllowedNamespaces `json:"allowedNamespaces,omitempty"`
 }
 
-// FromNamespaces specifies namespace from which Secret Engines may be attached to a
-// VaultServer.
+// AllowedNamespaces indicate which namespaces the resource should be selected from.
+type AllowedNamespaces struct {
+	// From indicates how to select the namespaces that are allowed to use this resource.
+	// Possible values are:
+	// * All: All namespaces can use this resource.
+	// * Selector: Namespaces that matches the selector can use this resource.
+	// * Same: Only current namespace can use the resource.
+	//
+	// +optional
+	// +kubebuilder:default=Same
+	From *FromNamespaces `json:"from,omitempty"`
+
+	// Selector must be specified when From is set to "Selector". In that case,
+	// only the selected namespaces are allowed to use this resource.
+	// This field is ignored for other values of "From".
+	//
+	// +optional
+	Selector *metav1.LabelSelector `json:"selector,omitempty"`
+}
+
+// FromNamespaces specifies namespace from which namespaces are allowed to use the resource.
 //
 // +kubebuilder:validation:Enum=All;Selector;Same
 type FromNamespaces string
 
 const (
-	// Secret Engines in all namespaces may be attached to this VaultServer.
+	// NamespacesFromAll specifies that all namespaces can use the resource.
 	NamespacesFromAll FromNamespaces = "All"
-	// Only Secret Engines in namespaces selected by the selector may be attached to
-	// this VaultServer.
+
+	// NamespacesFromSelector specifies that only the namespace that matches the selector can use the resource.
 	NamespacesFromSelector FromNamespaces = "Selector"
-	// Only Secret Engines in the same namespace as the VaultServer may be attached to this
-	// VaultServer.
+
+	// NamespacesFromSame specifies that only the current namespace can use the resource.
 	NamespacesFromSame FromNamespaces = "Same"
 )
-
-// SecretEngineNamespaces indicate which namespaces Secret Engines should be selected from.
-type AllowedNamespaces struct {
-	// From indicates where Secret Engines will be selected for this VaultServer. Possible
-	// values are:
-	// * All: Secret Engines in all namespaces may be used by this VaultServer.
-	// * Selector: Secret Engines in namespaces selected by the selector may be used by
-	//   this VaultServer.
-	// * Same: Only Secret Engines in the same namespace may be used by this VaultServer.
-	//
-	// +optional
-	// +kubebuilder:default=Same
-	From *FromNamespaces `json:"from,omitempty" protobuf:"bytes,1,opt,name=from,casttype=FromNamespaces"`
-
-	// Selector must be specified when From is set to "Selector". In that case,
-	// only Secret Engines in Namespaces matching this Selector will be selected by this
-	// VaultServer. This field is ignored for other values of "From".
-	//
-	// +optional
-	Selector *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,2,opt,name=selector"`
-}
