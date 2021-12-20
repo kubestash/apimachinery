@@ -25,7 +25,10 @@ import (
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// Repository is the Schema for the repositories API
+// Repository specifies the information about the targeted application that has been backed up
+// and the BackupStorage where the backed up data is being stored. It also holds a list of recent
+// Snapshots that have been taken in this Repository.
+// Repository is a namespaced object. It must be in the same namespace as the targeted application.
 type Repository struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -34,29 +37,76 @@ type Repository struct {
 	Status RepositoryStatus `json:"status,omitempty"`
 }
 
-// RepositorySpec defines the desired state of Repository
+// RepositorySpec specifies the application reference and the BackupStorage reference.It also specifies
+// what should be the behavior when a Repository CR is deleted from the cluster.
 type RepositorySpec struct {
-	AppRef         core.TypedLocalObjectReference `json:"appRef,omitempty"`
-	StorageRef     apis.TypedObjectReference      `json:"storageRef,omitempty"`
-	Path           string                         `json:"path,omitempty"`
-	DeletionPolicy DeletionPolicy                 `json:"deletionPolicy"`
-	Paused         bool                           `json:"paused,omitempty"`
+	// AppRef refers to the application that is being backed up in this Repository.
+	AppRef core.TypedLocalObjectReference `json:"appRef,omitempty"`
+
+	// StorageRef refers to the BackupStorage CR which contain the backend information where the backed
+	// up data will be stored. The BackupStorage could be in a different namespace. However, the Repository
+	// namespace must be allowed to use the BackupStorage.
+	StorageRef apis.TypedObjectReference `json:"storageRef,omitempty"`
+
+	// Path represents the directory inside the BackupStorage where this Repository is storing its data
+	// This path is relative to the path of BackupStorage.
+	Path string `json:"path,omitempty"`
+
+	// DeletionPolicy specifies what to do when you delete a Repository CR.
+	// The valid values are:
+	// "Delete": This will delete the respective Snapshot CRs from the cluster but keep the backed up data in the remote backend. This is the default behavior.
+	// "WipeOut": This will delete the respective Snapshot CRs as well as the backed up data from the backend.
+	// +kubebuilder:validation:default=Delete
+	// +optional
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy"`
+
+	// Paused specified whether the Repository is paused or not. If the Repository is paused,
+	// Stash will not process any further event for the Repository.
+	// +optional
+	Paused bool `json:"paused,omitempty"`
 }
 
 // RepositoryStatus defines the observed state of Repository
 type RepositoryStatus struct {
-	LastBackupTime  string         `json:"lastBackupTime,omitempty"`
-	Integrity       *bool          `json:"integrity,omitempty"`
-	SnapshotCount   *int32         `json:"snapshotCount,omitempty"`
-	Size            string         `json:"size,omitempty"`
+	// LastBackupTime specifies the timestamp when the last successful backup has been taken
+	// +optional
+	LastBackupTime string `json:"lastBackupTime,omitempty"`
+
+	// Integrity specifies whether the backed up data of this Repository has been tampered or not
+	// +optional
+	Integrity *bool `json:"integrity,omitempty"`
+
+	// SnapshotCount specifies the number of current Snapshots stored in this Repository
+	// +optional
+	SnapshotCount *int32 `json:"snapshotCount,omitempty"`
+
+	// Size specifies the amount of backed up data stored in the Repository
+	// +optional
+	Size string `json:"size,omitempty"`
+
+	// RecentSnapshots holds a list of recent Snapshot information that has been taken in this Repository
+	// +optional
 	RecentSnapshots []SnapshotInfo `json:"recentSnapshots,omitempty"`
 }
 
+// SnapshotInfo specifies some basic information about the Snapshots stored in this Repository
 type SnapshotInfo struct {
-	Name         string `json:"name,omitempty"`
-	Phase        string `json:"phase,omitempty"`
-	Session      string `json:"session,omitempty"`
-	Size         string `json:"size,omitempty"`
+	// Name represent the name of the Snapshot
+	Name string `json:"name,omitempty"`
+
+	// Phase represent the phase of the Snapshot
+	// +optional
+	Phase string `json:"phase,omitempty"`
+
+	// Session represent the name of the session that is responsible for this Snapshot
+	Session string `json:"session,omitempty"`
+
+	// Size represent the size of the Snapshot
+	// +optional
+	Size string `json:"size,omitempty"`
+
+	// SnapshotTime represent the time when this Snapshot was taken
+	// +optional
 	SnapshotTime string `json:"snapshotTime,omitempty"`
 }
 
