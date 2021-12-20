@@ -41,12 +41,12 @@ type BackupStorageSpec struct {
 	Storage Backend `json:"storage,omitempty"`
 	// UsagePolicy specifies a policy of how this BackupStorage will be used. For example, you can use `allowedNamespaces`
 	// policy to restrict the usage of this BackupStorage to particular namespaces.
-	// This field is optional. If you don't provide this usagePolicy, then it can be used only from the current namespace.
+	// This field is optional. If you don't provide the usagePolicy, then it can be used only from the current namespace.
 	// +optional
 	UsagePolicy *apis.UsagePolicy `json:"usagePolicy,omitempty"`
 
 	// Default specifies whether to use this BackupStorage as default storage for the current namespace
-	// as well as the allowed namespaces.
+	// as well as the allowed namespaces. One namespace can have at most one default RetentionPolicy configured.
 	// +optional
 	Default bool `json:"default,omitempty"`
 

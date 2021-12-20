@@ -43,7 +43,7 @@ type HookTemplateSpec struct {
 	// UsagePolicy specifies a policy of how this HookTemplate will be used. For example,
 	// you can use `allowedNamespaces` policy to restrict the usage of this HookTemplate to particular namespaces.
 	//
-	// This field is optional. If you don't provide this usagePolicy, then it can be used only from the current namespace.
+	// This field is optional. If you don't provide the usagePolicy, then it can be used only from the current namespace.
 	// +optional
 	UsagePolicy *apis.UsagePolicy `json:"usagePolicy,omitempty"`
 
