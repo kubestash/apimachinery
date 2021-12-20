@@ -23,8 +23,8 @@ import (
 )
 
 // Addon specifies the backup and restore capabilities for a particular resource.
-// For example, MySQL addon specifies the backup capabilities of MySQL database where
-// Postgres addon specifies backup capabilities for PostgreSQL database.
+// For example, MySQL addon specifies the backup and restore capabilities of MySQL database where
+// Postgres addon specifies backup and restore capabilities for PostgreSQL database.
 // An Addon CR defines the backup and restore tasks that can be performed by this addon.
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=addons,singular=addon,scope=Cluster,categories={kubestash,appscode,all}
@@ -90,7 +90,7 @@ type Task struct {
 
 	// PassThroughMounts specifies a list of volume mount for the VolumeTemplates that should be mounted
 	// on second level Jobs/Pods created by the first level executor Job.
-	// If the volume is need to be mounted on both first level and second level Jobs/Pods, then specify the
+	// If the volume needs to be mounted on both first level and second level Jobs/Pods, then specify the
 	// mount in both VolumeMounts and PassThroughMounts section.
 	// If the volume type is VolumeClaimTemplate, then the first level job is responsible for creating the volume.
 	// +optional

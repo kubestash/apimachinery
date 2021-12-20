@@ -35,7 +35,7 @@ type Function struct {
 }
 
 type FunctionSpec struct {
-	// Docker image name.
+	// Image specifies the docker image name.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// This field is optional to allow higher level config management to default or override
 	// container images in workload controllers like Deployments and StatefulSets.
@@ -51,7 +51,7 @@ type FunctionSpec struct {
 	// More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
 	// +optional
 	Command []string `json:"command,omitempty"`
-	// Arguments to the entrypoint.
+	// Args specifies the arguments to the entrypoint.
 	// The docker image's CMD is used if this is not provided.
 	// Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
 	// cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax
@@ -61,13 +61,13 @@ type FunctionSpec struct {
 	// More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
 	// +optional
 	Args []string `json:"args,omitempty"`
-	// Container's working directory.
+	// WorkDir specifies the container's working directory.
 	// If not specified, the container runtime's default will be used, which
 	// might be configured in the container image.
 	// Cannot be updated.
 	// +optional
 	WorkingDir string `json:"workingDir,omitempty"`
-	// List of ports to expose from the container. Exposing a port here gives
+	// Ports specifies the list of ports to expose from the container. Exposing a port here gives
 	// the system additional information about the network connections a
 	// container uses, but is primarily informational. Not specifying a port here
 	// DOES NOT prevent that port from being exposed. Any port which is
@@ -78,13 +78,13 @@ type FunctionSpec struct {
 	// +patchMergeKey=containerPort
 	// +patchStrategy=merge
 	Ports []core.ContainerPort `json:"ports,omitempty" patchStrategy:"merge" patchMergeKey:"containerPort"`
-	// Pod volumes to mount into the container's filesystem.
+	// VolumeMounts specifies the Pod volumes to mount into the container's filesystem.
 	// Cannot be updated.
 	// +optional
 	// +patchMergeKey=mountPath
 	// +patchStrategy=merge
 	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty" patchStrategy:"merge" patchMergeKey:"mountPath"`
-	// volumeDevices is the list of block devices to be used by the container.
+	// VolumeDevices is the list of block devices to be used by the container.
 	// This is an alpha feature and may change in the future.
 	// +patchMergeKey=devicePath
 	// +patchStrategy=merge

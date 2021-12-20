@@ -60,7 +60,7 @@ type RepositorySpec struct {
 	// +optional
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy"`
 
-	// Paused specified whether the Repository is paused or not. If the Repository is paused,
+	// Paused specifies whether the Repository is paused or not. If the Repository is paused,
 	// Stash will not process any further event for the Repository.
 	// +optional
 	Paused bool `json:"paused,omitempty"`
@@ -91,21 +91,21 @@ type RepositoryStatus struct {
 
 // SnapshotInfo specifies some basic information about the Snapshots stored in this Repository
 type SnapshotInfo struct {
-	// Name represent the name of the Snapshot
+	// Name represents the name of the Snapshot
 	Name string `json:"name,omitempty"`
 
-	// Phase represent the phase of the Snapshot
+	// Phase represents the phase of the Snapshot
 	// +optional
 	Phase string `json:"phase,omitempty"`
 
-	// Session represent the name of the session that is responsible for this Snapshot
+	// Session represents the name of the session that is responsible for this Snapshot
 	Session string `json:"session,omitempty"`
 
-	// Size represent the size of the Snapshot
+	// Size represents the size of the Snapshot
 	// +optional
 	Size string `json:"size,omitempty"`
 
-	// SnapshotTime represent the time when this Snapshot was taken
+	// SnapshotTime represents the time when this Snapshot was taken
 	// +optional
 	SnapshotTime string `json:"snapshotTime,omitempty"`
 }

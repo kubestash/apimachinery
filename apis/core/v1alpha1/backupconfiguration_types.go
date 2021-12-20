@@ -54,7 +54,7 @@ type BackupConfigurationSpec struct {
 	// +optional
 	Backends []BackendReference `json:"backends,omitempty"`
 
-	// Session defines a list of session configuration that specifies when and how to take backup.
+	// Sessions defines a list of session configuration that specifies when and how to take backup.
 	Sessions []Session `json:"sessions,omitempty"`
 }
 
@@ -286,7 +286,7 @@ type VerificationStrategy struct {
 	// +optional
 	OnFailure apis.FailurePolicy `json:"onFailure,omitempty"`
 
-	// RetryConfig specify the behavior of the retry mechanism in case of a verification failure
+	// RetryConfig specifies the behavior of the retry mechanism in case of a verification failure
 	// +optional
 	RetryConfig *apis.RetryConfig
 }

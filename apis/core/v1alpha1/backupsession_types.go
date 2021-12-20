@@ -87,14 +87,14 @@ const (
 
 // SnapshotStatus represents the current state of respective the Snapshot
 type SnapshotStatus struct {
-	// Name indicate to the name of the Snapshot
+	// Name indicates to the name of the Snapshot
 	Name string `json:"name,omitempty"`
 
 	// Phase indicate the phase of the Snapshot
 	// +optional
 	Phase storage.SnapshotPhase `json:"phase,omitempty"`
 
-	// AppRef indicate to the application that is being backed up in this Snapshot
+	// AppRef points to the application that is being backed up in this Snapshot
 	AppRef *core.LocalObjectReference `json:"appRef,omitempty"`
 
 	// Repository indicates the name of the Repository where the Snapshot is being stored.

@@ -34,7 +34,7 @@ type BackupBatch struct {
 }
 
 // BackupBatchSpec defines the targets of backup, the backend where the backed up data will be stored,
-// and the session configuration which specifies the when and how to take the backup.
+// and the session configuration which specifies when and how to take the backup.
 type BackupBatchSpec struct {
 	// Backends specifies a list of storage references where the backed up data will be stored.
 	// The respective BackupStorages can be in a different namespace than the BackupBatch.
@@ -49,7 +49,7 @@ type BackupBatchSpec struct {
 	// Targets specifies a list of targets that are subject to backup.
 	Targets []TargetReference `json:"targets,omitempty"`
 
-	// Session defines a list of session configuration that specifies when and how to take backup.
+	// Session defines a list of session configurations that specifies when and how to take backup.
 	Sessions []BatchSession `json:"sessions,omitempty"`
 }
 
@@ -72,7 +72,7 @@ type BatchSession struct {
 
 // TargetBackupSpec specifies the information needed to backup a target.
 type TargetBackupSpec struct {
-	// Name point to the identifier of the target that is being backed up.
+	// Name points to the identifier of the target that is being backed up.
 	// It should match the name used as the identifier of a target in the `spec.targets` section.
 	Name string `json:"name,omitempty"`
 

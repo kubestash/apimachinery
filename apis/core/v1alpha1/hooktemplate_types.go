@@ -47,7 +47,7 @@ type HookTemplateSpec struct {
 	// +optional
 	UsagePolicy *apis.UsagePolicy `json:"usagePolicy,omitempty"`
 
-	// Parameters defines a list of parameters that is used by the HookTemplate to execute its logic.
+	// Params defines a list of parameters that is used by the HookTemplate to execute its logic.
 	// +optional
 	Params *[]apis.ParameterDefinition `json:"params,omitempty"`
 

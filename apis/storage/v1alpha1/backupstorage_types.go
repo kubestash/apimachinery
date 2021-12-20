@@ -65,7 +65,7 @@ type BackupStorageStatus struct {
 	// +optional
 	Ready bool `json:"ready,omitempty"`
 
-	// TotalSize represent the total backed up data size in this storage.
+	// TotalSize represents the total backed up data size in this storage.
 	// This is simply the summation of sizes of all Repositories using this BackupStorage.
 	// +optional
 	TotalSize string `json:"totalSize,omitempty"`
@@ -81,7 +81,7 @@ type BackupStorageStatus struct {
 
 // RepositoryInfo specifies information regarding a Repository using the BackupStorage
 type RepositoryInfo struct {
-	// Name represent the name of the respective Repository CR
+	// Name represents the name of the respective Repository CR
 	Name string `json:"name,omitempty"`
 
 	// Namespace represent the namespace where the Repository CR has been created

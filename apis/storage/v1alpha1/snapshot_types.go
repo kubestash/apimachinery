@@ -67,7 +67,7 @@ type SnapshotSpec struct {
 	// +optional
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 
-	// Paused specified whether the Snapshot is paused or not. If the Snapshot is paused,
+	// Paused specifies whether the Snapshot is paused or not. If the Snapshot is paused,
 	// Stash will not process any further event for the Snapshot.
 	// +optional
 	Paused bool `json:"paused,omitempty"`
@@ -91,7 +91,7 @@ type SnapshotStatus struct {
 	// +optional
 	LastUpdateTime string `json:"lastUpdateTime,omitempty"`
 
-	// Size represent the size of the Snapshot
+	// Size represents the size of the Snapshot
 	// +optional
 	Size string `json:"size,omitempty"`
 

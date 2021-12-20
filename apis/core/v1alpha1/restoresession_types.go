@@ -76,7 +76,7 @@ type RestoreDataSource struct {
 	Snapshot string `json:"snapshot,omitempty"`
 
 	// PITR stands for Point-In-Time Recovery. You can provide a target time instead of specifying a particular Snapshot.
-	// Stash will automatically find the latest Snapshot that satisfy the targeted time and restore it.
+	// Stash will automatically find the latest Snapshot that satisfies the targeted time and restore it.
 	// +optional
 	PITR PITR `json:"pitr,omitempty"`
 
@@ -88,11 +88,11 @@ type RestoreDataSource struct {
 
 // PITR specifies the target time and behavior of Point-In-Time Recovery
 type PITR struct {
-	// TargetTime specify the desired date and time at which you want to roll back your application data
+	// TargetTime specifies the desired date and time at which you want to roll back your application data
 	// +kubebuilder:validation:Format=date-time
 	TargetTime string `json:"targetTime,omitempty"`
 
-	// Exclusive specifies whether to exclude the Snapshot that fall in the exact time specified
+	// Exclusive specifies whether to exclude the Snapshot that falls in the exact time specified
 	// in the `targetTime` field. By default, Stash will select the Snapshot that fall in the exact time.
 	// +optional
 	Exclusive bool `json:"exclusive,omitempty"`
@@ -161,7 +161,7 @@ type ComponentRestoreStatus struct {
 // BackupPausedStatus holds the respective backup invoker information if the restore
 // process pauses any active backup.
 type BackupPausedStatus struct {
-	// Paused specify whether the respective backup has been paused or not
+	// Paused specifies whether the respective backup has been paused or not
 	Paused bool `json:"paused,omitempty"`
 
 	// Invoker refers to the respective backup invoker

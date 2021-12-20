@@ -42,7 +42,7 @@ type TaskReference struct {
 	// +optional
 	TargetVolumes *TargetVolumeInfo `json:"targetVolumes,omitempty"`
 
-	// AddonVolumes let you overwrite the volume sources used in the VolumeTemplate section of Addon.
+	// AddonVolumes lets you overwrite the volume sources used in the VolumeTemplate section of Addon.
 	// Make sure that name of your volume matches with the name of the volume you want to overwrite.
 	// +optional
 	AddonVolumes []apis.VolumeSource `json:"addonVolumes,omitempty"`
@@ -118,7 +118,7 @@ const (
 
 // HookExecutionStatus represents the state of the hook execution
 type HookExecutionStatus struct {
-	// Name indicate the name of the hook whose status is being shown here.
+	// Name indicates the name of the hook whose status is being shown here.
 	Name string `json:"name,omitempty"`
 
 	// Phase represents the hook execution phase
