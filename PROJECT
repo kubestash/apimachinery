@@ -104,6 +104,7 @@ resources:
 - api:
     crdVersion: v1
     namespaced: true
+  controller: true
   domain: kubestash.com
   group: core
   kind: BackupBlueprint

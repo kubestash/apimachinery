@@ -17,37 +17,170 @@ limitations under the License.
 package v1alpha1
 
 import (
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
+	"stash.appscode.dev/kubestash/apis"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+// +kubebuilder:object:root=true
+// +kubebuilder:object:generate=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:path=restoresessions,singular=restoresession,shortName=restore,categories={kubestash,appscode,all}
+// +kubebuilder:printcolumn:name="Repository",type="string",JSONPath=".spec.dataSource.repository"
+// +kubebuilder:printcolumn:name="Failure-Policy",type="string",JSONPath=".spec.failurePolicy"
+// +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Duration",type="string",JSONPath=".status.duration"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
-// RestoreSessionSpec defines the desired state of RestoreSession
-type RestoreSessionSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of RestoreSession. Edit restoresession_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
-}
-
-// RestoreSessionStatus defines the observed state of RestoreSession
-type RestoreSessionStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-}
-
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
-// RestoreSession is the Schema for the restoresessions API
+// RestoreSession represents one restore run for the targeted application
 type RestoreSession struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec   RestoreSessionSpec   `json:"spec,omitempty"`
 	Status RestoreSessionStatus `json:"status,omitempty"`
+}
+
+// RestoreSessionSpec specifies the necessary configurations for restoring data into a target
+type RestoreSessionSpec struct {
+	// Target indicates the target application where the data will be restored.
+	// The target must be in the same namespace as the RestoreSession CR.
+	// +optional
+	Target *core.TypedLocalObjectReference `json:"target,omitempty"`
+
+	// DataSource specifies the information about the data that will be restored
+	DataSource *RestoreDataSource `json:"dataSource,omitempty"`
+
+	// Addon specifies addon configuration that will be used to restore the target.
+	Addon *AddonInfo `json:"addon,omitempty"`
+
+	// Hooks specifies the restore hooks that should be executed before and/or after the restore.
+	// +optional
+	Hooks *RestoreHooks `json:"hooks,omitempty"`
+
+	// FailurePolicy specifies what to do if the restore fail.
+	// Valid values are:
+	// - "Fail": Stash should mark the restore as failed if any component fail to complete its restore. This is the default behavior.
+	// - "Retry": Stash will retry to restore the failed component according to the `retryConfig`.
+	// +kubebuilder:default=Fail
+	// +optional
+	FailurePolicy apis.FailurePolicy `json:"failurePolicy,omitempty"`
+
+	// RetryConfig specifies the behavior of retry in case of a restore failure.
+	// +optional
+	RetryConfig *apis.RetryConfig `json:"retryConfig,omitempty"`
+}
+
+// RestoreDataSource specifies the information about the data that will be restored
+type RestoreDataSource struct {
+	// Repository points to the Repository name from which the data will be restored
+	Repository string `json:"repository,omitempty"`
+
+	// Snapshot specifies the Snapshot name that will be restored.
+	// If you want to use Point-In-Time recovery option, don't specify this field. Specify `pitr` field instead.
+	// +optional
+	Snapshot string `json:"snapshot,omitempty"`
+
+	// PITR stands for Point-In-Time Recovery. You can provide a target time instead of specifying a particular Snapshot.
+	// Stash will automatically find the latest Snapshot that satisfies the targeted time and restore it.
+	// +optional
+	PITR PITR `json:"pitr,omitempty"`
+
+	// Components specifies the components that will be restored. If you keep this field empty, then all
+	// the components that were backed up in the desired Snapshot will be restored.
+	// +optional
+	Components []string `json:"components,omitempty"`
+}
+
+// PITR specifies the target time and behavior of Point-In-Time Recovery
+type PITR struct {
+	// TargetTime specifies the desired date and time at which you want to roll back your application data
+	// +kubebuilder:validation:Format=date-time
+	TargetTime string `json:"targetTime,omitempty"`
+
+	// Exclusive specifies whether to exclude the Snapshot that falls in the exact time specified
+	// in the `targetTime` field. By default, Stash will select the Snapshot that fall in the exact time.
+	// +optional
+	Exclusive bool `json:"exclusive,omitempty"`
+}
+
+// RestoreHooks specifies the hooks that will be executed before and/or after restore
+type RestoreHooks struct {
+	// PreRestore specifies a list of hooks that will be executed before restore
+	// +optional
+	PreRestore []HookInfo `json:"preRestore,omitempty"`
+
+	// PostRestore specifies a list of hooks that will be executed after restore
+	// +optional
+	PostRestore []HookInfo `json:"postRestore,omitempty"`
+}
+
+// RestoreSessionStatus defines the observed state of RestoreSession
+type RestoreSessionStatus struct {
+	// Phase represents the current state of the restore process
+	// +optional
+	Phase RestorePhase `json:"phase,omitempty"`
+
+	// Duration specify total time taken to complete the restore process
+	// +optional
+	Duration string `json:"duration,omitempty"`
+
+	// Components represents the individual component restore status
+	// +optional
+	Components []ComponentRestoreStatus `json:"components,omitempty"`
+
+	// Hooks represents the hook execution status
+	// +optional
+	Hooks []HookExecutionStatus `json:"hooks,omitempty"`
+
+	// Backup represents the backup pause status. This section only present if the restore process
+	// pauses any active backup before restoring
+	// +optional
+	Backup *BackupPausedStatus `json:"backup,omitempty"`
+
+	// Conditions specifies a list of conditions related to this restore session
+	// +optional
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+}
+
+// RestorePhase represents the current state of the restore process
+// +kubebuilder:validation:Enum=Pending;Running;Failed;Skipped
+type RestorePhase string
+
+const (
+	RestorePending RestorePhase = "Pending"
+	RestoreRunning RestorePhase = "Running"
+	RestoreFailed  RestorePhase = "Failed"
+	RestoreSkipped RestorePhase = "Skipped"
+)
+
+// ComponentRestoreStatus represents the restore status of individual components
+type ComponentRestoreStatus struct {
+	// Name indicate to the name of the component
+	Name string `json:"name,omitempty"`
+
+	// Phase represents the restore phase of the component
+	// +optional
+	Phase RestorePhase `json:"phase,omitempty"`
+
+	// Duration specify total time taken to complete the restore process for this component
+	// +optional
+	Duration string `json:"duration,omitempty"`
+
+	// Error specifies the reason in case of restore failure for the component
+	// +optional
+	Error string `json:"error,omitempty"`
+}
+
+// BackupPausedStatus holds the respective backup invoker information if the restore
+// process pauses any active backup.
+type BackupPausedStatus struct {
+	// Paused specifies whether the respective backup has been paused or not
+	Paused bool `json:"paused,omitempty"`
+
+	// Invoker refers to the respective backup invoker
+	Invoker *core.TypedLocalObjectReference `json:"invoker,omitempty"`
 }
 
 //+kubebuilder:object:root=true
