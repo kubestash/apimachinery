@@ -1,3 +1,4 @@
+//+kubebuilder:object:generate=true
 package apis
 
 import (
@@ -16,7 +17,7 @@ const (
 
 // TypedObjectReference let you reference an object from different namespace
 type TypedObjectReference struct {
-	core.TypedLocalObjectReference
+	core.TypedLocalObjectReference `json:",inline"`
 	// Namespace points to the namespace of the targeted object.
 	// If you don't provide this field, the object will be looked up in the local namespace.
 	// +optional
@@ -25,7 +26,7 @@ type TypedObjectReference struct {
 
 // VolumeSource specifies the source of volume to mount in the backup/restore executor
 type VolumeSource struct {
-	core.VolumeSource
+	core.VolumeSource `json:",inline"`
 
 	// VolumeClaimTemplate specifies a template for volume to use by the backup/restore executor
 	// +optional
