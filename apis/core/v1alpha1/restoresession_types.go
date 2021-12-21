@@ -24,6 +24,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
+// +kubebuilder:object:generate=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=restoresessions,singular=restoresession,shortName=restore,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Repository",type="string",JSONPath=".spec.dataSource.repository"

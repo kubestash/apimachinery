@@ -22,6 +22,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
+// +kubebuilder:object:generate=true
 // +kubebuilder:resource:path=retentionpolicies,singular=retentionpolicy,categories={kubestash,appscode}
 // +kubebuilder:printcolumn:name="Max-Retention-Period",type="string",JSONPath=".spec.maxRetentionPeriod"
 // +kubebuilder:printcolumn:name="Default",type="boolean",JSONPath=".spec.default"

@@ -23,6 +23,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
+// +kubebuilder:object:generate=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=repositories,singular=repository,shortName=repo,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="App",type="string",JSONPath=".spec.appRef.Kind/.spec.appRef.name"

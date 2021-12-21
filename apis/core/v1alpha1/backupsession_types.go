@@ -24,6 +24,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
+// +kubebuilder:object:generate=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=backupsessions,singular=backupsession,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Invoker-Type",type="string",JSONPath=".spec.invoker.kind"

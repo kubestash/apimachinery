@@ -24,6 +24,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
+// +kubebuilder:object:generate=true
 // +kubebuilder:resource:path=hooktemplates,singular=hooktemplate,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Executor",type="string",JSONPath=".spec.executor.type"
 // +kubebuilder:printcolumn:name="Timeout",type="string",JSONPath=".spec.timeout"

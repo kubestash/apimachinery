@@ -27,6 +27,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
+// +kubebuilder:object:generate=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=backupconfigurations,singular=backupconfiguration,shortName=bc,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Paused",type="boolean",JSONPath=".spec.paused"

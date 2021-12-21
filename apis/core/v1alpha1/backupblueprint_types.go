@@ -22,6 +22,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
+// +kubebuilder:object:generate=true
 // +kubebuilder:resource:path=backupblueprints,singular=backupblueprint,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 

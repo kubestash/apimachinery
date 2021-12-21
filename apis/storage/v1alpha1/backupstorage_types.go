@@ -22,6 +22,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
+// +kubebuilder:object:generate=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=backupstorages,singular=backupstorage,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Default",type="boolean",JSONPath=".spec.default"

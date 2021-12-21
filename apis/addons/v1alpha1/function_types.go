@@ -23,6 +23,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
+// +kubebuilder:object:generate=true
 // +kubebuilder:resource:path=functions,singular=function,scope=Cluster,shortName=fn,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
