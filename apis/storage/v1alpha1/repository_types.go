@@ -17,13 +17,20 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"stash.appscode.dev/kubestash/apis"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"stash.appscode.dev/kubestash/apis"
 )
 
+const (
+	ResourceKindRepository     = "Repository"
+	ResourceSingularRepository = "repository"
+	ResourcePluralRepository   = "repositories"
+)
+
+// +k8s:openapi-gen=true
 // +kubebuilder:object:root=true
-// +kubebuilder:object:generate=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=repositories,singular=repository,shortName=repo,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="App",type="string",JSONPath=".spec.appRef.Kind/.spec.appRef.name"

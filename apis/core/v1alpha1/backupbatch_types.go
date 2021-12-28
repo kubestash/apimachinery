@@ -21,8 +21,14 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const (
+	ResourceKindBackupBatch     = "BackupBatch"
+	ResourceSingularBackupBatch = "backupbatch"
+	ResourcePluralBackupBatch   = "backupbatches"
+)
+
+// +k8s:openapi-gen=true
 // +kubebuilder:object:root=true
-// +kubebuilder:object:generate=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=backupbatches,singular=backupbatch,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
@@ -67,7 +73,7 @@ type TargetReference struct {
 
 // BatchSession specifies the session configuration for the targets.
 type BatchSession struct {
-	*SessionConfig
+	*SessionConfig `json:",inline"`
 
 	// Targets specifies a list of target backup specification.
 	Targets []TargetBackupSpec `json:"targets,omitempty"`
@@ -89,7 +95,7 @@ type TargetBackupSpec struct {
 
 // BackupBatchStatus defines the observed state of BackupBatch
 type BackupBatchStatus struct {
-	*OffshootStatus
+	*OffshootStatus `json:",inline"`
 
 	// Targets specifies whether the targets of backup do exist or not
 	Targets []ResourceFoundStatus `json:"targets,omitempty"`

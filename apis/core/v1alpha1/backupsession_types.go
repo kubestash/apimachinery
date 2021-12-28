@@ -17,14 +17,21 @@ limitations under the License.
 package v1alpha1
 
 import (
+	storage "stash.appscode.dev/kubestash/apis/storage/v1alpha1"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	storage "stash.appscode.dev/kubestash/apis/storage/v1alpha1"
 )
 
+const (
+	ResourceKindBackupSession     = "BackupSession"
+	ResourceSingularBackupSession = "backupsession"
+	ResourcePluralBackupSession   = "backupsessions"
+)
+
+// +k8s:openapi-gen=true
 // +kubebuilder:object:root=true
-// +kubebuilder:object:generate=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=backupsessions,singular=backupsession,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Invoker-Type",type="string",JSONPath=".spec.invoker.kind"

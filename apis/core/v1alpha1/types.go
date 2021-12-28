@@ -17,11 +17,12 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"stash.appscode.dev/kubestash/apis"
+
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
-	"stash.appscode.dev/kubestash/apis"
 )
 
 // AddonInfo specifies addon configuration that will be used to backup/restore the respective target.
@@ -51,6 +52,7 @@ type TaskReference struct {
 	Variables []core.EnvVar `json:"variables,omitempty"`
 
 	// Params specifies parameters for the task. You must provide the parameter in the Addon desired structure.
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +optional
 	Params *runtime.RawExtension `json:"params,omitempty"`
 
@@ -85,11 +87,13 @@ type HookInfo struct {
 	HookTemplate *kmapi.ObjectReference `json:"hookTemplate,omitempty"`
 
 	// Params specifies parameters for the hook. You must provide the parameter in the HookTemplates desired structure.
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +optional
 	Params *runtime.RawExtension `json:"params,omitempty"`
 
 	// MaxRetry specified how many times Stash should retry the hook execution in case of failure.
 	// The default value of this field is 0 which means no retry.
+	// +kubebuilder:validation:Minimum=0
 	// +optional
 	MaxRetry int32 `json:"maxRetry,omitempty"`
 
@@ -158,4 +162,27 @@ type ResourceFoundStatus struct {
 
 	// Found indicates whether the resource was found or not
 	Found bool `json:"found,omitempty"`
+}
+
+// FailurePolicy specifies what to do if a backup/restore fails
+// +kubebuilder:validation:Enum=Fail;Retry
+type FailurePolicy string
+
+const (
+	FailurePolicyFail  FailurePolicy = "Fail"
+	FailurePolicyRetry FailurePolicy = "Retry"
+)
+
+// RetryConfig specifies the behavior of retry
+type RetryConfig struct {
+	// MaxRetry specifies the maximum number of times Stash should retry the backup/restore process.
+	// By default, Stash will retry only 1 time.
+	// +kubebuilder:validation:default=1
+	// +kubebuilder:validation:Minimum=1
+	MaxRetry int32 `json:"maxRetry,omitempty"`
+
+	// Delay specifies a duration to wait until next retry.
+	// By default, Stash will retry immediately.
+	// +optional
+	Delay string `json:"delay,omitempty"`
 }

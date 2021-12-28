@@ -1,0 +1,192 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: kubestash
+  name: repositories.storage.kubestash.com
+spec:
+  group: storage.kubestash.com
+  names:
+    categories:
+    - kubestash
+    - appscode
+    - all
+    kind: Repository
+    listKind: RepositoryList
+    plural: repositories
+    shortNames:
+    - repo
+    singular: repository
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.appRef.Kind/.spec.appRef.name
+      name: App
+      type: string
+    - jsonPath: .spec.storageRef.namespace/.spec.storageRef.name
+      name: BackupStorage
+      type: string
+    - jsonPath: .status.integrity
+      name: Integrity
+      type: boolean
+    - jsonPath: .status.snapshotCount
+      name: Snapshot-Count
+      type: integer
+    - jsonPath: .status.size
+      name: Size
+      type: string
+    - format: date-time
+      jsonPath: .status.lastBackupTime
+      name: Last-Successful-Backup
+      type: date
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Repository specifies the information about the targeted application
+          that has been backed up and the BackupStorage where the backed up data is
+          being stored. It also holds a list of recent Snapshots that have been taken
+          in this Repository. Repository is a namespaced object. It must be in the
+          same namespace as the targeted application.
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RepositorySpec specifies the application reference and the
+              BackupStorage reference.It also specifies what should be the behavior
+              when a Repository CR is deleted from the cluster.
+            properties:
+              appRef:
+                description: AppRef refers to the application that is being backed
+                  up in this Repository.
+                properties:
+                  apiGroup:
+                    description: APIGroup is the group for the resource being referenced.
+                      If APIGroup is not specified, the specified Kind must be in
+                      the core API group. For any other third-party types, APIGroup
+                      is required.
+                    type: string
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
+                  name:
+                    description: Name is the name of resource being referenced
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+              deletionPolicy:
+                description: 'DeletionPolicy specifies what to do when you delete
+                  a Repository CR. The valid values are: "Delete": This will delete
+                  the respective Snapshot CRs from the cluster but keep the backed
+                  up data in the remote backend. This is the default behavior. "WipeOut":
+                  This will delete the respective Snapshot CRs as well as the backed
+                  up data from the backend.'
+                enum:
+                - Delete
+                - WipeOUt
+                type: string
+              path:
+                description: Path represents the directory inside the BackupStorage
+                  where this Repository is storing its data This path is relative
+                  to the path of BackupStorage.
+                type: string
+              paused:
+                description: Paused specifies whether the Repository is paused or
+                  not. If the Repository is paused, Stash will not process any further
+                  event for the Repository.
+                type: boolean
+              storageRef:
+                description: StorageRef refers to the BackupStorage CR which contain
+                  the backend information where the backed up data will be stored.
+                  The BackupStorage could be in a different namespace. However, the
+                  Repository namespace must be allowed to use the BackupStorage.
+                properties:
+                  apiGroup:
+                    description: APIGroup is the group for the resource being referenced.
+                      If APIGroup is not specified, the specified Kind must be in
+                      the core API group. For any other third-party types, APIGroup
+                      is required.
+                    type: string
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
+                  name:
+                    description: Name is the name of resource being referenced
+                    type: string
+                  namespace:
+                    description: Namespace points to the namespace of the targeted
+                      object. If you don't provide this field, the object will be
+                      looked up in the local namespace.
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+            type: object
+          status:
+            description: RepositoryStatus defines the observed state of Repository
+            properties:
+              integrity:
+                description: Integrity specifies whether the backed up data of this
+                  Repository has been corrupted or not
+                type: boolean
+              lastBackupTime:
+                description: LastBackupTime specifies the timestamp when the last
+                  successful backup has been taken
+                type: string
+              recentSnapshots:
+                description: RecentSnapshots holds a list of recent Snapshot information
+                  that has been taken in this Repository
+                items:
+                  description: SnapshotInfo specifies some basic information about
+                    the Snapshots stored in this Repository
+                  properties:
+                    name:
+                      description: Name represents the name of the Snapshot
+                      type: string
+                    phase:
+                      description: Phase represents the phase of the Snapshot
+                      type: string
+                    session:
+                      description: Session represents the name of the session that
+                        is responsible for this Snapshot
+                      type: string
+                    size:
+                      description: Size represents the size of the Snapshot
+                      type: string
+                    snapshotTime:
+                      description: SnapshotTime represents the time when this Snapshot
+                        was taken
+                      type: string
+                  type: object
+                type: array
+              size:
+                description: Size specifies the amount of backed up data stored in
+                  the Repository
+                type: string
+              snapshotCount:
+                description: SnapshotCount specifies the number of current Snapshots
+                  stored in this Repository
+                format: int32
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

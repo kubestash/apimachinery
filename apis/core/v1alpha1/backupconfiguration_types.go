@@ -17,17 +17,24 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"stash.appscode.dev/kubestash/apis"
+
 	batchv1 "k8s.io/api/batch/v1"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
-	"stash.appscode.dev/kubestash/apis"
 )
 
+const (
+	ResourceKindBackupConfiguration     = "BackupConfiguration"
+	ResourceSingularBackupConfiguration = "backupconfiguration"
+	ResourcePluralBackupConfiguration   = "backupconfigurations"
+)
+
+// +k8s:openapi-gen=true
 // +kubebuilder:object:root=true
-// +kubebuilder:object:generate=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=backupconfigurations,singular=backupconfiguration,shortName=bc,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Paused",type="boolean",JSONPath=".spec.paused"
@@ -81,7 +88,7 @@ type BackendReference struct {
 
 // Session specifies a backup session configuration for the target
 type Session struct {
-	*SessionConfig
+	*SessionConfig `json:",inline"`
 
 	// Addon specifies addon configuration that will be used to backup the target.
 	Addon *AddonInfo `json:"addon,omitempty"`
@@ -120,11 +127,11 @@ type SessionConfig struct {
 	// - "Retry": Stash will retry to backup the failed component according to the `retryConfig`.
 	// +kubebuilder:default=Fail
 	// +optional
-	FailurePolicy apis.FailurePolicy `json:"failurePolicy,omitempty"`
+	FailurePolicy FailurePolicy `json:"failurePolicy,omitempty"`
 
 	// RetryConfig specifies the behavior of retry in case of a backup failure.
 	// +optional
-	RetryConfig *apis.RetryConfig `json:"retryConfig,omitempty"`
+	RetryConfig *RetryConfig `json:"retryConfig,omitempty"`
 
 	// SessionHistoryLimit specifies how many backup Jobs and associate resources Stash should keep for debugging purpose.
 	// The default value is 1.
@@ -286,19 +293,21 @@ type VerificationStrategy struct {
 	Verifier *apis.TypedObjectReference `json:"verifier,omitempty"`
 
 	// Params specifies the parameters that will be used by the verifier
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +optional
 	Params *runtime.RawExtension `json:"params,omitempty"`
 
 	// VerifyEvery specifies the frequency of backup verification
+	// +kubebuilder:validation:Minimum=1
 	VerifyEvery int32 `json:"verifyEvery,omitempty"`
 
 	// OnFailure specifies what to do if the verification fail.
 	// +optional
-	OnFailure apis.FailurePolicy `json:"onFailure,omitempty"`
+	OnFailure FailurePolicy `json:"onFailure,omitempty"`
 
 	// RetryConfig specifies the behavior of the retry mechanism in case of a verification failure
 	// +optional
-	RetryConfig *apis.RetryConfig
+	RetryConfig *RetryConfig `json:"retryConfig,omitempty"`
 }
 
 // BackupHooks specifies the hooks that will be executed before and/or after backup
@@ -314,7 +323,7 @@ type BackupHooks struct {
 
 // BackupConfigurationStatus defines the observed state of BackupConfiguration
 type BackupConfigurationStatus struct {
-	*OffshootStatus
+	*OffshootStatus `json:",inline"`
 
 	// Target specifies whether the backup target exist or not
 	// +optional

@@ -1,0 +1,220 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: kubestash
+  name: snapshots.storage.kubestash.com
+spec:
+  group: storage.kubestash.com
+  names:
+    categories:
+    - kubestash
+    - appscode
+    kind: Snapshot
+    listKind: SnapshotList
+    plural: snapshots
+    singular: snapshot
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.appRef.Kind/.spec.appRef.name
+      name: App
+      type: string
+    - jsonPath: .spec.repository
+      name: Repository
+      type: string
+    - jsonPath: .spec.session
+      name: Session
+      type: string
+    - jsonPath: .status.snapshotTime
+      name: Snapshot-Time
+      type: string
+    - jsonPath: .spec.deletionPolicy
+      name: Deletion-Policy
+      type: string
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    - jsonPath: .status.verificationStatus
+      name: Verification-Status
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Snapshot represents the state of a backup run to a particular
+          Repository. Multiple components of the same target may be backed up in the
+          same Snapshot. This is a namespaced CRD. It should be in the same namespace
+          as the respective Repository. Stash operator is responsible for creating
+          Snapshot CR. Snapshot is not supposed to be created/edited by the end user.
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SnapshotSpec specifies the information regarding the application
+              that is being backed up, the Repository where the backed up data is
+              being stored, and the session which is responsible for this snapshot
+              etc.
+            properties:
+              appRef:
+                description: AppRef specifies the reference of the application that
+                  has been backed up in this Snapshot.
+                properties:
+                  apiGroup:
+                    description: APIGroup is the group for the resource being referenced.
+                      If APIGroup is not specified, the specified Kind must be in
+                      the core API group. For any other third-party types, APIGroup
+                      is required.
+                    type: string
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
+                  name:
+                    description: Name is the name of resource being referenced
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+              deletionPolicy:
+                description: 'DeletionPolicy specifies what to do when you delete
+                  a Snapshot CR. The valid values are: - "Delete": This will delete
+                  just the Snapshot CR from the cluster but keep the backed up data
+                  in the remote backend. This is the default behavior. - "WipeOut":
+                  This will delete the Snapshot CR as well as the backed up data from
+                  the backend.'
+                enum:
+                - Delete
+                - WipeOUt
+                type: string
+              paused:
+                description: Paused specifies whether the Snapshot is paused or not.
+                  If the Snapshot is paused, Stash will not process any further event
+                  for the Snapshot.
+                type: boolean
+              repository:
+                description: Repository specifies the name of the Repository where
+                  this Snapshot is being stored.
+                type: string
+              session:
+                description: Session specifies the name of the session which is responsible
+                  for this Snapshot
+                type: string
+              ulid:
+                description: 'ULID represents a "Universally Unique Lexicographically
+                  Sortable Identifier" for the Snapshot. For more details about ULID,
+                  please see: https://github.com/oklog/ulid'
+                type: string
+              version:
+                description: Version denotes the respective data organization structure
+                  inside the Repository
+                type: string
+            type: object
+          status:
+            description: SnapshotStatus defines the observed state of Snapshot
+            properties:
+              backupSession:
+                description: BackupSession represents the name of the respective BackupSession
+                  which is responsible for this Snapshot.
+                type: string
+              components:
+                description: Components represents the backup status of the individual
+                  components of this Snapshot
+                items:
+                  description: ComponentStatus represents the backup status of individual
+                    components
+                  properties:
+                    driver:
+                      description: Driver specifies the name of the tool that has
+                        been used to upload the underlying backed up data
+                      enum:
+                      - Restic
+                      - WalG
+                      type: string
+                    name:
+                      description: Name specifies the name of the component
+                      type: string
+                    path:
+                      description: Path specifies the path inside the Repository where
+                        the backed up data for this component has been stored. This
+                        path is relative to Repository path.
+                      type: string
+                    phase:
+                      description: Phase represents the backup phase of the component
+                      enum:
+                      - Pending
+                      - Running
+                      - Succeeded
+                      - Failed
+                      type: string
+                    resticStats:
+                      description: ResticStats specifies the "Restic" driver specific
+                        information
+                      properties:
+                        id:
+                          description: Id represents the restic snapshot id
+                          type: string
+                        integrity:
+                          description: Integrity represents the result of restic integrity
+                            check for this snapshot.
+                          type: boolean
+                        size:
+                          description: Size represents the restic snapshot size
+                          type: string
+                        uploaded:
+                          description: Uploaded specifies the amount of data that
+                            has been uploaded in the restic snapshot.
+                          type: string
+                      type: object
+                  type: object
+                type: array
+              integrity:
+                description: Integrity represents whether the Snapshot data has been
+                  corrupted or not
+                type: boolean
+              lastUpdateTime:
+                description: LastUpdateTime specifies the timestamp when this Snapshot
+                  was last updated.
+                type: string
+              phase:
+                description: Phase represents the backup state of this Snapshot
+                enum:
+                - Pending
+                - Running
+                - Succeeded
+                - Failed
+                type: string
+              size:
+                description: Size represents the size of the Snapshot
+                type: string
+              snapshotTime:
+                description: SnapshotTime represents the timestamp when this Snapshot
+                  was taken.
+                type: string
+              verificationStatus:
+                description: VerificationStatus specifies whether this Snapshot has
+                  been verified or not
+                enum:
+                - Verified
+                - NotVerified
+                - VerificationFailed
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

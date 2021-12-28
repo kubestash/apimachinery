@@ -17,12 +17,19 @@ limitations under the License.
 package v1alpha1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"stash.appscode.dev/kubestash/apis"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// +kubebuilder:object:root=true
-// +kubebuilder:object:generate=true
+const (
+	ResourceKindRetentionPolicy     = "RetentionPolicy"
+	ResourceSingularRetentionPolicy = "retentionpolicy"
+	ResourcePluralRetentionPolicy   = "retentionpolicies"
+)
+
+// +k8s:openapi-gen=true
+//+kubebuilder:object:root=true
 // +kubebuilder:resource:path=retentionpolicies,singular=retentionpolicy,categories={kubestash,appscode}
 // +kubebuilder:printcolumn:name="Max-Retention-Period",type="string",JSONPath=".spec.maxRetentionPeriod"
 // +kubebuilder:printcolumn:name="Default",type="boolean",JSONPath=".spec.default"

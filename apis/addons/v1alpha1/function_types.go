@@ -22,8 +22,14 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
+const (
+	ResourceKindFunction     = "Function"
+	ResourcePluralFunction   = "functions"
+	ResourceSingularFunction = "function"
+)
+
+// +k8s:openapi-gen=true
 // +kubebuilder:object:root=true
-// +kubebuilder:object:generate=true
 // +kubebuilder:resource:path=functions,singular=function,scope=Cluster,shortName=fn,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 

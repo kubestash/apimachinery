@@ -17,12 +17,19 @@ limitations under the License.
 package v1alpha1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"stash.appscode.dev/kubestash/apis"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const (
+	ResourceKindBackupBlueprint     = "BackupBlueprint"
+	ResourceSingularBackupBlueprint = "backupblueprint"
+	ResourcePluralBackupBlueprint   = "backupblueprints"
+)
+
+// +k8s:openapi-gen=true
 // +kubebuilder:object:root=true
-// +kubebuilder:object:generate=true
 // +kubebuilder:resource:path=backupblueprints,singular=backupblueprint,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 

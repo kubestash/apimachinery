@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-//+kubebuilder:object:generate=true
+// +k8s:openapi-gen=true
+// +kubebuilder:object:generate=true
 package apis
 
 import (
@@ -32,6 +33,7 @@ const (
 )
 
 // TypedObjectReference let you reference an object from different namespace
+// +k8s:openapi-gen=true
 type TypedObjectReference struct {
 	core.TypedLocalObjectReference `json:",inline"`
 	// Namespace points to the namespace of the targeted object.
@@ -41,6 +43,7 @@ type TypedObjectReference struct {
 }
 
 // VolumeSource specifies the source of volume to mount in the backup/restore executor
+// +k8s:openapi-gen=true
 type VolumeSource struct {
 	core.VolumeSource `json:",inline"`
 
@@ -49,29 +52,8 @@ type VolumeSource struct {
 	VolumeClaimTemplate *core.PersistentVolumeClaimTemplate `json:"volumeClaimTemplate,omitempty"`
 }
 
-// FailurePolicy specifies what to do if a backup/restore fails
-// +kubebuilder:validation:Enum=Fail;Retry
-type FailurePolicy string
-
-const (
-	FailurePolicyFail  FailurePolicy = "Fail"
-	FailurePolicyRetry FailurePolicy = "Retry"
-)
-
-// RetryConfig specifies the behavior of retry
-type RetryConfig struct {
-	// MaxRetry specifies the maximum number of times Stash should retry the backup/restore process.
-	// By default, Stash will retry only 1 time.
-	// +kubebuilder:validation:default=1
-	MaxRetry int32 `json:"maxRetry,omitempty"`
-
-	// Delay specifies a duration to wait until next retry.
-	// By default, Stash will retry immediately.
-	// +optional
-	Delay string `json:"delay,omitempty"`
-}
-
 // ParameterDefinition defines the parameter names, their usage, their requirements etc.
+// +k8s:openapi-gen=true
 type ParameterDefinition struct {
 	// Name specifies the name of the parameter
 	Name string `json:"name,omitempty"`
@@ -89,6 +71,7 @@ type ParameterDefinition struct {
 }
 
 // UsagePolicy specifies a policy that restrict the usage of a resource across namespaces.
+// +k8s:openapi-gen=true
 type UsagePolicy struct {
 	// AllowedNamespaces specifies which namespaces are allowed to use the resource
 	// +optional
@@ -96,6 +79,7 @@ type UsagePolicy struct {
 }
 
 // AllowedNamespaces indicate which namespaces the resource should be selected from.
+// +k8s:openapi-gen=true
 type AllowedNamespaces struct {
 	// From indicates how to select the namespaces that are allowed to use this resource.
 	// Possible values are:
@@ -116,7 +100,6 @@ type AllowedNamespaces struct {
 }
 
 // FromNamespaces specifies namespace from which namespaces are allowed to use the resource.
-//
 // +kubebuilder:validation:Enum=All;Selector;Same
 type FromNamespaces string
 

@@ -17,14 +17,21 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"stash.appscode.dev/kubestash/apis"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	prober "kmodules.xyz/prober/api/v1"
-	"stash.appscode.dev/kubestash/apis"
 )
 
+const (
+	ResourceKindHookTemplate     = "HookTemplate"
+	ResourceSingularHookTemplate = "hooktemplate"
+	ResourcePluralHookTemplate   = "hooktemplates"
+)
+
+// +k8s:openapi-gen=true
 // +kubebuilder:object:root=true
-// +kubebuilder:object:generate=true
 // +kubebuilder:resource:path=hooktemplates,singular=hooktemplate,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Executor",type="string",JSONPath=".spec.executor.type"
 // +kubebuilder:printcolumn:name="Timeout",type="string",JSONPath=".spec.timeout"
@@ -33,7 +40,6 @@ import (
 // HookTemplate defines a template for some action that will be executed before or/and after backup/restore process.
 // For example, there could be a HookTemplate that pause an application before backup and another HookTemplate
 // that resume the application after backup.
-//
 // This is a namespaced CRD. However, you can use it from other namespaces. You can control which
 // namespaces are allowed to use it using the `usagePolicy` section.
 type HookTemplate struct {

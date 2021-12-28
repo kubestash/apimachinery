@@ -20,11 +20,16 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	"stash.appscode.dev/kubestash/apis"
 )
 
+const (
+	ResourceKindRestoreSession     = "RestoreSession"
+	ResourceSingularRestoreSession = "restoresession"
+	ResourcePluralRestoreSession   = "restoresessions"
+)
+
+// +k8s:openapi-gen=true
 // +kubebuilder:object:root=true
-// +kubebuilder:object:generate=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=restoresessions,singular=restoresession,shortName=restore,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Repository",type="string",JSONPath=".spec.dataSource.repository"
@@ -65,11 +70,11 @@ type RestoreSessionSpec struct {
 	// - "Retry": Stash will retry to restore the failed component according to the `retryConfig`.
 	// +kubebuilder:default=Fail
 	// +optional
-	FailurePolicy apis.FailurePolicy `json:"failurePolicy,omitempty"`
+	FailurePolicy FailurePolicy `json:"failurePolicy,omitempty"`
 
 	// RetryConfig specifies the behavior of retry in case of a restore failure.
 	// +optional
-	RetryConfig *apis.RetryConfig `json:"retryConfig,omitempty"`
+	RetryConfig *RetryConfig `json:"retryConfig,omitempty"`
 }
 
 // RestoreDataSource specifies the information about the data that will be restored
