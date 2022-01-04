@@ -19,18 +19,21 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
+    - jsonPath: .spec.storage.provider
+      name: Provider
+      type: boolean
     - jsonPath: .spec.default
       name: Default
       type: boolean
     - jsonPath: .spec.deletionPolicy
       name: Deletion-Policy
       type: string
-    - jsonPath: .status.ready
-      name: Ready
-      type: boolean
     - jsonPath: .status.totalSize
       name: Total-Size
       type: string
+    - jsonPath: .status.ready
+      name: Ready
+      type: boolean
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
@@ -80,42 +83,75 @@ spec:
                 description: Storage specifies the remote storage information
                 properties:
                   azure:
+                    description: Azure specifies the storage information for Azure
+                      Blob container
                     properties:
                       container:
+                        description: Container specifies the name of the Azure Blob
+                          container that will be used as storage backend.
                         type: string
                       maxConnections:
+                        description: MaxConnections specifies the maximum number of
+                          concurrent connections to use to upload/download data to
+                          this backend.
                         format: int64
                         type: integer
                       prefix:
+                        description: Prefix specifies a directory inside the bucket/container
+                          where the data for this backend will be stored.
                         type: string
                       secret:
+                        description: Secret specifies the name of the Secret that
+                          contains the access credential for this storage.
                         type: string
                     type: object
                   b2:
+                    description: B2 specifies the storage information for B2 bucket
                     properties:
                       bucket:
+                        description: Bucket specifies the name of the bucket that
+                          will be used as storage backend.
                         type: string
                       maxConnections:
+                        description: MaxConnections specifies the maximum number of
+                          concurrent connections to use to upload/download data to
+                          this backend.
                         format: int64
                         type: integer
                       prefix:
+                        description: Prefix specifies a directory inside the bucket/container
+                          where the data for this backend will be stored.
                         type: string
                       secret:
+                        description: Secret specifies the name of the Secret that
+                          contains the access credential for this storage.
                         type: string
                     type: object
                   gcs:
+                    description: GCS specifies the storage information for GCS bucket
                     properties:
                       bucket:
+                        description: Bucket specifies the name of the bucket that
+                          will be used as storage backend.
                         type: string
                       maxConnections:
+                        description: MaxConnections specifies the maximum number of
+                          concurrent connections to use to upload/download data to
+                          this backend.
                         format: int64
                         type: integer
                       prefix:
+                        description: Prefix specifies a directory inside the bucket/container
+                          where the data for this backend will be stored.
                         type: string
                       secret:
+                        description: Secret specifies the name of the Secret that
+                          contains the access credential for this storage.
                         type: string
                     type: object
                   local:
+                    description: Local specifies the storage information for local
+                      provider
                     properties:
                       awsElasticBlockStore:
                         description: 'AWSElasticBlockStore represents an AWS Disk
@@ -965,6 +1001,8 @@ spec:
                         - targetPortal
                         type: object
                       mountPath:
+                        description: MountPath specifies the directory where this
+                          volume will be mounted
                         type: string
                       nfs:
                         description: 'NFS represents an NFS mount on the host that
@@ -1554,6 +1592,8 @@ spec:
                             type: string
                         type: object
                       subPath:
+                        description: Path within the volume from which the container's
+                          volume should be mounted. Defaults to "" (volume's root).
                         type: string
                       vsphereVolume:
                         description: VsphereVolume represents a vSphere volume attached
@@ -1579,33 +1619,61 @@ spec:
                         - volumePath
                         type: object
                     type: object
+                  provider:
+                    description: Provider specifies the provider of the storage
+                    type: string
                   rest:
+                    description: Rest specifies the storage information for rest storage
+                      server
                     properties:
                       secret:
+                        description: Secret specifies the name of the Secret that
+                          contains the access credential for this storage.
                         type: string
                       url:
+                        description: URL specifies the URL of the REST storage server
                         type: string
                     type: object
                   s3:
+                    description: S3 specifies the storage information for AWS S3 and
+                      S3 compatible storage.
                     properties:
                       bucket:
+                        description: Bucket specifies the name of the bucket that
+                          will be used as storage backend.
                         type: string
                       endpoint:
+                        description: Endpoint specifies the URL of the S3 or S3 compatible
+                          storage bucket.
                         type: string
                       prefix:
+                        description: Prefix specifies a directory inside the bucket/container
+                          where the data for this backend will be stored.
                         type: string
                       region:
+                        description: Region specifies the region where the bucket
+                          is located
                         type: string
                       secret:
+                        description: Secret specifies the name of the Secret that
+                          contains the access credential for this storage.
                         type: string
                     type: object
                   swift:
+                    description: Swift specifies the storage information for Swift
+                      container
                     properties:
                       container:
+                        description: Container specifies the name of the Swift container
+                          that will be used as storage backend.
                         type: string
                       prefix:
+                        description: Prefix specifies a directory inside the bucket/container
+                          where the data for this backend will be stored.
                         type: string
                       secret:
+                        description: Secret specifies the name of the Secret that
+                          contains the access credential for this storage.
                         type: string
                     type: object
                 type: object

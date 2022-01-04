@@ -154,6 +154,9 @@ gen: manifests openapi ## Runs all the generators. Run this command after modify
 .PHONY: manifests
 manifests: gen-deepcopy gen-crds label-crds gen-rbac gen-webhook ## Runs all the generator except "openapi".
 
+.PHONY: generate
+generate: manifests
+
 .PHONY: gen-deepcopy
 gen-deepcopy: ## Generate DeepCopy functions for the APIs. Run this command after modifying the API types
 	@echo "Generating DeepCopy........."

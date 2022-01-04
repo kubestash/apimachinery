@@ -14,6 +14,10 @@ resources:
   kind: BackupStorage
   path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
   version: v1alpha1
+  webhooks:
+    defaulting: true
+    validation: true
+    webhookVersion: v1
 - api:
     crdVersion: v1
     namespaced: true
@@ -23,6 +27,9 @@ resources:
   kind: Repository
   path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
   version: v1alpha1
+  webhooks:
+    validation: true
+    webhookVersion: v1
 - api:
     crdVersion: v1
     namespaced: true
@@ -35,12 +42,15 @@ resources:
 - api:
     crdVersion: v1
     namespaced: true
-  controller: true
   domain: kubestash.com
   group: storage
   kind: RetentionPolicy
   path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
   version: v1alpha1
+  webhooks:
+    defaulting: true
+    validation: true
+    webhookVersion: v1
 - api:
     crdVersion: v1
     namespaced: true
@@ -66,6 +76,9 @@ resources:
   kind: BackupConfiguration
   path: stash.appscode.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
+  webhooks:
+    validation: true
+    webhookVersion: v1
 - api:
     crdVersion: v1
     namespaced: true
@@ -75,6 +88,9 @@ resources:
   kind: BackupSession
   path: stash.appscode.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
+  webhooks:
+    validation: true
+    webhookVersion: v1
 - api:
     crdVersion: v1
     namespaced: true
@@ -84,6 +100,9 @@ resources:
   kind: BackupBatch
   path: stash.appscode.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
+  webhooks:
+    validation: true
+    webhookVersion: v1
 - api:
     crdVersion: v1
     namespaced: true
@@ -93,6 +112,9 @@ resources:
   kind: RestoreSession
   path: stash.appscode.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
+  webhooks:
+    validation: true
+    webhookVersion: v1
 - api:
     crdVersion: v1
     namespaced: true
@@ -101,6 +123,10 @@ resources:
   kind: HookTemplate
   path: stash.appscode.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
+  webhooks:
+    defaulting: true
+    validation: true
+    webhookVersion: v1
 - api:
     crdVersion: v1
     namespaced: true
@@ -110,4 +136,8 @@ resources:
   kind: BackupBlueprint
   path: stash.appscode.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
+  webhooks:
+    defaulting: true
+    validation: true
+    webhookVersion: v1
 version: "3"

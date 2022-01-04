@@ -104,13 +104,7 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Snapshot")
 		os.Exit(1)
 	}
-	if err = (&storagecontrollers.RetentionPolicyReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "RetentionPolicy")
-		os.Exit(1)
-	}
+
 	if err = (&corecontrollers.BackupConfigurationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -144,6 +138,42 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "BackupBlueprint")
+		os.Exit(1)
+	}
+	if err = (&corev1alpha1.BackupBatch{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "BackupBatch")
+		os.Exit(1)
+	}
+	if err = (&corev1alpha1.BackupBlueprint{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "BackupBlueprint")
+		os.Exit(1)
+	}
+	if err = (&corev1alpha1.BackupConfiguration{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "BackupConfiguration")
+		os.Exit(1)
+	}
+	if err = (&corev1alpha1.BackupSession{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "BackupSession")
+		os.Exit(1)
+	}
+	if err = (&corev1alpha1.RestoreSession{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "RestoreSession")
+		os.Exit(1)
+	}
+	if err = (&corev1alpha1.HookTemplate{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "HookTemplate")
+		os.Exit(1)
+	}
+	if err = (&storagev1alpha1.BackupStorage{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "BackupStorage")
+		os.Exit(1)
+	}
+	if err = (&storagev1alpha1.RetentionPolicy{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "RetentionPolicy")
+		os.Exit(1)
+	}
+	if err = (&storagev1alpha1.Repository{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "Repository")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

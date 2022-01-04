@@ -18347,26 +18347,30 @@ func schema_kubestash_apis_storage_v1alpha1_AzureSpec(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"container": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Container specifies the name of the Azure Blob container that will be used as storage backend.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"prefix": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Prefix specifies a directory inside the bucket/container where the data for this backend will be stored.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"maxConnections": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Description: "MaxConnections specifies the maximum number of concurrent connections to use to upload/download data to this backend.",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
 					"secret": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Secret specifies the name of the Secret that contains the access credential for this storage.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -18383,26 +18387,30 @@ func schema_kubestash_apis_storage_v1alpha1_B2Spec(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"bucket": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Bucket specifies the name of the bucket that will be used as storage backend.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"prefix": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Prefix specifies a directory inside the bucket/container where the data for this backend will be stored.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"maxConnections": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Description: "MaxConnections specifies the maximum number of concurrent connections to use to upload/download data to this backend.",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
 					"secret": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Secret specifies the name of the Secret that contains the access credential for this storage.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -18417,39 +18425,53 @@ func schema_kubestash_apis_storage_v1alpha1_Backend(ref common.ReferenceCallback
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"provider": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Provider specifies the provider of the storage",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"local": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.LocalSpec"),
+							Description: "Local specifies the storage information for local provider",
+							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.LocalSpec"),
 						},
 					},
 					"s3": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.S3Spec"),
+							Description: "S3 specifies the storage information for AWS S3 and S3 compatible storage.",
+							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.S3Spec"),
 						},
 					},
 					"gcs": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.GCSSpec"),
+							Description: "GCS specifies the storage information for GCS bucket",
+							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.GCSSpec"),
 						},
 					},
 					"azure": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.AzureSpec"),
+							Description: "Azure specifies the storage information for Azure Blob container",
+							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.AzureSpec"),
 						},
 					},
 					"swift": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.SwiftSpec"),
+							Description: "Swift specifies the storage information for Swift container",
+							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.SwiftSpec"),
 						},
 					},
 					"b2": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.B2Spec"),
+							Description: "B2 specifies the storage information for B2 bucket",
+							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.B2Spec"),
 						},
 					},
 					"rest": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.RestServerSpec"),
+							Description: "Rest specifies the storage information for rest storage server",
+							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.RestServerSpec"),
 						},
 					},
 				},
@@ -18733,26 +18755,30 @@ func schema_kubestash_apis_storage_v1alpha1_GCSSpec(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"bucket": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Bucket specifies the name of the bucket that will be used as storage backend.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"prefix": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Prefix specifies a directory inside the bucket/container where the data for this backend will be stored.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"maxConnections": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Description: "MaxConnections specifies the maximum number of concurrent connections to use to upload/download data to this backend.",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
 					"secret": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Secret specifies the name of the Secret that contains the access credential for this storage.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -18943,14 +18969,16 @@ func schema_kubestash_apis_storage_v1alpha1_LocalSpec(ref common.ReferenceCallba
 					},
 					"mountPath": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "MountPath specifies the directory where this volume will be mounted",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"subPath": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Path within the volume from which the container's volume should be mounted. Defaults to \"\" (volume's root).",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -19228,14 +19256,16 @@ func schema_kubestash_apis_storage_v1alpha1_RestServerSpec(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "URL specifies the URL of the REST storage server",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"secret": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Secret specifies the name of the Secret that contains the access credential for this storage.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -19432,32 +19462,37 @@ func schema_kubestash_apis_storage_v1alpha1_S3Spec(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"endpoint": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Endpoint specifies the URL of the S3 or S3 compatible storage bucket.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"bucket": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Bucket specifies the name of the bucket that will be used as storage backend.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"prefix": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Prefix specifies a directory inside the bucket/container where the data for this backend will be stored.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"region": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Region specifies the region where the bucket is located",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"secret": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Secret specifies the name of the Secret that contains the access credential for this storage.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -19815,20 +19850,23 @@ func schema_kubestash_apis_storage_v1alpha1_SwiftSpec(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"container": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Container specifies the name of the Swift container that will be used as storage backend.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"prefix": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Prefix specifies a directory inside the bucket/container where the data for this backend will be stored.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"secret": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Secret specifies the name of the Secret that contains the access credential for this storage.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

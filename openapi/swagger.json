@@ -13051,16 +13051,20 @@
       "type": "object",
       "properties": {
         "container": {
+          "description": "Container specifies the name of the Azure Blob container that will be used as storage backend.",
           "type": "string"
         },
         "maxConnections": {
+          "description": "MaxConnections specifies the maximum number of concurrent connections to use to upload/download data to this backend.",
           "type": "integer",
           "format": "int64"
         },
         "prefix": {
+          "description": "Prefix specifies a directory inside the bucket/container where the data for this backend will be stored.",
           "type": "string"
         },
         "secret": {
+          "description": "Secret specifies the name of the Secret that contains the access credential for this storage.",
           "type": "string"
         }
       }
@@ -13069,16 +13073,20 @@
       "type": "object",
       "properties": {
         "bucket": {
+          "description": "Bucket specifies the name of the bucket that will be used as storage backend.",
           "type": "string"
         },
         "maxConnections": {
+          "description": "MaxConnections specifies the maximum number of concurrent connections to use to upload/download data to this backend.",
           "type": "integer",
           "format": "int64"
         },
         "prefix": {
+          "description": "Prefix specifies a directory inside the bucket/container where the data for this backend will be stored.",
           "type": "string"
         },
         "secret": {
+          "description": "Secret specifies the name of the Secret that contains the access credential for this storage.",
           "type": "string"
         }
       }
@@ -13087,24 +13095,35 @@
       "type": "object",
       "properties": {
         "azure": {
+          "description": "Azure specifies the storage information for Azure Blob container",
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.AzureSpec"
         },
         "b2": {
+          "description": "B2 specifies the storage information for B2 bucket",
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.B2Spec"
         },
         "gcs": {
+          "description": "GCS specifies the storage information for GCS bucket",
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.GCSSpec"
         },
         "local": {
+          "description": "Local specifies the storage information for local provider",
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.LocalSpec"
         },
+        "provider": {
+          "description": "Provider specifies the provider of the storage",
+          "type": "string"
+        },
         "rest": {
+          "description": "Rest specifies the storage information for rest storage server",
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RestServerSpec"
         },
         "s3": {
+          "description": "S3 specifies the storage information for AWS S3 and S3 compatible storage.",
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.S3Spec"
         },
         "swift": {
+          "description": "Swift specifies the storage information for Swift container",
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.SwiftSpec"
         }
       }
@@ -13272,16 +13291,20 @@
       "type": "object",
       "properties": {
         "bucket": {
+          "description": "Bucket specifies the name of the bucket that will be used as storage backend.",
           "type": "string"
         },
         "maxConnections": {
+          "description": "MaxConnections specifies the maximum number of concurrent connections to use to upload/download data to this backend.",
           "type": "integer",
           "format": "int64"
         },
         "prefix": {
+          "description": "Prefix specifies a directory inside the bucket/container where the data for this backend will be stored.",
           "type": "string"
         },
         "secret": {
+          "description": "Secret specifies the name of the Secret that contains the access credential for this storage.",
           "type": "string"
         }
       }
@@ -13362,6 +13385,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.ISCSIVolumeSource"
         },
         "mountPath": {
+          "description": "MountPath specifies the directory where this volume will be mounted",
           "type": "string"
         },
         "nfs": {
@@ -13405,6 +13429,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.StorageOSVolumeSource"
         },
         "subPath": {
+          "description": "Path within the volume from which the container's volume should be mounted. Defaults to \"\" (volume's root).",
           "type": "string"
         },
         "vsphereVolume": {
@@ -13575,9 +13600,11 @@
       "type": "object",
       "properties": {
         "secret": {
+          "description": "Secret specifies the name of the Secret that contains the access credential for this storage.",
           "type": "string"
         },
         "url": {
+          "description": "URL specifies the URL of the REST storage server",
           "type": "string"
         }
       }
@@ -13700,18 +13727,23 @@
       "type": "object",
       "properties": {
         "bucket": {
+          "description": "Bucket specifies the name of the bucket that will be used as storage backend.",
           "type": "string"
         },
         "endpoint": {
+          "description": "Endpoint specifies the URL of the S3 or S3 compatible storage bucket.",
           "type": "string"
         },
         "prefix": {
+          "description": "Prefix specifies a directory inside the bucket/container where the data for this backend will be stored.",
           "type": "string"
         },
         "region": {
+          "description": "Region specifies the region where the bucket is located",
           "type": "string"
         },
         "secret": {
+          "description": "Secret specifies the name of the Secret that contains the access credential for this storage.",
           "type": "string"
         }
       }
@@ -13927,12 +13959,15 @@
       "type": "object",
       "properties": {
         "container": {
+          "description": "Container specifies the name of the Swift container that will be used as storage backend.",
           "type": "string"
         },
         "prefix": {
+          "description": "Prefix specifies a directory inside the bucket/container where the data for this backend will be stored.",
           "type": "string"
         },
         "secret": {
+          "description": "Secret specifies the name of the Secret that contains the access credential for this storage.",
           "type": "string"
         }
       }

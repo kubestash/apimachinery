@@ -32,10 +32,11 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=backupstorages,singular=backupstorage,categories={kubestash,appscode,all}
+// +kubebuilder:printcolumn:name="Provider",type="boolean",JSONPath=".spec.storage.provider"
 // +kubebuilder:printcolumn:name="Default",type="boolean",JSONPath=".spec.default"
 // +kubebuilder:printcolumn:name="Deletion-Policy",type="string",JSONPath=".spec.deletionPolicy"
-// +kubebuilder:printcolumn:name="Ready",type="boolean",JSONPath=".status.ready"
 // +kubebuilder:printcolumn:name="Total-Size",type="string",JSONPath=".status.totalSize"
+// +kubebuilder:printcolumn:name="Ready",type="boolean",JSONPath=".status.ready"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // BackupStorage specifies the backend information where the backed up data of different applications will be stored.
