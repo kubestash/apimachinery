@@ -45,7 +45,7 @@ REGISTRY ?= stashed
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS          ?= "crd:generateEmbeddedObjectMeta=true"
 CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.21
-API_GROUPS           ?= addons:v1alpha1 core:v1alpha1 storage:v1alpha1
+API_GROUPS           ?= addons:v1alpha1 core:v1alpha1 storage:v1alpha1 config:v1alpha1
 
 # This version-strategy uses git tags to set the version string
 git_branch       := $(shell git rev-parse --abbrev-ref HEAD)
@@ -74,7 +74,7 @@ RESTIC_VER       := 0.12.1
 ###
 
 SRC_PKGS := apis controllers crds
-SRC_DIRS := $(SRC_PKGS) hack/gencrd # directories which hold app source (not vendored)
+SRC_DIRS := $(SRC_PKGS) hack/gencrd hack/kubestash-crd-installer# directories which hold app source (not vendored)
 
 DOCKER_PLATFORMS := linux/amd64 linux/arm linux/arm64
 BIN_PLATFORMS    := $(DOCKER_PLATFORMS) windows/amd64 darwin/amd64
@@ -202,7 +202,7 @@ gen-webhook: ## Generate the WebhookConfiguration files. Run this command after 
 		controller-gen                      \
 			webhook							\
 			paths="./..." 					\
-			output:webhook:artifacts:config=config/webhooks
+			output:webhook:artifacts:config=config/webhook
 
 # Generate CRD manifests
 .PHONY: gen-crds
@@ -447,7 +447,7 @@ bin/.container-$(DOTFILE_IMAGE)-%: bin/$(OS)_$(ARCH)/$(BIN) $(DOCKERFILE_%)
 	    -e 's|{ARG_ARCH}|$(ARCH)|g'                 \
 	    -e 's|{ARG_OS}|$(OS)|g'                     \
 	    -e 's|{ARG_FROM}|$(BASEIMAGE_$*)|g'         \
-#	    -e 's|{RESTIC_VER}|$(RESTIC_VER)|g'         \
+	    -e 's|{RESTIC_VER}|$(RESTIC_VER)|g'         \
 	    $(DOCKERFILE_$*) > bin/.dockerfile-$*-$(OS)_$(ARCH)
 	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform $(OS)/$(ARCH) --load --pull -t $(IMAGE):$(TAG_$*) -f bin/.dockerfile-$*-$(OS)_$(ARCH) .
 	@docker images -q $(IMAGE):$(TAG_$*) > $@
@@ -465,6 +465,14 @@ push-to-kind: container ## Build docker image and push into local Kind cluster.
 	@kind load docker-image $(IMAGE):$(TAG)
 	@echo "Image has been pushed successfully into kind cluster."
 
+CRD_INSTALLER_TAG ?=$(TAG)
+KO := $(shell go env GOPATH)/bin/ko
+
+.PHONY: push-crd-installer
+push-crd-installer: $(BUILD_DIRS) install-ko ## Build and push CRD installer image
+	@echo "Pushing CRD installer image....."
+	DOCKER_CLI_EXPERIMENTAL=enabled KO_DOCKER_REPO=$(REGISTRY) $(KO) publish ./hack/kubestash-crd-installer --tags $(CRD_INSTALLER_TAG)  --base-import-paths  --platform=all
+
 .PHONY: docker-manifest
 docker-manifest: docker-manifest-PROD docker-manifest-DBG ## Make docker manifest for multi-arch docker images.
 docker-manifest-%:
@@ -472,9 +480,10 @@ docker-manifest-%:
 	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(IMAGE):$(VERSION_$*)
 
 ##@ Deploy
-REGISTRY_SECRET ?=
-KUBE_NAMESPACE  ?= kube-system
-LICENSE_FILE    ?=
+REGISTRY_SECRET 		?=
+OPERATOR_NAMESPACE		?= kubestash
+LICENSE_FILE    		?=
+IMAGE_PULL_POLICY 		?=IfNotPresent
 
 ifeq ($(strip $(REGISTRY_SECRET)),)
 	IMAGE_PULL_SECRETS =
@@ -496,22 +505,20 @@ run: ## Run the operator locally.
 
 .PHONY: install
 install: ## Install KubeStash in the current cluster.
-	@cd ../installer; \
-	helm dependency update charts/stash ;                   \
-	helm install stash charts/stash --wait                  \
-		--namespace=$(KUBE_NAMESPACE)		                \
-		--set features.enterprise=true                      \
-		--set-file global.license=$(LICENSE_FILE)	        \
-		--set stash-enterprise.operator.registry=$(REGISTRY)\
-		--set stash-enterprise.operator.tag=$(TAG)			\
-		--set stash-enterprise.imagePullPolicy=IfNotPresent	\
-		$(IMAGE_PULL_SECRETS);				                \
-	kubectl wait --for=condition=Available apiservice -l 'app.kubernetes.io/name=stash-enterprise,app.kubernetes.io/instance=stash' --timeout=5m
+	helm dependency update charts/kubestash ;                   		\
+	helm install kubestash charts/kubestash --wait --create-namespace	\
+		--namespace=$(OPERATOR_NAMESPACE)								\
+		--set-file global.license=$(LICENSE_FILE)						\
+		--set kubestash-operator.operator.registry=$(REGISTRY)			\
+		--set kubestash-operator.operator.tag=$(TAG)	   				\
+		--set kubestash-operator.imagePullPolicy=$(IMAGE_PULL_POLICY)	\
+		--set kubestash-operator.crdInstaller.tag=$(CRD_INSTALLER_TAG) 	\
+		$(IMAGE_PULL_SECRETS);				                			\
+	kubectl wait --for=condition=Ready pods -l 'app.kubernetes.io/name=kubestash-operator,app.kubernetes.io/instance=kubestash' --timeout=5m -n $(OPERATOR_NAMESPACE)
 
 .PHONY: uninstall
 uninstall: ## Uninstall KubeSash from the current cluster. This will not remove the registered CRDs.
-	@cd ../installer; \
-	helm uninstall stash --namespace=$(KUBE_NAMESPACE) || true
+	helm uninstall kubestash --namespace=$(OPERATOR_NAMESPACE) || true
 
 .PHONY: deploy-to-kind
 deploy-to-kind: uninstall push-to-kind install ## Build and deploy the operator in the local Kind cluster.
@@ -635,7 +642,7 @@ release: ## Release final production docker image and push into the DockerHub.
 		echo "apply tag to release binaries and/or docker images."; \
 		exit 1;                                                     \
 	fi
-	@$(MAKE) clean all-push docker-manifest --no-print-directory
+	@$(MAKE) clean all-push docker-manifest push-crd-installer --no-print-directory
 
 .PHONY: verify
 verify: verify-gen verify-modules ## Verify that the generated codes and modules are up-to-date.
@@ -653,3 +660,8 @@ verify-modules: ## Verify that module files are up-to-date.
 	@if !(git diff --exit-code HEAD); then \
 		echo "go module files are out of date"; exit 1; \
 	fi
+
+.PHONY: install-ko
+install-ko:
+	@echo "Installing: github.com/google/ko"
+	go install github.com/google/ko@latest

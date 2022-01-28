@@ -151,6 +151,10 @@ API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,X509Subject,
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,X509Subject,PostalCodes
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,X509Subject,Provinces
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,X509Subject,StreetAddresses
+API rule violation: list_type_missing,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,AddKeyTransform,Value
+API rule violation: list_type_missing,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,AppBindingSpec,SecretTransforms
+API rule violation: list_type_missing,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,ClientConfig,CABundle
+API rule violation: list_type_missing,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,TaskRef,Params
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ContainerRuntimeSettings,Env
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ContainerRuntimeSettings,EnvFrom
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PartialObjectMeta,OwnerReferences
@@ -168,10 +172,6 @@ API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSp
 API rule violation: list_type_missing,kmodules.xyz/prober/api/v1,FormEntry,Values
 API rule violation: list_type_missing,kmodules.xyz/prober/api/v1,HTTPPostAction,Form
 API rule violation: list_type_missing,kmodules.xyz/prober/api/v1,HTTPPostAction,HTTPHeaders
-API rule violation: list_type_missing,stash.appscode.dev/kubestash/apis/storage/v1alpha1,BackupStorageStatus,Conditions
-API rule violation: list_type_missing,stash.appscode.dev/kubestash/apis/storage/v1alpha1,BackupStorageStatus,Repositories
-API rule violation: list_type_missing,stash.appscode.dev/kubestash/apis/storage/v1alpha1,RepositoryStatus,RecentSnapshots
-API rule violation: list_type_missing,stash.appscode.dev/kubestash/apis/storage/v1alpha1,SnapshotStatus,Components
 API rule violation: names_match,k8s.io/api/core/v1,AzureDiskVolumeSource,DataDiskURI
 API rule violation: names_match,k8s.io/api/core/v1,ContainerStatus,LastTerminationState
 API rule violation: names_match,k8s.io/api/core/v1,DaemonEndpoint,Port

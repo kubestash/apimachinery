@@ -84,10 +84,10 @@ func generateSwaggerJson(version string) {
 			{corev1alpha1.GroupVersion, corev1alpha1.ResourcePluralRestoreSession, corev1alpha1.ResourceKindRestoreSession, true},
 
 			// storage/v1alpha1 resources
-			{storagev1alpha1.GroupVersion, storagev1alpha1.ResourcePluralBackupStorage, storagev1alpha1.ResourceKindBackupStorage, false},
-			{storagev1alpha1.GroupVersion, storagev1alpha1.ResourcePluralRepository, storagev1alpha1.ResourceKindRepository, false},
-			{storagev1alpha1.GroupVersion, storagev1alpha1.ResourcePluralRetentionPolicy, storagev1alpha1.ResourceKindRetentionPolicy, false},
-			{storagev1alpha1.GroupVersion, storagev1alpha1.ResourcePluralSnapshot, storagev1alpha1.ResourceKindSnapshot, false},
+			{storagev1alpha1.GroupVersion, storagev1alpha1.ResourcePluralBackupStorage, storagev1alpha1.ResourceKindBackupStorage, true},
+			{storagev1alpha1.GroupVersion, storagev1alpha1.ResourcePluralRepository, storagev1alpha1.ResourceKindRepository, true},
+			{storagev1alpha1.GroupVersion, storagev1alpha1.ResourcePluralRetentionPolicy, storagev1alpha1.ResourceKindRetentionPolicy, true},
+			{storagev1alpha1.GroupVersion, storagev1alpha1.ResourcePluralSnapshot, storagev1alpha1.ResourceKindSnapshot, true},
 		},
 	})
 	if err != nil {

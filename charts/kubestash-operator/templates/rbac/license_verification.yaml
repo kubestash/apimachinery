@@ -1,0 +1,88 @@
+# ===================== License verification permissions for operator ======================
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "kubestash-operator.fullname" . }}-operator-license-verification
+  labels:
+    {{- include "kubestash-operator.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+rules:
+# Get cluster id
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs: ["get"]
+# Detect workload/owner of operator pod
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs: ["get"]
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - replicasets
+  verbs: ["get"]
+# Write events in case of license verification failure
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs: ["get", "list", "create", "patch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "kubestash-operator.fullname" . }}-operator-license-verification
+  labels:
+    {{- include "kubestash-operator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "kubestash-operator.fullname" . }}-operator-license-verification
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "kubestash-operator.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+---
+
+# ================== License verification permission for Addons =========================
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "kubestash-operator.fullname" . }}-addon-license-verification
+  labels:
+    {{- include "kubestash-operator.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+rules:
+  # Detect license server endpoint for stash addons
+  - apiGroups:
+      - apiregistration.k8s.io
+    resources:
+      - apiservices
+    verbs: ["get"]
+  - nonResourceURLs:
+      - /appscode/license
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "kubestash-operator.fullname" . }}-addon-license-verification
+  labels:
+    {{- include "kubestash-operator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "kubestash-operator.fullname" . }}-addon-license-verification
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "kubestash-operator.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}

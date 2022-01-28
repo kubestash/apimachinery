@@ -338,12 +338,32 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"k8s.io/apimachinery/pkg/version.Info":                                             schema_k8sio_apimachinery_pkg_version_Info(ref),
 		"kmodules.xyz/client-go/api/v1.CertificatePrivateKey":                              schema_kmodulesxyz_client_go_api_v1_CertificatePrivateKey(ref),
 		"kmodules.xyz/client-go/api/v1.CertificateSpec":                                    schema_kmodulesxyz_client_go_api_v1_CertificateSpec(ref),
+		"kmodules.xyz/client-go/api/v1.ClusterMetadata":                                    schema_kmodulesxyz_client_go_api_v1_ClusterMetadata(ref),
 		"kmodules.xyz/client-go/api/v1.Condition":                                          schema_kmodulesxyz_client_go_api_v1_Condition(ref),
+		"kmodules.xyz/client-go/api/v1.ObjectID":                                           schema_kmodulesxyz_client_go_api_v1_ObjectID(ref),
+		"kmodules.xyz/client-go/api/v1.ObjectInfo":                                         schema_kmodulesxyz_client_go_api_v1_ObjectInfo(ref),
 		"kmodules.xyz/client-go/api/v1.ObjectReference":                                    schema_kmodulesxyz_client_go_api_v1_ObjectReference(ref),
 		"kmodules.xyz/client-go/api/v1.ResourceID":                                         schema_kmodulesxyz_client_go_api_v1_ResourceID(ref),
 		"kmodules.xyz/client-go/api/v1.TLSConfig":                                          schema_kmodulesxyz_client_go_api_v1_TLSConfig(ref),
 		"kmodules.xyz/client-go/api/v1.X509Subject":                                        schema_kmodulesxyz_client_go_api_v1_X509Subject(ref),
 		"kmodules.xyz/client-go/api/v1.stringSetMerger":                                    schema_kmodulesxyz_client_go_api_v1_stringSetMerger(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeyTransform":           schema_custom_resources_apis_appcatalog_v1alpha1_AddKeyTransform(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeysFromTransform":      schema_custom_resources_apis_appcatalog_v1alpha1_AddKeysFromTransform(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppBinding":                schema_custom_resources_apis_appcatalog_v1alpha1_AppBinding(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppBindingList":            schema_custom_resources_apis_appcatalog_v1alpha1_AppBindingList(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppBindingSpec":            schema_custom_resources_apis_appcatalog_v1alpha1_AppBindingSpec(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference":              schema_custom_resources_apis_appcatalog_v1alpha1_AppReference(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.ClientConfig":              schema_custom_resources_apis_appcatalog_v1alpha1_ClientConfig(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.ObjectReference":           schema_custom_resources_apis_appcatalog_v1alpha1_ObjectReference(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.Param":                     schema_custom_resources_apis_appcatalog_v1alpha1_Param(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.RemoveKeyTransform":        schema_custom_resources_apis_appcatalog_v1alpha1_RemoveKeyTransform(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.RenameKeyTransform":        schema_custom_resources_apis_appcatalog_v1alpha1_RenameKeyTransform(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.SecretTransform":           schema_custom_resources_apis_appcatalog_v1alpha1_SecretTransform(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.ServiceReference":          schema_custom_resources_apis_appcatalog_v1alpha1_ServiceReference(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddon":                schema_custom_resources_apis_appcatalog_v1alpha1_StashAddon(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec":            schema_custom_resources_apis_appcatalog_v1alpha1_StashAddonSpec(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashTaskSpec":             schema_custom_resources_apis_appcatalog_v1alpha1_StashTaskSpec(ref),
+		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.TaskRef":                   schema_custom_resources_apis_appcatalog_v1alpha1_TaskRef(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings":                        schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.IONiceSettings":                                  schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.NiceSettings":                                    schema_kmodulesxyz_offshoot_api_api_v1_NiceSettings(ref),
@@ -16634,6 +16654,44 @@ func schema_kmodulesxyz_client_go_api_v1_CertificateSpec(ref common.ReferenceCal
 	}
 }
 
+func schema_kmodulesxyz_client_go_api_v1_ClusterMetadata(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"displayName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"provider": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"uid"},
+			},
+		},
+	}
+}
+
 func schema_kmodulesxyz_client_go_api_v1_Condition(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -16692,6 +16750,69 @@ func schema_kmodulesxyz_client_go_api_v1_Condition(ref common.ReferenceCallback)
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_ObjectID(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_ObjectInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/client-go/api/v1.ResourceID"),
+						},
+					},
+					"ref": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+				},
+				Required: []string{"resource", "ref"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.ResourceID"},
 	}
 }
 
@@ -16941,6 +17062,620 @@ func schema_kmodulesxyz_client_go_api_v1_stringSetMerger(ref common.ReferenceCal
 				Type: []string{"object"},
 			},
 		},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_AddKeyTransform(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AddKeyTransform specifies that Service Catalog should add an additional entry to the Secret associated with the ServiceBinding. For example, given the following AddKeyTransform:\n    {\"key\": \"CONNECTION_POOL_SIZE\", \"stringValue\": \"10\"}\nthe following entry will appear in the Secret:\n    \"CONNECTION_POOL_SIZE\": \"10\"\nNote that this transform should only be used to add non-sensitive (non-secret) values. To add sensitive information, the AddKeysFromTransform should be used instead.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of the key to add",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The binary value (possibly non-string) to add to the Secret under the specified key. If both value and stringValue are specified, then value is ignored and stringValue is stored.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"stringValue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The string (non-binary) value to add to the Secret under the specified key.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"key"},
+			},
+		},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_AddKeysFromTransform(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AddKeysFromTransform specifies that Service Catalog should merge an existing secret into the Secret associated with the ServiceBinding. For example, given the following AddKeysFromTransform:\n    {\"secretRef\": {\"namespace\": \"foo\", \"name\": \"bar\"}}\nthe entries of the Secret \"bar\" from Namespace \"foo\" will be merged into the credentials Secret.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The reference to the Secret that should be merged into the credentials Secret.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_AppBinding(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppBindingSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppBindingSpec"},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_AppBindingList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AppBindingList is a list of Apps",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of AppBinding CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppBinding"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppBinding"},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_AppBindingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AppBindingSpec is the spec for app",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type used to facilitate programmatic handling of application.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version used to facilitate programmatic handling of application.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clientConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientConfig defines how to communicate with the app. Required",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.ClientConfig"),
+						},
+					},
+					"secret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Secret is the name of the secret to create in the AppBinding's namespace that will hold the credentials associated with the AppBinding.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"secretTransforms": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of transformations that should be applied to the credentials associated with the ServiceBinding before they are inserted into the Secret.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.SecretTransform"),
+									},
+								},
+							},
+						},
+					},
+					"parameters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Parameters is a set of the parameters to be used to connect to the app. The inline YAML/JSON payload to be translated into equivalent JSON object.\n\nThe Parameters field is NOT secret or secured in any way and should NEVER be used to hold sensitive information. To set parameters that contain secret information, you should ALWAYS store that information in a Secret.",
+							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+				},
+				Required: []string{"clientConfig"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/runtime.RawExtension", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.ClientConfig", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.SecretTransform"},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_AppReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`namespace` is the namespace of the app. Required",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`name` is the name of the app. Required",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"parameters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Parameters is a set of the parameters to be used to override default parameters. The inline YAML/JSON payload to be translated into equivalent JSON object.\n\nThe Parameters field is NOT secret or secured in any way and should NEVER be used to hold sensitive information.",
+							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+				},
+				Required: []string{"namespace", "name"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_ClientConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClientConfig contains the information to make a connection with an app",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`url` gives the location of the app, in standard URL form (`[scheme://]host:port/path`). Exactly one of `url` or `service` must be specified.\n\nThe `host` should not refer to a service running in the cluster; use the `service` field instead. The host might be resolved via external DNS in some apiservers (e.g., `kube-apiserver` cannot resolve in-cluster DNS as that would be a layering violation). `host` may also be an IP address.\n\nA path is optional, and if present may be any string permissible in a URL. You may use the path to pass an arbitrary string to the app, for example, a cluster identifier.\n\nAttempting to use a user or basic auth e.g. \"user:password@\" is not allowed. Fragments (\"#...\") and query parameters (\"?...\") are not allowed, either.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"service": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`service` is a reference to the service for this app. Either `service` or `url` must be specified.\n\nIf the webhook is running within the cluster, then you should use `service`.",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.ServiceReference"),
+						},
+					},
+					"insecureSkipTLSVerify": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InsecureSkipTLSVerify disables TLS certificate verification when communicating with this app. This is strongly discouraged.  You should use the CABundle instead.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"caBundle": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CABundle is a PEM encoded CA bundle which will be used to validate the serving certificate of this app.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.ServiceReference"},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_ObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObjectReference contains enough information to let you locate the referenced object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace of the referent.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the referent.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_Param(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Param declares a value to use for the Param called Name.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"name", "value"},
+			},
+		},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_RemoveKeyTransform(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RemoveKeyTransform specifies that one of the credentials keys returned from the broker should not be included in the credentials Secret.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The key to remove from the Secret",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"key"},
+			},
+		},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_RenameKeyTransform(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RenameKeyTransform specifies that one of the credentials keys returned from the broker should be renamed and stored under a different key in the Secret. For example, given the following credentials entry:\n    \"USERNAME\": \"johndoe\"\nand the following RenameKeyTransform:\n    {\"from\": \"USERNAME\", \"to\": \"DB_USER\"}\nthe following entry will appear in the Secret:\n    \"DB_USER\": \"johndoe\"",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"from": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of the key to rename",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"to": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The new name for the key",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"from", "to"},
+			},
+		},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_SecretTransform(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SecretTransform is a single transformation that is applied to the credentials returned from the broker before they are inserted into the Secret associated with the ServiceBinding. Because different brokers providing the same type of service may each return a different credentials structure, users can specify the transformations that should be applied to the Secret to adapt its entries to whatever the service consumer expects. For example, the credentials returned by the broker may include the key \"USERNAME\", but the consumer requires the username to be exposed under the key \"DB_USER\" instead. To have the Service Catalog transform the Secret, the following SecretTransform must be specified in ServiceBinding.spec.secretTransform: - {\"renameKey\": {\"from\": \"USERNAME\", \"to\": \"DB_USER\"}} Only one of the SecretTransform's members may be specified.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"renameKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RenameKey represents a transform that renames a credentials Secret entry's key",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.RenameKeyTransform"),
+						},
+					},
+					"addKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AddKey represents a transform that adds an additional key to the credentials Secret",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeyTransform"),
+						},
+					},
+					"addKeysFrom": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AddKeysFrom represents a transform that merges all the entries of an existing Secret into the credentials Secret",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeysFromTransform"),
+						},
+					},
+					"removeKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RemoveKey represents a transform that removes a credentials Secret entry",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.RemoveKeyTransform"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeyTransform", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeysFromTransform", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.RemoveKeyTransform", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.RenameKeyTransform"},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_ServiceReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ServiceReference holds a reference to Service.legacy.k8s.io",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"scheme": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies which scheme to use, for example: http, https If specified, then it will applied as prefix in this format: scheme:// If not specified, then nothing will be prefixed",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`namespace` is the namespace of the service.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`name` is the name of the service. Required",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The port that will be exposed by this app.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"path": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`path` is an optional URL path which will be sent in any request to this service.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"query": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`query` is optional encoded query string, without '?' which will be sent in any request to this service.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"scheme", "name", "port"},
+			},
+		},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_StashAddon(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"stash": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_StashAddonSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "StashAddonSpec is the spec for app",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"addon": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashTaskSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashTaskSpec"},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_StashTaskSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "StashTaskSpec is the spec for app",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"backupTask": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Backup task definition",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.TaskRef"),
+						},
+					},
+					"restoreTask": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Restore task definition",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.TaskRef"),
+						},
+					},
+				},
+				Required: []string{"backupTask", "restoreTask"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.TaskRef"},
+	}
+}
+
+func schema_custom_resources_apis_appcatalog_v1alpha1_TaskRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"params": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Params specifies a list of parameter to pass to the Task. Stash will use this parameters to resolve the task.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.Param"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.Param"},
 	}
 }
 

@@ -1,0 +1,221 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "kubestash-operator.fullname" . }}
+  labels:
+    {{- include "kubestash-operator.labels" . | nindent 4 }}
+rules:
+  - apiGroups:
+    - admissionregistration.k8s.io
+    resources:
+      - mutatingwebhookconfigurations
+      - validatingwebhookconfigurations
+    verbs: ["*"]
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupbatches
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupbatches/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupbatches/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupblueprints
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupblueprints/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupblueprints/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupconfigurations
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupconfigurations/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupconfigurations/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupsessions
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupsessions/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - backupsessions/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - restoresessions
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - restoresessions/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - core.kubestash.com
+    resources:
+      - restoresessions/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - storage.kubestash.com
+    resources:
+      - backupstorages
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - storage.kubestash.com
+    resources:
+      - backupstorages/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - storage.kubestash.com
+    resources:
+      - backupstorages/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - storage.kubestash.com
+    resources:
+      - repositories
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - storage.kubestash.com
+    resources:
+      - repositories/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - storage.kubestash.com
+    resources:
+      - repositories/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - storage.kubestash.com
+    resources:
+      - snapshots
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - storage.kubestash.com
+    resources:
+      - snapshots/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - storage.kubestash.com
+    resources:
+      - snapshots/status
+    verbs:
+      - get
+      - patch
+      - update
