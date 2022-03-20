@@ -6,6 +6,7 @@ require (
 	github.com/go-openapi/spec v0.19.5
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/gofuzz v1.1.0
+	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.15.0
 	gomodules.xyz/runtime v0.2.0
