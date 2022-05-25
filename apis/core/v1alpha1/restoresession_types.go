@@ -52,7 +52,7 @@ type RestoreSessionSpec struct {
 	// Target indicates the target application where the data will be restored.
 	// The target must be in the same namespace as the RestoreSession CR.
 	// +optional
-	Target *core.TypedLocalObjectReference `json:"target,omitempty"`
+	Target *kmapi.TypedObjectReference `json:"target,omitempty"`
 
 	// DataSource specifies the information about the data that will be restored
 	DataSource *RestoreDataSource `json:"dataSource,omitempty"`
@@ -75,6 +75,12 @@ type RestoreSessionSpec struct {
 	// RetryConfig specifies the behavior of retry in case of a restore failure.
 	// +optional
 	RetryConfig *RetryConfig `json:"retryConfig,omitempty"`
+
+	// Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed.
+	// If the session execution does not finish within this time period, KubeStash will consider this session as failure.
+	// Then, it will re-try according to the RetryConfig.
+	// +optional
+	Timeout *int32 `json:"timeout,omitempty"`
 }
 
 // RestoreDataSource specifies the information about the data that will be restored
@@ -130,6 +136,10 @@ type RestoreSessionStatus struct {
 	// Duration specify total time taken to complete the restore process
 	// +optional
 	Duration string `json:"duration,omitempty"`
+
+	// Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline,
+	// it will be considered as failed.
+	Deadline string `json:"deadline,omitempty"`
 
 	// Components represents the individual component restore status
 	// +optional

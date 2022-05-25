@@ -70,11 +70,6 @@ type HookTemplateSpec struct {
 	// - "tcpSocket": Check if a TCP socket open or not
 	Action *prober.Handler `json:"action,omitempty"`
 
-	// Timeout specifies a duration in seconds that Stash should wait for the hook execution to be completed.
-	// If the hook execution does not finish within this time period, Stash will consider this hook execution as failure.
-	// +optional
-	Timeout *int32 `json:"timeout,omitempty"`
-
 	// Executor specifies the entity where the hook will be executed.
 	Executor *HookExecutor `json:"executor,omitempty"`
 }

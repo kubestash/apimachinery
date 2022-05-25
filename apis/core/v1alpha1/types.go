@@ -91,11 +91,17 @@ type HookInfo struct {
 	// +optional
 	Params *runtime.RawExtension `json:"params,omitempty"`
 
-	// MaxRetry specified how many times Stash should retry the hook execution in case of failure.
+	// MaxRetry specifies how many times Stash should retry the hook execution in case of failure.
 	// The default value of this field is 0 which means no retry.
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	MaxRetry int32 `json:"maxRetry,omitempty"`
+
+	// Timeout specifies a duration in seconds that KubeStash should wait for the hook execution to be completed.
+	// If the hook execution does not finish within this time period, KubeStash will consider this hook execution as failure.
+	// Then, it will be re-tried according to MaxRetry policy.
+	// +optional
+	Timeout *int32 `json:"timeout,omitempty"`
 
 	// ExecutionPolicy specifies when to execute the hook.
 	// Valid values are:

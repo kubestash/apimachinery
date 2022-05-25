@@ -17,8 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
-	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -68,7 +68,7 @@ type TargetReference struct {
 	Name string `json:"name,omitempty"`
 
 	// AppRef points to the target that is subject to backup. The target should be in same namespace as the BackupBatch.
-	AppRef *core.TypedLocalObjectReference `json:"appRef,omitempty"`
+	AppRef *kmapi.TypedObjectReference `json:"appRef,omitempty"`
 }
 
 // BatchSession specifies the session configuration for the targets.

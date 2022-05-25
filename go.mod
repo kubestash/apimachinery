@@ -6,18 +6,17 @@ require (
 	github.com/go-openapi/spec v0.19.5
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/gofuzz v1.1.0
-	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.15.0
 	gomodules.xyz/runtime v0.2.0
-	gomodules.xyz/x v0.0.8
+	gomodules.xyz/x v0.0.10
 	k8s.io/api v0.22.1
 	k8s.io/apiextensions-apiserver v0.22.1
 	k8s.io/apimachinery v0.22.1
 	k8s.io/client-go v0.22.1
 	k8s.io/klog/v2 v2.9.0
 	k8s.io/kube-openapi v0.0.0-20210421082810-95288971da7e
-	kmodules.xyz/client-go v0.0.0-20220104114408-2a3a05dbe89f
+	kmodules.xyz/client-go v0.0.0-20220512223652-dc247aa7f6df
 	kmodules.xyz/crd-schema-fuzz v0.0.0-20211025154117-6edb24ef11bc
 	kmodules.xyz/custom-resources v0.0.0-20220126201139-be014631db0c
 	kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf

@@ -2034,13 +2034,6 @@ spec:
                       type: string
                   type: object
                 type: array
-              timeout:
-                description: Timeout specifies a duration in seconds that Stash should
-                  wait for the hook execution to be completed. If the hook execution
-                  does not finish within this time period, Stash will consider this
-                  hook execution as failure.
-                format: int32
-                type: integer
               usagePolicy:
                 description: "UsagePolicy specifies a policy of how this HookTemplate
                   will be used. For example, you can use `allowedNamespaces` policy

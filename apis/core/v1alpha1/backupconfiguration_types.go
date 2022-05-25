@@ -17,10 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"stash.appscode.dev/kubestash/apis"
-
 	batchv1 "k8s.io/api/batch/v1"
-	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -53,7 +50,7 @@ type BackupConfiguration struct {
 // and the sessions that specifies when and how to take backup.
 type BackupConfigurationSpec struct {
 	// Target refers to the target of backup. The target must be in the same namespace as the BackupConfiguration.
-	Target *core.TypedLocalObjectReference `json:"target,omitempty"`
+	Target *kmapi.TypedObjectReference `json:"target,omitempty"`
 
 	// Backends specifies a list of storage references where the backed up data will be stored.
 	// The respective BackupStorages can be in a different namespace than the BackupConfiguration.
@@ -83,7 +80,7 @@ type BackendReference struct {
 	// StorageRef refers to the CR that holds the information of a  storage.
 	// You can refer to the BackupStorage CR of a different namespace as long as it is allowed
 	// by the `usagePolicy` of the BackupStorage.`
-	StorageRef apis.TypedObjectReference `json:"storageRef,omitempty"`
+	StorageRef kmapi.TypedObjectReference `json:"storageRef,omitempty"`
 }
 
 // Session specifies a backup session configuration for the target
@@ -132,6 +129,12 @@ type SessionConfig struct {
 	// RetryConfig specifies the behavior of retry in case of a backup failure.
 	// +optional
 	RetryConfig *RetryConfig `json:"retryConfig,omitempty"`
+
+	// Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed.
+	// If the session execution does not finish within this time period, KubeStash will consider this session as failure.
+	// Then, it will re-try according to the RetryConfig.
+	// +optional
+	Timeout *int32 `json:"timeout,omitempty"`
 
 	// SessionHistoryLimit specifies how many backup Jobs and associate resources Stash should keep for debugging purpose.
 	// The default value is 1.
@@ -290,7 +293,7 @@ type VerificationStrategy struct {
 	Repository string `json:"repository,omitempty"`
 
 	// Verifier refers to the BackupVerification CR that defines how to verify this particular data
-	Verifier *apis.TypedObjectReference `json:"verifier,omitempty"`
+	Verifier *kmapi.TypedObjectReference `json:"verifier,omitempty"`
 
 	// Params specifies the parameters that will be used by the verifier
 	// +kubebuilder:pruning:PreserveUnknownFields

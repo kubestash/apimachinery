@@ -75,24 +75,16 @@ spec:
                         of the BackupStorage.`
                       properties:
                         apiGroup:
-                          description: APIGroup is the group for the resource being
-                            referenced. If APIGroup is not specified, the specified
-                            Kind must be in the core API group. For any other third-party
-                            types, APIGroup is required.
                           type: string
                         kind:
-                          description: Kind is the type of resource being referenced
                           type: string
                         name:
-                          description: Name is the name of resource being referenced
+                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                           type: string
                         namespace:
-                          description: Namespace points to the namespace of the targeted
-                            object. If you don't provide this field, the object will
-                            be looked up in the local namespace.
+                          description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
                           type: string
                       required:
-                      - kind
                       - name
                       type: object
                   type: object
@@ -8717,7 +8709,7 @@ spec:
                                 - name
                                 type: object
                               maxRetry:
-                                description: MaxRetry specified how many times Stash
+                                description: MaxRetry specifies how many times Stash
                                   should retry the hook execution in case of failure.
                                   The default value of this field is 0 which means
                                   no retry.
@@ -11307,6 +11299,15 @@ spec:
                                         type: array
                                     type: object
                                 type: object
+                              timeout:
+                                description: Timeout specifies a duration in seconds
+                                  that KubeStash should wait for the hook execution
+                                  to be completed. If the hook execution does not
+                                  finish within this time period, KubeStash will consider
+                                  this hook execution as failure. Then, it will be
+                                  re-tried according to MaxRetry policy.
+                                format: int32
+                                type: integer
                               variables:
                                 description: Variables specifies a list of variables
                                   and their sources that will be used to resolve the
@@ -13252,7 +13253,7 @@ spec:
                                 - name
                                 type: object
                               maxRetry:
-                                description: MaxRetry specified how many times Stash
+                                description: MaxRetry specifies how many times Stash
                                   should retry the hook execution in case of failure.
                                   The default value of this field is 0 which means
                                   no retry.
@@ -15842,6 +15843,15 @@ spec:
                                         type: array
                                     type: object
                                 type: object
+                              timeout:
+                                description: Timeout specifies a duration in seconds
+                                  that KubeStash should wait for the hook execution
+                                  to be completed. If the hook execution does not
+                                  finish within this time period, KubeStash will consider
+                                  this hook execution as failure. Then, it will be
+                                  re-tried according to MaxRetry policy.
+                                format: int32
+                                type: integer
                               variables:
                                 description: Variables specifies a list of variables
                                   and their sources that will be used to resolve the
@@ -21927,6 +21937,14 @@ spec:
                         The default value is 1.
                       format: int32
                       type: integer
+                    timeout:
+                      description: Timeout specifies a duration in seconds that KubeStash
+                        should wait for the session execution to be completed. If
+                        the session execution does not finish within this time period,
+                        KubeStash will consider this session as failure. Then, it
+                        will re-try according to the RetryConfig.
+                      format: int32
+                      type: integer
                     verificationStrategies:
                       description: VerificationStrategies specifies a list of backup
                         verification configurations
@@ -21974,24 +21992,17 @@ spec:
                               CR that defines how to verify this particular data
                             properties:
                               apiGroup:
-                                description: APIGroup is the group for the resource
-                                  being referenced. If APIGroup is not specified,
-                                  the specified Kind must be in the core API group.
-                                  For any other third-party types, APIGroup is required.
                                 type: string
                               kind:
-                                description: Kind is the type of resource being referenced
                                 type: string
                               name:
-                                description: Name is the name of resource being referenced
+                                description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                 type: string
                               namespace:
-                                description: Namespace points to the namespace of
-                                  the targeted object. If you don't provide this field,
-                                  the object will be looked up in the local namespace.
+                                description: 'Namespace of the referent. More info:
+                                  https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
                                 type: string
                             required:
-                            - kind
                             - name
                             type: object
                           verifyEvery:
@@ -22009,19 +22020,16 @@ spec:
                   be in the same namespace as the BackupConfiguration.
                 properties:
                   apiGroup:
-                    description: APIGroup is the group for the resource being referenced.
-                      If APIGroup is not specified, the specified Kind must be in
-                      the core API group. For any other third-party types, APIGroup
-                      is required.
                     type: string
                   kind:
-                    description: Kind is the type of resource being referenced
                     type: string
                   name:
-                    description: Name is the name of resource being referenced
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                    type: string
+                  namespace:
+                    description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
                     type: string
                 required:
-                - kind
                 - name
                 type: object
             type: object

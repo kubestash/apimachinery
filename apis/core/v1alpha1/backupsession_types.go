@@ -70,6 +70,10 @@ type BackupSessionStatus struct {
 	// +optional
 	Duration string `json:"duration,omitempty"`
 
+	// Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline,
+	// it will be considered as failed.
+	Deadline string `json:"deadline,omitempty"`
+
 	// Snapshots specifies the Snapshots status
 	// +optional
 	Snapshots []SnapshotStatus `json:"snapshots,omitempty"`

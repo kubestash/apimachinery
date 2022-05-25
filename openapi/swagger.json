@@ -12030,34 +12030,6 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.TypedObjectReference": {
-      "description": "TypedObjectReference let you reference an object from different namespace",
-      "type": "object",
-      "required": [
-        "kind",
-        "name"
-      ],
-      "properties": {
-        "apiGroup": {
-          "description": "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
-          "type": "string"
-        },
-        "kind": {
-          "description": "Kind is the type of resource being referenced",
-          "type": "string",
-          "default": ""
-        },
-        "name": {
-          "description": "Name is the name of resource being referenced",
-          "type": "string",
-          "default": ""
-        },
-        "namespace": {
-          "description": "Namespace points to the namespace of the targeted object. If you don't provide this field, the object will be looked up in the local namespace.",
-          "type": "string"
-        }
-      }
-    },
     "dev.appscode.stash.kubestash.apis.UsagePolicy": {
       "description": "UsagePolicy specifies a policy that restrict the usage of a resource across namespaces.",
       "type": "object",
@@ -12517,7 +12489,7 @@
         "storageRef": {
           "description": "StorageRef refers to the CR that holds the information of a  storage. You can refer to the BackupStorage CR of a different namespace as long as it is allowed by the `usagePolicy` of the BackupStorage.`",
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.TypedObjectReference"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"
         }
       }
     },
@@ -12887,7 +12859,7 @@
         },
         "target": {
           "description": "Target refers to the target of backup. The target must be in the same namespace as the BackupConfiguration.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"
         }
       }
     },
@@ -13076,6 +13048,10 @@
       "description": "BackupSessionStatus defines the observed state of BackupSession",
       "type": "object",
       "properties": {
+        "deadline": {
+          "description": "Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline, it will be considered as failed.",
+          "type": "string"
+        },
         "duration": {
           "description": "Duration specifies the time required to complete the backup process",
           "type": "string"
@@ -13154,6 +13130,11 @@
             "default": {},
             "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.TargetBackupSpec"
           }
+        },
+        "timeout": {
+          "description": "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
+          "type": "integer",
+          "format": "int32"
         },
         "verificationStrategies": {
           "description": "VerificationStrategies specifies a list of backup verification configurations",
@@ -13266,7 +13247,7 @@
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
         },
         "maxRetry": {
-          "description": "MaxRetry specified how many times Stash should retry the hook execution in case of failure. The default value of this field is 0 which means no retry.",
+          "description": "MaxRetry specifies how many times Stash should retry the hook execution in case of failure. The default value of this field is 0 which means no retry.",
           "type": "integer",
           "format": "int32"
         },
@@ -13281,6 +13262,11 @@
         "runtimeSettings": {
           "description": "RuntimeSettings specifies runtime configurations for the hook executor Job. Use this field only for `Function` type hook executor.",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.RuntimeSettings"
+        },
+        "timeout": {
+          "description": "Timeout specifies a duration in seconds that KubeStash should wait for the hook execution to be completed. If the hook execution does not finish within this time period, KubeStash will consider this hook execution as failure. Then, it will be re-tried according to MaxRetry policy.",
+          "type": "integer",
+          "format": "int32"
         },
         "variables": {
           "description": "Variables specifies a list of variables and their sources that will be used to resolve the HookTemplate.",
@@ -13391,11 +13377,6 @@
             "default": {},
             "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.ParameterDefinition"
           }
-        },
-        "timeout": {
-          "description": "Timeout specifies a duration in seconds that Stash should wait for the hook execution to be completed. If the hook execution does not finish within this time period, Stash will consider this hook execution as failure.",
-          "type": "integer",
-          "format": "int32"
         },
         "usagePolicy": {
           "description": "UsagePolicy specifies a policy of how this HookTemplate will be used. For example, you can use `allowedNamespaces` policy to restrict the usage of this HookTemplate to particular namespaces.\n\nThis field is optional. If you don't provide the usagePolicy, then it can be used only from the current namespace.",
@@ -13676,7 +13657,12 @@
         },
         "target": {
           "description": "Target indicates the target application where the data will be restored. The target must be in the same namespace as the RestoreSession CR.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"
+        },
+        "timeout": {
+          "description": "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -13703,6 +13689,10 @@
             "default": {},
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "deadline": {
+          "description": "Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline, it will be considered as failed.",
+          "type": "string"
         },
         "duration": {
           "description": "Duration specify total time taken to complete the restore process",
@@ -13844,6 +13834,11 @@
           "type": "integer",
           "format": "int32"
         },
+        "timeout": {
+          "description": "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
+          "type": "integer",
+          "format": "int32"
+        },
         "verificationStrategies": {
           "description": "VerificationStrategies specifies a list of backup verification configurations",
           "type": "array",
@@ -13926,7 +13921,7 @@
       "properties": {
         "appRef": {
           "description": "AppRef points to the target that is subject to backup. The target should be in same namespace as the BackupBatch.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"
         },
         "name": {
           "description": "Name specifies an identifier for this target. This name will be used in the session to refer this target.",
@@ -14030,7 +14025,7 @@
         },
         "verifier": {
           "description": "Verifier refers to the BackupVerification CR that defines how to verify this particular data",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.TypedObjectReference"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"
         },
         "verifyEvery": {
           "description": "VerifyEvery specifies the frequency of backup verification",
@@ -14535,7 +14530,7 @@
         "appRef": {
           "description": "AppRef refers to the application that is being backed up in this Repository.",
           "default": {},
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"
         },
         "deletionPolicy": {
           "description": "DeletionPolicy specifies what to do when you delete a Repository CR. The valid values are: \"Delete\": This will delete the respective Snapshot CRs from the cluster but keep the backed up data in the remote backend. This is the default behavior. \"WipeOut\": This will delete the respective Snapshot CRs as well as the backed up data from the backend.",
@@ -14553,7 +14548,7 @@
         "storageRef": {
           "description": "StorageRef refers to the BackupStorage CR which contain the backend information where the backed up data will be stored. The BackupStorage could be in a different namespace. However, the Repository namespace must be allowed to use the BackupStorage.",
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.TypedObjectReference"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"
         }
       }
     },
@@ -14841,7 +14836,7 @@
         "appRef": {
           "description": "AppRef specifies the reference of the application that has been backed up in this Snapshot.",
           "default": {},
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"
         },
         "deletionPolicy": {
           "description": "DeletionPolicy specifies what to do when you delete a Snapshot CR. The valid values are: - \"Delete\": This will delete just the Snapshot CR from the cluster but keep the backed up data in the remote backend. This is the default behavior. - \"WipeOut\": This will delete the Snapshot CR as well as the backed up data from the backend.",
@@ -18067,6 +18062,30 @@
         "name"
       ],
       "properties": {
+        "name": {
+          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+          "type": "string"
+        }
+      }
+    },
+    "xyz.kmodules.client-go.api.v1.TypedObjectReference": {
+      "description": "TypedObjectReference represents an typed namespaced object.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "apiGroup": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
         "name": {
           "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
           "type": "string",

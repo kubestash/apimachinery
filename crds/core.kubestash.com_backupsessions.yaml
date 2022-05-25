@@ -84,6 +84,11 @@ spec:
           status:
             description: BackupSessionStatus defines the observed state of BackupSession
             properties:
+              deadline:
+                description: Deadline specifies a timestamp till this session is valid.
+                  If the session does not complete within this deadline, it will be
+                  considered as failed.
+                type: string
               duration:
                 description: Duration specifies the time required to complete the
                   backup process

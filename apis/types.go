@@ -32,16 +32,6 @@ const (
 	DriverWalG   Driver = "WalG"
 )
 
-// TypedObjectReference let you reference an object from different namespace
-// +k8s:openapi-gen=true
-type TypedObjectReference struct {
-	core.TypedLocalObjectReference `json:",inline"`
-	// Namespace points to the namespace of the targeted object.
-	// If you don't provide this field, the object will be looked up in the local namespace.
-	// +optional
-	Namespace string `json:"namespace,omitempty"`
-}
-
 // VolumeSource specifies the source of volume to mount in the backup/restore executor
 // +k8s:openapi-gen=true
 type VolumeSource struct {

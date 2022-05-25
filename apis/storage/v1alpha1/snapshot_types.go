@@ -19,8 +19,8 @@ package v1alpha1
 import (
 	"stash.appscode.dev/kubestash/apis"
 
-	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -74,7 +74,7 @@ type SnapshotSpec struct {
 	Version string `json:"version,omitempty"`
 
 	// AppRef specifies the reference of the application that has been backed up in this Snapshot.
-	AppRef core.TypedLocalObjectReference `json:"appRef,omitempty"`
+	AppRef kmapi.TypedObjectReference `json:"appRef,omitempty"`
 
 	// DeletionPolicy specifies what to do when you delete a Snapshot CR.
 	// The valid values are:

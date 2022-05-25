@@ -74,19 +74,16 @@ spec:
                   up in this Repository.
                 properties:
                   apiGroup:
-                    description: APIGroup is the group for the resource being referenced.
-                      If APIGroup is not specified, the specified Kind must be in
-                      the core API group. For any other third-party types, APIGroup
-                      is required.
                     type: string
                   kind:
-                    description: Kind is the type of resource being referenced
                     type: string
                   name:
-                    description: Name is the name of resource being referenced
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                    type: string
+                  namespace:
+                    description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
                     type: string
                 required:
-                - kind
                 - name
                 type: object
               deletionPolicy:
@@ -117,24 +114,16 @@ spec:
                   Repository namespace must be allowed to use the BackupStorage.
                 properties:
                   apiGroup:
-                    description: APIGroup is the group for the resource being referenced.
-                      If APIGroup is not specified, the specified Kind must be in
-                      the core API group. For any other third-party types, APIGroup
-                      is required.
                     type: string
                   kind:
-                    description: Kind is the type of resource being referenced
                     type: string
                   name:
-                    description: Name is the name of resource being referenced
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                     type: string
                   namespace:
-                    description: Namespace points to the namespace of the targeted
-                      object. If you don't provide this field, the object will be
-                      looked up in the local namespace.
+                    description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
                     type: string
                 required:
-                - kind
                 - name
                 type: object
             type: object

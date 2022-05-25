@@ -30,6 +30,7 @@ import (
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	intstr "k8s.io/apimachinery/pkg/util/intstr"
 	common "k8s.io/kube-openapi/pkg/common"
+	apiv1 "kmodules.xyz/client-go/api/v1"
 )
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
@@ -345,6 +346,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/client-go/api/v1.ObjectReference":                                    schema_kmodulesxyz_client_go_api_v1_ObjectReference(ref),
 		"kmodules.xyz/client-go/api/v1.ResourceID":                                         schema_kmodulesxyz_client_go_api_v1_ResourceID(ref),
 		"kmodules.xyz/client-go/api/v1.TLSConfig":                                          schema_kmodulesxyz_client_go_api_v1_TLSConfig(ref),
+		"kmodules.xyz/client-go/api/v1.TimeOfDay":                                          schema_kmodulesxyz_client_go_api_v1_TimeOfDay(ref),
+		"kmodules.xyz/client-go/api/v1.TypedObjectReference":                               schema_kmodulesxyz_client_go_api_v1_TypedObjectReference(ref),
 		"kmodules.xyz/client-go/api/v1.X509Subject":                                        schema_kmodulesxyz_client_go_api_v1_X509Subject(ref),
 		"kmodules.xyz/client-go/api/v1.stringSetMerger":                                    schema_kmodulesxyz_client_go_api_v1_stringSetMerger(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeyTransform":           schema_custom_resources_apis_appcatalog_v1alpha1_AddKeyTransform(ref),
@@ -382,7 +385,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/prober/api/v1.Handler":                                               schema_kmodulesxyz_prober_api_v1_Handler(ref),
 		"stash.appscode.dev/kubestash/apis.AllowedNamespaces":                              schema_stashappscodedev_kubestash_apis_AllowedNamespaces(ref),
 		"stash.appscode.dev/kubestash/apis.ParameterDefinition":                            schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref),
-		"stash.appscode.dev/kubestash/apis.TypedObjectReference":                           schema_stashappscodedev_kubestash_apis_TypedObjectReference(ref),
 		"stash.appscode.dev/kubestash/apis.UsagePolicy":                                    schema_stashappscodedev_kubestash_apis_UsagePolicy(ref),
 		"stash.appscode.dev/kubestash/apis.VolumeSource":                                   schema_stashappscodedev_kubestash_apis_VolumeSource(ref),
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.AzureSpec":                     schema_kubestash_apis_storage_v1alpha1_AzureSpec(ref),
@@ -16930,6 +16932,59 @@ func schema_kmodulesxyz_client_go_api_v1_TLSConfig(ref common.ReferenceCallback)
 	}
 }
 
+func schema_kmodulesxyz_client_go_api_v1_TimeOfDay(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TimeOfDay is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+				Type:        apiv1.TimeOfDay{}.OpenAPISchemaType(),
+				Format:      apiv1.TimeOfDay{}.OpenAPISchemaFormat(),
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_TypedObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TypedObjectReference represents an typed namespaced object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"apiGroup": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_kmodulesxyz_client_go_api_v1_X509Subject(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18813,50 +18868,6 @@ func schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref common.Refer
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_TypedObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "TypedObjectReference let you reference an object from different namespace",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"apiGroup": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is the type of resource being referenced",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of resource being referenced",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"namespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Namespace points to the namespace of the targeted object. If you don't provide this field, the object will be looked up in the local namespace.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"kind", "name"},
-			},
-		},
-	}
-}
-
 func schema_stashappscodedev_kubestash_apis_UsagePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19886,14 +19897,14 @@ func schema_kubestash_apis_storage_v1alpha1_RepositorySpec(ref common.ReferenceC
 						SchemaProps: spec.SchemaProps{
 							Description: "AppRef refers to the application that is being backed up in this Repository.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
 						},
 					},
 					"storageRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "StorageRef refers to the BackupStorage CR which contain the backend information where the backed up data will be stored. The BackupStorage could be in a different namespace. However, the Repository namespace must be allowed to use the BackupStorage.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("stash.appscode.dev/kubestash/apis.TypedObjectReference"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
 						},
 					},
 					"path": {
@@ -19922,7 +19933,7 @@ func schema_kubestash_apis_storage_v1alpha1_RepositorySpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "stash.appscode.dev/kubestash/apis.TypedObjectReference"},
+			"kmodules.xyz/client-go/api/v1.TypedObjectReference"},
 	}
 }
 
@@ -20419,7 +20430,7 @@ func schema_kubestash_apis_storage_v1alpha1_SnapshotSpec(ref common.ReferenceCal
 						SchemaProps: spec.SchemaProps{
 							Description: "AppRef specifies the reference of the application that has been backed up in this Snapshot.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
 						},
 					},
 					"deletionPolicy": {
@@ -20440,7 +20451,7 @@ func schema_kubestash_apis_storage_v1alpha1_SnapshotSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference"},
+			"kmodules.xyz/client-go/api/v1.TypedObjectReference"},
 	}
 }
 

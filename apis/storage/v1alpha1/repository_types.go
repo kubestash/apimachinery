@@ -17,10 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"stash.appscode.dev/kubestash/apis"
-
-	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -57,12 +55,12 @@ type Repository struct {
 // what should be the behavior when a Repository CR is deleted from the cluster.
 type RepositorySpec struct {
 	// AppRef refers to the application that is being backed up in this Repository.
-	AppRef core.TypedLocalObjectReference `json:"appRef,omitempty"`
+	AppRef kmapi.TypedObjectReference `json:"appRef,omitempty"`
 
 	// StorageRef refers to the BackupStorage CR which contain the backend information where the backed
 	// up data will be stored. The BackupStorage could be in a different namespace. However, the Repository
 	// namespace must be allowed to use the BackupStorage.
-	StorageRef apis.TypedObjectReference `json:"storageRef,omitempty"`
+	StorageRef kmapi.TypedObjectReference `json:"storageRef,omitempty"`
 
 	// Path represents the directory inside the BackupStorage where this Repository is storing its data
 	// This path is relative to the path of BackupStorage.

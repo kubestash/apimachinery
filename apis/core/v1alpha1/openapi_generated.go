@@ -30,6 +30,7 @@ import (
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	intstr "k8s.io/apimachinery/pkg/util/intstr"
 	common "k8s.io/kube-openapi/pkg/common"
+	apiv1 "kmodules.xyz/client-go/api/v1"
 )
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
@@ -345,6 +346,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/client-go/api/v1.ObjectReference":                               schema_kmodulesxyz_client_go_api_v1_ObjectReference(ref),
 		"kmodules.xyz/client-go/api/v1.ResourceID":                                    schema_kmodulesxyz_client_go_api_v1_ResourceID(ref),
 		"kmodules.xyz/client-go/api/v1.TLSConfig":                                     schema_kmodulesxyz_client_go_api_v1_TLSConfig(ref),
+		"kmodules.xyz/client-go/api/v1.TimeOfDay":                                     schema_kmodulesxyz_client_go_api_v1_TimeOfDay(ref),
+		"kmodules.xyz/client-go/api/v1.TypedObjectReference":                          schema_kmodulesxyz_client_go_api_v1_TypedObjectReference(ref),
 		"kmodules.xyz/client-go/api/v1.X509Subject":                                   schema_kmodulesxyz_client_go_api_v1_X509Subject(ref),
 		"kmodules.xyz/client-go/api/v1.stringSetMerger":                               schema_kmodulesxyz_client_go_api_v1_stringSetMerger(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeyTransform":      schema_custom_resources_apis_appcatalog_v1alpha1_AddKeyTransform(ref),
@@ -382,7 +385,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/prober/api/v1.Handler":                                          schema_kmodulesxyz_prober_api_v1_Handler(ref),
 		"stash.appscode.dev/kubestash/apis.AllowedNamespaces":                         schema_stashappscodedev_kubestash_apis_AllowedNamespaces(ref),
 		"stash.appscode.dev/kubestash/apis.ParameterDefinition":                       schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref),
-		"stash.appscode.dev/kubestash/apis.TypedObjectReference":                      schema_stashappscodedev_kubestash_apis_TypedObjectReference(ref),
 		"stash.appscode.dev/kubestash/apis.UsagePolicy":                               schema_stashappscodedev_kubestash_apis_UsagePolicy(ref),
 		"stash.appscode.dev/kubestash/apis.VolumeSource":                              schema_stashappscodedev_kubestash_apis_VolumeSource(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo":                   schema_kubestash_apis_core_v1alpha1_AddonInfo(ref),
@@ -16956,6 +16958,59 @@ func schema_kmodulesxyz_client_go_api_v1_TLSConfig(ref common.ReferenceCallback)
 	}
 }
 
+func schema_kmodulesxyz_client_go_api_v1_TimeOfDay(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TimeOfDay is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+				Type:        apiv1.TimeOfDay{}.OpenAPISchemaType(),
+				Format:      apiv1.TimeOfDay{}.OpenAPISchemaFormat(),
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_TypedObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TypedObjectReference represents an typed namespaced object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"apiGroup": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_kmodulesxyz_client_go_api_v1_X509Subject(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18839,50 +18894,6 @@ func schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref common.Refer
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_TypedObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "TypedObjectReference let you reference an object from different namespace",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"apiGroup": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is the type of resource being referenced",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of resource being referenced",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"namespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Namespace points to the namespace of the targeted object. If you don't provide this field, the object will be looked up in the local namespace.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"kind", "name"},
-			},
-		},
-	}
-}
-
 func schema_stashappscodedev_kubestash_apis_UsagePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19166,14 +19177,14 @@ func schema_kubestash_apis_core_v1alpha1_BackendReference(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "StorageRef refers to the CR that holds the information of a  storage. You can refer to the BackupStorage CR of a different namespace as long as it is allowed by the `usagePolicy` of the BackupStorage.`",
 							Default:     map[string]interface{}{},
-							Ref:         ref("stash.appscode.dev/kubestash/apis.TypedObjectReference"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis.TypedObjectReference"},
+			"kmodules.xyz/client-go/api/v1.TypedObjectReference"},
 	}
 }
 
@@ -19729,7 +19740,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationSpec(ref common.Refe
 					"target": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Target refers to the target of backup. The target must be in the same namespace as the BackupConfiguration.",
-							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
 						},
 					},
 					"backends": {
@@ -19771,7 +19782,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.Session"},
+			"kmodules.xyz/client-go/api/v1.TypedObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.Session"},
 	}
 }
 
@@ -20104,6 +20115,13 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionStatus(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"deadline": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline, it will be considered as failed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"snapshots": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Snapshots specifies the Snapshots status",
@@ -20217,6 +20235,13 @@ func schema_kubestash_apis_core_v1alpha1_BatchSession(ref common.ReferenceCallba
 						SchemaProps: spec.SchemaProps{
 							Description: "RetryConfig specifies the behavior of retry in case of a backup failure.",
 							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"sessionHistoryLimit": {
@@ -20442,7 +20467,14 @@ func schema_kubestash_apis_core_v1alpha1_HookInfo(ref common.ReferenceCallback) 
 					},
 					"maxRetry": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxRetry specified how many times Stash should retry the hook execution in case of failure. The default value of this field is 0 which means no retry.",
+							Description: "MaxRetry specifies how many times Stash should retry the hook execution in case of failure. The default value of this field is 0 which means no retry.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout specifies a duration in seconds that KubeStash should wait for the hook execution to be completed. If the hook execution does not finish within this time period, KubeStash will consider this hook execution as failure. Then, it will be re-tried according to MaxRetry policy.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -20631,13 +20663,6 @@ func schema_kubestash_apis_core_v1alpha1_HookTemplateSpec(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "Action specifies the operation that is performed by this HookTemplate Valid values are: - \"exec\": Execute command in a shell - \"httpGet\": Do an HTTP GET request - \"httpPost\": Do an HTTP POST request - \"tcpSocket\": Check if a TCP socket open or not",
 							Ref:         ref("kmodules.xyz/prober/api/v1.Handler"),
-						},
-					},
-					"timeout": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Timeout specifies a duration in seconds that Stash should wait for the hook execution to be completed. If the hook execution does not finish within this time period, Stash will consider this hook execution as failure.",
-							Type:        []string{"integer"},
-							Format:      "int32",
 						},
 					},
 					"executor": {
@@ -21196,7 +21221,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionSpec(ref common.Reference
 					"target": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Target indicates the target application where the data will be restored. The target must be in the same namespace as the RestoreSession CR.",
-							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
 						},
 					},
 					"dataSource": {
@@ -21230,11 +21255,18 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionSpec(ref common.Reference
 							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
 						},
 					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreDataSource", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"},
+			"kmodules.xyz/client-go/api/v1.TypedObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreDataSource", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"},
 	}
 }
 
@@ -21255,6 +21287,13 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref common.Referen
 					"duration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Duration specify total time taken to complete the restore process",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"deadline": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline, it will be considered as failed.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -21503,6 +21542,13 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
 						},
 					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"sessionHistoryLimit": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SessionHistoryLimit specifies how many backup Jobs and associate resources Stash should keep for debugging purpose. The default value is 1.",
@@ -21595,6 +21641,13 @@ func schema_kubestash_apis_core_v1alpha1_SessionConfig(ref common.ReferenceCallb
 						SchemaProps: spec.SchemaProps{
 							Description: "RetryConfig specifies the behavior of retry in case of a backup failure.",
 							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"sessionHistoryLimit": {
@@ -21756,14 +21809,14 @@ func schema_kubestash_apis_core_v1alpha1_TargetReference(ref common.ReferenceCal
 					"appRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "AppRef points to the target that is subject to backup. The target should be in same namespace as the BackupBatch.",
-							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference"},
+			"kmodules.xyz/client-go/api/v1.TypedObjectReference"},
 	}
 }
 
@@ -21923,7 +21976,7 @@ func schema_kubestash_apis_core_v1alpha1_VerificationStrategy(ref common.Referen
 					"verifier": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Verifier refers to the BackupVerification CR that defines how to verify this particular data",
-							Ref:         ref("stash.appscode.dev/kubestash/apis.TypedObjectReference"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
 						},
 					},
 					"params": {
@@ -21956,6 +22009,6 @@ func schema_kubestash_apis_core_v1alpha1_VerificationStrategy(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension", "stash.appscode.dev/kubestash/apis.TypedObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"},
 	}
 }
