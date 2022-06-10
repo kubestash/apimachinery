@@ -55,6 +55,10 @@ type BackupBlueprintSpec struct {
 	// +optional
 	Backends []BackendReference `json:"backends,omitempty"`
 
+	// Subject specifies a list of subject to which this BackupBlueprint is applicable. KubeStash will start watcher for these resources.
+	// Multiple BackupBlueprints can have common subject. The watcher will find the appropriate blueprint from its annotations.
+	Subjects []metav1.TypeMeta `json:"subjects,omitempty"`
+
 	// Sessions specifies a list of session template for backup. You can use custom variables
 	// in your template then provide the variable value through annotations.
 	Sessions []Session `json:"sessions,omitempty"`

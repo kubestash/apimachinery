@@ -280,6 +280,11 @@ func (in *BackupBlueprintSpec) DeepCopyInto(out *BackupBlueprintSpec) {
 		*out = make([]BackendReference, len(*in))
 		copy(*out, *in)
 	}
+	if in.Subjects != nil {
+		in, out := &in.Subjects, &out.Subjects
+		*out = make([]metav1.TypeMeta, len(*in))
+		copy(*out, *in)
+	}
 	if in.Sessions != nil {
 		in, out := &in.Sessions, &out.Sessions
 		*out = make([]Session, len(*in))

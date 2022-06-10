@@ -19999,6 +19999,20 @@ func schema_kubestash_apis_core_v1alpha1_BackupBlueprintSpec(ref common.Referenc
 							},
 						},
 					},
+					"subjects": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Subject specifies a list of subject to which this BackupBlueprint is applicable. KubeStash will start watcher for these resources. Multiple BackupBlueprints can have common subject. The watcher will find the appropriate blueprint from its annotations.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.TypeMeta"),
+									},
+								},
+							},
+						},
+					},
 					"sessions": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Sessions specifies a list of session template for backup. You can use custom variables in your template then provide the variable value through annotations.",
@@ -20023,7 +20037,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBlueprintSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis.UsagePolicy", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.Session"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.TypeMeta", "stash.appscode.dev/kubestash/apis.UsagePolicy", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.Session"},
 	}
 }
 

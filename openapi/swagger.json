@@ -12831,6 +12831,14 @@
             "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.Session"
           }
         },
+        "subjects": {
+          "description": "Subject specifies a list of subject to which this BackupBlueprint is applicable. KubeStash will start watcher for these resources. Multiple BackupBlueprints can have common subject. The watcher will find the appropriate blueprint from its annotations.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.TypeMeta"
+          }
+        },
         "usagePolicy": {
           "description": "UsagePolicy specifies a policy of how this BackupBlueprint will be used. For example, you can use `allowedNamespaces` policy to restrict the usage of this BackupBlueprint to particular namespaces. This field is optional. If you don't provide the usagePolicy, then it can be used only from the current namespace.",
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.UsagePolicy"
@@ -18158,6 +18166,20 @@
       "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
       "type": "string",
       "format": "date-time"
+    },
+    "io.k8s.apimachinery.pkg.apis.meta.v1.TypeMeta": {
+      "description": "TypeMeta describes an individual object in an API response or request with strings representing the type of the object and its API schema version. Structures that are versioned or persisted should inline TypeMeta.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        }
+      }
     },
     "io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent": {
       "description": "Event represents a single event to a watched resource.",
