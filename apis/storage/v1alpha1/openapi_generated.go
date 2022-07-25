@@ -19766,10 +19766,10 @@ func schema_kubestash_apis_storage_v1alpha1_BackupStorageStatus(ref common.Refer
 				Description: "BackupStorageStatus defines the observed state of BackupStorage",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"ready": {
+					"phase": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Ready specifies whether the BackupStorage is ready to use or not.",
-							Type:        []string{"boolean"},
+							Description: "Phase indicates the overall phase of the backup BackupStorage. Phase will be \"Ready\" only if the Backend is initialized and Repositories are synced.",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
@@ -19802,7 +19802,7 @@ func schema_kubestash_apis_storage_v1alpha1_BackupStorageStatus(ref common.Refer
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
 									},
 								},
 							},
@@ -19812,7 +19812,7 @@ func schema_kubestash_apis_storage_v1alpha1_BackupStorageStatus(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.RepositoryInfo"},
+			"kmodules.xyz/client-go/api/v1.Condition", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.RepositoryInfo"},
 	}
 }
 

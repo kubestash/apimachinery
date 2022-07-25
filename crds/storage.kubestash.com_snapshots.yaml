@@ -95,7 +95,7 @@ spec:
                   the backend.'
                 enum:
                 - Delete
-                - WipeOUt
+                - WipeOut
                 type: string
               paused:
                 description: Paused specifies whether the Snapshot is paused or not.

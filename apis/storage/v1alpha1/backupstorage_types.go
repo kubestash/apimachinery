@@ -20,23 +20,32 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
+
+type BackupStoragePhase string
 
 const (
 	ResourceKindBackupStorage     = "BackupStorage"
 	ResourceSingularBackupStorage = "backupstorage"
 	ResourcePluralBackupStorage   = "backupstorages"
+
+	BackupStorageReady    BackupStoragePhase = "Ready"
+	BackupStorageNotReady BackupStoragePhase = "NotReady"
+
+	WipeOut DeletionPolicy = "WipeOut"
+	Delete  DeletionPolicy = "Delete"
 )
 
 // +k8s:openapi-gen=true
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=backupstorages,singular=backupstorage,categories={kubestash,appscode,all}
-// +kubebuilder:printcolumn:name="Provider",type="boolean",JSONPath=".spec.storage.provider"
+// +kubebuilder:printcolumn:name="Provider",type="string",JSONPath=".spec.storage.provider"
 // +kubebuilder:printcolumn:name="Default",type="boolean",JSONPath=".spec.default"
 // +kubebuilder:printcolumn:name="Deletion-Policy",type="string",JSONPath=".spec.deletionPolicy"
 // +kubebuilder:printcolumn:name="Total-Size",type="string",JSONPath=".status.totalSize"
-// +kubebuilder:printcolumn:name="Ready",type="boolean",JSONPath=".status.ready"
+// +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // BackupStorage specifies the backend information where the backed up data of different applications will be stored.
@@ -77,9 +86,10 @@ type BackupStorageSpec struct {
 
 // BackupStorageStatus defines the observed state of BackupStorage
 type BackupStorageStatus struct {
-	// Ready specifies whether the BackupStorage is ready to use or not.
+	// Phase indicates the overall phase of the backup BackupStorage. Phase will be "Ready" only
+	// if the Backend is initialized and Repositories are synced.
 	// +optional
-	Ready bool `json:"ready,omitempty"`
+	Phase BackupStoragePhase `json:"phase,omitempty"`
 
 	// TotalSize represents the total backed up data size in this storage.
 	// This is simply the summation of sizes of all Repositories using this BackupStorage.
@@ -92,7 +102,7 @@ type BackupStorageStatus struct {
 
 	// Conditions represents list of conditions regarding this BackupStorage
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 // RepositoryInfo specifies information regarding a Repository using the BackupStorage

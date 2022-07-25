@@ -21,7 +21,7 @@ import (
 )
 
 // DeletionPolicy specifies what to do if a resource is deleted
-// +kubebuilder:validation:Enum=Delete;WipeOUt
+// +kubebuilder:validation:Enum=Delete;WipeOut
 type DeletionPolicy string
 
 const (

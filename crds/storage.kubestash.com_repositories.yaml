@@ -95,7 +95,7 @@ spec:
                   up data from the backend.'
                 enum:
                 - Delete
-                - WipeOUt
+                - WipeOut
                 type: string
               path:
                 description: Path represents the directory inside the BackupStorage
