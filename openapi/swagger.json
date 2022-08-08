@@ -14636,6 +14636,14 @@
       "description": "RepositoryStatus defines the observed state of Repository",
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions represents list of conditions regarding this Repository",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "integrity": {
           "description": "Integrity specifies whether the backed up data of this Repository has been corrupted or not",
           "type": "boolean"

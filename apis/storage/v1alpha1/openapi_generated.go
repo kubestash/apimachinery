@@ -20379,11 +20379,25 @@ func schema_kubestash_apis_storage_v1alpha1_RepositoryStatus(ref common.Referenc
 							},
 						},
 					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions represents list of conditions regarding this Repository",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/storage/v1alpha1.SnapshotInfo"},
+			"kmodules.xyz/client-go/api/v1.Condition", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.SnapshotInfo"},
 	}
 }
 

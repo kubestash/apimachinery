@@ -101,6 +101,10 @@ type RepositoryStatus struct {
 	// RecentSnapshots holds a list of recent Snapshot information that has been taken in this Repository
 	// +optional
 	RecentSnapshots []SnapshotInfo `json:"recentSnapshots,omitempty"`
+
+	// Conditions represents list of conditions regarding this Repository
+	// +optional
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 // SnapshotInfo specifies some basic information about the Snapshots stored in this Repository
