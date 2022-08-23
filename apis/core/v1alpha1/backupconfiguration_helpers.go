@@ -19,9 +19,67 @@ package v1alpha1
 import (
 	"stash.appscode.dev/kubestash/crds"
 
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 )
 
 func (_ BackupConfiguration) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralBackupConfiguration))
+}
+
+func (b *BackupConfiguration) CalculatePhase() BackupInvokerPhase {
+	if kmapi.IsConditionFalse(b.Status.Conditions, TypeValidationPassed) {
+		return BackupInvokerInvalid
+	}
+
+	if b.isReady() {
+		return BackupInvokerReady
+	}
+
+	return BackupInvokerNotReady
+}
+
+func (b *BackupConfiguration) isReady() bool {
+	if b.Status.TargetFound == nil || !*b.Status.TargetFound {
+		return false
+	}
+
+	if !b.backendsReady() {
+		return false
+	}
+
+	if !b.sessionsReady() {
+		return false
+	}
+
+	return true
+}
+
+func (b *BackupConfiguration) sessionsReady() bool {
+	if len(b.Status.Sessions) != len(b.Spec.Sessions) {
+		return false
+	}
+
+	for _, status := range b.Status.Sessions {
+		if !kmapi.IsConditionTrue(status.Conditions, TypeSchedulerEnsured) ||
+			!kmapi.IsConditionTrue(status.Conditions, TypeBackupExecutorEnsured) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func (b *BackupConfiguration) backendsReady() bool {
+	if len(b.Status.Backends) != len(b.Spec.Backends) {
+		return false
+	}
+
+	for _, backend := range b.Status.Backends {
+		if !backend.Ready {
+			return false
+		}
+	}
+
+	return true
 }

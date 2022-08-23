@@ -505,6 +505,7 @@ run: ## Run the operator locally.
 
 .PHONY: install
 install: ## Install KubeStash in the current cluster.
+	push-crd-installer
 	helm dependency update charts/kubestash ;                   		\
 	helm install kubestash charts/kubestash --wait --create-namespace	\
 		--namespace=$(OPERATOR_NAMESPACE)								\

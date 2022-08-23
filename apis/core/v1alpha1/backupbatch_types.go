@@ -95,10 +95,20 @@ type TargetBackupSpec struct {
 
 // BackupBatchStatus defines the observed state of BackupBatch
 type BackupBatchStatus struct {
-	*OffshootStatus `json:",inline"`
+	// +optional
+	OffshootStatus `json:",inline"`
 
-	// Targets specifies whether the targets of backup do exist or not
+	// Phase represents the current state of the Backup Invoker.
+	// +optional
+	Phase BackupInvokerPhase `json:"phase,omitempty"`
+
+	// Targets specifies whether the backup targets exist or not
+	// +optional
 	Targets []ResourceFoundStatus `json:"targets,omitempty"`
+
+	// Conditions represents list of conditions regarding this BackupConfiguration
+	// +optional
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 //+kubebuilder:object:root=true

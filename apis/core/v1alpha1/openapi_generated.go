@@ -19775,13 +19775,6 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref common.ReferenceC
 				Description: "BackupBatchStatus defines the observed state of BackupBatch",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"ready": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Ready specifies whether the backup has been configured successfully or not",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"backends": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Backends specifies whether the backends exist or not",
@@ -19866,9 +19859,16 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref common.ReferenceC
 							},
 						},
 					},
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase represents the current state of the Backup Invoker.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"targets": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Targets specifies whether the targets of backup do exist or not",
+							Description: "Targets specifies whether the backup targets exist or not",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -19880,11 +19880,25 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref common.ReferenceC
 							},
 						},
 					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions represents list of conditions regarding this BackupConfiguration",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepoStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus"},
+			"kmodules.xyz/client-go/api/v1.Condition", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepoStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus"},
 	}
 }
 
@@ -20200,13 +20214,6 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref common.Re
 				Description: "BackupConfigurationStatus defines the observed state of BackupConfiguration",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"ready": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Ready specifies whether the backup has been configured successfully or not",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"backends": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Backends specifies whether the backends exist or not",
@@ -20291,18 +20298,39 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref common.Re
 							},
 						},
 					},
-					"target": {
+					"phase": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Target specifies whether the backup target exist or not",
-							Default:     map[string]interface{}{},
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
+							Description: "Phase represents the current state of the Backup Invoker.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"targetFound": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TargetFound specifies whether the backup target exist or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions represents list of conditions regarding this BackupConfiguration",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepoStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus"},
+			"kmodules.xyz/client-go/api/v1.Condition", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepoStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus"},
 	}
 }
 
@@ -21164,13 +21192,6 @@ func schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref common.ReferenceCall
 				Description: "OffshootStatus specifies the status that are common between BackupConfiguration and BackupBatch",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"ready": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Ready specifies whether the backup has been configured successfully or not",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"backends": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Backends specifies whether the backends exist or not",

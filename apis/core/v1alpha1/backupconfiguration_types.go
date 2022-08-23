@@ -34,6 +34,7 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=backupconfigurations,singular=backupconfiguration,shortName=bc,categories={kubestash,appscode,all}
+// +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Paused",type="boolean",JSONPath=".spec.paused"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
@@ -326,19 +327,34 @@ type BackupHooks struct {
 
 // BackupConfigurationStatus defines the observed state of BackupConfiguration
 type BackupConfigurationStatus struct {
-	*OffshootStatus `json:",inline"`
-
-	// Target specifies whether the backup target exist or not
 	// +optional
-	Target ResourceFoundStatus `json:"target,omitempty"`
+	OffshootStatus `json:",inline"`
+
+	// Phase represents the current state of the Backup Invoker.
+	// +optional
+	Phase BackupInvokerPhase `json:"phase,omitempty"`
+
+	// TargetFound specifies whether the backup target exist or not
+	// +optional
+	TargetFound *bool `json:"targetFound,omitempty"`
+
+	// Conditions represents list of conditions regarding this BackupConfiguration
+	// +optional
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
+
+// BackupInvokerPhase specifies the current state of the backup setup process
+// +kubebuilder:validation:Enum=NotReady;Ready;Invalid
+type BackupInvokerPhase string
+
+const (
+	BackupInvokerNotReady BackupInvokerPhase = "NotReady"
+	BackupInvokerReady    BackupInvokerPhase = "Ready"
+	BackupInvokerInvalid  BackupInvokerPhase = "Invalid"
+)
 
 // OffshootStatus specifies the status that are common between BackupConfiguration and BackupBatch
 type OffshootStatus struct {
-	// Ready specifies whether the backup has been configured successfully or not
-	// +optional
-	Ready bool `json:"ready,omitempty"`
-
 	// Backends specifies whether the backends exist or not
 	// +optional
 	Backends []BackendStatus `json:"backends,omitempty"`
@@ -402,6 +418,28 @@ type SessionStatus struct {
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
+
+const (
+	// TypeValidationPassed indicates the validation conditions of the CRD are passed or not.
+	TypeValidationPassed           = "ValidationPassed"
+	ReasonResourceValidationPassed = "ResourceValidationPassed"
+	ReasonResourceValidationFailed = "ResourceValidationFailed"
+
+	// TypeRetentionPolicyReady indicates whether the Retention Policy exists or not.
+	TypeRetentionPolicyFound      = "RetentionPolicyFound"
+	ReasonRetentionPolicyFound    = "RetentionPolicyFound"
+	ReasonRetentionPolicyNotFound = "RetentionPolicyNotFound"
+
+	// TypeBackupExecutorEnsured indicates whether the Backup Executor is ensured or not.
+	TypeBackupExecutorEnsured      = "BackupExecutorEnsured"
+	ReasonBackupExecutorEnsured    = "BackupExecutorEnsured"
+	ReasonBackupExecutorNotEnsured = "BackupExecutorNotEnsured"
+
+	// TypeSchedulerEnsured indicates whether the Scheduler is ensured or not.
+	TypeSchedulerEnsured      = "SchedulerEnsured"
+	ReasonSchedulerNotEnsured = "SchedulerNotEnsured"
+	ReasonSchedulerEnsured    = "SchedulerEnsured"
+)
 
 //+kubebuilder:object:root=true
 
