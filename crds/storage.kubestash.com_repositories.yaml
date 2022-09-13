@@ -198,6 +198,11 @@ spec:
                       type: string
                     phase:
                       description: Phase represents the phase of the Snapshot
+                      enum:
+                      - Pending
+                      - Running
+                      - Succeeded
+                      - Failed
                       type: string
                     session:
                       description: Session represents the name of the session that

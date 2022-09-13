@@ -19,9 +19,75 @@ package v1alpha1
 import (
 	"stash.appscode.dev/kubestash/crds"
 
+	"k8s.io/apimachinery/pkg/types"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 )
 
 func (_ Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralSnapshot))
+}
+
+func (s Snapshot) IsCompleted() bool {
+	return s.Status.Phase == SnapshotFailed || s.Status.Phase == SnapshotSucceeded
+}
+
+func (s Snapshot) CalculatePhase() SnapshotPhase {
+	if kmapi.IsConditionFalse(s.Status.Conditions, TypeBackendMetadataWritten) ||
+		kmapi.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) {
+		return SnapshotFailed
+	}
+
+	return s.GetComponentsPhase()
+}
+
+func (s Snapshot) GetComponentsPhase() SnapshotPhase {
+	failedComponent := 0
+	successfulComponent := 0
+	pendingComponent := 0
+
+	for _, c := range s.Status.Components {
+		if c.Phase == ComponentPhaseSucceeded {
+			successfulComponent++
+		}
+		if c.Phase == ComponentPhaseFailed {
+			failedComponent++
+		}
+		if c.Phase == ComponentPhasePending {
+			pendingComponent++
+		}
+	}
+
+	totalComponents := len(s.Status.Components)
+
+	if pendingComponent == totalComponents {
+		return SnapshotPending
+	}
+
+	if successfulComponent == totalComponents {
+		return SnapshotSucceeded
+	}
+
+	if successfulComponent+failedComponent == totalComponents {
+		return SnapshotFailed
+	}
+
+	return SnapshotRunning
+}
+
+func (s Snapshot) GetSnapshotInfo() SnapshotInfo {
+	return SnapshotInfo{
+		Name:         s.Name,
+		Phase:        s.Status.Phase,
+		Session:      s.Spec.Session,
+		Size:         s.Status.Size,
+		SnapshotTime: s.Status.SnapshotTime,
+	}
+}
+
+func (s Snapshot) GetSnapKey() types.NamespacedName {
+	return types.NamespacedName{
+		Name:      s.Name,
+		Namespace: s.Namespace,
+	}
 }

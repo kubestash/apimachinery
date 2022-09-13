@@ -114,7 +114,7 @@ type SnapshotInfo struct {
 
 	// Phase represents the phase of the Snapshot
 	// +optional
-	Phase string `json:"phase,omitempty"`
+	Phase SnapshotPhase `json:"phase,omitempty"`
 
 	// Session represents the name of the session that is responsible for this Snapshot
 	Session string `json:"session,omitempty"`

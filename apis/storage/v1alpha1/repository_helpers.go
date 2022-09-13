@@ -19,9 +19,17 @@ package v1alpha1
 import (
 	"stash.appscode.dev/kubestash/crds"
 
+	"k8s.io/apimachinery/pkg/types"
 	"kmodules.xyz/client-go/apiextensions"
 )
 
 func (_ Repository) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralRepository))
+}
+
+func (repo Repository) GetRepoKey() types.NamespacedName {
+	return types.NamespacedName{
+		Name:      repo.Name,
+		Namespace: repo.Namespace,
+	}
 }

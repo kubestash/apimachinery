@@ -123,6 +123,10 @@ type SnapshotStatus struct {
 	// BackupSession represents the name of the respective BackupSession which is responsible for this Snapshot.
 	// +optional
 	BackupSession string `json:"backupSession,omitempty"`
+
+	// Conditions represents list of conditions regarding this Snapshot
+	// +optional
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 // SnapshotPhase represent the overall progress of this Snapshot
@@ -195,6 +199,16 @@ type ResticStats struct {
 	// +optional
 	Integrity *bool `json:"integrity,omitempty"`
 }
+
+const (
+	TypeBackendMetadataWritten            = "BackendMetadataWritten"
+	ReasonBackendMetadataWrittenFailed    = "BackendMetadataWrittenFailed"
+	ReasonBackendMetadataWrittenSucceeded = "BackendMetadataWrittenSucceeded"
+
+	TypeRecentSnapshotListUpdated            = "RecentSnapshotListUpdated"
+	ReasonRecentSnapshotListUpdatedFailed    = "RecentSnapshotListUpdatedFailed"
+	ReasonRecentSnapshotListUpdatedSucceeded = "RecentSnapshotListUpdatedSucceeded "
+)
 
 //+kubebuilder:object:root=true
 

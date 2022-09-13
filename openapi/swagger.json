@@ -14983,6 +14983,14 @@
             "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.ComponentStatus"
           }
         },
+        "conditions": {
+          "description": "Conditions represents list of conditions regarding this Snapshot",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "integrity": {
           "description": "Integrity represents whether the Snapshot data has been corrupted or not",
           "type": "boolean"
