@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"stash.appscode.dev/kubestash/apis/storage/v1alpha1"
+
 	batchv1 "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -82,6 +84,13 @@ type BackendReference struct {
 	// You can refer to the BackupStorage CR of a different namespace as long as it is allowed
 	// by the `usagePolicy` of the BackupStorage.`
 	StorageRef kmapi.TypedObjectReference `json:"storageRef,omitempty"`
+
+	// RetentionPolicy refers to a RetentionPolicy CRs which defines how to cleanup the old Snapshots.
+	// This field is optional. If you don't provide this field, Stash will use the default RetentionPolicy for
+	// the namespace. If there is no default RetentionPolicy for the namespace, then Stash will find a
+	// RetentionPolicy from other namespaces that is allowed to use from the current namespace.
+	// +optional
+	RetentionPolicy *kmapi.ObjectReference `json:"retentionPolicy,omitempty"`
 }
 
 // Session specifies a backup session configuration for the target
@@ -103,13 +112,6 @@ type SessionConfig struct {
 
 	// Scheduler specifies the configuration for backup triggering CronJob
 	Scheduler *SchedulerSpec `json:"scheduler,omitempty"`
-
-	// RetentionPolicy refers to a RetentionPolicy CRs which defines how to cleanup the old Snapshots.
-	// This field is optional. If you don't provide this field, Stash will use the default RetentionPolicy for
-	// the namespace. If there is no default RetentionPolicy for the namespace, then Stash will find a
-	// RetentionPolicy from other namespaces that is allowed to use from the current namespace.
-	// +optional
-	RetentionPolicy *kmapi.ObjectReference `json:"retentionPolicy,omitempty"`
 
 	// VerificationStrategies specifies a list of backup verification configurations
 	// +optional
@@ -385,10 +387,38 @@ type BackendStatus struct {
 	// Name indicates the backend name
 	Name string `json:"name,omitempty"`
 
-	// Found indicate whether the respective BackupStorage was found or not
-	Found bool `json:"found,omitempty"`
-
 	// Ready indicates whether the respective BackupStorage is ready or not
+	// +optional
+	Ready bool `json:"ready,omitempty"`
+
+	// Reason specifies the error messages found during Backend Readiness check
+	// +optional
+	Reason string `json:"reason,omitempty"`
+
+	// Storage indicates the status of the respective BackupStorage
+	// +optional
+	Storage *StorageStatus `json:"storage,omitempty"`
+
+	// RetentionPolicy indicates the status of the respective RetentionPolicy
+	// +optional
+	RetentionPolicy *RetentionPolicyStatus `json:"retentionPolicy,omitempty"`
+}
+
+type StorageStatus struct {
+	// Ref indicates to the BackupStorage object.
+	Ref kmapi.TypedObjectReference `json:"ref,omitempty"`
+
+	// Phase indicates the current phase of the respective BackupStorage.
+	// +optional
+	Phase v1alpha1.BackupStoragePhase `json:"phase,omitempty"`
+}
+
+type RetentionPolicyStatus struct {
+	// Ref indicates the RetentionPolicy object reference.
+	Ref kmapi.ObjectReference `json:"ref,omitempty"`
+
+	// Ready indicates whether the RetentionPolicy is Ready or not
+	// +optional
 	Ready bool `json:"ready,omitempty"`
 }
 
@@ -424,11 +454,6 @@ const (
 	TypeValidationPassed           = "ValidationPassed"
 	ReasonResourceValidationPassed = "ResourceValidationPassed"
 	ReasonResourceValidationFailed = "ResourceValidationFailed"
-
-	// TypeRetentionPolicyReady indicates whether the Retention Policy exists or not.
-	TypeRetentionPolicyFound      = "RetentionPolicyFound"
-	ReasonRetentionPolicyFound    = "RetentionPolicyFound"
-	ReasonRetentionPolicyNotFound = "RetentionPolicyNotFound"
 
 	// TypeBackupExecutorEnsured indicates whether the Backup Executor is ensured or not.
 	TypeBackupExecutorEnsured      = "BackupExecutorEnsured"

@@ -71,6 +71,24 @@ spec:
                     name:
                       description: Name provides an identifier for this storage.
                       type: string
+                    retentionPolicy:
+                      description: RetentionPolicy refers to a RetentionPolicy CRs
+                        which defines how to cleanup the old Snapshots. This field
+                        is optional. If you don't provide this field, Stash will use
+                        the default RetentionPolicy for the namespace. If there is
+                        no default RetentionPolicy for the namespace, then Stash will
+                        find a RetentionPolicy from other namespaces that is allowed
+                        to use from the current namespace.
+                      properties:
+                        name:
+                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                          type: string
+                        namespace:
+                          description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                          type: string
+                      required:
+                      - name
+                      type: object
                     storageRef:
                       description: StorageRef refers to the CR that holds the information
                         of a  storage. You can refer to the BackupStorage CR of a
@@ -19295,24 +19313,6 @@ spec:
                             type: string
                         type: object
                       type: array
-                    retentionPolicy:
-                      description: RetentionPolicy refers to a RetentionPolicy CRs
-                        which defines how to cleanup the old Snapshots. This field
-                        is optional. If you don't provide this field, Stash will use
-                        the default RetentionPolicy for the namespace. If there is
-                        no default RetentionPolicy for the namespace, then Stash will
-                        find a RetentionPolicy from other namespaces that is allowed
-                        to use from the current namespace.
-                      properties:
-                        name:
-                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
-                          type: string
-                        namespace:
-                          description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
-                          type: string
-                      required:
-                      - name
-                      type: object
                     retryConfig:
                       description: RetryConfig specifies the behavior of retry in
                         case of a backup failure.
@@ -23942,10 +23942,6 @@ spec:
                 items:
                   description: BackendStatus specifies the status of the backends
                   properties:
-                    found:
-                      description: Found indicate whether the respective BackupStorage
-                        was found or not
-                      type: boolean
                     name:
                       description: Name indicates the backend name
                       type: string
@@ -23953,6 +23949,58 @@ spec:
                       description: Ready indicates whether the respective BackupStorage
                         is ready or not
                       type: boolean
+                    reason:
+                      description: Reason specifies the error messages found during
+                        Backend Readiness check
+                      type: string
+                    retentionPolicy:
+                      description: RetentionPolicy indicates the status of the respective
+                        RetentionPolicy
+                      properties:
+                        ready:
+                          description: Ready indicates whether the RetentionPolicy
+                            is Ready or not
+                          type: boolean
+                        ref:
+                          description: Ref indicates the RetentionPolicy object reference.
+                          properties:
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                              type: string
+                            namespace:
+                              description: 'Namespace of the referent. More info:
+                                https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                              type: string
+                          required:
+                          - name
+                          type: object
+                      type: object
+                    storage:
+                      description: Storage indicates the status of the respective
+                        BackupStorage
+                      properties:
+                        phase:
+                          description: Phase indicates the current phase of the respective
+                            BackupStorage.
+                          type: string
+                        ref:
+                          description: Ref indicates to the BackupStorage object.
+                          properties:
+                            apiGroup:
+                              type: string
+                            kind:
+                              type: string
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                              type: string
+                            namespace:
+                              description: 'Namespace of the referent. More info:
+                                https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                              type: string
+                          required:
+                          - name
+                          type: object
+                      type: object
                   type: object
                 type: array
               conditions:

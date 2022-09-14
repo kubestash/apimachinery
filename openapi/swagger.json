@@ -12558,6 +12558,10 @@
           "description": "Name provides an identifier for this storage.",
           "type": "string"
         },
+        "retentionPolicy": {
+          "description": "RetentionPolicy refers to a RetentionPolicy CRs which defines how to cleanup the old Snapshots. This field is optional. If you don't provide this field, Stash will use the default RetentionPolicy for the namespace. If there is no default RetentionPolicy for the namespace, then Stash will find a RetentionPolicy from other namespaces that is allowed to use from the current namespace.",
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
         "storageRef": {
           "description": "StorageRef refers to the CR that holds the information of a  storage. You can refer to the BackupStorage CR of a different namespace as long as it is allowed by the `usagePolicy` of the BackupStorage.`",
           "default": {},
@@ -12569,10 +12573,6 @@
       "description": "BackendStatus specifies the status of the backends",
       "type": "object",
       "properties": {
-        "found": {
-          "description": "Found indicate whether the respective BackupStorage was found or not",
-          "type": "boolean"
-        },
         "name": {
           "description": "Name indicates the backend name",
           "type": "string"
@@ -12580,6 +12580,18 @@
         "ready": {
           "description": "Ready indicates whether the respective BackupStorage is ready or not",
           "type": "boolean"
+        },
+        "reason": {
+          "description": "Reason specifies the error messages found during Backend Readiness check",
+          "type": "string"
+        },
+        "retentionPolicy": {
+          "description": "RetentionPolicy indicates the status of the respective RetentionPolicy",
+          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RetentionPolicyStatus"
+        },
+        "storage": {
+          "description": "Storage indicates the status of the respective BackupStorage",
+          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.StorageStatus"
         }
       }
     },
@@ -13200,10 +13212,6 @@
         "name": {
           "description": "Name specifies the name of the session",
           "type": "string"
-        },
-        "retentionPolicy": {
-          "description": "RetentionPolicy refers to a RetentionPolicy CRs which defines how to cleanup the old Snapshots. This field is optional. If you don't provide this field, Stash will use the default RetentionPolicy for the namespace. If there is no default RetentionPolicy for the namespace, then Stash will find a RetentionPolicy from other namespaces that is allowed to use from the current namespace.",
-          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
         },
         "retryConfig": {
           "description": "RetryConfig specifies the behavior of retry in case of a backup failure.",
@@ -13826,6 +13834,20 @@
         }
       }
     },
+    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RetentionPolicyStatus": {
+      "type": "object",
+      "properties": {
+        "ready": {
+          "description": "Ready indicates whether the RetentionPolicy is Ready or not",
+          "type": "boolean"
+        },
+        "ref": {
+          "description": "Ref indicates the RetentionPolicy object reference.",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        }
+      }
+    },
     "dev.appscode.stash.kubestash.apis.core.v1alpha1.RetryConfig": {
       "description": "RetryConfig specifies the behavior of retry",
       "type": "object",
@@ -13912,10 +13934,6 @@
             "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RepositoryInfo"
           }
         },
-        "retentionPolicy": {
-          "description": "RetentionPolicy refers to a RetentionPolicy CRs which defines how to cleanup the old Snapshots. This field is optional. If you don't provide this field, Stash will use the default RetentionPolicy for the namespace. If there is no default RetentionPolicy for the namespace, then Stash will find a RetentionPolicy from other namespaces that is allowed to use from the current namespace.",
-          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
-        },
         "retryConfig": {
           "description": "RetryConfig specifies the behavior of retry in case of a backup failure.",
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RetryConfig"
@@ -13985,6 +14003,20 @@
         "repository": {
           "description": "Repository indicates the name of the Repository where the Snapshot is being stored.",
           "type": "string"
+        }
+      }
+    },
+    "dev.appscode.stash.kubestash.apis.core.v1alpha1.StorageStatus": {
+      "type": "object",
+      "properties": {
+        "phase": {
+          "description": "Phase indicates the current phase of the respective BackupStorage.",
+          "type": "string"
+        },
+        "ref": {
+          "description": "Ref indicates to the BackupStorage object.",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"
         }
       }
     },

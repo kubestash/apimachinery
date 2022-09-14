@@ -432,12 +432,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSessionSpec":          schema_kubestash_apis_core_v1alpha1_RestoreSessionSpec(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSessionStatus":        schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus":  schema_kubestash_apis_core_v1alpha1_RetentionPolicyApplyStatus(ref),
+		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyStatus":       schema_kubestash_apis_core_v1alpha1_RetentionPolicyStatus(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig":                 schema_kubestash_apis_core_v1alpha1_RetryConfig(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec":               schema_kubestash_apis_core_v1alpha1_SchedulerSpec(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.Session":                     schema_kubestash_apis_core_v1alpha1_Session(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionConfig":               schema_kubestash_apis_core_v1alpha1_SessionConfig(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus":               schema_kubestash_apis_core_v1alpha1_SessionStatus(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.SnapshotStatus":              schema_kubestash_apis_core_v1alpha1_SnapshotStatus(ref),
+		"stash.appscode.dev/kubestash/apis/core/v1alpha1.StorageStatus":               schema_kubestash_apis_core_v1alpha1_StorageStatus(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetBackupSpec":            schema_kubestash_apis_core_v1alpha1_TargetBackupSpec(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetReference":             schema_kubestash_apis_core_v1alpha1_TargetReference(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetVolumeInfo":            schema_kubestash_apis_core_v1alpha1_TargetVolumeInfo(ref),
@@ -19573,11 +19575,17 @@ func schema_kubestash_apis_core_v1alpha1_BackendReference(ref common.ReferenceCa
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
 						},
 					},
+					"retentionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionPolicy refers to a RetentionPolicy CRs which defines how to cleanup the old Snapshots. This field is optional. If you don't provide this field, Stash will use the default RetentionPolicy for the namespace. If there is no default RetentionPolicy for the namespace, then Stash will find a RetentionPolicy from other namespaces that is allowed to use from the current namespace.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.TypedObjectReference"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TypedObjectReference"},
 	}
 }
 
@@ -19595,13 +19603,6 @@ func schema_kubestash_apis_core_v1alpha1_BackendStatus(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
-					"found": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Found indicate whether the respective BackupStorage was found or not",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"ready": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Ready indicates whether the respective BackupStorage is ready or not",
@@ -19609,9 +19610,30 @@ func schema_kubestash_apis_core_v1alpha1_BackendStatus(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reason specifies the error messages found during Backend Readiness check",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage indicates the status of the respective BackupStorage",
+							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.StorageStatus"),
+						},
+					},
+					"retentionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionPolicy indicates the status of the respective RetentionPolicy",
+							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyStatus"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.StorageStatus"},
 	}
 }
 
@@ -20633,12 +20655,6 @@ func schema_kubestash_apis_core_v1alpha1_BatchSession(ref common.ReferenceCallba
 							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec"),
 						},
 					},
-					"retentionPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RetentionPolicy refers to a RetentionPolicy CRs which defines how to cleanup the old Snapshots. This field is optional. If you don't provide this field, Stash will use the default RetentionPolicy for the namespace. If there is no default RetentionPolicy for the namespace, then Stash will find a RetentionPolicy from other namespaces that is allowed to use from the current namespace.",
-							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
-						},
-					},
 					"verificationStrategies": {
 						SchemaProps: spec.SchemaProps{
 							Description: "VerificationStrategies specifies a list of backup verification configurations",
@@ -20704,7 +20720,7 @@ func schema_kubestash_apis_core_v1alpha1_BatchSession(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetBackupSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
+			"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetBackupSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
 	}
 }
 
@@ -21818,6 +21834,34 @@ func schema_kubestash_apis_core_v1alpha1_RetentionPolicyApplyStatus(ref common.R
 	}
 }
 
+func schema_kubestash_apis_core_v1alpha1_RetentionPolicyStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ref": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ref indicates the RetentionPolicy object reference.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"ready": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ready indicates whether the RetentionPolicy is Ready or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
+	}
+}
+
 func schema_kubestash_apis_core_v1alpha1_RetryConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21931,12 +21975,6 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec"),
 						},
 					},
-					"retentionPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RetentionPolicy refers to a RetentionPolicy CRs which defines how to cleanup the old Snapshots. This field is optional. If you don't provide this field, Stash will use the default RetentionPolicy for the namespace. If there is no default RetentionPolicy for the namespace, then Stash will find a RetentionPolicy from other namespaces that is allowed to use from the current namespace.",
-							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
-						},
-					},
 					"verificationStrategies": {
 						SchemaProps: spec.SchemaProps{
 							Description: "VerificationStrategies specifies a list of backup verification configurations",
@@ -22008,7 +22046,7 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepositoryInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
+			"stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepositoryInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
 	}
 }
 
@@ -22030,12 +22068,6 @@ func schema_kubestash_apis_core_v1alpha1_SessionConfig(ref common.ReferenceCallb
 						SchemaProps: spec.SchemaProps{
 							Description: "Scheduler specifies the configuration for backup triggering CronJob",
 							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec"),
-						},
-					},
-					"retentionPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RetentionPolicy refers to a RetentionPolicy CRs which defines how to cleanup the old Snapshots. This field is optional. If you don't provide this field, Stash will use the default RetentionPolicy for the namespace. If there is no default RetentionPolicy for the namespace, then Stash will find a RetentionPolicy from other namespaces that is allowed to use from the current namespace.",
-							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
 					"verificationStrategies": {
@@ -22089,7 +22121,7 @@ func schema_kubestash_apis_core_v1alpha1_SessionConfig(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
+			"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
 	}
 }
 
@@ -22175,6 +22207,34 @@ func schema_kubestash_apis_core_v1alpha1_SnapshotStatus(ref common.ReferenceCall
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
+func schema_kubestash_apis_core_v1alpha1_StorageStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ref": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ref indicates to the BackupStorage object.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
+						},
+					},
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase indicates the current phase of the respective BackupStorage.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.TypedObjectReference"},
 	}
 }
 
