@@ -76,6 +76,7 @@ spec:
                 - kind
                 - name
                 type: object
+                x-kubernetes-map-type: atomic
               session:
                 description: Session specifies the name of the session that triggered
                   this backup
@@ -165,6 +166,7 @@ spec:
                             TODO: Add other useful fields. apiVersion, kind, uid?'
                           type: string
                       type: object
+                      x-kubernetes-map-type: atomic
                     name:
                       description: Name indicates to the name of the Snapshot
                       type: string

@@ -18,7 +18,6 @@ package main
 
 import (
 	"flag"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -99,7 +98,7 @@ func generateSwaggerJson(version string) {
 	if err != nil {
 		klog.Fatal(err)
 	}
-	err = ioutil.WriteFile(filename, []byte(apispec), 0o644)
+	err = os.WriteFile(filename, []byte(apispec), 0o644)
 	if err != nil {
 		klog.Fatal(err)
 	}

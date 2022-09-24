@@ -44,7 +44,7 @@ REGISTRY ?= stashed
 
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS          ?= "crd:generateEmbeddedObjectMeta=true"
-CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.24
+CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.25
 API_GROUPS           ?= addons:v1alpha1 core:v1alpha1 storage:v1alpha1 config:v1alpha1
 
 # This version-strategy uses git tags to set the version string
@@ -93,7 +93,7 @@ TAG              := $(VERSION)_$(OS)_$(ARCH)
 TAG_PROD         := $(TAG)
 TAG_DBG          := $(VERSION)-dbg_$(OS)_$(ARCH)
 
-GO_VERSION       ?= 1.18
+GO_VERSION       ?= 1.19
 BUILD_IMAGE      ?= appscode/golang-dev:$(GO_VERSION)
 TEST_IMAGE       ?= appscode/golang-dev:$(GO_VERSION)-stash
 

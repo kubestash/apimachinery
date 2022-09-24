@@ -19,7 +19,6 @@ package main
 import (
 	"context"
 	"flag"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -228,7 +227,7 @@ func updateMutatingWebhookCABundle(mgr manager.Manager, ctrlConfig *configv1alph
 		return err
 	}
 
-	caBundle, err := ioutil.ReadFile(filepath.Join(ctrlConfig.Webhook.CertDir, "ca.crt"))
+	caBundle, err := os.ReadFile(filepath.Join(ctrlConfig.Webhook.CertDir, "ca.crt"))
 	if err != nil {
 		return err
 	}
@@ -247,7 +246,7 @@ func updateValidatingWebhookCABundle(mgr manager.Manager, ctrlConfig *configv1al
 		return err
 	}
 
-	caBundle, err := ioutil.ReadFile(filepath.Join(ctrlConfig.Webhook.CertDir, "ca.crt"))
+	caBundle, err := os.ReadFile(filepath.Join(ctrlConfig.Webhook.CertDir, "ca.crt"))
 	if err != nil {
 		return err
 	}
