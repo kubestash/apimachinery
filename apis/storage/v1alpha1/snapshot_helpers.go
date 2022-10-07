@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	"stash.appscode.dev/kubestash/crds"
 
-	"k8s.io/apimachinery/pkg/types"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 )
@@ -82,12 +81,5 @@ func (s Snapshot) GetSnapshotInfo() SnapshotInfo {
 		Session:      s.Spec.Session,
 		Size:         s.Status.Size,
 		SnapshotTime: s.Status.SnapshotTime,
-	}
-}
-
-func (s Snapshot) GetSnapKey() types.NamespacedName {
-	return types.NamespacedName{
-		Name:      s.Name,
-		Namespace: s.Namespace,
 	}
 }
