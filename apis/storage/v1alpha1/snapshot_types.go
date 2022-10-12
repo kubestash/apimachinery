@@ -201,13 +201,13 @@ type ResticStats struct {
 }
 
 const (
-	TypeBackendMetadataWritten            = "BackendMetadataWritten"
-	ReasonBackendMetadataWrittenFailed    = "BackendMetadataWrittenFailed"
-	ReasonBackendMetadataWrittenSucceeded = "BackendMetadataWrittenSucceeded"
+	TypeBackendMetadataWritten               = "BackendMetadataWritten"
+	ReasonFailedToWriteBackendMetadata       = "FailedToWriteBackendMetadata"
+	ReasonSuccessfullyWrittenBackendMetadata = "SuccessfullyWrittenBackendMetadata "
 
-	TypeRecentSnapshotListUpdated            = "RecentSnapshotListUpdated"
-	ReasonRecentSnapshotListUpdatedFailed    = "RecentSnapshotListUpdatedFailed"
-	ReasonRecentSnapshotListUpdatedSucceeded = "RecentSnapshotListUpdatedSucceeded "
+	TypeRecentSnapshotListUpdated               = "RecentSnapshotListUpdated"
+	ReasonFailedToUpdateRecentSnapshotList      = "FailedToUpdateRecentSnapshotList"
+	ReasonSuccessfullyUpdatedRecentSnapshotList = "SuccessfullyUpdatedRecentSnapshotList"
 )
 
 //+kubebuilder:object:root=true
