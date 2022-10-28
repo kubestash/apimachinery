@@ -22,3 +22,10 @@ const (
 	RequeueTimeInterval       = 10 * time.Second
 	KubeStashCleanupFinalizer = "kubestash.com/cleanup"
 )
+
+const (
+	KeyTargetKind      = "target_kind"
+	KeyTargetName      = "target_name"
+	KeyTargetNamespace = "target_namespace"
+	KeyReason          = "reason"
+)

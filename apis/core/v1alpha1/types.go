@@ -163,9 +163,7 @@ const (
 
 // ResourceFoundStatus specifies whether a resource was found or not
 type ResourceFoundStatus struct {
-	// Name represents the name of the resource
-	Name string `json:"name,omitempty"`
-
+	kmapi.TypedObjectReference `json:",inline"`
 	// Found indicates whether the resource was found or not
 	Found bool `json:"found,omitempty"`
 }
@@ -192,3 +190,8 @@ type RetryConfig struct {
 	// +optional
 	Delay string `json:"delay,omitempty"`
 }
+
+const (
+	TypeDeadlineExceeded                 = "DeadlineExceeded"
+	ReasonFailedToCompleteWithinDeadline = "FailedToCompleteWithinDeadline"
+)

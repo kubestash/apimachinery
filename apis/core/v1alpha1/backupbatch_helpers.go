@@ -19,9 +19,19 @@ package v1alpha1
 import (
 	"stash.appscode.dev/kubestash/crds"
 
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 )
 
 func (_ BackupBatch) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralBackupBatch))
+}
+
+func (bb BackupBatch) HasTarget(target kmapi.TypedObjectReference) bool {
+	for _, t := range bb.Spec.Targets {
+		if *t.AppRef == target {
+			return true
+		}
+	}
+	return false
 }

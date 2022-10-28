@@ -60,6 +60,12 @@ type BackupBatchSpec struct {
 
 	// Session defines a list of session configurations that specifies when and how to take backup.
 	Sessions []BatchSession `json:"sessions,omitempty"`
+
+	// Paused indicates that the BackupBatch has been paused from taking backup. Default value is 'false'.
+	// If you set `paused` field to `true`, Stash will suspend the respective backup triggering CronJob and
+	// skip processing any further events for this BackupBatch.
+	// +optional
+	Paused bool `json:"paused,omitempty"`
 }
 
 // TargetReference specifies a reference to the target that is subject to backup

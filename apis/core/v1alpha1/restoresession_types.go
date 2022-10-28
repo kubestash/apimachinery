@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -64,23 +63,10 @@ type RestoreSessionSpec struct {
 	// +optional
 	Hooks *RestoreHooks `json:"hooks,omitempty"`
 
-	// FailurePolicy specifies what to do if the restore fail.
-	// Valid values are:
-	// - "Fail": Stash should mark the restore as failed if any component fail to complete its restore. This is the default behavior.
-	// - "Retry": Stash will retry to restore the failed component according to the `retryConfig`.
-	// +kubebuilder:default=Fail
+	// Timeout specifies a duration that KubeStash should wait for the session execution to be completed.
+	// If the session execution does not finish within this time period, KubeStash will consider this session as a failure.
 	// +optional
-	FailurePolicy FailurePolicy `json:"failurePolicy,omitempty"`
-
-	// RetryConfig specifies the behavior of retry in case of a restore failure.
-	// +optional
-	RetryConfig *RetryConfig `json:"retryConfig,omitempty"`
-
-	// Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed.
-	// If the session execution does not finish within this time period, KubeStash will consider this session as failure.
-	// Then, it will re-try according to the RetryConfig.
-	// +optional
-	Timeout *int32 `json:"timeout,omitempty"`
+	Timeout *metav1.Duration `json:"timeout,omitempty"`
 }
 
 // RestoreDataSource specifies the information about the data that will be restored
@@ -133,13 +119,18 @@ type RestoreSessionStatus struct {
 	// +optional
 	Phase RestorePhase `json:"phase,omitempty"`
 
+	// TargetFound specifies whether the restore target exist or not
+	// +optional
+	TargetFound *bool `json:"targetFound,omitempty"`
+
 	// Duration specify total time taken to complete the restore process
 	// +optional
 	Duration string `json:"duration,omitempty"`
 
 	// Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline,
 	// it will be considered as failed.
-	Deadline string `json:"deadline,omitempty"`
+	// +optional
+	Deadline *metav1.Time `json:"deadline,omitempty"`
 
 	// Components represents the individual component restore status
 	// +optional
@@ -149,11 +140,13 @@ type RestoreSessionStatus struct {
 	// +optional
 	Hooks []HookExecutionStatus `json:"hooks,omitempty"`
 
-	// Backup represents the backup pause status. This section only present if the restore process
-	// pauses any active backup before restoring
+	// Dependencies specifies whether the objects required by this RestoreSession exist or not
 	// +optional
-	Backup *BackupPausedStatus `json:"backup,omitempty"`
+	Dependencies []ResourceFoundStatus `json:"dependencies,omitempty"`
 
+	// PausedBackups represents the list of backups that have been paused before restore.
+	// +optional
+	PausedBackups []kmapi.TypedObjectReference `json:"pausedBackups,omitempty"`
 	// Conditions specifies a list of conditions related to this restore session
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
@@ -164,10 +157,10 @@ type RestoreSessionStatus struct {
 type RestorePhase string
 
 const (
-	RestorePending RestorePhase = "Pending"
-	RestoreRunning RestorePhase = "Running"
-	RestoreFailed  RestorePhase = "Failed"
-	RestoreSkipped RestorePhase = "Skipped"
+	RestorePending   RestorePhase = "Pending"
+	RestoreRunning   RestorePhase = "Running"
+	RestoreFailed    RestorePhase = "Failed"
+	RestoreSucceeded RestorePhase = "Succeeded"
 )
 
 // ComponentRestoreStatus represents the restore status of individual components
@@ -188,15 +181,22 @@ type ComponentRestoreStatus struct {
 	Error string `json:"error,omitempty"`
 }
 
-// BackupPausedStatus holds the respective backup invoker information if the restore
-// process pauses any active backup.
-type BackupPausedStatus struct {
-	// Paused specifies whether the respective backup has been paused or not
-	Paused bool `json:"paused,omitempty"`
+const (
+	TypeRestoreExecutorEnsured               = "RestoreExecutorEnsured"
+	ReasonSuccessfullyEnsuredRestoreExecutor = "SuccessfullyEnsuredRestoreExecutor"
+	ReasonFailedToEnsureRestoreExecutor      = "FailedToEnsureRestoreExecutor"
 
-	// Invoker refers to the respective backup invoker
-	Invoker *core.TypedLocalObjectReference `json:"invoker,omitempty"`
-}
+	TypePreRestoreHooksExecutionSucceeded     = "PreRestoreHooksExecutionSucceeded"
+	ReasonSuccessfullyExecutedPreRestoreHooks = "SuccessfullyExecutedPreRestoreHooks"
+	ReasonFailedToExecutePreRestoreHooks      = "FailedToExecutePreRestoreHooks"
+
+	TypePostRestoreHooksExecutionSucceeded     = "PostRestoreHooksExecutionSucceeded"
+	ReasonSuccessfullyExecutedPostRestoreHooks = "SuccessfullyExecutedPostRestoreHooks"
+	ReasonFailedToExecutePostRestoreHooks      = "FailedToExecutePostRestoreHooks"
+
+	TypeRestoreTargetFound                = "RestoreTargetFound"
+	ReasonUnableToCheckTargetAvailability = "UnableToCheckTargetAvailability"
+)
 
 //+kubebuilder:object:root=true
 

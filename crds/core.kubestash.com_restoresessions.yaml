@@ -8668,17 +8668,6 @@ spec:
                       don't specify this field. Specify `pitr` field instead.
                     type: string
                 type: object
-              failurePolicy:
-                default: Fail
-                description: 'FailurePolicy specifies what to do if the restore fail.
-                  Valid values are: - "Fail": Stash should mark the restore as failed
-                  if any component fail to complete its restore. This is the default
-                  behavior. - "Retry": Stash will retry to restore the failed component
-                  according to the `retryConfig`.'
-                enum:
-                - Fail
-                - Retry
-                type: string
               hooks:
                 description: Hooks specifies the restore hooks that should be executed
                   before and/or after the restore.
@@ -17800,22 +17789,6 @@ spec:
                       type: object
                     type: array
                 type: object
-              retryConfig:
-                description: RetryConfig specifies the behavior of retry in case of
-                  a restore failure.
-                properties:
-                  delay:
-                    description: Delay specifies a duration to wait until next retry.
-                      By default, Stash will retry immediately.
-                    type: string
-                  maxRetry:
-                    description: MaxRetry specifies the maximum number of times Stash
-                      should retry the backup/restore process. By default, Stash will
-                      retry only 1 time.
-                    format: int32
-                    minimum: 1
-                    type: integer
-                type: object
               target:
                 description: Target indicates the target application where the data
                   will be restored. The target must be in the same namespace as the
@@ -17835,47 +17808,15 @@ spec:
                 - name
                 type: object
               timeout:
-                description: Timeout specifies a duration in seconds that KubeStash
-                  should wait for the session execution to be completed. If the session
-                  execution does not finish within this time period, KubeStash will
-                  consider this session as failure. Then, it will re-try according
-                  to the RetryConfig.
-                format: int32
-                type: integer
+                description: Timeout specifies a duration that KubeStash should wait
+                  for the session execution to be completed. If the session execution
+                  does not finish within this time period, KubeStash will consider
+                  this session as a failure.
+                type: string
             type: object
           status:
             description: RestoreSessionStatus defines the observed state of RestoreSession
             properties:
-              backup:
-                description: Backup represents the backup pause status. This section
-                  only present if the restore process pauses any active backup before
-                  restoring
-                properties:
-                  invoker:
-                    description: Invoker refers to the respective backup invoker
-                    properties:
-                      apiGroup:
-                        description: APIGroup is the group for the resource being
-                          referenced. If APIGroup is not specified, the specified
-                          Kind must be in the core API group. For any other third-party
-                          types, APIGroup is required.
-                        type: string
-                      kind:
-                        description: Kind is the type of resource being referenced
-                        type: string
-                      name:
-                        description: Name is the name of resource being referenced
-                        type: string
-                    required:
-                    - kind
-                    - name
-                    type: object
-                    x-kubernetes-map-type: atomic
-                  paused:
-                    description: Paused specifies whether the respective backup has
-                      been paused or not
-                    type: boolean
-                type: object
               components:
                 description: Components represents the individual component restore
                   status
@@ -17956,7 +17897,33 @@ spec:
                 description: Deadline specifies a timestamp till this session is valid.
                   If the session does not complete within this deadline, it will be
                   considered as failed.
+                format: date-time
                 type: string
+              dependencies:
+                description: Dependencies specifies whether the objects required by
+                  this RestoreSession exist or not
+                items:
+                  description: ResourceFoundStatus specifies whether a resource was
+                    found or not
+                  properties:
+                    apiGroup:
+                      type: string
+                    found:
+                      description: Found indicates whether the resource was found
+                        or not
+                      type: boolean
+                    kind:
+                      type: string
+                    name:
+                      description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                      type: string
+                    namespace:
+                      description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
               duration:
                 description: Duration specify total time taken to complete the restore
                   process
@@ -17979,6 +17946,27 @@ spec:
                       type: string
                   type: object
                 type: array
+              pausedBackups:
+                description: PausedBackups represents the list of backups that have
+                  been paused before restore.
+                items:
+                  description: TypedObjectReference represents an typed namespaced
+                    object.
+                  properties:
+                    apiGroup:
+                      type: string
+                    kind:
+                      type: string
+                    name:
+                      description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                      type: string
+                    namespace:
+                      description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
               phase:
                 description: Phase represents the current state of the restore process
                 enum:
@@ -17987,6 +17975,10 @@ spec:
                 - Failed
                 - Skipped
                 type: string
+              targetFound:
+                description: TargetFound specifies whether the restore target exist
+                  or not
+                type: boolean
             type: object
         type: object
     served: true

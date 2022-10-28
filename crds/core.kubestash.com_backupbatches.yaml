@@ -101,6 +101,12 @@ spec:
                       type: object
                   type: object
                 type: array
+              paused:
+                description: Paused indicates that the BackupBatch has been paused
+                  from taking backup. Default value is 'false'. If you set `paused`
+                  field to `true`, Stash will suspend the respective backup triggering
+                  CronJob and skip processing any further events for this BackupBatch.
+                type: boolean
               sessions:
                 description: Session defines a list of session configurations that
                   specifies when and how to take backup.
@@ -25108,21 +25114,6 @@ spec:
           status:
             description: BackupBatchStatus defines the observed state of BackupBatch
             properties:
-              addons:
-                description: Addons specifies whether the addons exist or not
-                items:
-                  description: ResourceFoundStatus specifies whether a resource was
-                    found or not
-                  properties:
-                    found:
-                      description: Found indicates whether the resource was found
-                        or not
-                      type: boolean
-                    name:
-                      description: Name represents the name of the resource
-                      type: string
-                  type: object
-                type: array
               backends:
                 description: Backends specifies whether the backends exist or not
                 items:
@@ -25237,20 +25228,29 @@ spec:
                   - type
                   type: object
                 type: array
-              hookTemplates:
-                description: HookTemplates specifies whether the HookTemplates exist
-                  or not
+              dependencies:
+                description: Dependencies specifies whether the objects required by
+                  this BackupConfiguration exist or not
                 items:
                   description: ResourceFoundStatus specifies whether a resource was
                     found or not
                   properties:
+                    apiGroup:
+                      type: string
                     found:
                       description: Found indicates whether the resource was found
                         or not
                       type: boolean
-                    name:
-                      description: Name represents the name of the resource
+                    kind:
                       type: string
+                    name:
+                      description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                      type: string
+                    namespace:
+                      description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                      type: string
+                  required:
+                  - name
                   type: object
                 type: array
               phase:
@@ -25350,29 +25350,22 @@ spec:
                   description: ResourceFoundStatus specifies whether a resource was
                     found or not
                   properties:
+                    apiGroup:
+                      type: string
                     found:
                       description: Found indicates whether the resource was found
                         or not
                       type: boolean
-                    name:
-                      description: Name represents the name of the resource
+                    kind:
                       type: string
-                  type: object
-                type: array
-              verifiers:
-                description: Verifiers specifies whether the backup verifiers exist
-                  or not
-                items:
-                  description: ResourceFoundStatus specifies whether a resource was
-                    found or not
-                  properties:
-                    found:
-                      description: Found indicates whether the resource was found
-                        or not
-                      type: boolean
                     name:
-                      description: Name represents the name of the resource
+                      description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                       type: string
+                    namespace:
+                      description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                      type: string
+                  required:
+                  - name
                   type: object
                 type: array
             type: object

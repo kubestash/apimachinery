@@ -361,21 +361,13 @@ type OffshootStatus struct {
 	// +optional
 	Backends []BackendStatus `json:"backends,omitempty"`
 
-	// Addons specifies whether the addons exist or not
-	// +optional
-	Addons []ResourceFoundStatus `json:"addons,omitempty"`
-
 	// Repositories specifies whether the repositories have been successfully initialized or not
 	// +optional
 	Repositories []RepoStatus `json:"repositories,omitempty"`
 
-	// Verifiers specifies whether the backup verifiers exist or not
+	// Dependencies specifies whether the objects required by this BackupConfiguration exist or not
 	// +optional
-	Verifiers []ResourceFoundStatus `json:"verifiers,omitempty"`
-
-	// HookTemplates specifies whether the HookTemplates exist or not
-	// +optional
-	HookTemplates []ResourceFoundStatus `json:"hookTemplates,omitempty"`
+	Dependencies []ResourceFoundStatus `json:"dependencies,omitempty"`
 
 	// Sessions specifies status of the session specific resources
 	// +optional

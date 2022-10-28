@@ -404,7 +404,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfigurationSpec":     schema_kubestash_apis_core_v1alpha1_BackupConfigurationSpec(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfigurationStatus":   schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks":                 schema_kubestash_apis_core_v1alpha1_BackupHooks(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupPausedStatus":          schema_kubestash_apis_core_v1alpha1_BackupPausedStatus(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSession":               schema_kubestash_apis_core_v1alpha1_BackupSession(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSessionList":           schema_kubestash_apis_core_v1alpha1_BackupSessionList(ref),
 		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSessionSpec":           schema_kubestash_apis_core_v1alpha1_BackupSessionSpec(ref),
@@ -19782,6 +19781,13 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchSpec(ref common.ReferenceCal
 							},
 						},
 					},
+					"paused": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Paused indicates that the BackupBatch has been paused from taking backup. Default value is 'false'. If you set `paused` field to `true`, Stash will suspend the respective backup triggering CronJob and skip processing any further events for this BackupBatch.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
@@ -19811,20 +19817,6 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref common.ReferenceC
 							},
 						},
 					},
-					"addons": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Addons specifies whether the addons exist or not",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
-									},
-								},
-							},
-						},
-					},
 					"repositories": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Repositories specifies whether the repositories have been successfully initialized or not",
@@ -19839,23 +19831,9 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref common.ReferenceC
 							},
 						},
 					},
-					"verifiers": {
+					"dependencies": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Verifiers specifies whether the backup verifiers exist or not",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
-									},
-								},
-							},
-						},
-					},
-					"hookTemplates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "HookTemplates specifies whether the HookTemplates exist or not",
+							Description: "Dependencies specifies whether the objects required by this BackupConfiguration exist or not",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20250,20 +20228,6 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref common.Re
 							},
 						},
 					},
-					"addons": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Addons specifies whether the addons exist or not",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
-									},
-								},
-							},
-						},
-					},
 					"repositories": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Repositories specifies whether the repositories have been successfully initialized or not",
@@ -20278,23 +20242,9 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref common.Re
 							},
 						},
 					},
-					"verifiers": {
+					"dependencies": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Verifiers specifies whether the backup verifiers exist or not",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
-									},
-								},
-							},
-						},
-					},
-					"hookTemplates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "HookTemplates specifies whether the HookTemplates exist or not",
+							Description: "Dependencies specifies whether the objects required by this BackupConfiguration exist or not",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20396,34 +20346,6 @@ func schema_kubestash_apis_core_v1alpha1_BackupHooks(ref common.ReferenceCallbac
 		},
 		Dependencies: []string{
 			"stash.appscode.dev/kubestash/apis/core/v1alpha1.HookInfo"},
-	}
-}
-
-func schema_kubestash_apis_core_v1alpha1_BackupPausedStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "BackupPausedStatus holds the respective backup invoker information if the restore process pauses any active backup.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Paused specifies whether the respective backup has been paused or not",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"invoker": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Invoker refers to the respective backup invoker",
-							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference"},
 	}
 }
 
@@ -21222,20 +21144,6 @@ func schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref common.ReferenceCall
 							},
 						},
 					},
-					"addons": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Addons specifies whether the addons exist or not",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
-									},
-								},
-							},
-						},
-					},
 					"repositories": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Repositories specifies whether the repositories have been successfully initialized or not",
@@ -21250,23 +21158,9 @@ func schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref common.ReferenceCall
 							},
 						},
 					},
-					"verifiers": {
+					"dependencies": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Verifiers specifies whether the backup verifiers exist or not",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
-									},
-								},
-							},
-						},
-					},
-					"hookTemplates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "HookTemplates specifies whether the HookTemplates exist or not",
+							Description: "Dependencies specifies whether the objects required by this BackupConfiguration exist or not",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -21445,9 +21339,29 @@ func schema_kubestash_apis_core_v1alpha1_ResourceFoundStatus(ref common.Referenc
 				Description: "ResourceFoundStatus specifies whether a resource was found or not",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"apiGroup": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name represents the name of the resource",
+							Description: "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -21460,6 +21374,7 @@ func schema_kubestash_apis_core_v1alpha1_ResourceFoundStatus(ref common.Referenc
 						},
 					},
 				},
+				Required: []string{"name"},
 			},
 		},
 	}
@@ -21686,31 +21601,17 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionSpec(ref common.Reference
 							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreHooks"),
 						},
 					},
-					"failurePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "FailurePolicy specifies what to do if the restore fail. Valid values are: - \"Fail\": Stash should mark the restore as failed if any component fail to complete its restore. This is the default behavior. - \"Retry\": Stash will retry to restore the failed component according to the `retryConfig`.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"retryConfig": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RetryConfig specifies the behavior of retry in case of a restore failure.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
-						},
-					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Description: "Timeout specifies a duration that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as a failure.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.TypedObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreDataSource", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreDataSource", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreHooks"},
 	}
 }
 
@@ -21728,6 +21629,13 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref common.Referen
 							Format:      "",
 						},
 					},
+					"targetFound": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TargetFound specifies whether the restore target exist or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"duration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Duration specify total time taken to complete the restore process",
@@ -21738,8 +21646,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref common.Referen
 					"deadline": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline, it will be considered as failed.",
-							Type:        []string{"string"},
-							Format:      "",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"components": {
@@ -21770,10 +21677,32 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref common.Referen
 							},
 						},
 					},
-					"backup": {
+					"dependencies": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Backup represents the backup pause status. This section only present if the restore process pauses any active backup before restoring",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupPausedStatus"),
+							Description: "Dependencies specifies whether the objects required by this RestoreSession exist or not",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
+									},
+								},
+							},
+						},
+					},
+					"pausedBackups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PausedBackups represents the list of backups that have been paused before restore.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
+									},
+								},
+							},
 						},
 					},
 					"conditions": {
@@ -21794,7 +21723,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupPausedStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ComponentRestoreStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ComponentRestoreStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"},
 	}
 }
 
