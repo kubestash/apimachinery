@@ -188,7 +188,7 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			assert.Equal(t, test.restoreSession.CalculatePhase(), test.expectedPhase)
+			assert.Equal(t, test.expectedPhase, test.restoreSession.CalculatePhase())
 		})
 	}
 }
@@ -202,7 +202,7 @@ func TestRestoreSessionPhaseIsFailedIfPreRestoreHooksExecutionSucceededCondition
 		})
 	})
 
-	assert.Equal(t, rs.CalculatePhase(), RestoreFailed)
+	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
 }
 
 func TestRestoreSessionPhaseIsFailedIfPostRestoreHooksExecutionSucceededConditionIsFalse(t *testing.T) {
@@ -214,7 +214,7 @@ func TestRestoreSessionPhaseIsFailedIfPostRestoreHooksExecutionSucceededConditio
 		})
 	})
 
-	assert.Equal(t, rs.CalculatePhase(), RestoreFailed)
+	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
 }
 
 func TestRestoreSessionPhaseIsFailedIfRestoreExecutorEnsuredConditionIsFalse(t *testing.T) {
@@ -226,7 +226,7 @@ func TestRestoreSessionPhaseIsFailedIfRestoreExecutorEnsuredConditionIsFalse(t *
 		})
 	})
 
-	assert.Equal(t, rs.CalculatePhase(), RestoreFailed)
+	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
 }
 
 func TestRestoreSessionPhaseIsFailedIfDeadlineExceededConditionIsTrue(t *testing.T) {
@@ -238,7 +238,7 @@ func TestRestoreSessionPhaseIsFailedIfDeadlineExceededConditionIsTrue(t *testing
 		})
 	})
 
-	assert.Equal(t, rs.CalculatePhase(), RestoreFailed)
+	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
 }
 
 func TestRestoreSessionPhaseIsRunningIfPostRestoreHooksNotExecuted(test *testing.T) {
@@ -262,7 +262,7 @@ func TestRestoreSessionPhaseIsRunningIfPostRestoreHooksNotExecuted(test *testing
 			},
 		}
 	})
-	assert.Equal(test, rs.CalculatePhase(), RestoreRunning)
+	assert.Equal(test, RestoreRunning, rs.CalculatePhase())
 }
 
 func sampleRestoreSession(transformFuncs ...func(*RestoreSession)) *RestoreSession {
