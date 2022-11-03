@@ -19472,8 +19472,9 @@ spec:
                         case of a backup failure.
                       properties:
                         delay:
-                          description: Delay specifies a duration to wait until next
-                            retry. By default, Stash will retry immediately.
+                          description: 'The amount of time to wait before next retry.
+                            If you don''t specify this field, Stash will retry immediately.
+                            Format: 30s, 2m, 1h etc.'
                           type: string
                         maxRetry:
                           description: MaxRetry specifies the maximum number of times
@@ -24001,13 +24002,11 @@ spec:
                       format: int32
                       type: integer
                     timeout:
-                      description: Timeout specifies a duration in seconds that KubeStash
-                        should wait for the session execution to be completed. If
-                        the session execution does not finish within this time period,
-                        KubeStash will consider this session as failure. Then, it
-                        will re-try according to the RetryConfig.
-                      format: int32
-                      type: integer
+                      description: Timeout specifies the maximum duration of backup.
+                        BackupSession will be considered Failed if backup does not
+                        complete within this time limit. By default, Stash don't set
+                        any timeout for backup.
+                      type: string
                     verificationStrategies:
                       description: VerificationStrategies specifies a list of backup
                         verification configurations
@@ -24039,8 +24038,9 @@ spec:
                               retry mechanism in case of a verification failure
                             properties:
                               delay:
-                                description: Delay specifies a duration to wait until
-                                  next retry. By default, Stash will retry immediately.
+                                description: 'The amount of time to wait before next
+                                  retry. If you don''t specify this field, Stash will
+                                  retry immediately. Format: 30s, 2m, 1h etc.'
                                 type: string
                               maxRetry:
                                 description: MaxRetry specifies the maximum number

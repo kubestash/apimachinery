@@ -20465,6 +20465,13 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionSpec(ref common.ReferenceC
 							Format:      "",
 						},
 					},
+					"retryLeft": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetryLeft specifies number of retry attempts left for the session. If this set to non-zero, Stash will create a new BackupSession if the current one fails.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 			},
 		},
@@ -20494,11 +20501,10 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionStatus(ref common.Referenc
 							Format:      "",
 						},
 					},
-					"deadline": {
+					"sessionDeadline": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline, it will be considered as failed.",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "Deadline specifies the deadline of backup. BackupSession will be considered Failed if backup does not complete within this deadline",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"snapshots": {
@@ -20549,11 +20555,38 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionStatus(ref common.Referenc
 							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus"),
 						},
 					},
+					"retried": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Retried specifies whether this session was retried or not. This field will exist only if the `retryConfig` has been set in the respective backup invoker.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"nextRetry": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NextRetry specifies the time when Stash should retry the current failed backup. This field will exist only if the `retryConfig` has been set in the respective backup invoker.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions represents list of conditions regarding this BackupSession",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SnapshotStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SnapshotStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStatus"},
 	}
 }
 
@@ -20612,9 +20645,8 @@ func schema_kubestash_apis_core_v1alpha1_BatchSession(ref common.ReferenceCallba
 					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Description: "Timeout specifies the maximum duration of backup. BackupSession will be considered Failed if backup does not complete within this time limit. By default, Stash don't set any timeout for backup.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"sessionHistoryLimit": {
@@ -20642,7 +20674,7 @@ func schema_kubestash_apis_core_v1alpha1_BatchSession(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetBackupSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetBackupSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
 	}
 }
 
@@ -21807,14 +21839,15 @@ func schema_kubestash_apis_core_v1alpha1_RetryConfig(ref common.ReferenceCallbac
 					},
 					"delay": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Delay specifies a duration to wait until next retry. By default, Stash will retry immediately.",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "The amount of time to wait before next retry. If you don't specify this field, Stash will retry immediately. Format: 30s, 2m, 1h etc.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -21939,9 +21972,8 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Description: "Timeout specifies the maximum duration of backup. BackupSession will be considered Failed if backup does not complete within this time limit. By default, Stash don't set any timeout for backup.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"sessionHistoryLimit": {
@@ -21975,7 +22007,7 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepositoryInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepositoryInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
 	}
 }
 
@@ -22034,9 +22066,8 @@ func schema_kubestash_apis_core_v1alpha1_SessionConfig(ref common.ReferenceCallb
 					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Description: "Timeout specifies the maximum duration of backup. BackupSession will be considered Failed if backup does not complete within this time limit. By default, Stash don't set any timeout for backup.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"sessionHistoryLimit": {
@@ -22050,7 +22081,7 @@ func schema_kubestash_apis_core_v1alpha1_SessionConfig(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
 	}
 }
 
@@ -22121,7 +22152,7 @@ func schema_kubestash_apis_core_v1alpha1_SnapshotStatus(ref common.ReferenceCall
 					"appRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "AppRef points to the application that is being backed up in this Snapshot",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
 						},
 					},
 					"repository": {
@@ -22135,7 +22166,7 @@ func schema_kubestash_apis_core_v1alpha1_SnapshotStatus(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference"},
+			"kmodules.xyz/client-go/api/v1.TypedObjectReference"},
 	}
 }
 

@@ -20,6 +20,7 @@ import (
 	"stash.appscode.dev/kubestash/apis"
 
 	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
@@ -185,10 +186,10 @@ type RetryConfig struct {
 	// +kubebuilder:validation:Minimum=1
 	MaxRetry int32 `json:"maxRetry,omitempty"`
 
-	// Delay specifies a duration to wait until next retry.
-	// By default, Stash will retry immediately.
+	// The amount of time to wait before next retry. If you don't specify this field, Stash will retry immediately.
+	// Format: 30s, 2m, 1h etc.
 	// +optional
-	Delay string `json:"delay,omitempty"`
+	Delay metav1.Duration `json:"delay,omitempty"`
 }
 
 const (

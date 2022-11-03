@@ -13103,6 +13103,11 @@
           "description": "Invoker points to the respective BackupConfiguration or BackupBatch which is responsible for triggering this backup.",
           "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
+        "retryLeft": {
+          "description": "RetryLeft specifies number of retry attempts left for the session. If this set to non-zero, Stash will create a new BackupSession if the current one fails.",
+          "type": "integer",
+          "format": "int32"
+        },
         "session": {
           "description": "Session specifies the name of the session that triggered this backup",
           "type": "string"
@@ -13113,9 +13118,13 @@
       "description": "BackupSessionStatus defines the observed state of BackupSession",
       "type": "object",
       "properties": {
-        "deadline": {
-          "description": "Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline, it will be considered as failed.",
-          "type": "string"
+        "conditions": {
+          "description": "Conditions represents list of conditions regarding this BackupSession",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
         },
         "duration": {
           "description": "Duration specifies the time required to complete the backup process",
@@ -13129,6 +13138,10 @@
             "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookExecutionStatus"
           }
         },
+        "nextRetry": {
+          "description": "NextRetry specifies the time when Stash should retry the current failed backup. This field will exist only if the `retryConfig` has been set in the respective backup invoker.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
         "phase": {
           "description": "Phase represents the current state of the backup process.",
           "type": "string"
@@ -13136,6 +13149,14 @@
         "retentionPolicy": {
           "description": "RetentionPolicy specifies whether the retention policy was properly applied or not",
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RetentionPolicyApplyStatus"
+        },
+        "retried": {
+          "description": "Retried specifies whether this session was retried or not. This field will exist only if the `retryConfig` has been set in the respective backup invoker.",
+          "type": "boolean"
+        },
+        "sessionDeadline": {
+          "description": "Deadline specifies the deadline of backup. BackupSession will be considered Failed if backup does not complete within this deadline",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "snapshots": {
           "description": "Snapshots specifies the Snapshots status",
@@ -13193,9 +13214,8 @@
           }
         },
         "timeout": {
-          "description": "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
-          "type": "integer",
-          "format": "int32"
+          "description": "Timeout specifies the maximum duration of backup. BackupSession will be considered Failed if backup does not complete within this time limit. By default, Stash don't set any timeout for backup.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "verificationStrategies": {
           "description": "VerificationStrategies specifies a list of backup verification configurations",
@@ -13832,8 +13852,8 @@
       "type": "object",
       "properties": {
         "delay": {
-          "description": "Delay specifies a duration to wait until next retry. By default, Stash will retry immediately.",
-          "type": "string"
+          "description": "The amount of time to wait before next retry. If you don't specify this field, Stash will retry immediately. Format: 30s, 2m, 1h etc.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "maxRetry": {
           "description": "MaxRetry specifies the maximum number of times Stash should retry the backup/restore process. By default, Stash will retry only 1 time.",
@@ -13927,9 +13947,8 @@
           "format": "int32"
         },
         "timeout": {
-          "description": "Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed. If the session execution does not finish within this time period, KubeStash will consider this session as failure. Then, it will re-try according to the RetryConfig.",
-          "type": "integer",
-          "format": "int32"
+          "description": "Timeout specifies the maximum duration of backup. BackupSession will be considered Failed if backup does not complete within this time limit. By default, Stash don't set any timeout for backup.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "verificationStrategies": {
           "description": "VerificationStrategies specifies a list of backup verification configurations",
@@ -13969,7 +13988,7 @@
       "properties": {
         "appRef": {
           "description": "AppRef points to the application that is being backed up in this Snapshot",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"
         },
         "name": {
           "description": "Name indicates to the name of the Snapshot",

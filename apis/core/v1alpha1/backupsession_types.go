@@ -58,6 +58,11 @@ type BackupSessionSpec struct {
 
 	// Session specifies the name of the session that triggered this backup
 	Session string `json:"session,omitempty"`
+
+	// RetryLeft specifies number of retry attempts left for the session.
+	// If this set to non-zero, Stash will create a new BackupSession if the current one fails.
+	// +optional
+	RetryLeft int32 `json:"retryLeft,omitempty"`
 }
 
 // BackupSessionStatus defines the observed state of BackupSession
@@ -70,9 +75,10 @@ type BackupSessionStatus struct {
 	// +optional
 	Duration string `json:"duration,omitempty"`
 
-	// Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline,
-	// it will be considered as failed.
-	Deadline string `json:"deadline,omitempty"`
+	// Deadline specifies the deadline of backup. BackupSession will be
+	// considered Failed if backup does not complete within this deadline
+	// +optional
+	Deadline *metav1.Time `json:"sessionDeadline,omitempty"`
 
 	// Snapshots specifies the Snapshots status
 	// +optional
@@ -89,6 +95,20 @@ type BackupSessionStatus struct {
 	// RetentionPolicy specifies whether the retention policy was properly applied or not
 	// +optional
 	RetentionPolicy *RetentionPolicyApplyStatus `json:"retentionPolicy,omitempty"`
+
+	// Retried specifies whether this session was retried or not.
+	// This field will exist only if the `retryConfig` has been set in the respective backup invoker.
+	// +optional
+	Retried *bool `json:"retried,omitempty"`
+
+	// NextRetry specifies the time when Stash should retry the current failed backup.
+	// This field will exist only if the `retryConfig` has been set in the respective backup invoker.
+	// +optional
+	NextRetry *metav1.Time `json:"nextRetry,omitempty"`
+
+	// Conditions represents list of conditions regarding this BackupSession
+	// +optional
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 // BackupSessionPhase specifies the current state of the backup process
@@ -113,7 +133,7 @@ type SnapshotStatus struct {
 	Phase storage.SnapshotPhase `json:"phase,omitempty"`
 
 	// AppRef points to the application that is being backed up in this Snapshot
-	AppRef *core.LocalObjectReference `json:"appRef,omitempty"`
+	AppRef *kmapi.TypedObjectReference `json:"appRef,omitempty"`
 
 	// Repository indicates the name of the Repository where the Snapshot is being stored.
 	Repository string `json:"repository,omitempty"`
@@ -161,6 +181,40 @@ const (
 	RetentionPolicyPending       RetentionPolicyApplyPhase = "Pending"
 	RetentionPolicyApplied       RetentionPolicyApplyPhase = "Applied"
 	RetentionPolicyFailedToApply RetentionPolicyApplyPhase = "FailedToApply"
+)
+
+// ============================ Conditions ========================
+
+const (
+	// TypeBackupSkipped indicates that the current session was skipped
+	TypeBackupSkipped = "BackupSkipped"
+	// ReasonSkippedTakingNewBackup indicates that the backup was skipped because another backup was running or backup invoker is not ready state.
+	ReasonSkippedTakingNewBackup = "PreRequisitesNotSatisfied"
+
+	// TypeSessionHistoryCleaned indicates whether the backup history was cleaned or not according to backupHistoryLimit
+	TypeSessionHistoryCleaned               = "SessionHistoryCleaned"
+	ReasonSuccessfullyCleanedSessionHistory = "SuccessfullyCleanedSessionHistory"
+	ReasonFailedToCleanSessionHistory       = "FailedToCleanSessionHistory"
+
+	// TypePreBackupHooksExecutionSucceeded indicates whether the pre-backup hooks were executed successfully or not
+	TypePreBackupHooksExecutionSucceeded     = "PreBackupHooksExecutionSucceeded"
+	ReasonSuccessfullyExecutedPreBackupHooks = "SuccessfullyExecutedPreBackupHooks"
+	ReasonFailedToExecutePreBackupHooks      = "FailedToExecutePreBackupHooks"
+
+	// TypePostBackupHooksExecutionSucceeded indicates whether the pre-backup hooks were executed successfully or not
+	TypePostBackupHooksExecutionSucceeded     = "PostBackupHooksExecutionSucceeded"
+	ReasonSuccessfullyExecutedPostBackupHooks = "SuccessfullyExecutedPostBackupHooks"
+	ReasonFailedToExecutePostBackupHooks      = "FailedToExecutePostBackupHooks"
+
+	// TypeBackupExecutorEnsured indicates whether the Backup Executor is ensured or not.
+	TypeBackupExecutorEnsured               = "BackupExecutorEnsured"
+	ReasonSuccessfullyEnsuredBackupExecutor = "SuccessfullyEnsuredBackupExecutor"
+	ReasonFailedToEnsureBackupExecutor      = "FailedToEnsureBackupExecutor"
+
+	// TypeSnapshotsEnsured indicates whether Snapshots are ensured for each Repository or not
+	TypeSnapshotsEnsured               = "SnapshotsEnsured"
+	ReasonSuccessfullyEnsuredSnapshots = "SuccessfullyEnsuredSnapshots"
+	ReasonFailedToEnsureSnapshots      = "FailedToEnsureSnapshots"
 )
 
 //+kubebuilder:object:root=true

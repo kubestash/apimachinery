@@ -133,11 +133,10 @@ type SessionConfig struct {
 	// +optional
 	RetryConfig *RetryConfig `json:"retryConfig,omitempty"`
 
-	// Timeout specifies a duration in seconds that KubeStash should wait for the session execution to be completed.
-	// If the session execution does not finish within this time period, KubeStash will consider this session as failure.
-	// Then, it will re-try according to the RetryConfig.
+	// Timeout specifies the maximum duration of backup. BackupSession will be considered Failed
+	// if backup does not complete within this time limit. By default, Stash don't set any timeout for backup.
 	// +optional
-	Timeout *int32 `json:"timeout,omitempty"`
+	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
 	// SessionHistoryLimit specifies how many backup Jobs and associate resources Stash should keep for debugging purpose.
 	// The default value is 1.
@@ -446,11 +445,6 @@ const (
 	TypeValidationPassed           = "ValidationPassed"
 	ReasonResourceValidationPassed = "ResourceValidationPassed"
 	ReasonResourceValidationFailed = "ResourceValidationFailed"
-
-	// TypeBackupExecutorEnsured indicates whether the Backup Executor is ensured or not.
-	TypeBackupExecutorEnsured      = "BackupExecutorEnsured"
-	ReasonBackupExecutorEnsured    = "BackupExecutorEnsured"
-	ReasonBackupExecutorNotEnsured = "BackupExecutorNotEnsured"
 
 	// TypeSchedulerEnsured indicates whether the Scheduler is ensured or not.
 	TypeSchedulerEnsured      = "SchedulerEnsured"

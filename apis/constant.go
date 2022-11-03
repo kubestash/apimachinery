@@ -21,11 +21,34 @@ import "time"
 const (
 	RequeueTimeInterval       = 10 * time.Second
 	KubeStashCleanupFinalizer = "kubestash.com/cleanup"
+	KubeStashKey              = "kubestash.com"
+)
+
+// =================== Keys for structure logging =====================
+const (
+	KeyTargetKind          = "target_kind"
+	KeyTargetName          = "target_name"
+	KeyTargetNamespace     = "target_namespace"
+	KeyInvokerKind         = "invoker_kind"
+	KeyInvokerName         = "invoker_name"
+	KeyInvokerNamespace    = "invoker_namespace"
+	KeyRepositoryName      = "repo_name"
+	KeyRepositoryNamespace = "repo_namespace"
+	KeyReason              = "reason"
+	ObjectKey              = "key"
+	ObjectKind             = "kind"
+	ObjectName             = "name"
+	ObjectNamespace        = "namespace"
 )
 
 const (
-	KeyTargetKind      = "target_kind"
-	KeyTargetName      = "target_name"
-	KeyTargetNamespace = "target_namespace"
-	KeyReason          = "reason"
+	LabelInvokerType     = KubeStashKey + "/invoker-type"
+	LabelInvokerName     = KubeStashKey + "/invoker-name"
+	LabelTargetKind      = KubeStashKey + "/target-kind"
+	LabelTargetNamespace = KubeStashKey + "/target-namespace"
+	LabelTargetName      = KubeStashKey + "/target-name"
+)
+
+const (
+	TargetKindEmpty = "EmptyTarget"
 )

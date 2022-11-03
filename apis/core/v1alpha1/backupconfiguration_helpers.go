@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	"stash.appscode.dev/kubestash/crds"
 
-	"k8s.io/apimachinery/pkg/types"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 )
@@ -62,20 +61,12 @@ func (b BackupConfiguration) sessionsReady() bool {
 	}
 
 	for _, status := range b.Status.Sessions {
-		if !kmapi.IsConditionTrue(status.Conditions, TypeSchedulerEnsured) ||
-			!kmapi.IsConditionTrue(status.Conditions, TypeBackupExecutorEnsured) {
+		if !kmapi.IsConditionTrue(status.Conditions, TypeSchedulerEnsured) {
 			return false
 		}
 	}
 
 	return true
-}
-
-func (b BackupConfiguration) GetStorageKey() types.NamespacedName {
-	return types.NamespacedName{
-		Name:      b.Name,
-		Namespace: b.Namespace,
-	}
 }
 
 func (b BackupConfiguration) backendsReady() bool {
