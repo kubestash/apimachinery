@@ -35,6 +35,9 @@ type KubeStashConfig struct {
 
 	// WebhookInfo specifies validating and mutating webhook information
 	WebhookInfo WebhookInfo `json:"webhookInfo,omitempty"`
+
+	// Docker specifies the operator's  docker registry, image, and tag information
+	Docker Docker `json:"docker,omitempty"`
 }
 
 type LicenseOptions struct {
@@ -56,6 +59,14 @@ type GenericWebhookInfo struct {
 
 	// Name specifies the name of the respective webhook
 	Name string `json:"name,omitempty"`
+}
+
+type Docker struct {
+	Registry, Image, Tag string
+}
+
+func (docker Docker) ToContainerImage() string {
+	return docker.Registry + "/" + docker.Image + ":" + docker.Tag
 }
 
 func init() {

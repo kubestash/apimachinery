@@ -110,6 +110,7 @@ func main() {
 	if err = (&corecontrollers.BackupConfigurationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
+		Config: &ctrlConfig,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "BackupConfiguration")
 		os.Exit(1)

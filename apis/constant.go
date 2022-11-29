@@ -26,29 +26,12 @@ const (
 
 // =================== Keys for structure logging =====================
 const (
-	KeyTargetKind          = "target_kind"
-	KeyTargetName          = "target_name"
-	KeyTargetNamespace     = "target_namespace"
-	KeyInvokerKind         = "invoker_kind"
-	KeyInvokerName         = "invoker_name"
-	KeyInvokerNamespace    = "invoker_namespace"
-	KeyRepositoryName      = "repo_name"
-	KeyRepositoryNamespace = "repo_namespace"
-	KeyReason              = "reason"
-	ObjectKey              = "key"
-	ObjectKind             = "kind"
-	ObjectName             = "name"
-	ObjectNamespace        = "namespace"
+	KeyTargetKind      = "target_kind"
+	KeyTargetName      = "target_name"
+	KeyTargetNamespace = "target_namespace"
+	KeyReason          = "reason"
 )
 
 const (
-	LabelInvokerType     = KubeStashKey + "/invoker-type"
-	LabelInvokerName     = KubeStashKey + "/invoker-name"
-	LabelTargetKind      = KubeStashKey + "/target-kind"
-	LabelTargetNamespace = KubeStashKey + "/target-namespace"
-	LabelTargetName      = KubeStashKey + "/target-name"
-)
-
-const (
-	TargetKindEmpty = "EmptyTarget"
+	KindClusterRole = "ClusterRole"
 )

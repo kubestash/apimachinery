@@ -57,7 +57,6 @@ func SafeFuzzerFuncs(funcs ...fuzzer.FuzzerFuncs) fuzzer.FuzzerFuncs {
 			j.DeletionTimestamp = nil
 			j.DeletionGracePeriodSeconds = nil
 			j.OwnerReferences = nil
-			j.ZZZ_DeprecatedClusterName = ""
 			j.ManagedFields = nil
 		})
 		return result

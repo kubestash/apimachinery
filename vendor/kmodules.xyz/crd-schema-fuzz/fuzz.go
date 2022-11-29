@@ -25,7 +25,9 @@ import (
 
 const iters = 100
 
-var internalScheme = runtime.NewScheme()
+var (
+	internalScheme = runtime.NewScheme()
+)
 
 func init() {
 	utilruntime.Must(metav1.AddMetaToScheme(internalScheme))

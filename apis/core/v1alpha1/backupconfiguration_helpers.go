@@ -17,10 +17,14 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
+	"time"
+
 	"stash.appscode.dev/kubestash/crds"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	"kmodules.xyz/client-go/meta"
 )
 
 func (_ BackupConfiguration) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -81,4 +85,8 @@ func (b BackupConfiguration) backendsReady() bool {
 	}
 
 	return true
+}
+
+func GenerateBackupSessionName(inv, session string) string {
+	return meta.ValidNameWithPrefixNSuffix(inv, session, fmt.Sprintf("%d", time.Now().Unix()))
 }
