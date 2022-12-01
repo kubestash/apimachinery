@@ -6,7 +6,7 @@ metadata:
     {{- include "kubestash-operator.labels" . | nindent 4 }}
 rules:
   - apiGroups:
-    - admissionregistration.k8s.io
+      - admissionregistration.k8s.io
     resources:
       - mutatingwebhookconfigurations
       - validatingwebhookconfigurations
@@ -58,7 +58,7 @@ rules:
       - ""
     resources:
       - secrets
-    verbs: ["get", "list", "create", "patch"]
+    verbs: ["get", "list", "create", "patch", "watch"]
   - apiGroups:
       - batch
     resources:

@@ -43,7 +43,6 @@ const (
 
 type Backend struct {
 	// Provider specifies the provider of the storage
-	// +optional
 	Provider StorageProvider `json:"provider,omitempty"`
 
 	// Local specifies the storage information for local provider
