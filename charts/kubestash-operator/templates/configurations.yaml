@@ -31,3 +31,7 @@ data:
       mutating:
         enable: {{ .Values.apiserver.enableMutatingWebhook }}
         name: {{ include "kubestash-operator.fullname" . }}
+    docker:
+      registry: {{ .Values.operator.registry }}
+      image: {{ .Values.operator.repository }}
+      tag: {{ .Values.operator.tag }}

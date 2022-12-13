@@ -62,7 +62,14 @@ type GenericWebhookInfo struct {
 }
 
 type Docker struct {
-	Registry, Image, Tag string
+	// Registry specifies the name of a Docker registry
+	Registry string `json:"registry,omitempty"`
+
+	// Image specifies the name of a Docker image
+	Image string `json:"image,omitempty"`
+
+	// Tag specifies the Docker image tag
+	Tag string `json:"tag,omitempty"`
 }
 
 func (docker Docker) ToContainerImage() string {

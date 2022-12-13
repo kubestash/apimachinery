@@ -39,6 +39,7 @@ spec:
         image: "{{ include "operator.registry" . }}/{{ .Values.operator.repository }}:{{ .Values.operator.tag }}"
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         args:
+          - run
           - --config=/var/config/config.yaml
         ports:
         - name: webhook-server
