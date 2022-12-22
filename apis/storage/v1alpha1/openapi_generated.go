@@ -19861,7 +19861,7 @@ func schema_kubestash_apis_storage_v1alpha1_BackupStorageSpec(ref common.Referen
 					},
 					"default": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Default specifies whether to use this BackupStorage as default storage for the current namespace as well as the allowed namespaces. One namespace can have at most one default RetentionPolicy configured.",
+							Description: "Default specifies whether to use this BackupStorage as default storage for the current namespace as well as the allowed namespaces. One namespace can have at most one default BackupStorage configured.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -20432,7 +20432,6 @@ func schema_kubestash_apis_storage_v1alpha1_RepositorySpec(ref common.ReferenceC
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DeletionPolicy specifies what to do when you delete a Repository CR. The valid values are: \"Delete\": This will delete the respective Snapshot CRs from the cluster but keep the backed up data in the remote backend. This is the default behavior. \"WipeOut\": This will delete the respective Snapshot CRs as well as the backed up data from the backend.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -20459,6 +20458,13 @@ func schema_kubestash_apis_storage_v1alpha1_RepositoryStatus(ref common.Referenc
 				Description: "RepositoryStatus defines the observed state of Repository",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase represents the current state of the Repository.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"lastBackupTime": {
 						SchemaProps: spec.SchemaProps{
 							Description: "LastBackupTime specifies the timestamp when the last successful backup has been taken",
@@ -20861,13 +20867,14 @@ func schema_kubestash_apis_storage_v1alpha1_SnapshotInfo(ref common.ReferenceCal
 					"snapshotTime": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SnapshotTime represents the time when this Snapshot was taken",
-							Type:        []string{"string"},
-							Format:      "",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -21008,15 +21015,13 @@ func schema_kubestash_apis_storage_v1alpha1_SnapshotStatus(ref common.ReferenceC
 					"snapshotTime": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SnapshotTime represents the timestamp when this Snapshot was taken.",
-							Type:        []string{"string"},
-							Format:      "",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"lastUpdateTime": {
 						SchemaProps: spec.SchemaProps{
 							Description: "LastUpdateTime specifies the timestamp when this Snapshot was last updated.",
-							Type:        []string{"string"},
-							Format:      "",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"size": {
@@ -21072,7 +21077,7 @@ func schema_kubestash_apis_storage_v1alpha1_SnapshotStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.ComponentStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.ComponentStatus"},
 	}
 }
 

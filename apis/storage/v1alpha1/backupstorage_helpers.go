@@ -19,9 +19,18 @@ package v1alpha1
 import (
 	"stash.appscode.dev/kubestash/crds"
 
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 )
 
 func (_ BackupStorage) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralBackupStorage))
+}
+
+func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
+	if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackendInitialized) &&
+		kmapi.IsConditionTrue(b.Status.Conditions, TypeRepositorySynced) {
+		return BackupStorageReady
+	}
+	return BackupStorageNotReady
 }

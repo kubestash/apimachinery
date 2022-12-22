@@ -36,6 +36,9 @@ spec:
     - jsonPath: .status.size
       name: Size
       type: string
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
     - format: date-time
       jsonPath: .status.lastBackupTime
       name: Last-Successful-Backup
@@ -186,6 +189,12 @@ spec:
                 description: LastBackupTime specifies the timestamp when the last
                   successful backup has been taken
                 type: string
+              phase:
+                description: Phase represents the current state of the Repository.
+                enum:
+                - NotReady
+                - Ready
+                type: string
               recentSnapshots:
                 description: RecentSnapshots holds a list of recent Snapshot information
                   that has been taken in this Repository
@@ -214,6 +223,7 @@ spec:
                     snapshotTime:
                       description: SnapshotTime represents the time when this Snapshot
                         was taken
+                      format: date-time
                       type: string
                   type: object
                 type: array

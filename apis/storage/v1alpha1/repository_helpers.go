@@ -19,9 +19,23 @@ package v1alpha1
 import (
 	"stash.appscode.dev/kubestash/crds"
 
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	"kmodules.xyz/client-go/meta"
 )
 
 func (_ Repository) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralRepository))
+}
+
+func (r *Repository) CalculatePhase() RepositoryPhase {
+	if kmapi.IsConditionTrue(r.Status.Conditions, TypeRepositoryInitialized) &&
+		kmapi.IsConditionTrue(r.Status.Conditions, TypeSnapshotsSynced) {
+		return RepositoryReady
+	}
+	return RepositoryNotReady
+}
+
+func GenerateRepositoryName(invokerName, repoName string) string {
+	return meta.ValidNameWithPrefix(invokerName, repoName)
 }

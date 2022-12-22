@@ -25162,6 +25162,13 @@ spec:
                                     section. For using a default backend, keep this
                                     field empty.
                                   type: string
+                                deletionPolicy:
+                                  description: DeletionPolicy specifies what to do
+                                    when you delete a Repository CR.
+                                  enum:
+                                  - Delete
+                                  - WipeOut
+                                  type: string
                                 directory:
                                   description: Directory specifies the path inside
                                     the backend where the backed up data will be stored.
@@ -25456,16 +25463,19 @@ spec:
                 items:
                   description: RepoStatus specifies the status of a Repository
                   properties:
-                    error:
-                      description: Error provides a message indicating the reason
-                        when the repository can not be initialized properly
-                      type: string
-                    initialized:
-                      description: Initialized indicate whether the repository was
-                        properly initialized or not
-                      type: boolean
                     name:
                       description: Name indicate the name of the Repository
+                      type: string
+                    phase:
+                      description: Ready indicates whether the respective Repository
+                        is ready or not
+                      enum:
+                      - NotReady
+                      - Ready
+                      type: string
+                    reason:
+                      description: Reason specifies the error messages found while
+                        ensuring the respective Repository
                       type: string
                   type: object
                 type: array

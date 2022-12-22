@@ -65,7 +65,7 @@ spec:
               default:
                 description: Default specifies whether to use this BackupStorage as
                   default storage for the current namespace as well as the allowed
-                  namespaces. One namespace can have at most one default RetentionPolicy
+                  namespaces. One namespace can have at most one default BackupStorage
                   configured.
                 type: boolean
               deletionPolicy:

@@ -17,21 +17,17 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"fmt"
-	"time"
-
 	"stash.appscode.dev/kubestash/crds"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
-	"kmodules.xyz/client-go/meta"
 )
 
 func (_ BackupConfiguration) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralBackupConfiguration))
 }
 
-func (b BackupConfiguration) CalculatePhase() BackupInvokerPhase {
+func (b *BackupConfiguration) CalculatePhase() BackupInvokerPhase {
 	if kmapi.IsConditionFalse(b.Status.Conditions, TypeValidationPassed) {
 		return BackupInvokerInvalid
 	}
@@ -43,7 +39,7 @@ func (b BackupConfiguration) CalculatePhase() BackupInvokerPhase {
 	return BackupInvokerNotReady
 }
 
-func (b BackupConfiguration) isReady() bool {
+func (b *BackupConfiguration) isReady() bool {
 	if b.Status.TargetFound == nil || !*b.Status.TargetFound {
 		return false
 	}
@@ -59,7 +55,7 @@ func (b BackupConfiguration) isReady() bool {
 	return true
 }
 
-func (b BackupConfiguration) sessionsReady() bool {
+func (b *BackupConfiguration) sessionsReady() bool {
 	if len(b.Status.Sessions) != len(b.Spec.Sessions) {
 		return false
 	}
@@ -73,7 +69,7 @@ func (b BackupConfiguration) sessionsReady() bool {
 	return true
 }
 
-func (b BackupConfiguration) backendsReady() bool {
+func (b *BackupConfiguration) backendsReady() bool {
 	if len(b.Status.Backends) != len(b.Spec.Backends) {
 		return false
 	}
@@ -87,6 +83,11 @@ func (b BackupConfiguration) backendsReady() bool {
 	return true
 }
 
-func GenerateBackupSessionName(inv, session string) string {
-	return meta.ValidNameWithPrefixNSuffix(inv, session, fmt.Sprintf("%d", time.Now().Unix()))
+func (b *BackupConfiguration) GetStorageRef(backend string) kmapi.TypedObjectReference {
+	for _, b := range b.Spec.Backends {
+		if b.Name == backend {
+			return b.StorageRef
+		}
+	}
+	return kmapi.TypedObjectReference{}
 }

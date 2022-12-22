@@ -13797,16 +13797,16 @@
       "description": "RepoStatus specifies the status of a Repository",
       "type": "object",
       "properties": {
-        "error": {
-          "description": "Error provides a message indicating the reason when the repository can not be initialized properly",
-          "type": "string"
-        },
-        "initialized": {
-          "description": "Initialized indicate whether the repository was properly initialized or not",
-          "type": "boolean"
-        },
         "name": {
           "description": "Name indicate the name of the Repository",
+          "type": "string"
+        },
+        "phase": {
+          "description": "Ready indicates whether the respective Repository is ready or not",
+          "type": "string"
+        },
+        "reason": {
+          "description": "Reason specifies the error messages found while ensuring the respective Repository",
           "type": "string"
         }
       }
@@ -13817,6 +13817,10 @@
       "properties": {
         "backend": {
           "description": "Backend specifies the name of the backend where this repository will be initialized. This should point to a backend name specified in `.spec.backends` section. For using a default backend, keep this field empty.",
+          "type": "string"
+        },
+        "deletionPolicy": {
+          "description": "DeletionPolicy specifies what to do when you delete a Repository CR.",
           "type": "string"
         },
         "directory": {
@@ -14565,7 +14569,7 @@
       "type": "object",
       "properties": {
         "default": {
-          "description": "Default specifies whether to use this BackupStorage as default storage for the current namespace as well as the allowed namespaces. One namespace can have at most one default RetentionPolicy configured.",
+          "description": "Default specifies whether to use this BackupStorage as default storage for the current namespace as well as the allowed namespaces. One namespace can have at most one default BackupStorage configured.",
           "type": "boolean"
         },
         "deletionPolicy": {
@@ -14911,8 +14915,7 @@
         },
         "deletionPolicy": {
           "description": "DeletionPolicy specifies what to do when you delete a Repository CR. The valid values are: \"Delete\": This will delete the respective Snapshot CRs from the cluster but keep the backed up data in the remote backend. This is the default behavior. \"WipeOut\": This will delete the respective Snapshot CRs as well as the backed up data from the backend.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "path": {
           "description": "Path represents the directory inside the BackupStorage where this Repository is storing its data This path is relative to the path of BackupStorage.",
@@ -14947,6 +14950,10 @@
         },
         "lastBackupTime": {
           "description": "LastBackupTime specifies the timestamp when the last successful backup has been taken",
+          "type": "string"
+        },
+        "phase": {
+          "description": "Phase represents the current state of the Repository.",
           "type": "string"
         },
         "recentSnapshots": {
@@ -15175,7 +15182,7 @@
         },
         "snapshotTime": {
           "description": "SnapshotTime represents the time when this Snapshot was taken",
-          "type": "string"
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         }
       }
     },
@@ -15279,7 +15286,7 @@
         },
         "lastUpdateTime": {
           "description": "LastUpdateTime specifies the timestamp when this Snapshot was last updated.",
-          "type": "string"
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "phase": {
           "description": "Phase represents the backup state of this Snapshot",
@@ -15291,7 +15298,7 @@
         },
         "snapshotTime": {
           "description": "SnapshotTime represents the timestamp when this Snapshot was taken.",
-          "type": "string"
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "verificationStatus": {
           "description": "VerificationStatus specifies whether this Snapshot has been verified or not",

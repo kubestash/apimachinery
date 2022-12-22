@@ -102,11 +102,11 @@ type SnapshotStatus struct {
 
 	// SnapshotTime represents the timestamp when this Snapshot was taken.
 	// +optional
-	SnapshotTime string `json:"snapshotTime,omitempty"`
+	SnapshotTime *metav1.Time `json:"snapshotTime,omitempty"`
 
 	// LastUpdateTime specifies the timestamp when this Snapshot was last updated.
 	// +optional
-	LastUpdateTime string `json:"lastUpdateTime,omitempty"`
+	LastUpdateTime *metav1.Time `json:"lastUpdateTime,omitempty"`
 
 	// Size represents the size of the Snapshot
 	// +optional

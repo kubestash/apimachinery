@@ -32,9 +32,6 @@ const (
 
 	BackupStorageReady    BackupStoragePhase = "Ready"
 	BackupStorageNotReady BackupStoragePhase = "NotReady"
-
-	WipeOut DeletionPolicy = "WipeOut"
-	Delete  DeletionPolicy = "Delete"
 )
 
 // +k8s:openapi-gen=true
@@ -71,7 +68,7 @@ type BackupStorageSpec struct {
 	UsagePolicy *apis.UsagePolicy `json:"usagePolicy,omitempty"`
 
 	// Default specifies whether to use this BackupStorage as default storage for the current namespace
-	// as well as the allowed namespaces. One namespace can have at most one default RetentionPolicy configured.
+	// as well as the allowed namespaces. One namespace can have at most one default BackupStorage configured.
 	// +optional
 	Default bool `json:"default,omitempty"`
 
@@ -130,6 +127,16 @@ type RepositoryInfo struct {
 	// +optional
 	Error *string `json:"error,omitempty"`
 }
+
+const (
+	TypeBackendInitialized               = "BackendInitialized"
+	ReasonBackendInitializationSucceeded = "BackendInitializationSucceeded"
+	ReasonBackendInitializationFailed    = "BackendInitializationFailed"
+
+	TypeRepositorySynced          = "RepositorySynced"
+	ReasonRepositorySyncSucceeded = "RepositorySyncSucceeded"
+	ReasonRepositorySyncFailed    = "RepositorySyncFailed"
+)
 
 //+kubebuilder:object:root=true
 

@@ -36,6 +36,7 @@ const (
 // +kubebuilder:printcolumn:name="Integrity",type="boolean",JSONPath=".status.integrity"
 // +kubebuilder:printcolumn:name="Snapshot-Count",type="integer",JSONPath=".status.snapshotCount"
 // +kubebuilder:printcolumn:name="Size",type="string",JSONPath=".status.size"
+// +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Last-Successful-Backup",type="date",format="date-time",JSONPath=".status.lastBackupTime"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
@@ -72,7 +73,7 @@ type RepositorySpec struct {
 	// "WipeOut": This will delete the respective Snapshot CRs as well as the backed up data from the backend.
 	// +kubebuilder:validation:default=Delete
 	// +optional
-	DeletionPolicy DeletionPolicy `json:"deletionPolicy"`
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 
 	// Paused specifies whether the Repository is paused or not. If the Repository is paused,
 	// Stash will not process any further event for the Repository.
@@ -82,6 +83,10 @@ type RepositorySpec struct {
 
 // RepositoryStatus defines the observed state of Repository
 type RepositoryStatus struct {
+	// Phase represents the current state of the Repository.
+	// +optional
+	Phase RepositoryPhase `json:"phase,omitempty"`
+
 	// LastBackupTime specifies the timestamp when the last successful backup has been taken
 	// +optional
 	LastBackupTime string `json:"lastBackupTime,omitempty"`
@@ -107,6 +112,15 @@ type RepositoryStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
+// RepositoryPhase specifies the current state of the Repository
+// +kubebuilder:validation:Enum=NotReady;Ready
+type RepositoryPhase string
+
+const (
+	RepositoryNotReady RepositoryPhase = "NotReady"
+	RepositoryReady    RepositoryPhase = "Ready"
+)
+
 // SnapshotInfo specifies some basic information about the Snapshots stored in this Repository
 type SnapshotInfo struct {
 	// Name represents the name of the Snapshot
@@ -125,8 +139,18 @@ type SnapshotInfo struct {
 
 	// SnapshotTime represents the time when this Snapshot was taken
 	// +optional
-	SnapshotTime string `json:"snapshotTime,omitempty"`
+	SnapshotTime *metav1.Time `json:"snapshotTime,omitempty"`
 }
+
+const (
+	TypeRepositoryInitialized               = "BackendInitialized"
+	ReasonRepositoryInitializationSucceeded = "BackendInitializationSucceeded"
+	ReasonRepositoryInitializationFailed    = "BackendInitializationFailed"
+
+	TypeSnapshotsSynced          = "SnapshotsSynced"
+	ReasonSnapshotsSyncSucceeded = "SnapshotsSyncSucceeded"
+	ReasonSnapshotsSyncFailed    = "SnapshotsSyncFailed"
+)
 
 //+kubebuilder:object:root=true
 

@@ -21424,16 +21424,16 @@ func schema_kubestash_apis_core_v1alpha1_RepoStatus(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
-					"initialized": {
+					"phase": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Initialized indicate whether the repository was properly initialized or not",
-							Type:        []string{"boolean"},
+							Description: "Ready indicates whether the respective Repository is ready or not",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"error": {
+					"reason": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Error provides a message indicating the reason when the repository can not be initialized properly",
+							Description: "Reason specifies the error messages found while ensuring the respective Repository",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -21476,6 +21476,13 @@ func schema_kubestash_apis_core_v1alpha1_RepositoryInfo(ref common.ReferenceCall
 						SchemaProps: spec.SchemaProps{
 							Description: "EncryptionSecret refers to the Secret containing the encryption key which will be used to encode/decode the backed up dta. You can refer to a Secret of a different namespace. If you don't provide the namespace field, Stash will look for the Secret in the same namespace as the BackupConfiguration / BackupBatch.",
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy specifies what to do when you delete a Repository CR.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

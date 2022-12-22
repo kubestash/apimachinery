@@ -27,11 +27,11 @@ func (_ Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralSnapshot))
 }
 
-func (s Snapshot) IsCompleted() bool {
+func (s *Snapshot) IsCompleted() bool {
 	return s.Status.Phase == SnapshotFailed || s.Status.Phase == SnapshotSucceeded
 }
 
-func (s Snapshot) CalculatePhase() SnapshotPhase {
+func (s *Snapshot) CalculatePhase() SnapshotPhase {
 	if kmapi.IsConditionFalse(s.Status.Conditions, TypeBackendMetadataWritten) ||
 		kmapi.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) {
 		return SnapshotFailed
@@ -40,7 +40,7 @@ func (s Snapshot) CalculatePhase() SnapshotPhase {
 	return s.GetComponentsPhase()
 }
 
-func (s Snapshot) GetComponentsPhase() SnapshotPhase {
+func (s *Snapshot) GetComponentsPhase() SnapshotPhase {
 	failedComponent := 0
 	successfulComponent := 0
 	pendingComponent := 0
@@ -72,14 +72,4 @@ func (s Snapshot) GetComponentsPhase() SnapshotPhase {
 	}
 
 	return SnapshotRunning
-}
-
-func (s Snapshot) GetSnapshotInfo() SnapshotInfo {
-	return SnapshotInfo{
-		Name:         s.Name,
-		Phase:        s.Status.Phase,
-		Session:      s.Spec.Session,
-		Size:         s.Status.Size,
-		SnapshotTime: s.Status.SnapshotTime,
-	}
 }

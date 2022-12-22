@@ -284,6 +284,10 @@ type RepositoryInfo struct {
 	// You can refer to a Secret of a different namespace.
 	// If you don't provide the namespace field, Stash will look for the Secret in the same namespace as the BackupConfiguration / BackupBatch.
 	EncryptionSecret *kmapi.ObjectReference `json:"encryptionSecret,omitempty"`
+
+	// DeletionPolicy specifies what to do when you delete a Repository CR.
+	// +optional
+	DeletionPolicy v1alpha1.DeletionPolicy `json:"deletionPolicy,omitempty"`
 }
 
 // VerificationStrategy specifies a strategy to verify the backed up data.
@@ -418,12 +422,13 @@ type RepoStatus struct {
 	// Name indicate the name of the Repository
 	Name string `json:"name,omitempty"`
 
-	// Initialized indicate whether the repository was properly initialized or not
-	Initialized bool `json:"initialized,omitempty"`
-
-	// Error provides a message indicating the reason when the repository can not be initialized properly
+	// Ready indicates whether the respective Repository is ready or not
 	// +optional
-	Error string `json:"error,omitempty"`
+	Phase v1alpha1.RepositoryPhase `json:"phase,omitempty"`
+
+	// Reason specifies the error messages found while ensuring the respective Repository
+	// +optional
+	Reason string `json:"reason,omitempty"`
 }
 
 // SessionStatus specifies the status of a session specific fields.
