@@ -35,3 +35,8 @@ const (
 const (
 	KindClusterRole = "ClusterRole"
 )
+
+const (
+	Requeue      = true
+	DoNotRequeue = false
+)
