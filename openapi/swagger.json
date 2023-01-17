@@ -14649,6 +14649,14 @@
           "description": "ResticStats specifies the \"Restic\" driver specific information",
           "default": {},
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.ResticStats"
+        },
+        "walSegments": {
+          "description": "WalSegments specifies a list of wall segment for individual component",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.WalSegment"
+          }
         }
       }
     },
@@ -15259,8 +15267,12 @@
           "description": "Session specifies the name of the session which is responsible for this Snapshot",
           "type": "string"
         },
-        "ulid": {
-          "description": "ULID represents a \"Universally Unique Lexicographically Sortable Identifier\" for the Snapshot. For more details about ULID, please see: https://github.com/oklog/ulid",
+        "snapshotID": {
+          "description": "SnapshotID represents a \"Universally Unique Lexicographically Sortable Identifier\" (ULID) for the Snapshot. For more details about ULID, please see: https://github.com/oklog/ulid",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type specifies whether this snapshot represents a full or incremental backup",
           "type": "string"
         },
         "version": {
@@ -15369,6 +15381,18 @@
         "secret": {
           "description": "Secret specifies the name of the Secret that contains the access credential for this storage.",
           "type": "string"
+        }
+      }
+    },
+    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.WalSegment": {
+      "description": "WalSegment specifies the \"WalG\" driver specific information",
+      "type": "object",
+      "properties": {
+        "end": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "start": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         }
       }
     },

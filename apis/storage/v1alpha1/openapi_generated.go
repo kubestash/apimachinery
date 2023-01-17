@@ -421,6 +421,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.SnapshotStatus":                schema_kubestash_apis_storage_v1alpha1_SnapshotStatus(ref),
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.SuccessfulSnapshotsKeepPolicy": schema_kubestash_apis_storage_v1alpha1_SuccessfulSnapshotsKeepPolicy(ref),
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.SwiftSpec":                     schema_kubestash_apis_storage_v1alpha1_SwiftSpec(ref),
+		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.WalSegment":                    schema_kubestash_apis_storage_v1alpha1_WalSegment(ref),
 	}
 }
 
@@ -19981,11 +19982,25 @@ func schema_kubestash_apis_storage_v1alpha1_ComponentStatus(ref common.Reference
 							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.ResticStats"),
 						},
 					},
+					"walSegments": {
+						SchemaProps: spec.SchemaProps{
+							Description: "WalSegments specifies a list of wall segment for individual component",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.WalSegment"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/storage/v1alpha1.ResticStats"},
+			"stash.appscode.dev/kubestash/apis/storage/v1alpha1.ResticStats", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.WalSegment"},
 	}
 }
 
@@ -20947,9 +20962,16 @@ func schema_kubestash_apis_storage_v1alpha1_SnapshotSpec(ref common.ReferenceCal
 				Description: "SnapshotSpec specifies the information regarding the application that is being backed up, the Repository where the backed up data is being stored, and the session which is responsible for this snapshot etc.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"ulid": {
+					"snapshotID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ULID represents a \"Universally Unique Lexicographically Sortable Identifier\" for the Snapshot. For more details about ULID, please see: https://github.com/oklog/ulid",
+							Description: "SnapshotID represents a \"Universally Unique Lexicographically Sortable Identifier\" (ULID) for the Snapshot. For more details about ULID, please see: https://github.com/oklog/ulid",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type specifies whether this snapshot represents a full or incremental backup",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -21179,5 +21201,30 @@ func schema_kubestash_apis_storage_v1alpha1_SwiftSpec(ref common.ReferenceCallba
 				},
 			},
 		},
+	}
+}
+
+func schema_kubestash_apis_storage_v1alpha1_WalSegment(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "WalSegment specifies the \"WalG\" driver specific information",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"start": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"end": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }

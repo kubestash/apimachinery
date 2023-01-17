@@ -110,10 +110,14 @@ spec:
                 description: Session specifies the name of the session which is responsible
                   for this Snapshot
                 type: string
-              ulid:
-                description: 'ULID represents a "Universally Unique Lexicographically
-                  Sortable Identifier" for the Snapshot. For more details about ULID,
-                  please see: https://github.com/oklog/ulid'
+              snapshotID:
+                description: 'SnapshotID represents a "Universally Unique Lexicographically
+                  Sortable Identifier" (ULID) for the Snapshot. For more details about
+                  ULID, please see: https://github.com/oklog/ulid'
+                type: string
+              type:
+                description: Type specifies whether this snapshot represents a full
+                  or incremental backup
                 type: string
               version:
                 description: Version denotes the respective data organization structure
@@ -176,6 +180,21 @@ spec:
                             has been uploaded in the restic snapshot.
                           type: string
                       type: object
+                    walSegments:
+                      description: WalSegments specifies a list of wall segment for
+                        individual component
+                      items:
+                        description: WalSegment specifies the "WalG" driver specific
+                          information
+                        properties:
+                          end:
+                            format: date-time
+                            type: string
+                          start:
+                            format: date-time
+                            type: string
+                        type: object
+                      type: array
                   type: object
                 type: array
               conditions:

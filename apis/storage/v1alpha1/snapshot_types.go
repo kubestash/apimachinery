@@ -23,10 +23,15 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
+type BackupType string
+
 const (
 	ResourceKindSnapshot     = "Snapshot"
 	ResourceSingularSnapshot = "snapshot"
 	ResourcePluralSnapshot   = "snapshots"
+
+	BackupTypeFull        BackupType = "FullBackup"
+	BackupTypeIncremental BackupType = "IncrementalBackup"
 )
 
 // +k8s:openapi-gen=true
@@ -59,10 +64,13 @@ type Snapshot struct {
 // the Repository where the backed up data is being stored, and the session which is
 // responsible for this snapshot etc.
 type SnapshotSpec struct {
-	// ULID represents a "Universally Unique Lexicographically Sortable Identifier" for the Snapshot.
+	// SnapshotID represents a "Universally Unique Lexicographically Sortable Identifier" (ULID) for the Snapshot.
 	// For more details about ULID, please see: https://github.com/oklog/ulid
 	// +optional
-	ULID string `json:"ulid,omitempty"`
+	SnapshotID string `json:"snapshotID,omitempty"`
+
+	// Type specifies whether this snapshot represents a full or incremental backup
+	Type BackupType `json:"type,omitempty"`
 
 	// Repository specifies the name of the Repository where this Snapshot is being stored.
 	Repository string `json:"repository,omitempty"`
@@ -169,6 +177,9 @@ type ComponentStatus struct {
 	// ResticStats specifies the "Restic" driver specific information
 	// +optional
 	ResticStats ResticStats `json:"resticStats,omitempty"`
+
+	// WalSegments specifies a list of wall segment for individual component
+	WalSegments []WalSegment `json:"walSegments,omitempty"`
 }
 
 // ComponentPhase represents the backup phase of the individual component.
@@ -198,6 +209,12 @@ type ResticStats struct {
 	// Integrity represents the result of restic integrity check for this snapshot.
 	// +optional
 	Integrity *bool `json:"integrity,omitempty"`
+}
+
+// WalSegment specifies the "WalG" driver specific information
+type WalSegment struct {
+	Start *metav1.Time `json:"start,omitempty"`
+	End   *metav1.Time `json:"end,omitempty"`
 }
 
 const (
