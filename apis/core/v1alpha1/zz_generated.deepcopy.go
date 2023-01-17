@@ -584,10 +584,10 @@ func (in *BackupSessionStatus) DeepCopyInto(out *BackupSessionStatus) {
 		*out = make([]VerificationStatus, len(*in))
 		copy(*out, *in)
 	}
-	if in.RetentionPolicy != nil {
-		in, out := &in.RetentionPolicy, &out.RetentionPolicy
-		*out = new(RetentionPolicyApplyStatus)
-		**out = **in
+	if in.RetentionPolicies != nil {
+		in, out := &in.RetentionPolicies, &out.RetentionPolicies
+		*out = make([]RetentionPolicyApplyStatus, len(*in))
+		copy(*out, *in)
 	}
 	if in.Retried != nil {
 		in, out := &in.Retried, &out.Retried

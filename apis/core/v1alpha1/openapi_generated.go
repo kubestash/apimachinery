@@ -20673,8 +20673,16 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionStatus(ref common.Referenc
 					},
 					"retentionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RetentionPolicy specifies whether the retention policy was properly applied or not",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus"),
+							Description: "RetentionPolices specifies whether the retention policies were properly applied on the repositories or not",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus"),
+									},
+								},
+							},
 						},
 					},
 					"retried": {
@@ -21902,6 +21910,13 @@ func schema_kubestash_apis_core_v1alpha1_RetentionPolicyApplyStatus(ref common.R
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
+					"repository": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Repository specifies the name of the Repository on which the RetentionPolicy has been applied.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"phase": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Phase specifies the state of retention policy apply process",
@@ -21939,7 +21954,7 @@ func schema_kubestash_apis_core_v1alpha1_RetentionPolicyStatus(ref common.Refere
 					},
 					"ready": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Ready indicates whether the RetentionPolicy is Ready or not",
+							Description: "Found indicates whether the RetentionPolicy is Found or not",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},

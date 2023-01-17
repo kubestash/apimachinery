@@ -177,35 +177,43 @@ spec:
                 - Skipped
                 type: string
               retentionPolicy:
-                description: RetentionPolicy specifies whether the retention policy
-                  was properly applied or not
-                properties:
-                  error:
-                    description: Error represents the reason if the retention policy
-                      applying fail
-                    type: string
-                  phase:
-                    description: Phase specifies the state of retention policy apply
-                      process
-                    enum:
-                    - Pending
-                    - Applied
-                    - FailedToApply
-                    type: string
-                  ref:
-                    description: Ref points to the RetentionPolicy CR that is being
-                      used to cleanup the old Snapshots for this session.
-                    properties:
-                      name:
-                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
-                        type: string
-                      namespace:
-                        description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
-                        type: string
-                    required:
-                    - name
-                    type: object
-                type: object
+                description: RetentionPolices specifies whether the retention policies
+                  were properly applied on the repositories or not
+                items:
+                  description: RetentionPolicyApplyStatus represents the state of
+                    the applying retention policy
+                  properties:
+                    error:
+                      description: Error represents the reason if the retention policy
+                        applying fail
+                      type: string
+                    phase:
+                      description: Phase specifies the state of retention policy apply
+                        process
+                      enum:
+                      - Pending
+                      - Applied
+                      - FailedToApply
+                      type: string
+                    ref:
+                      description: Ref points to the RetentionPolicy CR that is being
+                        used to cleanup the old Snapshots for this session.
+                      properties:
+                        name:
+                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                          type: string
+                        namespace:
+                          description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    repository:
+                      description: Repository specifies the name of the Repository
+                        on which the RetentionPolicy has been applied.
+                      type: string
+                  type: object
+                type: array
               retried:
                 description: Retried specifies whether this session was retried or
                   not. This field will exist only if the `retryConfig` has been set

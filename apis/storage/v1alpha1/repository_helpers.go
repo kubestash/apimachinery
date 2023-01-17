@@ -21,7 +21,6 @@ import (
 
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
-	"kmodules.xyz/client-go/meta"
 )
 
 func (_ Repository) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -34,8 +33,4 @@ func (r *Repository) CalculatePhase() RepositoryPhase {
 		return RepositoryReady
 	}
 	return RepositoryNotReady
-}
-
-func GenerateRepositoryName(invokerName, repoName string) string {
-	return meta.ValidNameWithPrefix(invokerName, repoName)
 }

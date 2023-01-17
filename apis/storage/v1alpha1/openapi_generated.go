@@ -399,6 +399,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.BackupStorageSpec":             schema_kubestash_apis_storage_v1alpha1_BackupStorageSpec(ref),
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.BackupStorageStatus":           schema_kubestash_apis_storage_v1alpha1_BackupStorageStatus(ref),
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.ComponentStatus":               schema_kubestash_apis_storage_v1alpha1_ComponentStatus(ref),
+		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.Duration":                      schema_kubestash_apis_storage_v1alpha1_Duration(ref),
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.FailedSnapshotsKeepPolicy":     schema_kubestash_apis_storage_v1alpha1_FailedSnapshotsKeepPolicy(ref),
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.GCSSpec":                       schema_kubestash_apis_storage_v1alpha1_GCSSpec(ref),
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.LocalSpec":                     schema_kubestash_apis_storage_v1alpha1_LocalSpec(ref),
@@ -19988,6 +19989,18 @@ func schema_kubestash_apis_storage_v1alpha1_ComponentStatus(ref common.Reference
 	}
 }
 
+func schema_kubestash_apis_storage_v1alpha1_Duration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Duration is similar to time.Duration, except it only supports larger ranges like hours, days, months, and years.",
+				Type:        Duration{}.OpenAPISchemaType(),
+				Format:      Duration{}.OpenAPISchemaFormat(),
+			},
+		},
+	}
+}
+
 func schema_kubestash_apis_storage_v1alpha1_FailedSnapshotsKeepPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -20696,8 +20709,8 @@ func schema_kubestash_apis_storage_v1alpha1_RetentionPolicySpec(ref common.Refer
 					"maxRetentionPeriod": {
 						SchemaProps: spec.SchemaProps{
 							Description: "MaxRetentionPeriod specifies a duration up to which the old Snapshots should be kept. Stash will remove all the Snapshots that are older than the MaxRetentionPeriod. For example, MaxRetentionPeriod of `30d` will keep only the Snapshots of last 30 days. Sample duration format: - years: \t2y - months: \t6mo - days: \t\t30d - hours: \t12h - minutes: \t30m You can also combine the above durations. For example: 30d12h30m",
-							Type:        []string{"string"},
-							Format:      "",
+							Default:     map[string]interface{}{},
+							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.Duration"),
 						},
 					},
 					"usagePolicy": {
@@ -20731,7 +20744,7 @@ func schema_kubestash_apis_storage_v1alpha1_RetentionPolicySpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis.UsagePolicy", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.FailedSnapshotsKeepPolicy", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.SuccessfulSnapshotsKeepPolicy"},
+			"stash.appscode.dev/kubestash/apis.UsagePolicy", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.Duration", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.FailedSnapshotsKeepPolicy", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.SuccessfulSnapshotsKeepPolicy"},
 	}
 }
 

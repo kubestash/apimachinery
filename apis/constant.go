@@ -40,3 +40,7 @@ const (
 	Requeue      = true
 	DoNotRequeue = false
 )
+
+const (
+	OwnerKey = ".metadata.controller"
+)

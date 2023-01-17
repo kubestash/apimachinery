@@ -24314,8 +24314,8 @@ spec:
                         RetentionPolicy
                       properties:
                         ready:
-                          description: Ready indicates whether the RetentionPolicy
-                            is Ready or not
+                          description: Found indicates whether the RetentionPolicy
+                            is Found or not
                           type: boolean
                         ref:
                           description: Ref indicates the RetentionPolicy object reference.

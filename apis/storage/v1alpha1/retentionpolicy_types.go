@@ -58,7 +58,7 @@ type RetentionPolicySpec struct {
 	// - minutes: 	30m
 	// You can also combine the above durations. For example: 30d12h30m
 	// +optional
-	MaxRetentionPeriod string `json:"maxRetentionPeriod,omitempty"`
+	MaxRetentionPeriod Duration `json:"maxRetentionPeriod,omitempty"`
 
 	// UsagePolicy specifies a policy of how this RetentionPolicy will be used. For example, you can use `allowedNamespaces`
 	// policy to restrict the usage of this RetentionPolicy to particular namespaces.
@@ -79,6 +79,25 @@ type RetentionPolicySpec struct {
 	// One namespace can have at most one default RetentionPolicy configured.
 	// +optional
 	Default bool `json:"default,omitempty"`
+}
+
+// Duration is similar to time.Duration, except it only supports larger ranges
+// like hours, days, months, and years.
+type Duration struct {
+	// +optional
+	Minutes int `json:"minutes,omitempty"`
+
+	// +optional
+	Hours int `json:"hours,omitempty"`
+
+	// +optional
+	Days int `json:"days,omitempty"`
+
+	// +optional
+	Months int `json:"months,omitempty"`
+
+	// +optional
+	Years int `json:"years,omitempty"`
 }
 
 // SuccessfulSnapshotsKeepPolicy specifies the policy for keeping successful Snapshots

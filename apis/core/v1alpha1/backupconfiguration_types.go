@@ -412,9 +412,9 @@ type RetentionPolicyStatus struct {
 	// Ref indicates the RetentionPolicy object reference.
 	Ref kmapi.ObjectReference `json:"ref,omitempty"`
 
-	// Ready indicates whether the RetentionPolicy is Ready or not
+	// Found indicates whether the RetentionPolicy is Found or not
 	// +optional
-	Ready bool `json:"ready,omitempty"`
+	Found bool `json:"ready,omitempty"`
 }
 
 // RepoStatus specifies the status of a Repository

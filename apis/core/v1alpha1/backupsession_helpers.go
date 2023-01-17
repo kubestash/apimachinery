@@ -73,10 +73,10 @@ func (b *BackupSession) FinalStepExecuted() bool {
 }
 
 func (b *BackupSession) failedToApplyRetentionPolicy() bool {
-	status := b.Status.RetentionPolicy
-
-	if status != nil && status.Phase == RetentionPolicyFailedToApply {
-		return true
+	for _, status := range b.Status.RetentionPolicies {
+		if status.Phase == RetentionPolicyFailedToApply {
+			return true
+		}
 	}
 
 	return false

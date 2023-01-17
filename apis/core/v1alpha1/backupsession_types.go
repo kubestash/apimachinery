@@ -92,9 +92,9 @@ type BackupSessionStatus struct {
 	// +optional
 	Verifications []VerificationStatus `json:"verifications,omitempty"`
 
-	// RetentionPolicy specifies whether the retention policy was properly applied or not
+	// RetentionPolices specifies whether the retention policies were properly applied on the repositories or not
 	// +optional
-	RetentionPolicy *RetentionPolicyApplyStatus `json:"retentionPolicy,omitempty"`
+	RetentionPolicies []RetentionPolicyApplyStatus `json:"retentionPolicy,omitempty"`
 
 	// Retried specifies whether this session was retried or not.
 	// This field will exist only if the `retryConfig` has been set in the respective backup invoker.
@@ -164,6 +164,8 @@ type RetentionPolicyApplyStatus struct {
 	// Ref points to the RetentionPolicy CR that is being used to cleanup the old Snapshots for this session.
 	Ref kmapi.ObjectReference `json:"ref,omitempty"`
 
+	// Repository specifies the name of the Repository on which the RetentionPolicy has been applied.
+	Repository string `json:"repository,omitempty"`
 	// Phase specifies the state of retention policy apply process
 	// +optional
 	Phase RetentionPolicyApplyPhase `json:"phase,omitempty"`

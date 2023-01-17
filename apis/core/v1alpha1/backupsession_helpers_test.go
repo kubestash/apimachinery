@@ -276,9 +276,9 @@ func TestBackupSessionPhaseFailedIfSessionHistoryCleanupFailed(t *testing.T) {
 
 func TestBackupSessionPhaseFailedIfRetentionPolicyFailedToApply(t *testing.T) {
 	bs := getSampleBackupSession(func(b *BackupSession) {
-		b.Status.RetentionPolicy = &RetentionPolicyApplyStatus{
+		b.Status.RetentionPolicies = append(b.Status.RetentionPolicies, RetentionPolicyApplyStatus{
 			Phase: RetentionPolicyFailedToApply,
-		}
+		})
 	})
 
 	assert.Equal(t, BackupSessionFailed, bs.CalculatePhase())

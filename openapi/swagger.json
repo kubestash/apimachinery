@@ -13399,8 +13399,12 @@
           "type": "string"
         },
         "retentionPolicy": {
-          "description": "RetentionPolicy specifies whether the retention policy was properly applied or not",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RetentionPolicyApplyStatus"
+          "description": "RetentionPolices specifies whether the retention policies were properly applied on the repositories or not",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RetentionPolicyApplyStatus"
+          }
         },
         "retried": {
           "description": "Retried specifies whether this session was retried or not. This field will exist only if the `retryConfig` has been set in the respective backup invoker.",
@@ -14086,6 +14090,10 @@
           "description": "Ref points to the RetentionPolicy CR that is being used to cleanup the old Snapshots for this session.",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "repository": {
+          "description": "Repository specifies the name of the Repository on which the RetentionPolicy has been applied.",
+          "type": "string"
         }
       }
     },
@@ -14093,7 +14101,7 @@
       "type": "object",
       "properties": {
         "ready": {
-          "description": "Ready indicates whether the RetentionPolicy is Ready or not",
+          "description": "Found indicates whether the RetentionPolicy is Found or not",
           "type": "boolean"
         },
         "ref": {
@@ -14644,6 +14652,10 @@
         }
       }
     },
+    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.Duration": {
+      "description": "Duration is similar to time.Duration, except it only supports larger ranges like hours, days, months, and years.",
+      "type": "string"
+    },
     "dev.appscode.stash.kubestash.apis.storage.v1alpha1.FailedSnapshotsKeepPolicy": {
       "description": "FailedSnapshotsKeepPolicy specifies the policy for keeping failed Snapshots",
       "type": "object",
@@ -15089,7 +15101,8 @@
         },
         "maxRetentionPeriod": {
           "description": "MaxRetentionPeriod specifies a duration up to which the old Snapshots should be kept. Stash will remove all the Snapshots that are older than the MaxRetentionPeriod. For example, MaxRetentionPeriod of `30d` will keep only the Snapshots of last 30 days. Sample duration format: - years: \t2y - months: \t6mo - days: \t\t30d - hours: \t12h - minutes: \t30m You can also combine the above durations. For example: 30d12h30m",
-          "type": "string"
+          "default": {},
+          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Duration"
         },
         "successfulSnapshots": {
           "description": "SuccessfulSnapshots specifies how many successful Snapshots should be kept.",

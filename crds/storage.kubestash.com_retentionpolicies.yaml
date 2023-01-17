@@ -74,7 +74,18 @@ spec:
                   format: - years: \t2y - months: \t6mo - days: \t\t30d - hours: \t12h
                   - minutes: \t30m You can also combine the above durations. For example:
                   30d12h30m"
-                type: string
+                properties:
+                  days:
+                    type: integer
+                  hours:
+                    type: integer
+                  minutes:
+                    type: integer
+                  months:
+                    type: integer
+                  years:
+                    type: integer
+                type: object
               successfulSnapshots:
                 description: SuccessfulSnapshots specifies how many successful Snapshots
                   should be kept.
