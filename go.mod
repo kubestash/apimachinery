@@ -12,6 +12,7 @@ require (
 	github.com/onsi/gomega v1.20.1
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.8.0
+	gomodules.xyz/envsubst v0.1.0
 	gomodules.xyz/logs v0.0.6
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.3.0

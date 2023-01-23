@@ -22486,7 +22486,15 @@ func schema_kubestash_apis_core_v1alpha1_TaskReference(ref common.ReferenceCallb
 					"params": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Params specifies parameters for the task. You must provide the parameter in the Addon desired structure.",
-							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+									},
+								},
+							},
 						},
 					},
 					"targetVolumes": {

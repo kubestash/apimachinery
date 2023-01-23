@@ -13,6 +13,8 @@ rules:
     verbs: ["*"]
   - apiGroups:
       - core.kubestash.com
+      - kubedb.com
+      - snapshot.storage.k8s.io
     resources:
       - "*"
     verbs: ["*"]
@@ -31,6 +33,11 @@ rules:
     resources:
       - "*"
     verbs: ["*"]
+  - apiGroups:
+      - addons.kubestash.com
+    resources:
+      - "*"
+    verbs: [ "*" ]
   - apiGroups:
       - ""
     resources:

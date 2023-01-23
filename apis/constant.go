@@ -19,7 +19,8 @@ package apis
 import "time"
 
 const (
-	RequeueTimeInterval       = 10 * time.Second
+	RequeueTimeInterval = 10 * time.Second
+
 	KubeStashCleanupFinalizer = "kubestash.com/cleanup"
 	KubeStashKey              = "kubestash.com"
 )
@@ -33,6 +34,8 @@ const (
 )
 
 const (
+	KindStatefulSet = "StatefulSet"
+	KindDaemonSet   = "DaemonSet"
 	KindClusterRole = "ClusterRole"
 )
 
