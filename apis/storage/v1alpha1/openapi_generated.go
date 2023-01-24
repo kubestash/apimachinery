@@ -20737,14 +20737,12 @@ func schema_kubestash_apis_storage_v1alpha1_RetentionPolicySpec(ref common.Refer
 					"successfulSnapshots": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SuccessfulSnapshots specifies how many successful Snapshots should be kept.",
-							Default:     map[string]interface{}{},
 							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.SuccessfulSnapshotsKeepPolicy"),
 						},
 					},
 					"failedSnapshots": {
 						SchemaProps: spec.SchemaProps{
 							Description: "FailedSnapshots specifies how many failed Snapshots should be kept.",
-							Default:     map[string]interface{}{},
 							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.FailedSnapshotsKeepPolicy"),
 						},
 					},

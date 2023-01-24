@@ -15107,7 +15107,6 @@
         },
         "failedSnapshots": {
           "description": "FailedSnapshots specifies how many failed Snapshots should be kept.",
-          "default": {},
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.FailedSnapshotsKeepPolicy"
         },
         "maxRetentionPeriod": {
@@ -15117,7 +15116,6 @@
         },
         "successfulSnapshots": {
           "description": "SuccessfulSnapshots specifies how many successful Snapshots should be kept.",
-          "default": {},
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.SuccessfulSnapshotsKeepPolicy"
         },
         "usagePolicy": {

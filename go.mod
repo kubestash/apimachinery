@@ -12,6 +12,7 @@ require (
 	github.com/onsi/gomega v1.20.1
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.8.0
+	gomodules.xyz/clock v0.0.0-20200817085942-06523dba733f
 	gomodules.xyz/envsubst v0.1.0
 	gomodules.xyz/logs v0.0.6
 	gomodules.xyz/pointer v0.1.0
@@ -106,7 +107,6 @@ require (
 	golang.org/x/term v0.1.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9 // indirect
-	gomodules.xyz/clock v0.0.0-20200817085942-06523dba733f // indirect
 	gomodules.xyz/flags v0.1.3 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.2.0 // indirect
 	gomodules.xyz/mergo v0.3.13 // indirect

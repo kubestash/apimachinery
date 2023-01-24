@@ -35,13 +35,15 @@ func (_ RetentionPolicy) CustomResourceDefinition() *apiextensions.CustomResourc
 
 // Zero returns true if the duration is empty (all values are set to zero).
 func (d *Duration) Zero() bool {
-	return d.Years == 0 && d.Months == 0 && d.Days == 0 && d.Hours == 0 && d.Minutes == 0
+	return d.Years == 0 && d.Months == 0 && d.Weeks == 0 &&
+		d.Days == 0 && d.Hours == 0 && d.Minutes == 0
 }
 
 func (d *Duration) ToMinutes() int {
 	minutes := d.Minutes
 	minutes += d.Hours * 60
 	minutes += d.Days * 24 * 60
+	minutes += d.Weeks * 7 * 24 * 60
 	minutes += d.Months * 30 * 24 * 60
 	minutes += d.Years * 365 * 24 * 60
 	return minutes
@@ -78,6 +80,8 @@ func ParseDuration(s string) (Duration, error) {
 		switch s[0] {
 		case 'y':
 			d.Years = num
+		case 'w':
+			d.Weeks = num
 		case 'd':
 			d.Days = num
 		case 'h':
@@ -164,6 +168,10 @@ func (d Duration) String() string {
 
 	if d.Months != 0 {
 		s += fmt.Sprintf("%dmo", d.Months)
+	}
+
+	if d.Weeks != 0 {
+		s += fmt.Sprintf("%dw", d.Weeks)
 	}
 
 	if d.Days != 0 {

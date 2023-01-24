@@ -68,11 +68,11 @@ type RetentionPolicySpec struct {
 
 	// SuccessfulSnapshots specifies how many successful Snapshots should be kept.
 	// +optional
-	SuccessfulSnapshots SuccessfulSnapshotsKeepPolicy `json:"successfulSnapshots,omitempty"`
+	SuccessfulSnapshots *SuccessfulSnapshotsKeepPolicy `json:"successfulSnapshots,omitempty"`
 
 	// FailedSnapshots specifies how many failed Snapshots should be kept.
 	// +optional
-	FailedSnapshots FailedSnapshotsKeepPolicy `json:"failedSnapshots,omitempty"`
+	FailedSnapshots *FailedSnapshotsKeepPolicy `json:"failedSnapshots,omitempty"`
 
 	// Default specifies whether to use this RetentionPolicy as a default RetentionPolicy for
 	// the current namespace as well as the permitted namespaces.
@@ -92,6 +92,9 @@ type Duration struct {
 
 	// +optional
 	Days int `json:"days,omitempty"`
+
+	// +optional
+	Weeks int `json:"weeks,omitempty"`
 
 	// +optional
 	Months int `json:"months,omitempty"`
