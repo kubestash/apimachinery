@@ -14663,10 +14663,6 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.Duration": {
-      "description": "Duration is similar to time.Duration, except it only supports larger ranges like hours, days, months, and years.",
-      "type": "string"
-    },
     "dev.appscode.stash.kubestash.apis.storage.v1alpha1.FailedSnapshotsKeepPolicy": {
       "description": "FailedSnapshotsKeepPolicy specifies the policy for keeping failed Snapshots",
       "type": "object",
@@ -15111,8 +15107,7 @@
         },
         "maxRetentionPeriod": {
           "description": "MaxRetentionPeriod specifies a duration up to which the old Snapshots should be kept. Stash will remove all the Snapshots that are older than the MaxRetentionPeriod. For example, MaxRetentionPeriod of `30d` will keep only the Snapshots of last 30 days. Sample duration format: - years: \t2y - months: \t6mo - days: \t\t30d - hours: \t12h - minutes: \t30m You can also combine the above durations. For example: 30d12h30m",
-          "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Duration"
+          "type": "string"
         },
         "successfulSnapshots": {
           "description": "SuccessfulSnapshots specifies how many successful Snapshots should be kept.",
@@ -15252,6 +15247,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"
         },
+        "backupSession": {
+          "description": "BackupSession represents the name of the respective BackupSession which is responsible for this Snapshot.",
+          "type": "string"
+        },
         "deletionPolicy": {
           "description": "DeletionPolicy specifies what to do when you delete a Snapshot CR. The valid values are: - \"Delete\": This will delete just the Snapshot CR from the cluster but keep the backed up data in the remote backend. This is the default behavior. - \"WipeOut\": This will delete the Snapshot CR as well as the backed up data from the backend.",
           "type": "string"
@@ -15286,10 +15285,6 @@
       "description": "SnapshotStatus defines the observed state of Snapshot",
       "type": "object",
       "properties": {
-        "backupSession": {
-          "description": "BackupSession represents the name of the respective BackupSession which is responsible for this Snapshot.",
-          "type": "string"
-        },
         "components": {
           "description": "Components represents the backup status of the individual components of this Snapshot",
           "type": "array",

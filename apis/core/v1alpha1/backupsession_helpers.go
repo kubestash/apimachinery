@@ -32,6 +32,10 @@ func (_ BackupSession) CustomResourceDefinition() *apiextensions.CustomResourceD
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralBackupSession))
 }
 
+func (b *BackupSession) IsRunning() bool {
+	return b.Status.Phase == BackupSessionRunning
+}
+
 func (b *BackupSession) CalculatePhase() BackupSessionPhase {
 	if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackupSkipped) {
 		return BackupSessionSkipped

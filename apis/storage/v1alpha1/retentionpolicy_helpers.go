@@ -17,9 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 	"unicode"
@@ -33,20 +31,27 @@ func (_ RetentionPolicy) CustomResourceDefinition() *apiextensions.CustomResourc
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralRetentionPolicy))
 }
 
-// Zero returns true if the duration is empty (all values are set to zero).
-func (d *Duration) Zero() bool {
-	return d.Years == 0 && d.Months == 0 && d.Weeks == 0 &&
-		d.Days == 0 && d.Hours == 0 && d.Minutes == 0
-}
-
-func (d *Duration) ToMinutes() int {
+func (r RetentionPeriod) ToMinutes() (int, error) {
+	d, err := ParseDuration(string(r))
+	if err != nil {
+		return 0, err
+	}
 	minutes := d.Minutes
 	minutes += d.Hours * 60
 	minutes += d.Days * 24 * 60
 	minutes += d.Weeks * 7 * 24 * 60
 	minutes += d.Months * 30 * 24 * 60
 	minutes += d.Years * 365 * 24 * 60
-	return minutes
+	return minutes, nil
+}
+
+type Duration struct {
+	Minutes int
+	Hours   int
+	Days    int
+	Weeks   int
+	Months  int
+	Years   int
 }
 
 var errInvalidDuration = errors.New("invalid duration provided")
@@ -137,69 +142,3 @@ func nextNumber(input string) (num int, rest string, err error) {
 
 	return num, rest, nil
 }
-
-// UnmarshalJSON implements the json.Unmarshaller interface.
-func (d *Duration) UnmarshalJSON(b []byte) error {
-	var str string
-	err := json.Unmarshal(b, &str)
-	if err != nil {
-		return err
-	}
-
-	pd, err := ParseDuration(str)
-	if err != nil {
-		return err
-	}
-
-	*d = pd
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaler interface.
-func (d Duration) MarshalJSON() ([]byte, error) {
-	return json.Marshal(d.String())
-}
-
-func (d Duration) String() string {
-	var s string
-	if d.Years != 0 {
-		s += fmt.Sprintf("%dy", d.Years)
-	}
-
-	if d.Months != 0 {
-		s += fmt.Sprintf("%dmo", d.Months)
-	}
-
-	if d.Weeks != 0 {
-		s += fmt.Sprintf("%dw", d.Weeks)
-	}
-
-	if d.Days != 0 {
-		s += fmt.Sprintf("%dd", d.Days)
-	}
-
-	if d.Hours != 0 {
-		s += fmt.Sprintf("%dh", d.Hours)
-	}
-
-	if d.Minutes != 0 {
-		s += fmt.Sprintf("%dm", d.Minutes)
-	}
-
-	return s
-}
-
-// ToUnstructured implements the value.UnstructuredConverter interface.
-func (d Duration) ToUnstructured() interface{} {
-	return d.String()
-}
-
-// OpenAPISchemaType is used by the kube-openapi generator when constructing
-// the OpenAPI spec of this type.
-//
-// See: https://github.com/kubernetes/kube-openapi/tree/master/pkg/generators
-func (_ Duration) OpenAPISchemaType() []string { return []string{"string"} }
-
-// OpenAPISchemaFormat is used by the kube-openapi generator when constructing
-// the OpenAPI spec of this type.
-func (_ Duration) OpenAPISchemaFormat() string { return "" }

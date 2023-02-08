@@ -78,6 +78,10 @@ type SnapshotSpec struct {
 	// Session specifies the name of the session which is responsible for this Snapshot
 	Session string `json:"session,omitempty"`
 
+	// BackupSession represents the name of the respective BackupSession which is responsible for this Snapshot.
+	// +optional
+	BackupSession string `json:"backupSession,omitempty"`
+
 	// Version denotes the respective data organization structure inside the Repository
 	Version string `json:"version,omitempty"`
 
@@ -127,10 +131,6 @@ type SnapshotStatus struct {
 	// Components represents the backup status of the individual components of this Snapshot
 	// +optional
 	Components []ComponentStatus `json:"components,omitempty"`
-
-	// BackupSession represents the name of the respective BackupSession which is responsible for this Snapshot.
-	// +optional
-	BackupSession string `json:"backupSession,omitempty"`
 
 	// Conditions represents list of conditions regarding this Snapshot
 	// +optional

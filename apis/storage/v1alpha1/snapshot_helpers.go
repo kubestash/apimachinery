@@ -17,9 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"strconv"
-	"time"
-
 	"stash.appscode.dev/kubestash/crds"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -78,6 +75,6 @@ func (s *Snapshot) GetComponentsPhase() SnapshotPhase {
 	return SnapshotRunning
 }
 
-func GenerateSnapshotName(repoName string) string {
-	return meta.ValidNameWithPrefix(repoName, strconv.FormatInt(time.Now().Unix(), 10))
+func GenerateSnapshotName(repoName, backupSession string) string {
+	return meta.ValidNameWithPrefix(repoName, backupSession)
 }

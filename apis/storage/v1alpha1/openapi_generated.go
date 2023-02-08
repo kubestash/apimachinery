@@ -20008,9 +20008,52 @@ func schema_kubestash_apis_storage_v1alpha1_Duration(ref common.ReferenceCallbac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Duration is similar to time.Duration, except it only supports larger ranges like hours, days, months, and years.",
-				Type:        Duration{}.OpenAPISchemaType(),
-				Format:      Duration{}.OpenAPISchemaFormat(),
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Minutes": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"Hours": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"Days": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"Weeks": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"Months": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"Years": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+				},
+				Required: []string{"Minutes", "Hours", "Days", "Weeks", "Months", "Years"},
 			},
 		},
 	}
@@ -20724,8 +20767,8 @@ func schema_kubestash_apis_storage_v1alpha1_RetentionPolicySpec(ref common.Refer
 					"maxRetentionPeriod": {
 						SchemaProps: spec.SchemaProps{
 							Description: "MaxRetentionPeriod specifies a duration up to which the old Snapshots should be kept. Stash will remove all the Snapshots that are older than the MaxRetentionPeriod. For example, MaxRetentionPeriod of `30d` will keep only the Snapshots of last 30 days. Sample duration format: - years: \t2y - months: \t6mo - days: \t\t30d - hours: \t12h - minutes: \t30m You can also combine the above durations. For example: 30d12h30m",
-							Default:     map[string]interface{}{},
-							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.Duration"),
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"usagePolicy": {
@@ -20757,7 +20800,7 @@ func schema_kubestash_apis_storage_v1alpha1_RetentionPolicySpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis.UsagePolicy", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.Duration", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.FailedSnapshotsKeepPolicy", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.SuccessfulSnapshotsKeepPolicy"},
+			"stash.appscode.dev/kubestash/apis.UsagePolicy", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.FailedSnapshotsKeepPolicy", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.SuccessfulSnapshotsKeepPolicy"},
 	}
 }
 
@@ -20988,6 +21031,13 @@ func schema_kubestash_apis_storage_v1alpha1_SnapshotSpec(ref common.ReferenceCal
 							Format:      "",
 						},
 					},
+					"backupSession": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackupSession represents the name of the respective BackupSession which is responsible for this Snapshot.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Version denotes the respective data organization structure inside the Repository",
@@ -21083,13 +21133,6 @@ func schema_kubestash_apis_storage_v1alpha1_SnapshotStatus(ref common.ReferenceC
 									},
 								},
 							},
-						},
-					},
-					"backupSession": {
-						SchemaProps: spec.SchemaProps{
-							Description: "BackupSession represents the name of the respective BackupSession which is responsible for this Snapshot.",
-							Type:        []string{"string"},
-							Format:      "",
 						},
 					},
 					"conditions": {

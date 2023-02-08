@@ -86,6 +86,10 @@ spec:
                 required:
                 - name
                 type: object
+              backupSession:
+                description: BackupSession represents the name of the respective BackupSession
+                  which is responsible for this Snapshot.
+                type: string
               deletionPolicy:
                 description: 'DeletionPolicy specifies what to do when you delete
                   a Snapshot CR. The valid values are: - "Delete": This will delete
@@ -127,10 +131,6 @@ spec:
           status:
             description: SnapshotStatus defines the observed state of Snapshot
             properties:
-              backupSession:
-                description: BackupSession represents the name of the respective BackupSession
-                  which is responsible for this Snapshot.
-                type: string
               components:
                 description: Components represents the backup status of the individual
                   components of this Snapshot
