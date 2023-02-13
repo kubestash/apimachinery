@@ -144,6 +144,7 @@ spec:
                       enum:
                       - Restic
                       - WalG
+                      - VolumeSnapshotter
                       type: string
                     name:
                       description: Name specifies the name of the component
@@ -179,6 +180,15 @@ spec:
                           description: Uploaded specifies the amount of data that
                             has been uploaded in the restic snapshot.
                           type: string
+                      type: object
+                    volumeSnapshotterStats:
+                      description: VolumeSnapshotterStats specifies the "VolumeSnapshotter"
+                        driver specific information
+                      properties:
+                        volumeSnapshotName:
+                          type: string
+                      required:
+                      - volumeSnapshotName
                       type: object
                     walSegments:
                       description: WalSegments specifies a list of wall segment for

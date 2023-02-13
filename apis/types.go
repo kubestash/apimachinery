@@ -24,12 +24,13 @@ import (
 )
 
 // Driver specifies the name of underlying tool that is being used to upload the backed up data.
-// +kubebuilder:validation:Enum=Restic;WalG
+// +kubebuilder:validation:Enum=Restic;WalG;VolumeSnapshotter
 type Driver string
 
 const (
-	DriverRestic Driver = "Restic"
-	DriverWalG   Driver = "WalG"
+	DriverRestic            Driver = "Restic"
+	DriverWalG              Driver = "WalG"
+	DriverVolumeSnapshotter Driver = "VolumeSnapshotter"
 )
 
 // VolumeSource specifies the source of volume to mount in the backup/restore executor

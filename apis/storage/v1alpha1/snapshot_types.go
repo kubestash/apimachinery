@@ -178,6 +178,10 @@ type ComponentStatus struct {
 	// +optional
 	ResticStats ResticStats `json:"resticStats,omitempty"`
 
+	// VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
+	// +optional
+	VolumeSnapshotterStats VolumeSnapshotterStats `json:"volumeSnapshotterStats,omitempty"`
+
 	// WalSegments specifies a list of wall segment for individual component
 	WalSegments []WalSegment `json:"walSegments,omitempty"`
 }
@@ -209,6 +213,11 @@ type ResticStats struct {
 	// Integrity represents the result of restic integrity check for this snapshot.
 	// +optional
 	Integrity *bool `json:"integrity,omitempty"`
+}
+
+// VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
+type VolumeSnapshotterStats struct {
+	VolumeSnapshotName string `json:"volumeSnapshotName"`
 }
 
 // WalSegment specifies the "WalG" driver specific information

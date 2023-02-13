@@ -14653,6 +14653,11 @@
           "default": {},
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.ResticStats"
         },
+        "volumeSnapshotterStats": {
+          "description": "VolumeSnapshotterStats specifies the \"VolumeSnapshotter\" driver specific information",
+          "default": {},
+          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.VolumeSnapshotterStats"
+        },
         "walSegments": {
           "description": "WalSegments specifies a list of wall segment for individual component",
           "type": "array",
@@ -15377,6 +15382,19 @@
         "secret": {
           "description": "Secret specifies the name of the Secret that contains the access credential for this storage.",
           "type": "string"
+        }
+      }
+    },
+    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.VolumeSnapshotterStats": {
+      "description": "VolumeSnapshotterStats specifies the \"VolumeSnapshotter\" driver specific information",
+      "type": "object",
+      "required": [
+        "volumeSnapshotName"
+      ],
+      "properties": {
+        "volumeSnapshotName": {
+          "type": "string",
+          "default": ""
         }
       }
     },

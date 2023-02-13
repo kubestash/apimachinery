@@ -59,6 +59,7 @@ spec:
                       - enum:
                         - Restic
                         - WalG
+                        - VolumeSnapshotter
                       - enum:
                         - Restic
                         - WalG
@@ -2168,6 +2169,7 @@ spec:
                       - enum:
                         - Restic
                         - WalG
+                        - VolumeSnapshotter
                       - enum:
                         - Restic
                         - WalG

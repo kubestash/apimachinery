@@ -421,6 +421,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.SnapshotStatus":                schema_kubestash_apis_storage_v1alpha1_SnapshotStatus(ref),
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.SuccessfulSnapshotsKeepPolicy": schema_kubestash_apis_storage_v1alpha1_SuccessfulSnapshotsKeepPolicy(ref),
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.SwiftSpec":                     schema_kubestash_apis_storage_v1alpha1_SwiftSpec(ref),
+		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.VolumeSnapshotterStats":        schema_kubestash_apis_storage_v1alpha1_VolumeSnapshotterStats(ref),
 		"stash.appscode.dev/kubestash/apis/storage/v1alpha1.WalSegment":                    schema_kubestash_apis_storage_v1alpha1_WalSegment(ref),
 	}
 }
@@ -19982,6 +19983,13 @@ func schema_kubestash_apis_storage_v1alpha1_ComponentStatus(ref common.Reference
 							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.ResticStats"),
 						},
 					},
+					"volumeSnapshotterStats": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VolumeSnapshotterStats specifies the \"VolumeSnapshotter\" driver specific information",
+							Default:     map[string]interface{}{},
+							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.VolumeSnapshotterStats"),
+						},
+					},
 					"walSegments": {
 						SchemaProps: spec.SchemaProps{
 							Description: "WalSegments specifies a list of wall segment for individual component",
@@ -20000,7 +20008,7 @@ func schema_kubestash_apis_storage_v1alpha1_ComponentStatus(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/storage/v1alpha1.ResticStats", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.WalSegment"},
+			"stash.appscode.dev/kubestash/apis/storage/v1alpha1.ResticStats", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.VolumeSnapshotterStats", "stash.appscode.dev/kubestash/apis/storage/v1alpha1.WalSegment"},
 	}
 }
 
@@ -21240,6 +21248,27 @@ func schema_kubestash_apis_storage_v1alpha1_SwiftSpec(ref common.ReferenceCallba
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_kubestash_apis_storage_v1alpha1_VolumeSnapshotterStats(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VolumeSnapshotterStats specifies the \"VolumeSnapshotter\" driver specific information",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"volumeSnapshotName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"volumeSnapshotName"},
 			},
 		},
 	}
