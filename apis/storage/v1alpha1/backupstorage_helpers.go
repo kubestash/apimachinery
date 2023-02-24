@@ -17,8 +17,13 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"stash.appscode.dev/kubestash/apis"
 	"stash.appscode.dev/kubestash/crds"
 
+	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/klog/v2"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 )
@@ -33,4 +38,38 @@ func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
 		return BackupStorageReady
 	}
 	return BackupStorageNotReady
+}
+
+func (b *BackupStorage) UsageAllowed(srcNamespace *core.Namespace) bool {
+	if b.Spec.UsagePolicy == nil {
+		return b.Namespace == srcNamespace.Name
+	}
+	return b.isNamespaceAllowed(srcNamespace)
+}
+
+func (r *BackupStorage) isNamespaceAllowed(srcNamespace *core.Namespace) bool {
+	allowedNamespaces := r.Spec.UsagePolicy.AllowedNamespaces
+
+	if allowedNamespaces.From == nil {
+		return false
+	}
+
+	if *allowedNamespaces.From == apis.NamespacesFromAll {
+		return true
+	}
+
+	if *allowedNamespaces.From == apis.NamespacesFromSame {
+		return r.Namespace == srcNamespace.Name
+	}
+
+	return selectorMatches(allowedNamespaces.Selector, srcNamespace.Labels)
+}
+
+func selectorMatches(ls *metav1.LabelSelector, srcLabels map[string]string) bool {
+	selector, err := metav1.LabelSelectorAsSelector(ls)
+	if err != nil {
+		klog.Infoln("invalid label selector: ", ls)
+		return false
+	}
+	return selector.Matches(labels.Set(srcLabels))
 }

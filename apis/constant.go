@@ -31,6 +31,7 @@ const (
 	KeyTargetName      = "target_name"
 	KeyTargetNamespace = "target_namespace"
 	KeyReason          = "reason"
+	KeyName            = "name"
 )
 
 const (

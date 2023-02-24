@@ -83,11 +83,11 @@ func (b *BackupConfiguration) backendsReady() bool {
 	return true
 }
 
-func (b *BackupConfiguration) GetStorageRef(backend string) kmapi.TypedObjectReference {
+func (b *BackupConfiguration) GetStorageRef(backend string) *kmapi.TypedObjectReference {
 	for _, b := range b.Spec.Backends {
 		if b.Name == backend {
-			return b.StorageRef
+			return &b.StorageRef
 		}
 	}
-	return kmapi.TypedObjectReference{}
+	return nil
 }
