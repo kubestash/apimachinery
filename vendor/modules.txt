@@ -1171,8 +1171,6 @@ kmodules.xyz/crd-schema-fuzz
 ## explicit; go 1.18
 kmodules.xyz/custom-resources/apis/appcatalog
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
-kmodules.xyz/custom-resources/apis/metrics
-kmodules.xyz/custom-resources/apis/metrics/v1alpha1
 kmodules.xyz/custom-resources/crds
 # kmodules.xyz/offshoot-api v0.24.1
 ## explicit; go 1.18

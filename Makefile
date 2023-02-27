@@ -74,7 +74,7 @@ RESTIC_VER       := 0.13.1
 ###
 
 SRC_PKGS := apis controllers crds
-SRC_DIRS := $(SRC_PKGS) hack/gencrd hack/kubestash-crd-installer# directories which hold app source (not vendored)
+SRC_DIRS := $(SRC_PKGS) hack/gencrd # directories which hold app source (not vendored)
 
 DOCKER_PLATFORMS := linux/amd64 linux/arm linux/arm64
 BIN_PLATFORMS    := $(DOCKER_PLATFORMS) windows/amd64 darwin/amd64
@@ -246,7 +246,6 @@ openapi: $(addprefix openapi-, $(subst :,_, $(API_GROUPS))) ## Generate OpenAPI 
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
 		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
-		--env                             \
 		--env GOFLAGS="-mod=vendor"                      \
 		$(BUILD_IMAGE)                                   \
 		go run hack/gencrd/main.go --version=$(OPENAPI_VERSION)
@@ -384,7 +383,6 @@ lint: $(BUILD_DIRS) ## Run linter.
 	    -v $$(pwd)/.go/cache:/.cache                            \
 	    --env HTTP_PROXY=$(HTTP_PROXY)                          \
 	    --env HTTPS_PROXY=$(HTTPS_PROXY)                        \
-	    --env                                    \
 	    --env GOFLAGS="-mod=vendor"                             \
 	    $(BUILD_IMAGE)                                          \
         golangci-lint run --enable $(ADDTL_LINTERS) --timeout=10m --skip-files="generated.*\.go$\" --skip-dirs-use-default --skip-dirs=client,vendor
@@ -465,14 +463,6 @@ push-to-kind: container ## Build docker image and push into local Kind cluster.
 	@kind load docker-image $(IMAGE):$(TAG)
 	@echo "Image has been pushed successfully into kind cluster."
 
-CRD_INSTALLER_TAG ?=$(TAG)
-KO := $(shell go env GOPATH)/bin/ko
-
-.PHONY: push-crd-installer
-push-crd-installer: $(BUILD_DIRS) install-ko ## Build and push CRD installer image
-	@echo "Pushing CRD installer image....."
-	DOCKER_CLI_EXPERIMENTAL=enabled KO_DOCKER_REPO=$(REGISTRY) $(KO) publish ./hack/kubestash-crd-installer --tags $(CRD_INSTALLER_TAG)  --base-import-paths  --platform=all
-
 .PHONY: docker-manifest
 docker-manifest: docker-manifest-PROD docker-manifest-DBG ## Make docker manifest for multi-arch docker images.
 docker-manifest-%:
@@ -507,13 +497,12 @@ run: ## Run the operator locally.
 install: ## Install KubeStash in the current cluster.
 	@cd ../installer; \
 	helm dependency update charts/kubestash ;                   		\
-	helm upgrade -i kubestash charts/kubestash --wait --create-namespace	\
+	helm upgrade -i kubestash charts/kubestash --wait --create-namespace\
 		--namespace=$(OPERATOR_NAMESPACE)								\
 		--set-file global.license=$(LICENSE_FILE)						\
 		--set kubestash-operator.operator.registry=$(REGISTRY)			\
 		--set kubestash-operator.operator.tag=$(TAG)	   				\
 		--set kubestash-operator.imagePullPolicy=$(IMAGE_PULL_POLICY)	\
-		--set kubestash-operator.crdInstaller.tag=$(CRD_INSTALLER_TAG) 	\
 		$(IMAGE_PULL_SECRETS);				                			\
 	kubectl wait --for=condition=Ready pods -l 'app.kubernetes.io/name=kubestash-operator,app.kubernetes.io/instance=kubestash' --timeout=5m -n $(OPERATOR_NAMESPACE)
 
@@ -644,7 +633,7 @@ release: ## Release final production docker image and push into the DockerHub.
 		echo "apply tag to release binaries and/or docker images."; \
 		exit 1;                                                     \
 	fi
-	@$(MAKE) clean all-push docker-manifest push-crd-installer --no-print-directory
+	@$(MAKE) clean all-push docker-manifest --no-print-directory
 
 .PHONY: verify
 verify: verify-gen verify-modules ## Verify that the generated codes and modules are up-to-date.
@@ -662,8 +651,3 @@ verify-modules: ## Verify that module files are up-to-date.
 	@if !(git diff --exit-code HEAD); then \
 		echo "go module files are out of date"; exit 1; \
 	fi
-
-.PHONY: install-ko
-install-ko:
-	@echo "Installing: github.com/google/ko"
-	go install github.com/google/ko@latest
