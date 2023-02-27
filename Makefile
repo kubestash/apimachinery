@@ -246,7 +246,7 @@ openapi: $(addprefix openapi-, $(subst :,_, $(API_GROUPS))) ## Generate OpenAPI 
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
 		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
-		--env GO111MODULE=on                             \
+		--env                             \
 		--env GOFLAGS="-mod=vendor"                      \
 		$(BUILD_IMAGE)                                   \
 		go run hack/gencrd/main.go --version=$(OPENAPI_VERSION)
@@ -384,7 +384,7 @@ lint: $(BUILD_DIRS) ## Run linter.
 	    -v $$(pwd)/.go/cache:/.cache                            \
 	    --env HTTP_PROXY=$(HTTP_PROXY)                          \
 	    --env HTTPS_PROXY=$(HTTPS_PROXY)                        \
-	    --env GO111MODULE=on                                    \
+	    --env                                    \
 	    --env GOFLAGS="-mod=vendor"                             \
 	    $(BUILD_IMAGE)                                          \
         golangci-lint run --enable $(ADDTL_LINTERS) --timeout=10m --skip-files="generated.*\.go$\" --skip-dirs-use-default --skip-dirs=client,vendor
@@ -493,7 +493,7 @@ endif
 
 .PHONY: run
 run: ## Run the operator locally.
-	GO111MODULE=on go run -mod=vendor *.go run \
+	go run -mod=vendor *.go run \
 		--v=3 \
 		--secure-port=8443 \
 		--kubeconfig=$(KUBECONFIG) \
@@ -505,8 +505,9 @@ run: ## Run the operator locally.
 
 .PHONY: install
 install: ## Install KubeStash in the current cluster.
+  @cd ../installer; \
 	helm dependency update charts/kubestash ;                   		\
-	helm install kubestash charts/kubestash --wait --create-namespace	\
+	helm upgrade -i kubestash charts/kubestash --wait --create-namespace	\
 		--namespace=$(OPERATOR_NAMESPACE)								\
 		--set-file global.license=$(LICENSE_FILE)						\
 		--set kubestash-operator.operator.registry=$(REGISTRY)			\
@@ -518,6 +519,7 @@ install: ## Install KubeStash in the current cluster.
 
 .PHONY: uninstall
 uninstall: ## Uninstall KubeSash from the current cluster. This will not remove the registered CRDs.
+	@cd ../installer; \
 	helm uninstall kubestash --namespace=$(OPERATOR_NAMESPACE) || true
 
 .PHONY: deploy-to-kind
@@ -525,7 +527,7 @@ deploy-to-kind: uninstall push-to-kind install ## Build and deploy the operator 
 
 .PHONY: purge
 purge: uninstall ## Uninstall KubeStash and remove the registered CRDs from the current cluster.
-	kubectl delete crds -l app.kubernetes.io/name=stash
+	kubectl delete crds -l app.kubernetes.io/name=kubestash
 
 ##@ Testing
 
@@ -655,8 +657,8 @@ verify-gen: gen fmt ## Verify that the generated files are up-to-date.
 
 .PHONY: verify-modules
 verify-modules: ## Verify that module files are up-to-date.
-	GO111MODULE=on go mod tidy
-	GO111MODULE=on go mod vendor
+	go mod tidy
+	go mod vendor
 	@if !(git diff --exit-code HEAD); then \
 		echo "go module files are out of date"; exit 1; \
 	fi
