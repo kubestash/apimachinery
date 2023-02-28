@@ -88,6 +88,12 @@ type RestoreDataSource struct {
 	// the components that were backed up in the desired Snapshot will be restored.
 	// +optional
 	Components []string `json:"components,omitempty"`
+
+	// EncryptionSecret refers to the Secret containing the encryption key which will be used to encode/decode the backed up data.
+	// You can refer to a Secret of a different namespace.
+	// If you don't provide the namespace field, Stash will look for the Secret in the same namespace as the RestoreSession.
+	// +optional
+	EncryptionSecret *kmapi.ObjectReference `json:"encryptionSecret,omitempty"`
 }
 
 // PITR specifies the target time and behavior of Point-In-Time Recovery

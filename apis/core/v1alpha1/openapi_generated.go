@@ -21592,11 +21592,17 @@ func schema_kubestash_apis_core_v1alpha1_RestoreDataSource(ref common.ReferenceC
 							},
 						},
 					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EncryptionSecret refers to the Secret containing the encryption key which will be used to encode/decode the backed up data. You can refer to a Secret of a different namespace. If you don't provide the namespace field, Stash will look for the Secret in the same namespace as the RestoreSession.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.PITR"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.PITR"},
 	}
 }
 
