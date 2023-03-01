@@ -384,11 +384,7 @@ type BackendStatus struct {
 
 	// Ready indicates whether the respective BackupStorage is ready or not
 	// +optional
-	Ready bool `json:"ready,omitempty"`
-
-	// Reason specifies the error messages found during Backend Readiness check
-	// +optional
-	Reason string `json:"reason,omitempty"`
+	Ready *bool `json:"ready,omitempty"`
 
 	// Storage indicates the status of the respective BackupStorage
 	// +optional
@@ -406,6 +402,10 @@ type StorageStatus struct {
 	// Phase indicates the current phase of the respective BackupStorage.
 	// +optional
 	Phase v1alpha1.BackupStoragePhase `json:"phase,omitempty"`
+
+	// Reason specifies the error messages found while checking the BackupStorage phase
+	// +optional
+	Reason string `json:"reason,omitempty"`
 }
 
 type RetentionPolicyStatus struct {
@@ -414,7 +414,11 @@ type RetentionPolicyStatus struct {
 
 	// Found indicates whether the RetentionPolicy is Found or not
 	// +optional
-	Found bool `json:"ready,omitempty"`
+	Found *bool `json:"found,omitempty"`
+
+	// Reason specifies the error messages found while checking the RetentionPolicy
+	// +optional
+	Reason string `json:"reason,omitempty"`
 }
 
 // RepoStatus specifies the status of a Repository

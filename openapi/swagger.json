@@ -12833,10 +12833,6 @@
           "description": "Ready indicates whether the respective BackupStorage is ready or not",
           "type": "boolean"
         },
-        "reason": {
-          "description": "Reason specifies the error messages found during Backend Readiness check",
-          "type": "string"
-        },
         "retentionPolicy": {
           "description": "RetentionPolicy indicates the status of the respective RetentionPolicy",
           "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RetentionPolicyStatus"
@@ -14104,9 +14100,13 @@
     "dev.appscode.stash.kubestash.apis.core.v1alpha1.RetentionPolicyStatus": {
       "type": "object",
       "properties": {
-        "ready": {
+        "found": {
           "description": "Found indicates whether the RetentionPolicy is Found or not",
           "type": "boolean"
+        },
+        "reason": {
+          "description": "Reason specifies the error messages found while checking the RetentionPolicy",
+          "type": "string"
         },
         "ref": {
           "description": "Ref indicates the RetentionPolicy object reference.",
@@ -14277,6 +14277,10 @@
       "properties": {
         "phase": {
           "description": "Phase indicates the current phase of the respective BackupStorage.",
+          "type": "string"
+        },
+        "reason": {
+          "description": "Reason specifies the error messages found while checking the BackupStorage phase",
           "type": "string"
         },
         "ref": {

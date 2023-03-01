@@ -75,7 +75,7 @@ func (b *BackupConfiguration) backendsReady() bool {
 	}
 
 	for _, backend := range b.Status.Backends {
-		if !backend.Ready {
+		if !*backend.Ready {
 			return false
 		}
 	}

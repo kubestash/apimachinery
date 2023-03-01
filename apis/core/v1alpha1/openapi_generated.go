@@ -19731,13 +19731,6 @@ func schema_kubestash_apis_core_v1alpha1_BackendStatus(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
-					"reason": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Reason specifies the error messages found during Backend Readiness check",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"storage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Storage indicates the status of the respective BackupStorage",
@@ -21958,10 +21951,17 @@ func schema_kubestash_apis_core_v1alpha1_RetentionPolicyStatus(ref common.Refere
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
-					"ready": {
+					"found": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Found indicates whether the RetentionPolicy is Found or not",
 							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reason specifies the error messages found while checking the RetentionPolicy",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
@@ -22336,6 +22336,13 @@ func schema_kubestash_apis_core_v1alpha1_StorageStatus(ref common.ReferenceCallb
 					"phase": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Phase indicates the current phase of the respective BackupStorage.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reason specifies the error messages found while checking the BackupStorage phase",
 							Type:        []string{"string"},
 							Format:      "",
 						},
