@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	"stash.appscode.dev/kubestash/apis/storage/v1alpha1"
+	"kubestash.dev/kubestash/apis/storage/v1alpha1"
 
 	"github.com/stretchr/testify/assert"
 	core "k8s.io/api/core/v1"

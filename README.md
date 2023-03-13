@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/stash.appscode.dev/kubestash)](https://goreportcard.com/report/stash.appscode.dev/kubestash)
+[![Go Report Card](https://goreportcard.com/badge/kubestash.dev/kubestash)](https://goreportcard.com/report/kubestash.dev/kubestash)
 [![Build Status](https://github.com/stashed/stash/workflows/CI/badge.svg)](https://github.com/stashed/stash/actions?workflow=CI)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appscode/stash.svg)](https://hub.docker.com/r/appscode/stash/)
 [![Slack](https://shields.io/badge/Join_Slack-salck?color=4A154B&logo=slack)](https://slack.appscode.com)

@@ -4,21 +4,21 @@ layout:
 - go.kubebuilder.io/v3
 multigroup: true
 projectName: kubestash
-repo: stash.appscode.dev/kubestash
+repo: kubestash.dev/kubestash
 resources:
 - api:
     crdVersion: v1
   domain: kubestash.com
   group: addons
   kind: Addon
-  path: stash.appscode.dev/kubestash/apis/addons/v1alpha1
+  path: kubestash.dev/kubestash/apis/addons/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
   domain: kubestash.com
   group: addons
   kind: Function
-  path: stash.appscode.dev/kubestash/apis/addons/v1alpha1
+  path: kubestash.dev/kubestash/apis/addons/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -27,7 +27,7 @@ resources:
   domain: kubestash.com
   group: core
   kind: BackupBatch
-  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
+  path: kubestash.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
   webhooks:
     validation: true
@@ -39,7 +39,7 @@ resources:
   domain: kubestash.com
   group: core
   kind: BackupBlueprint
-  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
+  path: kubestash.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
   webhooks:
     defaulting: true
@@ -52,7 +52,7 @@ resources:
   domain: kubestash.com
   group: core
   kind: BackupConfiguration
-  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
+  path: kubestash.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
   webhooks:
     validation: true
@@ -64,7 +64,7 @@ resources:
   domain: kubestash.com
   group: core
   kind: BackupSession
-  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
+  path: kubestash.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
   webhooks:
     validation: true
@@ -75,7 +75,7 @@ resources:
   domain: kubestash.com
   group: core
   kind: HookTemplate
-  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
+  path: kubestash.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
   webhooks:
     defaulting: true
@@ -88,7 +88,7 @@ resources:
   domain: kubestash.com
   group: core
   kind: RestoreSession
-  path: stash.appscode.dev/kubestash/apis/core/v1alpha1
+  path: kubestash.dev/kubestash/apis/core/v1alpha1
   version: v1alpha1
   webhooks:
     validation: true
@@ -100,7 +100,7 @@ resources:
   domain: kubestash.com
   group: storage
   kind: BackupStorage
-  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
+  path: kubestash.dev/kubestash/apis/storage/v1alpha1
   version: v1alpha1
   webhooks:
     defaulting: true
@@ -113,7 +113,7 @@ resources:
   domain: kubestash.com
   group: storage
   kind: Repository
-  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
+  path: kubestash.dev/kubestash/apis/storage/v1alpha1
   version: v1alpha1
   webhooks:
     validation: true
@@ -124,7 +124,7 @@ resources:
   domain: kubestash.com
   group: storage
   kind: RetentionPolicy
-  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
+  path: kubestash.dev/kubestash/apis/storage/v1alpha1
   version: v1alpha1
   webhooks:
     defaulting: true
@@ -137,7 +137,7 @@ resources:
   domain: kubestash.com
   group: storage
   kind: Snapshot
-  path: stash.appscode.dev/kubestash/apis/storage/v1alpha1
+  path: kubestash.dev/kubestash/apis/storage/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -145,6 +145,6 @@ resources:
   domain: kubestash.com
   group: config
   kind: KubeStashConfig
-  path: stash.appscode.dev/kubestash/apis/config/v1alpha1
+  path: kubestash.dev/kubestash/apis/config/v1alpha1
   version: v1alpha1
 version: "3"

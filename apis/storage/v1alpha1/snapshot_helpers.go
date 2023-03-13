@@ -17,7 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"stash.appscode.dev/kubestash/crds"
+	"kubestash.dev/kubestash/crds"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"

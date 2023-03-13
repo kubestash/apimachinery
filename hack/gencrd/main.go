@@ -1,11 +1,11 @@
 /*
 Copyright AppsCode Inc. and Contributors
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the AppsCode Free Trial License 1.0.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Free-Trial-1.0.0.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,12 +21,12 @@ import (
 	"os"
 	"path/filepath"
 
-	addonsinstall "stash.appscode.dev/kubestash/apis/addons/install"
-	addonsv1alpha1 "stash.appscode.dev/kubestash/apis/addons/v1alpha1"
-	coreinstall "stash.appscode.dev/kubestash/apis/core/install"
-	corev1alpha1 "stash.appscode.dev/kubestash/apis/core/v1alpha1"
-	storageinstall "stash.appscode.dev/kubestash/apis/storage/install"
-	storagev1alpha1 "stash.appscode.dev/kubestash/apis/storage/v1alpha1"
+	addonsinstall "kubestash.dev/kubestash/apis/addons/install"
+	addonsv1alpha1 "kubestash.dev/kubestash/apis/addons/v1alpha1"
+	coreinstall "kubestash.dev/kubestash/apis/core/install"
+	corev1alpha1 "kubestash.dev/kubestash/apis/core/v1alpha1"
+	storageinstall "kubestash.dev/kubestash/apis/storage/install"
+	storagev1alpha1 "kubestash.dev/kubestash/apis/storage/v1alpha1"
 
 	gort "gomodules.xyz/runtime"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -93,7 +93,7 @@ func generateSwaggerJson(version string) {
 		klog.Fatal(err)
 	}
 
-	filename := gort.GOPath() + "/src/stash.appscode.dev/kubestash/openapi/swagger.json"
+	filename := gort.GOPath() + "/src/kubestash.dev/kubestash/openapi/swagger.json"
 	err = os.MkdirAll(filepath.Dir(filename), 0o755)
 	if err != nil {
 		klog.Fatal(err)

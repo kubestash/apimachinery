@@ -22,7 +22,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"stash.appscode.dev/kubestash/apis"
+	"kubestash.dev/kubestash/apis"
 
 	v1 "k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"

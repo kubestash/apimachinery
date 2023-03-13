@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"time"
 
-	"stash.appscode.dev/kubestash/apis/storage/v1alpha1"
-	"stash.appscode.dev/kubestash/crds"
+	"kubestash.dev/kubestash/apis/storage/v1alpha1"
+	"kubestash.dev/kubestash/crds"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"

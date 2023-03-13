@@ -395,18 +395,18 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/prober/api/v1.FormEntry":                                        schema_kmodulesxyz_prober_api_v1_FormEntry(ref),
 		"kmodules.xyz/prober/api/v1.HTTPPostAction":                                   schema_kmodulesxyz_prober_api_v1_HTTPPostAction(ref),
 		"kmodules.xyz/prober/api/v1.Handler":                                          schema_kmodulesxyz_prober_api_v1_Handler(ref),
-		"stash.appscode.dev/kubestash/apis.AllowedNamespaces":                         schema_stashappscodedev_kubestash_apis_AllowedNamespaces(ref),
-		"stash.appscode.dev/kubestash/apis.ParameterDefinition":                       schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref),
-		"stash.appscode.dev/kubestash/apis.UsagePolicy":                               schema_stashappscodedev_kubestash_apis_UsagePolicy(ref),
-		"stash.appscode.dev/kubestash/apis.VolumeSource":                              schema_stashappscodedev_kubestash_apis_VolumeSource(ref),
-		"stash.appscode.dev/kubestash/apis/addons/v1alpha1.Addon":                     schema_kubestash_apis_addons_v1alpha1_Addon(ref),
-		"stash.appscode.dev/kubestash/apis/addons/v1alpha1.AddonList":                 schema_kubestash_apis_addons_v1alpha1_AddonList(ref),
-		"stash.appscode.dev/kubestash/apis/addons/v1alpha1.AddonSpec":                 schema_kubestash_apis_addons_v1alpha1_AddonSpec(ref),
-		"stash.appscode.dev/kubestash/apis/addons/v1alpha1.Function":                  schema_kubestash_apis_addons_v1alpha1_Function(ref),
-		"stash.appscode.dev/kubestash/apis/addons/v1alpha1.FunctionList":              schema_kubestash_apis_addons_v1alpha1_FunctionList(ref),
-		"stash.appscode.dev/kubestash/apis/addons/v1alpha1.FunctionSpec":              schema_kubestash_apis_addons_v1alpha1_FunctionSpec(ref),
-		"stash.appscode.dev/kubestash/apis/addons/v1alpha1.Task":                      schema_kubestash_apis_addons_v1alpha1_Task(ref),
-		"stash.appscode.dev/kubestash/apis/addons/v1alpha1.VolumeTemplate":            schema_kubestash_apis_addons_v1alpha1_VolumeTemplate(ref),
+		"kubestash.dev/kubestash/apis.AllowedNamespaces":                              schema_kubestashdev_kubestash_apis_AllowedNamespaces(ref),
+		"kubestash.dev/kubestash/apis.ParameterDefinition":                            schema_kubestashdev_kubestash_apis_ParameterDefinition(ref),
+		"kubestash.dev/kubestash/apis.UsagePolicy":                                    schema_kubestashdev_kubestash_apis_UsagePolicy(ref),
+		"kubestash.dev/kubestash/apis.VolumeSource":                                   schema_kubestashdev_kubestash_apis_VolumeSource(ref),
+		"kubestash.dev/kubestash/apis/addons/v1alpha1.Addon":                          schema_kubestash_apis_addons_v1alpha1_Addon(ref),
+		"kubestash.dev/kubestash/apis/addons/v1alpha1.AddonList":                      schema_kubestash_apis_addons_v1alpha1_AddonList(ref),
+		"kubestash.dev/kubestash/apis/addons/v1alpha1.AddonSpec":                      schema_kubestash_apis_addons_v1alpha1_AddonSpec(ref),
+		"kubestash.dev/kubestash/apis/addons/v1alpha1.Function":                       schema_kubestash_apis_addons_v1alpha1_Function(ref),
+		"kubestash.dev/kubestash/apis/addons/v1alpha1.FunctionList":                   schema_kubestash_apis_addons_v1alpha1_FunctionList(ref),
+		"kubestash.dev/kubestash/apis/addons/v1alpha1.FunctionSpec":                   schema_kubestash_apis_addons_v1alpha1_FunctionSpec(ref),
+		"kubestash.dev/kubestash/apis/addons/v1alpha1.Task":                           schema_kubestash_apis_addons_v1alpha1_Task(ref),
+		"kubestash.dev/kubestash/apis/addons/v1alpha1.VolumeTemplate":                 schema_kubestash_apis_addons_v1alpha1_VolumeTemplate(ref),
 	}
 }
 
@@ -19790,7 +19790,7 @@ func schema_kmodulesxyz_prober_api_v1_Handler(ref common.ReferenceCallback) comm
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_AllowedNamespaces(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_AllowedNamespaces(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -19818,7 +19818,7 @@ func schema_stashappscodedev_kubestash_apis_AllowedNamespaces(ref common.Referen
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_ParameterDefinition(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -19859,7 +19859,7 @@ func schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref common.Refer
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_UsagePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_UsagePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -19870,18 +19870,18 @@ func schema_stashappscodedev_kubestash_apis_UsagePolicy(ref common.ReferenceCall
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedNamespaces specifies which namespaces are allowed to use the resource",
 							Default:     map[string]interface{}{},
-							Ref:         ref("stash.appscode.dev/kubestash/apis.AllowedNamespaces"),
+							Ref:         ref("kubestash.dev/kubestash/apis.AllowedNamespaces"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis.AllowedNamespaces"},
+			"kubestash.dev/kubestash/apis.AllowedNamespaces"},
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_VolumeSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_VolumeSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -20106,14 +20106,14 @@ func schema_kubestash_apis_addons_v1alpha1_Addon(ref common.ReferenceCallback) c
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/addons/v1alpha1.AddonSpec"),
+							Ref:     ref("kubestash.dev/kubestash/apis/addons/v1alpha1.AddonSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "stash.appscode.dev/kubestash/apis/addons/v1alpha1.AddonSpec"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubestash.dev/kubestash/apis/addons/v1alpha1.AddonSpec"},
 	}
 }
 
@@ -20151,7 +20151,7 @@ func schema_kubestash_apis_addons_v1alpha1_AddonList(ref common.ReferenceCallbac
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/addons/v1alpha1.Addon"),
+										Ref:     ref("kubestash.dev/kubestash/apis/addons/v1alpha1.Addon"),
 									},
 								},
 							},
@@ -20162,7 +20162,7 @@ func schema_kubestash_apis_addons_v1alpha1_AddonList(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "stash.appscode.dev/kubestash/apis/addons/v1alpha1.Addon"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubestash.dev/kubestash/apis/addons/v1alpha1.Addon"},
 	}
 }
 
@@ -20181,7 +20181,7 @@ func schema_kubestash_apis_addons_v1alpha1_AddonSpec(ref common.ReferenceCallbac
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/addons/v1alpha1.Task"),
+										Ref:     ref("kubestash.dev/kubestash/apis/addons/v1alpha1.Task"),
 									},
 								},
 							},
@@ -20195,7 +20195,7 @@ func schema_kubestash_apis_addons_v1alpha1_AddonSpec(ref common.ReferenceCallbac
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/addons/v1alpha1.Task"),
+										Ref:     ref("kubestash.dev/kubestash/apis/addons/v1alpha1.Task"),
 									},
 								},
 							},
@@ -20205,7 +20205,7 @@ func schema_kubestash_apis_addons_v1alpha1_AddonSpec(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/addons/v1alpha1.Task"},
+			"kubestash.dev/kubestash/apis/addons/v1alpha1.Task"},
 	}
 }
 
@@ -20239,14 +20239,14 @@ func schema_kubestash_apis_addons_v1alpha1_Function(ref common.ReferenceCallback
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/addons/v1alpha1.FunctionSpec"),
+							Ref:     ref("kubestash.dev/kubestash/apis/addons/v1alpha1.FunctionSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "stash.appscode.dev/kubestash/apis/addons/v1alpha1.FunctionSpec"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubestash.dev/kubestash/apis/addons/v1alpha1.FunctionSpec"},
 	}
 }
 
@@ -20284,7 +20284,7 @@ func schema_kubestash_apis_addons_v1alpha1_FunctionList(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/addons/v1alpha1.Function"),
+										Ref:     ref("kubestash.dev/kubestash/apis/addons/v1alpha1.Function"),
 									},
 								},
 							},
@@ -20295,7 +20295,7 @@ func schema_kubestash_apis_addons_v1alpha1_FunctionList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "stash.appscode.dev/kubestash/apis/addons/v1alpha1.Function"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubestash.dev/kubestash/apis/addons/v1alpha1.Function"},
 	}
 }
 
@@ -20466,7 +20466,7 @@ func schema_kubestash_apis_addons_v1alpha1_Task(ref common.ReferenceCallback) co
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis.ParameterDefinition"),
+										Ref:     ref("kubestash.dev/kubestash/apis.ParameterDefinition"),
 									},
 								},
 							},
@@ -20480,7 +20480,7 @@ func schema_kubestash_apis_addons_v1alpha1_Task(ref common.ReferenceCallback) co
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/addons/v1alpha1.VolumeTemplate"),
+										Ref:     ref("kubestash.dev/kubestash/apis/addons/v1alpha1.VolumeTemplate"),
 									},
 								},
 							},
@@ -20518,7 +20518,7 @@ func schema_kubestash_apis_addons_v1alpha1_Task(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.VolumeMount", "stash.appscode.dev/kubestash/apis.ParameterDefinition", "stash.appscode.dev/kubestash/apis/addons/v1alpha1.VolumeTemplate"},
+			"k8s.io/api/core/v1.VolumeMount", "kubestash.dev/kubestash/apis.ParameterDefinition", "kubestash.dev/kubestash/apis/addons/v1alpha1.VolumeTemplate"},
 	}
 }
 
@@ -20546,13 +20546,13 @@ func schema_kubestash_apis_addons_v1alpha1_VolumeTemplate(ref common.ReferenceCa
 					"source": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Source specifies the source of this volume.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis.VolumeSource"),
+							Ref:         ref("kubestash.dev/kubestash/apis.VolumeSource"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis.VolumeSource"},
+			"kubestash.dev/kubestash/apis.VolumeSource"},
 	}
 }

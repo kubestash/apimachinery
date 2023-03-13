@@ -12,28 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Copyright 2019 AppsCode Inc.
-# Copyright 2016 The Kubernetes Authors.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 SHELL=/bin/bash -o pipefail
 
 PRODUCT_OWNER_NAME := appscode
 PRODUCT_NAME       := kubestash
 ENFORCE_LICENSE    ?=
 
-GO_PKG   := stash.appscode.dev
+GO_PKG   := kubestash.dev
 REPO     := $(notdir $(shell pwd))
 BIN      := kubestash
 COMPRESS ?= no
@@ -264,7 +249,7 @@ openapi-%:
 		openapi-gen                                      \
 			--v 1 --logtostderr                          \
 			--go-header-file "./hack/license/go.txt" \
-			--input-dirs "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*),k8s.io/apimachinery/pkg/apis/meta/v1,k8s.io/apimachinery/pkg/api/resource,k8s.io/apimachinery/pkg/runtime,k8s.io/apimachinery/pkg/util/intstr,k8s.io/apimachinery/pkg/version,k8s.io/api/core/v1,k8s.io/api/apps/v1,kmodules.xyz/offshoot-api/api/v1,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,k8s.io/api/rbac/v1,kmodules.xyz/objectstore-api/api/v1,kmodules.xyz/prober/api/v1,kmodules.xyz/client-go/api/v1,stash.appscode.dev/kubestash/apis" \
+			--input-dirs "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*),k8s.io/apimachinery/pkg/apis/meta/v1,k8s.io/apimachinery/pkg/api/resource,k8s.io/apimachinery/pkg/runtime,k8s.io/apimachinery/pkg/util/intstr,k8s.io/apimachinery/pkg/version,k8s.io/api/core/v1,k8s.io/api/apps/v1,kmodules.xyz/offshoot-api/api/v1,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,k8s.io/api/rbac/v1,kmodules.xyz/objectstore-api/api/v1,kmodules.xyz/prober/api/v1,kmodules.xyz/client-go/api/v1,kubestash.dev/kubestash/apis" \
 			--output-package "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*)" \
 			--report-filename .config/api-rules/violation_exceptions.list
 

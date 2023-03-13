@@ -22,7 +22,7 @@ import (
 	"strings"
 	"unicode"
 
-	"stash.appscode.dev/kubestash/crds"
+	"kubestash.dev/kubestash/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
 )

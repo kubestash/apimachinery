@@ -20,10 +20,10 @@ import (
 	"context"
 	"fmt"
 
-	"stash.appscode.dev/kubestash/apis"
-	storageapi "stash.appscode.dev/kubestash/apis/storage/v1alpha1"
-	"stash.appscode.dev/kubestash/pkg/storage"
-	"stash.appscode.dev/kubestash/pkg/target"
+	"kubestash.dev/kubestash/apis"
+	storageapi "kubestash.dev/kubestash/apis/storage/v1alpha1"
+	"kubestash.dev/kubestash/pkg/storage"
+	"kubestash.dev/kubestash/pkg/target"
 
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"

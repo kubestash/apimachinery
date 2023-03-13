@@ -395,66 +395,66 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/prober/api/v1.FormEntry":                                        schema_kmodulesxyz_prober_api_v1_FormEntry(ref),
 		"kmodules.xyz/prober/api/v1.HTTPPostAction":                                   schema_kmodulesxyz_prober_api_v1_HTTPPostAction(ref),
 		"kmodules.xyz/prober/api/v1.Handler":                                          schema_kmodulesxyz_prober_api_v1_Handler(ref),
-		"stash.appscode.dev/kubestash/apis.AllowedNamespaces":                         schema_stashappscodedev_kubestash_apis_AllowedNamespaces(ref),
-		"stash.appscode.dev/kubestash/apis.ParameterDefinition":                       schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref),
-		"stash.appscode.dev/kubestash/apis.UsagePolicy":                               schema_stashappscodedev_kubestash_apis_UsagePolicy(ref),
-		"stash.appscode.dev/kubestash/apis.VolumeSource":                              schema_stashappscodedev_kubestash_apis_VolumeSource(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo":                   schema_kubestash_apis_core_v1alpha1_AddonInfo(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendReference":            schema_kubestash_apis_core_v1alpha1_BackendReference(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendStatus":               schema_kubestash_apis_core_v1alpha1_BackendStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBatch":                 schema_kubestash_apis_core_v1alpha1_BackupBatch(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBatchList":             schema_kubestash_apis_core_v1alpha1_BackupBatchList(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBatchSpec":             schema_kubestash_apis_core_v1alpha1_BackupBatchSpec(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBatchStatus":           schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBlueprint":             schema_kubestash_apis_core_v1alpha1_BackupBlueprint(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBlueprintList":         schema_kubestash_apis_core_v1alpha1_BackupBlueprintList(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBlueprintSpec":         schema_kubestash_apis_core_v1alpha1_BackupBlueprintSpec(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfiguration":         schema_kubestash_apis_core_v1alpha1_BackupConfiguration(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfigurationList":     schema_kubestash_apis_core_v1alpha1_BackupConfigurationList(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfigurationSpec":     schema_kubestash_apis_core_v1alpha1_BackupConfigurationSpec(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfigurationStatus":   schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks":                 schema_kubestash_apis_core_v1alpha1_BackupHooks(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSession":               schema_kubestash_apis_core_v1alpha1_BackupSession(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSessionList":           schema_kubestash_apis_core_v1alpha1_BackupSessionList(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSessionSpec":           schema_kubestash_apis_core_v1alpha1_BackupSessionSpec(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSessionStatus":         schema_kubestash_apis_core_v1alpha1_BackupSessionStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.BatchSession":                schema_kubestash_apis_core_v1alpha1_BatchSession(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.ComponentRestoreStatus":      schema_kubestash_apis_core_v1alpha1_ComponentRestoreStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.FunctionHookExecutorSpec":    schema_kubestash_apis_core_v1alpha1_FunctionHookExecutorSpec(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus":         schema_kubestash_apis_core_v1alpha1_HookExecutionStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutor":                schema_kubestash_apis_core_v1alpha1_HookExecutor(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.HookInfo":                    schema_kubestash_apis_core_v1alpha1_HookInfo(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.HookTemplate":                schema_kubestash_apis_core_v1alpha1_HookTemplate(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.HookTemplateList":            schema_kubestash_apis_core_v1alpha1_HookTemplateList(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.HookTemplateSpec":            schema_kubestash_apis_core_v1alpha1_HookTemplateSpec(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.JobTemplate":                 schema_kubestash_apis_core_v1alpha1_JobTemplate(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.OffshootStatus":              schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.PITR":                        schema_kubestash_apis_core_v1alpha1_PITR(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.PodHookExecutorSpec":         schema_kubestash_apis_core_v1alpha1_PodHookExecutorSpec(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RepoStatus":                  schema_kubestash_apis_core_v1alpha1_RepoStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RepositoryInfo":              schema_kubestash_apis_core_v1alpha1_RepositoryInfo(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus":         schema_kubestash_apis_core_v1alpha1_ResourceFoundStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreDataSource":           schema_kubestash_apis_core_v1alpha1_RestoreDataSource(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreHooks":                schema_kubestash_apis_core_v1alpha1_RestoreHooks(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSession":              schema_kubestash_apis_core_v1alpha1_RestoreSession(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSessionList":          schema_kubestash_apis_core_v1alpha1_RestoreSessionList(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSessionSpec":          schema_kubestash_apis_core_v1alpha1_RestoreSessionSpec(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSessionStatus":        schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus":  schema_kubestash_apis_core_v1alpha1_RetentionPolicyApplyStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyStatus":       schema_kubestash_apis_core_v1alpha1_RetentionPolicyStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig":                 schema_kubestash_apis_core_v1alpha1_RetryConfig(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec":               schema_kubestash_apis_core_v1alpha1_SchedulerSpec(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.Session":                     schema_kubestash_apis_core_v1alpha1_Session(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionConfig":               schema_kubestash_apis_core_v1alpha1_SessionConfig(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus":               schema_kubestash_apis_core_v1alpha1_SessionStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.SnapshotStatus":              schema_kubestash_apis_core_v1alpha1_SnapshotStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.StorageStatus":               schema_kubestash_apis_core_v1alpha1_StorageStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetBackupSpec":            schema_kubestash_apis_core_v1alpha1_TargetBackupSpec(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetReference":             schema_kubestash_apis_core_v1alpha1_TargetReference(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetVolumeInfo":            schema_kubestash_apis_core_v1alpha1_TargetVolumeInfo(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.TaskReference":               schema_kubestash_apis_core_v1alpha1_TaskReference(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStatus":          schema_kubestash_apis_core_v1alpha1_VerificationStatus(ref),
-		"stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy":        schema_kubestash_apis_core_v1alpha1_VerificationStrategy(ref),
+		"kubestash.dev/kubestash/apis.AllowedNamespaces":                              schema_kubestashdev_kubestash_apis_AllowedNamespaces(ref),
+		"kubestash.dev/kubestash/apis.ParameterDefinition":                            schema_kubestashdev_kubestash_apis_ParameterDefinition(ref),
+		"kubestash.dev/kubestash/apis.UsagePolicy":                                    schema_kubestashdev_kubestash_apis_UsagePolicy(ref),
+		"kubestash.dev/kubestash/apis.VolumeSource":                                   schema_kubestashdev_kubestash_apis_VolumeSource(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.AddonInfo":                        schema_kubestash_apis_core_v1alpha1_AddonInfo(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackendReference":                 schema_kubestash_apis_core_v1alpha1_BackendReference(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackendStatus":                    schema_kubestash_apis_core_v1alpha1_BackendStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupBatch":                      schema_kubestash_apis_core_v1alpha1_BackupBatch(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupBatchList":                  schema_kubestash_apis_core_v1alpha1_BackupBatchList(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupBatchSpec":                  schema_kubestash_apis_core_v1alpha1_BackupBatchSpec(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupBatchStatus":                schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupBlueprint":                  schema_kubestash_apis_core_v1alpha1_BackupBlueprint(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupBlueprintList":              schema_kubestash_apis_core_v1alpha1_BackupBlueprintList(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupBlueprintSpec":              schema_kubestash_apis_core_v1alpha1_BackupBlueprintSpec(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupConfiguration":              schema_kubestash_apis_core_v1alpha1_BackupConfiguration(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupConfigurationList":          schema_kubestash_apis_core_v1alpha1_BackupConfigurationList(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupConfigurationSpec":          schema_kubestash_apis_core_v1alpha1_BackupConfigurationSpec(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupConfigurationStatus":        schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupHooks":                      schema_kubestash_apis_core_v1alpha1_BackupHooks(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupSession":                    schema_kubestash_apis_core_v1alpha1_BackupSession(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupSessionList":                schema_kubestash_apis_core_v1alpha1_BackupSessionList(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupSessionSpec":                schema_kubestash_apis_core_v1alpha1_BackupSessionSpec(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BackupSessionStatus":              schema_kubestash_apis_core_v1alpha1_BackupSessionStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.BatchSession":                     schema_kubestash_apis_core_v1alpha1_BatchSession(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.ComponentRestoreStatus":           schema_kubestash_apis_core_v1alpha1_ComponentRestoreStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.FunctionHookExecutorSpec":         schema_kubestash_apis_core_v1alpha1_FunctionHookExecutorSpec(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus":              schema_kubestash_apis_core_v1alpha1_HookExecutionStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.HookExecutor":                     schema_kubestash_apis_core_v1alpha1_HookExecutor(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.HookInfo":                         schema_kubestash_apis_core_v1alpha1_HookInfo(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.HookTemplate":                     schema_kubestash_apis_core_v1alpha1_HookTemplate(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.HookTemplateList":                 schema_kubestash_apis_core_v1alpha1_HookTemplateList(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.HookTemplateSpec":                 schema_kubestash_apis_core_v1alpha1_HookTemplateSpec(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.JobTemplate":                      schema_kubestash_apis_core_v1alpha1_JobTemplate(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.OffshootStatus":                   schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.PITR":                             schema_kubestash_apis_core_v1alpha1_PITR(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.PodHookExecutorSpec":              schema_kubestash_apis_core_v1alpha1_PodHookExecutorSpec(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.RepoStatus":                       schema_kubestash_apis_core_v1alpha1_RepoStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.RepositoryInfo":                   schema_kubestash_apis_core_v1alpha1_RepositoryInfo(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus":              schema_kubestash_apis_core_v1alpha1_ResourceFoundStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.RestoreDataSource":                schema_kubestash_apis_core_v1alpha1_RestoreDataSource(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.RestoreHooks":                     schema_kubestash_apis_core_v1alpha1_RestoreHooks(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.RestoreSession":                   schema_kubestash_apis_core_v1alpha1_RestoreSession(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.RestoreSessionList":               schema_kubestash_apis_core_v1alpha1_RestoreSessionList(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.RestoreSessionSpec":               schema_kubestash_apis_core_v1alpha1_RestoreSessionSpec(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.RestoreSessionStatus":             schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus":       schema_kubestash_apis_core_v1alpha1_RetentionPolicyApplyStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.RetentionPolicyStatus":            schema_kubestash_apis_core_v1alpha1_RetentionPolicyStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.RetryConfig":                      schema_kubestash_apis_core_v1alpha1_RetryConfig(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.SchedulerSpec":                    schema_kubestash_apis_core_v1alpha1_SchedulerSpec(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.Session":                          schema_kubestash_apis_core_v1alpha1_Session(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.SessionConfig":                    schema_kubestash_apis_core_v1alpha1_SessionConfig(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.SessionStatus":                    schema_kubestash_apis_core_v1alpha1_SessionStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.SnapshotStatus":                   schema_kubestash_apis_core_v1alpha1_SnapshotStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.StorageStatus":                    schema_kubestash_apis_core_v1alpha1_StorageStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.TargetBackupSpec":                 schema_kubestash_apis_core_v1alpha1_TargetBackupSpec(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.TargetReference":                  schema_kubestash_apis_core_v1alpha1_TargetReference(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.TargetVolumeInfo":                 schema_kubestash_apis_core_v1alpha1_TargetVolumeInfo(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.TaskReference":                    schema_kubestash_apis_core_v1alpha1_TaskReference(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.VerificationStatus":               schema_kubestash_apis_core_v1alpha1_VerificationStatus(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.VerificationStrategy":             schema_kubestash_apis_core_v1alpha1_VerificationStrategy(ref),
 	}
 }
 
@@ -19838,7 +19838,7 @@ func schema_kmodulesxyz_prober_api_v1_Handler(ref common.ReferenceCallback) comm
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_AllowedNamespaces(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_AllowedNamespaces(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -19866,7 +19866,7 @@ func schema_stashappscodedev_kubestash_apis_AllowedNamespaces(ref common.Referen
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_ParameterDefinition(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -19907,7 +19907,7 @@ func schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref common.Refer
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_UsagePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_UsagePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -19918,18 +19918,18 @@ func schema_stashappscodedev_kubestash_apis_UsagePolicy(ref common.ReferenceCall
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedNamespaces specifies which namespaces are allowed to use the resource",
 							Default:     map[string]interface{}{},
-							Ref:         ref("stash.appscode.dev/kubestash/apis.AllowedNamespaces"),
+							Ref:         ref("kubestash.dev/kubestash/apis.AllowedNamespaces"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis.AllowedNamespaces"},
+			"kubestash.dev/kubestash/apis.AllowedNamespaces"},
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_VolumeSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_VolumeSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -20146,7 +20146,7 @@ func schema_kubestash_apis_core_v1alpha1_AddonInfo(ref common.ReferenceCallback)
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.TaskReference"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.TaskReference"),
 									},
 								},
 							},
@@ -20168,7 +20168,7 @@ func schema_kubestash_apis_core_v1alpha1_AddonInfo(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.TaskReference"},
+			"kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubestash.dev/kubestash/apis/core/v1alpha1.TaskReference"},
 	}
 }
 
@@ -20231,20 +20231,20 @@ func schema_kubestash_apis_core_v1alpha1_BackendStatus(ref common.ReferenceCallb
 					"storage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Storage indicates the status of the respective BackupStorage",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.StorageStatus"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.StorageStatus"),
 						},
 					},
 					"retentionPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "RetentionPolicy indicates the status of the respective RetentionPolicy",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyStatus"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.RetentionPolicyStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.StorageStatus"},
+			"kubestash.dev/kubestash/apis/core/v1alpha1.RetentionPolicyStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.StorageStatus"},
 	}
 }
 
@@ -20278,20 +20278,20 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatch(ref common.ReferenceCallbac
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBatchSpec"),
+							Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupBatchSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBatchStatus"),
+							Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupBatchStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBatchSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBatchStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupBatchSpec", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupBatchStatus"},
 	}
 }
 
@@ -20329,7 +20329,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchList(ref common.ReferenceCal
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBatch"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupBatch"),
 									},
 								},
 							},
@@ -20340,7 +20340,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchList(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBatch"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupBatch"},
 	}
 }
 
@@ -20359,7 +20359,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchSpec(ref common.ReferenceCal
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendReference"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackendReference"),
 									},
 								},
 							},
@@ -20373,7 +20373,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchSpec(ref common.ReferenceCal
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetReference"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.TargetReference"),
 									},
 								},
 							},
@@ -20387,7 +20387,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchSpec(ref common.ReferenceCal
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BatchSession"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BatchSession"),
 									},
 								},
 							},
@@ -20404,7 +20404,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BatchSession", "stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetReference"},
+			"kubestash.dev/kubestash/apis/core/v1alpha1.BackendReference", "kubestash.dev/kubestash/apis/core/v1alpha1.BatchSession", "kubestash.dev/kubestash/apis/core/v1alpha1.TargetReference"},
 	}
 }
 
@@ -20423,7 +20423,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackendStatus"),
 									},
 								},
 							},
@@ -20437,7 +20437,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RepoStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.RepoStatus"),
 									},
 								},
 							},
@@ -20451,7 +20451,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
 									},
 								},
 							},
@@ -20465,7 +20465,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.SessionStatus"),
 									},
 								},
 							},
@@ -20486,7 +20486,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
 									},
 								},
 							},
@@ -20510,7 +20510,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBatchStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepoStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubestash.dev/kubestash/apis/core/v1alpha1.BackendStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.RepoStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.SessionStatus"},
 	}
 }
 
@@ -20544,14 +20544,14 @@ func schema_kubestash_apis_core_v1alpha1_BackupBlueprint(ref common.ReferenceCal
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBlueprintSpec"),
+							Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupBlueprintSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBlueprintSpec"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupBlueprintSpec"},
 	}
 }
 
@@ -20589,7 +20589,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBlueprintList(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBlueprint"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupBlueprint"),
 									},
 								},
 							},
@@ -20600,7 +20600,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBlueprintList(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupBlueprint"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupBlueprint"},
 	}
 }
 
@@ -20619,7 +20619,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBlueprintSpec(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendReference"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackendReference"),
 									},
 								},
 							},
@@ -20647,7 +20647,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupBlueprintSpec(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.Session"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.Session"),
 									},
 								},
 							},
@@ -20656,14 +20656,14 @@ func schema_kubestash_apis_core_v1alpha1_BackupBlueprintSpec(ref common.Referenc
 					"usagePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "UsagePolicy specifies a policy of how this BackupBlueprint will be used. For example, you can use `allowedNamespaces` policy to restrict the usage of this BackupBlueprint to particular namespaces. This field is optional. If you don't provide the usagePolicy, then it can be used only from the current namespace.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis.UsagePolicy"),
+							Ref:         ref("kubestash.dev/kubestash/apis.UsagePolicy"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.TypeMeta", "stash.appscode.dev/kubestash/apis.UsagePolicy", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.Session"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.TypeMeta", "kubestash.dev/kubestash/apis.UsagePolicy", "kubestash.dev/kubestash/apis/core/v1alpha1.BackendReference", "kubestash.dev/kubestash/apis/core/v1alpha1.Session"},
 	}
 }
 
@@ -20697,20 +20697,20 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfiguration(ref common.Referenc
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfigurationSpec"),
+							Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupConfigurationSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfigurationStatus"),
+							Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupConfigurationStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfigurationSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfigurationStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupConfigurationSpec", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupConfigurationStatus"},
 	}
 }
 
@@ -20748,7 +20748,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationList(ref common.Refe
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfiguration"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupConfiguration"),
 									},
 								},
 							},
@@ -20759,7 +20759,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationList(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupConfiguration"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupConfiguration"},
 	}
 }
 
@@ -20784,7 +20784,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationSpec(ref common.Refe
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendReference"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackendReference"),
 									},
 								},
 							},
@@ -20798,7 +20798,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationSpec(ref common.Refe
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.Session"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.Session"),
 									},
 								},
 							},
@@ -20815,7 +20815,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.TypedObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.Session"},
+			"kmodules.xyz/client-go/api/v1.TypedObjectReference", "kubestash.dev/kubestash/apis/core/v1alpha1.BackendReference", "kubestash.dev/kubestash/apis/core/v1alpha1.Session"},
 	}
 }
 
@@ -20834,7 +20834,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref common.Re
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackendStatus"),
 									},
 								},
 							},
@@ -20848,7 +20848,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref common.Re
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RepoStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.RepoStatus"),
 									},
 								},
 							},
@@ -20862,7 +20862,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref common.Re
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
 									},
 								},
 							},
@@ -20876,7 +20876,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref common.Re
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.SessionStatus"),
 									},
 								},
 							},
@@ -20914,7 +20914,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupConfigurationStatus(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepoStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubestash.dev/kubestash/apis/core/v1alpha1.BackendStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.RepoStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.SessionStatus"},
 	}
 }
 
@@ -20933,7 +20933,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupHooks(ref common.ReferenceCallbac
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.HookInfo"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.HookInfo"),
 									},
 								},
 							},
@@ -20947,7 +20947,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupHooks(ref common.ReferenceCallbac
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.HookInfo"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.HookInfo"),
 									},
 								},
 							},
@@ -20957,7 +20957,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupHooks(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.HookInfo"},
+			"kubestash.dev/kubestash/apis/core/v1alpha1.HookInfo"},
 	}
 }
 
@@ -20991,20 +20991,20 @@ func schema_kubestash_apis_core_v1alpha1_BackupSession(ref common.ReferenceCallb
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSessionSpec"),
+							Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupSessionSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSessionStatus"),
+							Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupSessionStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSessionSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSessionStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupSessionSpec", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupSessionStatus"},
 	}
 }
 
@@ -21042,7 +21042,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionList(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSession"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupSession"),
 									},
 								},
 							},
@@ -21053,7 +21053,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupSession"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupSession"},
 	}
 }
 
@@ -21127,7 +21127,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionStatus(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.SnapshotStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.SnapshotStatus"),
 									},
 								},
 							},
@@ -21141,7 +21141,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionStatus(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus"),
 									},
 								},
 							},
@@ -21155,7 +21155,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionStatus(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.VerificationStatus"),
 									},
 								},
 							},
@@ -21169,7 +21169,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionStatus(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus"),
 									},
 								},
 							},
@@ -21206,7 +21206,7 @@ func schema_kubestash_apis_core_v1alpha1_BackupSessionStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SnapshotStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "kubestash.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.RetentionPolicyApplyStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.SnapshotStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.VerificationStatus"},
 	}
 }
 
@@ -21227,7 +21227,7 @@ func schema_kubestash_apis_core_v1alpha1_BatchSession(ref common.ReferenceCallba
 					"scheduler": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Scheduler specifies the configuration for backup triggering CronJob",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.SchedulerSpec"),
 						},
 					},
 					"verificationStrategies": {
@@ -21238,7 +21238,7 @@ func schema_kubestash_apis_core_v1alpha1_BatchSession(ref common.ReferenceCallba
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"),
 									},
 								},
 							},
@@ -21247,7 +21247,7 @@ func schema_kubestash_apis_core_v1alpha1_BatchSession(ref common.ReferenceCallba
 					"hooks": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Hooks specifies the backup hooks that should be executed before and/or after the backup.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupHooks"),
 						},
 					},
 					"failurePolicy": {
@@ -21260,7 +21260,7 @@ func schema_kubestash_apis_core_v1alpha1_BatchSession(ref common.ReferenceCallba
 					"retryConfig": {
 						SchemaProps: spec.SchemaProps{
 							Description: "RetryConfig specifies the behavior of retry in case of a backup failure.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
 						},
 					},
 					"timeout": {
@@ -21284,7 +21284,7 @@ func schema_kubestash_apis_core_v1alpha1_BatchSession(ref common.ReferenceCallba
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetBackupSpec"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.TargetBackupSpec"),
 									},
 								},
 							},
@@ -21294,7 +21294,7 @@ func schema_kubestash_apis_core_v1alpha1_BatchSession(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetBackupSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupHooks", "kubestash.dev/kubestash/apis/core/v1alpha1.RetryConfig", "kubestash.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "kubestash.dev/kubestash/apis/core/v1alpha1.TargetBackupSpec", "kubestash.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
 	}
 }
 
@@ -21447,20 +21447,20 @@ func schema_kubestash_apis_core_v1alpha1_HookExecutor(ref common.ReferenceCallba
 					"function": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Function specifies the function information which will be used to create the hook executor job.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.FunctionHookExecutorSpec"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.FunctionHookExecutorSpec"),
 						},
 					},
 					"pod": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Pod specifies the criteria to use to select the hook executor pods",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.PodHookExecutorSpec"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.PodHookExecutorSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.FunctionHookExecutorSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.PodHookExecutorSpec"},
+			"kubestash.dev/kubestash/apis/core/v1alpha1.FunctionHookExecutorSpec", "kubestash.dev/kubestash/apis/core/v1alpha1.PodHookExecutorSpec"},
 	}
 }
 
@@ -21597,14 +21597,14 @@ func schema_kubestash_apis_core_v1alpha1_HookTemplate(ref common.ReferenceCallba
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.HookTemplateSpec"),
+							Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.HookTemplateSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.HookTemplateSpec"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.HookTemplateSpec"},
 	}
 }
 
@@ -21642,7 +21642,7 @@ func schema_kubestash_apis_core_v1alpha1_HookTemplateList(ref common.ReferenceCa
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.HookTemplate"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.HookTemplate"),
 									},
 								},
 							},
@@ -21653,7 +21653,7 @@ func schema_kubestash_apis_core_v1alpha1_HookTemplateList(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.HookTemplate"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.HookTemplate"},
 	}
 }
 
@@ -21667,7 +21667,7 @@ func schema_kubestash_apis_core_v1alpha1_HookTemplateSpec(ref common.ReferenceCa
 					"usagePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "UsagePolicy specifies a policy of how this HookTemplate will be used. For example, you can use `allowedNamespaces` policy to restrict the usage of this HookTemplate to particular namespaces.\n\nThis field is optional. If you don't provide the usagePolicy, then it can be used only from the current namespace.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis.UsagePolicy"),
+							Ref:         ref("kubestash.dev/kubestash/apis.UsagePolicy"),
 						},
 					},
 					"params": {
@@ -21678,7 +21678,7 @@ func schema_kubestash_apis_core_v1alpha1_HookTemplateSpec(ref common.ReferenceCa
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis.ParameterDefinition"),
+										Ref:     ref("kubestash.dev/kubestash/apis.ParameterDefinition"),
 									},
 								},
 							},
@@ -21693,14 +21693,14 @@ func schema_kubestash_apis_core_v1alpha1_HookTemplateSpec(ref common.ReferenceCa
 					"executor": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Executor specifies the entity where the hook will be executed.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutor"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.HookExecutor"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/prober/api/v1.Handler", "stash.appscode.dev/kubestash/apis.ParameterDefinition", "stash.appscode.dev/kubestash/apis.UsagePolicy", "stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutor"},
+			"kmodules.xyz/prober/api/v1.Handler", "kubestash.dev/kubestash/apis.ParameterDefinition", "kubestash.dev/kubestash/apis.UsagePolicy", "kubestash.dev/kubestash/apis/core/v1alpha1.HookExecutor"},
 	}
 }
 
@@ -21790,7 +21790,7 @@ func schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackendStatus"),
 									},
 								},
 							},
@@ -21804,7 +21804,7 @@ func schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RepoStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.RepoStatus"),
 									},
 								},
 							},
@@ -21818,7 +21818,7 @@ func schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
 									},
 								},
 							},
@@ -21832,7 +21832,7 @@ func schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.SessionStatus"),
 									},
 								},
 							},
@@ -21842,7 +21842,7 @@ func schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.BackendStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepoStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SessionStatus"},
+			"kubestash.dev/kubestash/apis/core/v1alpha1.BackendStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.RepoStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.SessionStatus"},
 	}
 }
 
@@ -22064,7 +22064,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreDataSource(ref common.ReferenceC
 						SchemaProps: spec.SchemaProps{
 							Description: "PITR stands for Point-In-Time Recovery. You can provide a target time instead of specifying a particular Snapshot. Stash will automatically find the latest Snapshot that satisfies the targeted time and restore it.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.PITR"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.PITR"),
 						},
 					},
 					"components": {
@@ -22092,7 +22092,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreDataSource(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.PITR"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubestash.dev/kubestash/apis/core/v1alpha1.PITR"},
 	}
 }
 
@@ -22111,7 +22111,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreHooks(ref common.ReferenceCallba
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.HookInfo"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.HookInfo"),
 									},
 								},
 							},
@@ -22125,7 +22125,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreHooks(ref common.ReferenceCallba
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.HookInfo"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.HookInfo"),
 									},
 								},
 							},
@@ -22135,7 +22135,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreHooks(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.HookInfo"},
+			"kubestash.dev/kubestash/apis/core/v1alpha1.HookInfo"},
 	}
 }
 
@@ -22169,20 +22169,20 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSession(ref common.ReferenceCall
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSessionSpec"),
+							Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.RestoreSessionSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSessionStatus"),
+							Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.RestoreSessionStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSessionSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSessionStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreSessionSpec", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreSessionStatus"},
 	}
 }
 
@@ -22220,7 +22220,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionList(ref common.Reference
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSession"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.RestoreSession"),
 									},
 								},
 							},
@@ -22231,7 +22231,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionList(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreSession"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreSession"},
 	}
 }
 
@@ -22251,19 +22251,19 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionSpec(ref common.Reference
 					"dataSource": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DataSource specifies the information about the data that will be restored",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreDataSource"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.RestoreDataSource"),
 						},
 					},
 					"addon": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Addon specifies addon configuration that will be used to restore the target.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.AddonInfo"),
 						},
 					},
 					"hooks": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Hooks specifies the restore hooks that should be executed before and/or after the restore.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreHooks"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.RestoreHooks"),
 						},
 					},
 					"timeout": {
@@ -22276,7 +22276,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreDataSource", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RestoreHooks"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "kubestash.dev/kubestash/apis/core/v1alpha1.AddonInfo", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreDataSource", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreHooks"},
 	}
 }
 
@@ -22322,7 +22322,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ComponentRestoreStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.ComponentRestoreStatus"),
 									},
 								},
 							},
@@ -22336,7 +22336,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus"),
 									},
 								},
 							},
@@ -22350,7 +22350,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"),
 									},
 								},
 							},
@@ -22388,7 +22388,7 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionStatus(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ComponentRestoreStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus", "stash.appscode.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "kubestash.dev/kubestash/apis/core/v1alpha1.ComponentRestoreStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.HookExecutionStatus", "kubestash.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus"},
 	}
 }
 
@@ -22538,7 +22538,7 @@ func schema_kubestash_apis_core_v1alpha1_SchedulerSpec(ref common.ReferenceCallb
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the job that will be created when executing a CronJob.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.JobTemplate"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.JobTemplate"),
 						},
 					},
 					"successfulJobsHistoryLimit": {
@@ -22560,7 +22560,7 @@ func schema_kubestash_apis_core_v1alpha1_SchedulerSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.JobTemplate"},
+			"kubestash.dev/kubestash/apis/core/v1alpha1.JobTemplate"},
 	}
 }
 
@@ -22581,7 +22581,7 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 					"scheduler": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Scheduler specifies the configuration for backup triggering CronJob",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.SchedulerSpec"),
 						},
 					},
 					"verificationStrategies": {
@@ -22592,7 +22592,7 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"),
 									},
 								},
 							},
@@ -22601,7 +22601,7 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 					"hooks": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Hooks specifies the backup hooks that should be executed before and/or after the backup.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupHooks"),
 						},
 					},
 					"failurePolicy": {
@@ -22614,7 +22614,7 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 					"retryConfig": {
 						SchemaProps: spec.SchemaProps{
 							Description: "RetryConfig specifies the behavior of retry in case of a backup failure.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
 						},
 					},
 					"timeout": {
@@ -22633,7 +22633,7 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 					"addon": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Addon specifies addon configuration that will be used to backup the target.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.AddonInfo"),
 						},
 					},
 					"repositories": {
@@ -22644,7 +22644,7 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RepositoryInfo"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.RepositoryInfo"),
 									},
 								},
 							},
@@ -22654,7 +22654,7 @@ func schema_kubestash_apis_core_v1alpha1_Session(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepositoryInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubestash.dev/kubestash/apis/core/v1alpha1.AddonInfo", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupHooks", "kubestash.dev/kubestash/apis/core/v1alpha1.RepositoryInfo", "kubestash.dev/kubestash/apis/core/v1alpha1.RetryConfig", "kubestash.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "kubestash.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
 	}
 }
 
@@ -22675,7 +22675,7 @@ func schema_kubestash_apis_core_v1alpha1_SessionConfig(ref common.ReferenceCallb
 					"scheduler": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Scheduler specifies the configuration for backup triggering CronJob",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.SchedulerSpec"),
 						},
 					},
 					"verificationStrategies": {
@@ -22686,7 +22686,7 @@ func schema_kubestash_apis_core_v1alpha1_SessionConfig(ref common.ReferenceCallb
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"),
 									},
 								},
 							},
@@ -22695,7 +22695,7 @@ func schema_kubestash_apis_core_v1alpha1_SessionConfig(ref common.ReferenceCallb
 					"hooks": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Hooks specifies the backup hooks that should be executed before and/or after the backup.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.BackupHooks"),
 						},
 					},
 					"failurePolicy": {
@@ -22708,7 +22708,7 @@ func schema_kubestash_apis_core_v1alpha1_SessionConfig(ref common.ReferenceCallb
 					"retryConfig": {
 						SchemaProps: spec.SchemaProps{
 							Description: "RetryConfig specifies the behavior of retry in case of a backup failure.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
 						},
 					},
 					"timeout": {
@@ -22728,7 +22728,7 @@ func schema_kubestash_apis_core_v1alpha1_SessionConfig(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "stash.appscode.dev/kubestash/apis/core/v1alpha1.BackupHooks", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig", "stash.appscode.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "stash.appscode.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubestash.dev/kubestash/apis/core/v1alpha1.BackupHooks", "kubestash.dev/kubestash/apis/core/v1alpha1.RetryConfig", "kubestash.dev/kubestash/apis/core/v1alpha1.SchedulerSpec", "kubestash.dev/kubestash/apis/core/v1alpha1.VerificationStrategy"},
 	}
 }
 
@@ -22869,7 +22869,7 @@ func schema_kubestash_apis_core_v1alpha1_TargetBackupSpec(ref common.ReferenceCa
 					"addon": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Addon specifies addon configuration that will be used to backup this target.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.AddonInfo"),
 						},
 					},
 					"repositories": {
@@ -22880,7 +22880,7 @@ func schema_kubestash_apis_core_v1alpha1_TargetBackupSpec(ref common.ReferenceCa
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RepositoryInfo"),
+										Ref:     ref("kubestash.dev/kubestash/apis/core/v1alpha1.RepositoryInfo"),
 									},
 								},
 							},
@@ -22890,7 +22890,7 @@ func schema_kubestash_apis_core_v1alpha1_TargetBackupSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis/core/v1alpha1.AddonInfo", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RepositoryInfo"},
+			"kubestash.dev/kubestash/apis/core/v1alpha1.AddonInfo", "kubestash.dev/kubestash/apis/core/v1alpha1.RepositoryInfo"},
 	}
 }
 
@@ -23010,7 +23010,7 @@ func schema_kubestash_apis_core_v1alpha1_TaskReference(ref common.ReferenceCallb
 					"targetVolumes": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TargetVolumes specifies which volumes from the target should be mounted in the backup/restore job/container.",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetVolumeInfo"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.TargetVolumeInfo"),
 						},
 					},
 					"addonVolumes": {
@@ -23021,7 +23021,7 @@ func schema_kubestash_apis_core_v1alpha1_TaskReference(ref common.ReferenceCallb
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("stash.appscode.dev/kubestash/apis.VolumeSource"),
+										Ref:     ref("kubestash.dev/kubestash/apis.VolumeSource"),
 									},
 								},
 							},
@@ -23031,7 +23031,7 @@ func schema_kubestash_apis_core_v1alpha1_TaskReference(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EnvVar", "k8s.io/apimachinery/pkg/runtime.RawExtension", "stash.appscode.dev/kubestash/apis.VolumeSource", "stash.appscode.dev/kubestash/apis/core/v1alpha1.TargetVolumeInfo"},
+			"k8s.io/api/core/v1.EnvVar", "k8s.io/apimachinery/pkg/runtime.RawExtension", "kubestash.dev/kubestash/apis.VolumeSource", "kubestash.dev/kubestash/apis/core/v1alpha1.TargetVolumeInfo"},
 	}
 }
 
@@ -23112,13 +23112,13 @@ func schema_kubestash_apis_core_v1alpha1_VerificationStrategy(ref common.Referen
 					"retryConfig": {
 						SchemaProps: spec.SchemaProps{
 							Description: "RetryConfig specifies the behavior of the retry mechanism in case of a verification failure",
-							Ref:         ref("stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.RetryConfig"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "stash.appscode.dev/kubestash/apis/core/v1alpha1.RetryConfig"},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "kubestash.dev/kubestash/apis/core/v1alpha1.RetryConfig"},
 	}
 }

@@ -17,8 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"stash.appscode.dev/kubestash/apis"
-	"stash.appscode.dev/kubestash/crds"
+	"kubestash.dev/kubestash/apis"
+	"kubestash.dev/kubestash/crds"
 
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

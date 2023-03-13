@@ -1,4 +1,4 @@
-module stash.appscode.dev/kubestash
+module kubestash.dev/kubestash
 
 go 1.18
 

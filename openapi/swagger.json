@@ -193,7 +193,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.AddonList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.AddonList"
             }
           }
         },
@@ -227,7 +227,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Addon"
             }
           },
           {
@@ -256,19 +256,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Addon"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Addon"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Addon"
             }
           }
         },
@@ -429,7 +429,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Addon"
             }
           }
         },
@@ -463,7 +463,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Addon"
             }
           },
           {
@@ -492,13 +492,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Addon"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Addon"
             }
           }
         },
@@ -646,13 +646,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Addon"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Addon"
             }
           }
         },
@@ -770,7 +770,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.FunctionList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.FunctionList"
             }
           }
         },
@@ -804,7 +804,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Function"
             }
           },
           {
@@ -833,19 +833,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Function"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Function"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Function"
             }
           }
         },
@@ -1006,7 +1006,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Function"
             }
           }
         },
@@ -1040,7 +1040,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Function"
             }
           },
           {
@@ -1069,13 +1069,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Function"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Function"
             }
           }
         },
@@ -1223,13 +1223,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Function"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Function"
             }
           }
         },
@@ -1790,7 +1790,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatchList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatchList"
             }
           }
         },
@@ -1898,7 +1898,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprintList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprintList"
             }
           }
         },
@@ -2006,7 +2006,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfigurationList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfigurationList"
             }
           }
         },
@@ -2114,7 +2114,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSessionList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSessionList"
             }
           }
         },
@@ -2222,7 +2222,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplateList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplateList"
             }
           }
         },
@@ -2395,7 +2395,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatchList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatchList"
             }
           }
         },
@@ -2429,7 +2429,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch"
             }
           },
           {
@@ -2458,19 +2458,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch"
             }
           }
         },
@@ -2639,7 +2639,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch"
             }
           }
         },
@@ -2673,7 +2673,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch"
             }
           },
           {
@@ -2702,13 +2702,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch"
             }
           }
         },
@@ -2856,13 +2856,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch"
             }
           }
         },
@@ -2988,7 +2988,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprintList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprintList"
             }
           }
         },
@@ -3022,7 +3022,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint"
             }
           },
           {
@@ -3051,19 +3051,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint"
             }
           }
         },
@@ -3232,7 +3232,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint"
             }
           }
         },
@@ -3266,7 +3266,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint"
             }
           },
           {
@@ -3295,13 +3295,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint"
             }
           }
         },
@@ -3449,13 +3449,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint"
             }
           }
         },
@@ -3581,7 +3581,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfigurationList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfigurationList"
             }
           }
         },
@@ -3615,7 +3615,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration"
             }
           },
           {
@@ -3644,19 +3644,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration"
             }
           }
         },
@@ -3825,7 +3825,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration"
             }
           }
         },
@@ -3859,7 +3859,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration"
             }
           },
           {
@@ -3888,13 +3888,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration"
             }
           }
         },
@@ -4042,13 +4042,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration"
             }
           }
         },
@@ -4174,7 +4174,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSessionList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSessionList"
             }
           }
         },
@@ -4208,7 +4208,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession"
             }
           },
           {
@@ -4237,19 +4237,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession"
             }
           }
         },
@@ -4418,7 +4418,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession"
             }
           }
         },
@@ -4452,7 +4452,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession"
             }
           },
           {
@@ -4481,13 +4481,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession"
             }
           }
         },
@@ -4635,13 +4635,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession"
             }
           }
         },
@@ -4767,7 +4767,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplateList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplateList"
             }
           }
         },
@@ -4801,7 +4801,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate"
             }
           },
           {
@@ -4830,19 +4830,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate"
             }
           }
         },
@@ -5011,7 +5011,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate"
             }
           }
         },
@@ -5045,7 +5045,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate"
             }
           },
           {
@@ -5074,13 +5074,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate"
             }
           }
         },
@@ -5228,13 +5228,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate"
             }
           }
         },
@@ -5360,7 +5360,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSessionList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSessionList"
             }
           }
         },
@@ -5394,7 +5394,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession"
             }
           },
           {
@@ -5423,19 +5423,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession"
             }
           }
         },
@@ -5604,7 +5604,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession"
             }
           }
         },
@@ -5638,7 +5638,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession"
             }
           },
           {
@@ -5667,13 +5667,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession"
             }
           }
         },
@@ -5821,13 +5821,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession"
             }
           }
         },
@@ -5888,7 +5888,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSessionList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSessionList"
             }
           }
         },
@@ -8144,7 +8144,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorageList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorageList"
             }
           }
         },
@@ -8317,7 +8317,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorageList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorageList"
             }
           }
         },
@@ -8351,7 +8351,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage"
             }
           },
           {
@@ -8380,19 +8380,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage"
             }
           }
         },
@@ -8561,7 +8561,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage"
             }
           }
         },
@@ -8595,7 +8595,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage"
             }
           },
           {
@@ -8624,13 +8624,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage"
             }
           }
         },
@@ -8778,13 +8778,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage"
             }
           }
         },
@@ -8910,7 +8910,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RepositoryList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RepositoryList"
             }
           }
         },
@@ -8944,7 +8944,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Repository"
             }
           },
           {
@@ -8973,19 +8973,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Repository"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Repository"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Repository"
             }
           }
         },
@@ -9154,7 +9154,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Repository"
             }
           }
         },
@@ -9188,7 +9188,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Repository"
             }
           },
           {
@@ -9217,13 +9217,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Repository"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Repository"
             }
           }
         },
@@ -9371,13 +9371,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Repository"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Repository"
             }
           }
         },
@@ -9503,7 +9503,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicyList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicyList"
             }
           }
         },
@@ -9537,7 +9537,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
             }
           },
           {
@@ -9566,19 +9566,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
             }
           }
         },
@@ -9747,7 +9747,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
             }
           }
         },
@@ -9781,7 +9781,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
             }
           },
           {
@@ -9810,13 +9810,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
             }
           }
         },
@@ -9964,13 +9964,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
             }
           }
         },
@@ -10096,7 +10096,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.SnapshotList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.SnapshotList"
             }
           }
         },
@@ -10130,7 +10130,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot"
             }
           },
           {
@@ -10159,19 +10159,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot"
             }
           }
         },
@@ -10340,7 +10340,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot"
             }
           }
         },
@@ -10374,7 +10374,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot"
             }
           },
           {
@@ -10403,13 +10403,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot"
             }
           }
         },
@@ -10557,13 +10557,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot"
             }
           }
         },
@@ -10624,7 +10624,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RepositoryList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RepositoryList"
             }
           }
         },
@@ -10732,7 +10732,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicyList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicyList"
             }
           }
         },
@@ -10840,7 +10840,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.SnapshotList"
+              "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.SnapshotList"
             }
           }
         },
@@ -12318,7 +12318,7 @@
     }
   },
   "definitions": {
-    "dev.appscode.stash.kubestash.apis.AllowedNamespaces": {
+    "dev.kubestash.kubestash.apis.AllowedNamespaces": {
       "description": "AllowedNamespaces indicate which namespaces the resource should be selected from.",
       "type": "object",
       "properties": {
@@ -12332,7 +12332,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.ParameterDefinition": {
+    "dev.kubestash.kubestash.apis.ParameterDefinition": {
       "description": "ParameterDefinition defines the parameter names, their usage, their requirements etc.",
       "type": "object",
       "properties": {
@@ -12354,18 +12354,18 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.UsagePolicy": {
+    "dev.kubestash.kubestash.apis.UsagePolicy": {
       "description": "UsagePolicy specifies a policy that restrict the usage of a resource across namespaces.",
       "type": "object",
       "properties": {
         "allowedNamespaces": {
           "description": "AllowedNamespaces specifies which namespaces are allowed to use the resource",
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.AllowedNamespaces"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.AllowedNamespaces"
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.VolumeSource": {
+    "dev.kubestash.kubestash.apis.VolumeSource": {
       "description": "VolumeSource specifies the source of volume to mount in the backup/restore executor",
       "type": "object",
       "properties": {
@@ -12491,7 +12491,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon": {
+    "dev.kubestash.kubestash.apis.addons.v1alpha1.Addon": {
       "description": "Addon specifies the backup and restore capabilities for a particular resource. For example, MySQL addon specifies the backup and restore capabilities of MySQL database where Postgres addon specifies backup and restore capabilities for PostgreSQL database. An Addon CR defines the backup and restore tasks that can be performed by this addon.",
       "type": "object",
       "properties": {
@@ -12509,7 +12509,7 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.AddonSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.AddonSpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -12520,7 +12520,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.addons.v1alpha1.AddonList": {
+    "dev.kubestash.kubestash.apis.addons.v1alpha1.AddonList": {
       "description": "AddonList contains a list of Addon",
       "type": "object",
       "required": [
@@ -12535,7 +12535,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Addon"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Addon"
           }
         },
         "kind": {
@@ -12555,7 +12555,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.addons.v1alpha1.AddonSpec": {
+    "dev.kubestash.kubestash.apis.addons.v1alpha1.AddonSpec": {
       "description": "AddonSpec defines the specification for backup and restore tasks.",
       "type": "object",
       "properties": {
@@ -12564,7 +12564,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Task"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Task"
           }
         },
         "restoreTasks": {
@@ -12572,12 +12572,12 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Task"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Task"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function": {
+    "dev.kubestash.kubestash.apis.addons.v1alpha1.Function": {
       "description": "Function is the Schema for the functions API",
       "type": "object",
       "properties": {
@@ -12595,7 +12595,7 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.FunctionSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.FunctionSpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -12606,7 +12606,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.addons.v1alpha1.FunctionList": {
+    "dev.kubestash.kubestash.apis.addons.v1alpha1.FunctionList": {
       "description": "FunctionList contains a list of Function",
       "type": "object",
       "required": [
@@ -12621,7 +12621,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.Function"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.Function"
           }
         },
         "kind": {
@@ -12641,7 +12641,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.addons.v1alpha1.FunctionSpec": {
+    "dev.kubestash.kubestash.apis.addons.v1alpha1.FunctionSpec": {
       "type": "object",
       "properties": {
         "args": {
@@ -12704,7 +12704,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.addons.v1alpha1.Task": {
+    "dev.kubestash.kubestash.apis.addons.v1alpha1.Task": {
       "description": "Task defines the specification of a backup/restore task.",
       "type": "object",
       "properties": {
@@ -12729,7 +12729,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.ParameterDefinition"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.ParameterDefinition"
           }
         },
         "passThroughMounts": {
@@ -12753,12 +12753,12 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.addons.v1alpha1.VolumeTemplate"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.addons.v1alpha1.VolumeTemplate"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.addons.v1alpha1.VolumeTemplate": {
+    "dev.kubestash.kubestash.apis.addons.v1alpha1.VolumeTemplate": {
       "description": "VolumeTemplate specifies the name, usage, and the source of volume that will be used by the addon to execute it's backup/restore task.",
       "type": "object",
       "properties": {
@@ -12768,7 +12768,7 @@
         },
         "source": {
           "description": "Source specifies the source of this volume.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.VolumeSource"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.VolumeSource"
         },
         "usage": {
           "description": "Usage specifies the usage of the volume.",
@@ -12776,7 +12776,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.AddonInfo": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.AddonInfo": {
       "description": "AddonInfo specifies addon configuration that will be used to backup/restore the respective target.",
       "type": "object",
       "properties": {
@@ -12797,12 +12797,12 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.TaskReference"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.TaskReference"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackendReference": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackendReference": {
       "description": "BackendReference specifies reference to a storage where the backed up data will be stored.",
       "type": "object",
       "properties": {
@@ -12821,7 +12821,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackendStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackendStatus": {
       "description": "BackendStatus specifies the status of the backends",
       "type": "object",
       "properties": {
@@ -12835,15 +12835,15 @@
         },
         "retentionPolicy": {
           "description": "RetentionPolicy indicates the status of the respective RetentionPolicy",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RetentionPolicyStatus"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RetentionPolicyStatus"
         },
         "storage": {
           "description": "Storage indicates the status of the respective BackupStorage",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.StorageStatus"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.StorageStatus"
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch": {
       "description": "BackupBatch specifies the configurations for taking backup of multiple co-related applications.",
       "type": "object",
       "properties": {
@@ -12861,11 +12861,11 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatchSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatchSpec"
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatchStatus"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatchStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -12876,7 +12876,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatchList": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatchList": {
       "description": "BackupBatchList contains a list of BackupBatch",
       "type": "object",
       "required": [
@@ -12891,7 +12891,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatch"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatch"
           }
         },
         "kind": {
@@ -12911,7 +12911,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatchSpec": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatchSpec": {
       "description": "BackupBatchSpec defines the targets of backup, the backend where the backed up data will be stored, and the session configuration which specifies when and how to take the backup.",
       "type": "object",
       "properties": {
@@ -12920,7 +12920,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackendReference"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackendReference"
           }
         },
         "paused": {
@@ -12932,7 +12932,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BatchSession"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BatchSession"
           }
         },
         "targets": {
@@ -12940,12 +12940,12 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.TargetReference"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.TargetReference"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBatchStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupBatchStatus": {
       "description": "BackupBatchStatus defines the observed state of BackupBatch",
       "type": "object",
       "properties": {
@@ -12954,7 +12954,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackendStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackendStatus"
           }
         },
         "conditions": {
@@ -12970,7 +12970,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.ResourceFoundStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.ResourceFoundStatus"
           }
         },
         "phase": {
@@ -12982,7 +12982,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RepoStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RepoStatus"
           }
         },
         "sessions": {
@@ -12990,7 +12990,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.SessionStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.SessionStatus"
           }
         },
         "targets": {
@@ -12998,12 +12998,12 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.ResourceFoundStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.ResourceFoundStatus"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint": {
       "description": "BackupBlueprint lets you define a common template for taking backup for all the similar applications. Then, you can just apply some annotations in the targeted application to enable backup. Stash will automatically resolve the template and create a BackupConfiguration for the targeted application.",
       "type": "object",
       "properties": {
@@ -13021,7 +13021,7 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprintSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprintSpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -13032,7 +13032,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprintList": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprintList": {
       "description": "BackupBlueprintList contains a list of BackupBlueprint",
       "type": "object",
       "required": [
@@ -13047,7 +13047,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprint"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprint"
           }
         },
         "kind": {
@@ -13067,7 +13067,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupBlueprintSpec": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupBlueprintSpec": {
       "description": "BackupBlueprintSpec defines the desired state of BackupBlueprint",
       "type": "object",
       "properties": {
@@ -13076,7 +13076,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackendReference"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackendReference"
           }
         },
         "sessions": {
@@ -13084,7 +13084,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.Session"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.Session"
           }
         },
         "subjects": {
@@ -13097,11 +13097,11 @@
         },
         "usagePolicy": {
           "description": "UsagePolicy specifies a policy of how this BackupBlueprint will be used. For example, you can use `allowedNamespaces` policy to restrict the usage of this BackupBlueprint to particular namespaces. This field is optional. If you don't provide the usagePolicy, then it can be used only from the current namespace.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.UsagePolicy"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.UsagePolicy"
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration": {
       "description": "BackupConfiguration specifies the configuration for taking backup of a target application.",
       "type": "object",
       "properties": {
@@ -13119,11 +13119,11 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfigurationSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfigurationSpec"
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfigurationStatus"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfigurationStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -13134,7 +13134,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfigurationList": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfigurationList": {
       "description": "BackupConfigurationList contains a list of BackupConfiguration",
       "type": "object",
       "required": [
@@ -13149,7 +13149,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfiguration"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfiguration"
           }
         },
         "kind": {
@@ -13169,7 +13169,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfigurationSpec": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfigurationSpec": {
       "description": "BackupConfigurationSpec defines the target of backup, the backends where the data will be stored, and the sessions that specifies when and how to take backup.",
       "type": "object",
       "properties": {
@@ -13178,7 +13178,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackendReference"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackendReference"
           }
         },
         "paused": {
@@ -13190,7 +13190,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.Session"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.Session"
           }
         },
         "target": {
@@ -13199,7 +13199,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupConfigurationStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupConfigurationStatus": {
       "description": "BackupConfigurationStatus defines the observed state of BackupConfiguration",
       "type": "object",
       "properties": {
@@ -13208,7 +13208,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackendStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackendStatus"
           }
         },
         "conditions": {
@@ -13224,7 +13224,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.ResourceFoundStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.ResourceFoundStatus"
           }
         },
         "phase": {
@@ -13236,7 +13236,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RepoStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RepoStatus"
           }
         },
         "sessions": {
@@ -13244,7 +13244,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.SessionStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.SessionStatus"
           }
         },
         "targetFound": {
@@ -13253,7 +13253,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupHooks": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupHooks": {
       "description": "BackupHooks specifies the hooks that will be executed before and/or after backup",
       "type": "object",
       "properties": {
@@ -13262,7 +13262,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookInfo"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookInfo"
           }
         },
         "preBackup": {
@@ -13270,12 +13270,12 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookInfo"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookInfo"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession": {
       "description": "BackupSession represent one backup run for the target(s) pointed by the respective BackupConfiguration or BackupBatch",
       "type": "object",
       "properties": {
@@ -13293,11 +13293,11 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSessionSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSessionSpec"
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSessionStatus"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSessionStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -13308,7 +13308,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSessionList": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupSessionList": {
       "description": "BackupSessionList contains a list of BackupSession",
       "type": "object",
       "required": [
@@ -13323,7 +13323,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSession"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupSession"
           }
         },
         "kind": {
@@ -13343,7 +13343,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSessionSpec": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupSessionSpec": {
       "description": "BackupSessionSpec specifies the information related to the respective backup invoker and session.",
       "type": "object",
       "properties": {
@@ -13362,7 +13362,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupSessionStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BackupSessionStatus": {
       "description": "BackupSessionStatus defines the observed state of BackupSession",
       "type": "object",
       "properties": {
@@ -13383,7 +13383,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookExecutionStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookExecutionStatus"
           }
         },
         "nextRetry": {
@@ -13399,7 +13399,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RetentionPolicyApplyStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RetentionPolicyApplyStatus"
           }
         },
         "retried": {
@@ -13415,7 +13415,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.SnapshotStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.SnapshotStatus"
           }
         },
         "verifications": {
@@ -13423,12 +13423,12 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.VerificationStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.VerificationStatus"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.BatchSession": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.BatchSession": {
       "description": "BatchSession specifies the session configuration for the targets.",
       "type": "object",
       "properties": {
@@ -13438,7 +13438,7 @@
         },
         "hooks": {
           "description": "Hooks specifies the backup hooks that should be executed before and/or after the backup.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupHooks"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupHooks"
         },
         "name": {
           "description": "Name specifies the name of the session",
@@ -13446,11 +13446,11 @@
         },
         "retryConfig": {
           "description": "RetryConfig specifies the behavior of retry in case of a backup failure.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RetryConfig"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RetryConfig"
         },
         "scheduler": {
           "description": "Scheduler specifies the configuration for backup triggering CronJob",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.SchedulerSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.SchedulerSpec"
         },
         "sessionHistoryLimit": {
           "description": "SessionHistoryLimit specifies how many backup Jobs and associate resources Stash should keep for debugging purpose. The default value is 1.",
@@ -13462,7 +13462,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.TargetBackupSpec"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.TargetBackupSpec"
           }
         },
         "timeout": {
@@ -13474,12 +13474,12 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.VerificationStrategy"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.VerificationStrategy"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.ComponentRestoreStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.ComponentRestoreStatus": {
       "description": "ComponentRestoreStatus represents the restore status of individual components",
       "type": "object",
       "properties": {
@@ -13501,7 +13501,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.FunctionHookExecutorSpec": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.FunctionHookExecutorSpec": {
       "description": "FunctionHookExecutorSpec defines function and its parameters that will be used to create hook executor job",
       "type": "object",
       "properties": {
@@ -13535,7 +13535,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.HookExecutionStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.HookExecutionStatus": {
       "description": "HookExecutionStatus represents the state of the hook execution",
       "type": "object",
       "properties": {
@@ -13549,17 +13549,17 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.HookExecutor": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.HookExecutor": {
       "description": "HookExecutor specifies the entity specification which is responsible for executing the hook",
       "type": "object",
       "properties": {
         "function": {
           "description": "Function specifies the function information which will be used to create the hook executor job.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.FunctionHookExecutorSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.FunctionHookExecutorSpec"
         },
         "pod": {
           "description": "Pod specifies the criteria to use to select the hook executor pods",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.PodHookExecutorSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.PodHookExecutorSpec"
         },
         "type": {
           "description": "Type indicate the types of entity that will execute the hook. Valid values are: - \"Function\": Stash will create a job with the provided information in `function` section. The job will execute the hook. - \"Pod\": Stash will select the pod that matches the selector provided in `pod` section. This pod(s) will execute the hook. - \"Operator\": Stash operator itself will execute the hook.",
@@ -13567,7 +13567,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.HookInfo": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.HookInfo": {
       "description": "HookInfo specifies the information about the backup/restore hooks",
       "type": "object",
       "properties": {
@@ -13627,7 +13627,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate": {
       "description": "HookTemplate defines a template for some action that will be executed before or/and after backup/restore process. For example, there could be a HookTemplate that pause an application before backup and another HookTemplate that resume the application after backup. This is a namespaced CRD. However, you can use it from other namespaces. You can control which namespaces are allowed to use it using the `usagePolicy` section.",
       "type": "object",
       "properties": {
@@ -13645,7 +13645,7 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplateSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplateSpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -13656,7 +13656,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplateList": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplateList": {
       "description": "HookTemplateList contains a list of HookTemplate",
       "type": "object",
       "required": [
@@ -13671,7 +13671,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplate"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplate"
           }
         },
         "kind": {
@@ -13691,7 +13691,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.HookTemplateSpec": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.HookTemplateSpec": {
       "description": "HookTemplateSpec defines the template for the operation that will be performed by this hook",
       "type": "object",
       "properties": {
@@ -13701,23 +13701,23 @@
         },
         "executor": {
           "description": "Executor specifies the entity where the hook will be executed.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookExecutor"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookExecutor"
         },
         "params": {
           "description": "Params defines a list of parameters that is used by the HookTemplate to execute its logic.",
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.ParameterDefinition"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.ParameterDefinition"
           }
         },
         "usagePolicy": {
           "description": "UsagePolicy specifies a policy of how this HookTemplate will be used. For example, you can use `allowedNamespaces` policy to restrict the usage of this HookTemplate to particular namespaces.\n\nThis field is optional. If you don't provide the usagePolicy, then it can be used only from the current namespace.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.UsagePolicy"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.UsagePolicy"
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.JobTemplate": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.JobTemplate": {
       "description": "JobTemplate specifies the template for the Job created by the scheduler CronJob.",
       "type": "object",
       "properties": {
@@ -13761,7 +13761,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.PITR": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.PITR": {
       "description": "PITR specifies the target time and behavior of Point-In-Time Recovery",
       "type": "object",
       "properties": {
@@ -13775,7 +13775,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.PodHookExecutorSpec": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.PodHookExecutorSpec": {
       "description": "PodHookExecutorSpec specifies the criteria that will be used to select the pod which will execute the hook",
       "type": "object",
       "properties": {
@@ -13793,7 +13793,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RepoStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.RepoStatus": {
       "description": "RepoStatus specifies the status of a Repository",
       "type": "object",
       "properties": {
@@ -13811,7 +13811,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RepositoryInfo": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.RepositoryInfo": {
       "description": "RepositoryInfo specifies information about the repository where the backed up data will be stored. Stash will create the respective Repository CR from this information.",
       "type": "object",
       "properties": {
@@ -13837,7 +13837,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.ResourceFoundStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.ResourceFoundStatus": {
       "description": "ResourceFoundStatus specifies whether a resource was found or not",
       "type": "object",
       "required": [
@@ -13865,7 +13865,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreDataSource": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.RestoreDataSource": {
       "description": "RestoreDataSource specifies the information about the data that will be restored",
       "type": "object",
       "properties": {
@@ -13884,7 +13884,7 @@
         "pitr": {
           "description": "PITR stands for Point-In-Time Recovery. You can provide a target time instead of specifying a particular Snapshot. Stash will automatically find the latest Snapshot that satisfies the targeted time and restore it.",
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.PITR"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.PITR"
         },
         "repository": {
           "description": "Repository points to the Repository name from which the data will be restored",
@@ -13896,7 +13896,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreHooks": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.RestoreHooks": {
       "description": "RestoreHooks specifies the hooks that will be executed before and/or after restore",
       "type": "object",
       "properties": {
@@ -13905,7 +13905,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookInfo"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookInfo"
           }
         },
         "preRestore": {
@@ -13913,12 +13913,12 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookInfo"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookInfo"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession": {
       "description": "RestoreSession represents one restore run for the targeted application",
       "type": "object",
       "properties": {
@@ -13936,11 +13936,11 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSessionSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSessionSpec"
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSessionStatus"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSessionStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -13951,7 +13951,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSessionList": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSessionList": {
       "description": "RestoreSessionList contains a list of RestoreSession",
       "type": "object",
       "required": [
@@ -13966,7 +13966,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSession"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSession"
           }
         },
         "kind": {
@@ -13986,21 +13986,21 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSessionSpec": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSessionSpec": {
       "description": "RestoreSessionSpec specifies the necessary configurations for restoring data into a target",
       "type": "object",
       "properties": {
         "addon": {
           "description": "Addon specifies addon configuration that will be used to restore the target.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.AddonInfo"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.AddonInfo"
         },
         "dataSource": {
           "description": "DataSource specifies the information about the data that will be restored",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreDataSource"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreDataSource"
         },
         "hooks": {
           "description": "Hooks specifies the restore hooks that should be executed before and/or after the restore.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreHooks"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreHooks"
         },
         "target": {
           "description": "Target indicates the target application where the data will be restored. The target must be in the same namespace as the RestoreSession CR.",
@@ -14012,7 +14012,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RestoreSessionStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.RestoreSessionStatus": {
       "description": "RestoreSessionStatus defines the observed state of RestoreSession",
       "type": "object",
       "properties": {
@@ -14021,7 +14021,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.ComponentRestoreStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.ComponentRestoreStatus"
           }
         },
         "conditions": {
@@ -14041,7 +14041,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.ResourceFoundStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.ResourceFoundStatus"
           }
         },
         "duration": {
@@ -14053,7 +14053,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.HookExecutionStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.HookExecutionStatus"
           }
         },
         "pausedBackups": {
@@ -14074,7 +14074,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RetentionPolicyApplyStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.RetentionPolicyApplyStatus": {
       "description": "RetentionPolicyApplyStatus represents the state of the applying retention policy",
       "type": "object",
       "properties": {
@@ -14097,7 +14097,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RetentionPolicyStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.RetentionPolicyStatus": {
       "type": "object",
       "properties": {
         "found": {
@@ -14115,7 +14115,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.RetryConfig": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.RetryConfig": {
       "description": "RetryConfig specifies the behavior of retry",
       "type": "object",
       "properties": {
@@ -14130,7 +14130,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.SchedulerSpec": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.SchedulerSpec": {
       "description": "SchedulerSpec specifies the configuration for the backup triggering CronJob for a session.",
       "type": "object",
       "required": [
@@ -14150,7 +14150,7 @@
         "jobTemplate": {
           "description": "Specifies the job that will be created when executing a CronJob.",
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.JobTemplate"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.JobTemplate"
         },
         "schedule": {
           "description": "The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.",
@@ -14173,13 +14173,13 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.Session": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.Session": {
       "description": "Session specifies a backup session configuration for the target",
       "type": "object",
       "properties": {
         "addon": {
           "description": "Addon specifies addon configuration that will be used to backup the target.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.AddonInfo"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.AddonInfo"
         },
         "failurePolicy": {
           "description": "FailurePolicy specifies what to do if the backup fail. Valid values are: - \"Fail\": Stash should mark the backup as failed if any component fail to complete its backup. This is the default behavior. - \"Retry\": Stash will retry to backup the failed component according to the `retryConfig`.",
@@ -14187,7 +14187,7 @@
         },
         "hooks": {
           "description": "Hooks specifies the backup hooks that should be executed before and/or after the backup.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.BackupHooks"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.BackupHooks"
         },
         "name": {
           "description": "Name specifies the name of the session",
@@ -14198,16 +14198,16 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RepositoryInfo"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RepositoryInfo"
           }
         },
         "retryConfig": {
           "description": "RetryConfig specifies the behavior of retry in case of a backup failure.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RetryConfig"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RetryConfig"
         },
         "scheduler": {
           "description": "Scheduler specifies the configuration for backup triggering CronJob",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.SchedulerSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.SchedulerSpec"
         },
         "sessionHistoryLimit": {
           "description": "SessionHistoryLimit specifies how many backup Jobs and associate resources Stash should keep for debugging purpose. The default value is 1.",
@@ -14223,12 +14223,12 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.VerificationStrategy"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.VerificationStrategy"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.SessionStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.SessionStatus": {
       "description": "SessionStatus specifies the status of a session specific fields.",
       "type": "object",
       "properties": {
@@ -14250,7 +14250,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.SnapshotStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.SnapshotStatus": {
       "description": "SnapshotStatus represents the current state of respective the Snapshot",
       "type": "object",
       "properties": {
@@ -14272,7 +14272,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.StorageStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.StorageStatus": {
       "type": "object",
       "properties": {
         "phase": {
@@ -14290,13 +14290,13 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.TargetBackupSpec": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.TargetBackupSpec": {
       "description": "TargetBackupSpec specifies the information needed to backup a target.",
       "type": "object",
       "properties": {
         "addon": {
           "description": "Addon specifies addon configuration that will be used to backup this target.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.AddonInfo"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.AddonInfo"
         },
         "name": {
           "description": "Name points to the identifier of the target that is being backed up. It should match the name used as the identifier of a target in the `spec.targets` section.",
@@ -14307,12 +14307,12 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RepositoryInfo"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RepositoryInfo"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.TargetReference": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.TargetReference": {
       "description": "TargetReference specifies a reference to the target that is subject to backup",
       "type": "object",
       "properties": {
@@ -14326,7 +14326,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.TargetVolumeInfo": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.TargetVolumeInfo": {
       "description": "TargetVolumeInfo specifies the volumes and their mounts of the targeted application that should be mounted in backup/restore Job/container.",
       "type": "object",
       "properties": {
@@ -14348,7 +14348,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.TaskReference": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.TaskReference": {
       "description": "TaskReference specifies a task and its configuration parameters",
       "type": "object",
       "properties": {
@@ -14357,7 +14357,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.VolumeSource"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.VolumeSource"
           }
         },
         "name": {
@@ -14373,7 +14373,7 @@
         },
         "targetVolumes": {
           "description": "TargetVolumes specifies which volumes from the target should be mounted in the backup/restore job/container.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.TargetVolumeInfo"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.TargetVolumeInfo"
         },
         "variables": {
           "description": "Variables specifies a list of variables and their sources that will be used to resolve the task.",
@@ -14385,7 +14385,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.VerificationStatus": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.VerificationStatus": {
       "description": "VerificationStatus specifies the status of a backup verification",
       "type": "object",
       "properties": {
@@ -14399,7 +14399,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.core.v1alpha1.VerificationStrategy": {
+    "dev.kubestash.kubestash.apis.core.v1alpha1.VerificationStrategy": {
       "description": "VerificationStrategy specifies a strategy to verify the backed up data.",
       "type": "object",
       "properties": {
@@ -14421,7 +14421,7 @@
         },
         "retryConfig": {
           "description": "RetryConfig specifies the behavior of the retry mechanism in case of a verification failure",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.core.v1alpha1.RetryConfig"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RetryConfig"
         },
         "verifier": {
           "description": "Verifier refers to the BackupVerification CR that defines how to verify this particular data",
@@ -14434,7 +14434,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.AzureSpec": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.AzureSpec": {
       "type": "object",
       "properties": {
         "container": {
@@ -14456,7 +14456,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.B2Spec": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.B2Spec": {
       "type": "object",
       "properties": {
         "bucket": {
@@ -14478,24 +14478,24 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.Backend": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.Backend": {
       "type": "object",
       "properties": {
         "azure": {
           "description": "Azure specifies the storage information for Azure Blob container",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.AzureSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.AzureSpec"
         },
         "b2": {
           "description": "B2 specifies the storage information for B2 bucket",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.B2Spec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.B2Spec"
         },
         "gcs": {
           "description": "GCS specifies the storage information for GCS bucket",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.GCSSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.GCSSpec"
         },
         "local": {
           "description": "Local specifies the storage information for local provider",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.LocalSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.LocalSpec"
         },
         "provider": {
           "description": "Provider specifies the provider of the storage",
@@ -14503,19 +14503,19 @@
         },
         "rest": {
           "description": "Rest specifies the storage information for rest storage server",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RestServerSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RestServerSpec"
         },
         "s3": {
           "description": "S3 specifies the storage information for AWS S3 and S3 compatible storage.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.S3Spec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.S3Spec"
         },
         "swift": {
           "description": "Swift specifies the storage information for Swift container",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.SwiftSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.SwiftSpec"
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage": {
       "description": "BackupStorage specifies the backend information where the backed up data of different applications will be stored. You can consider BackupStorage as a representation of a bucket in Kubernetes native way. This is a namespaced object. However, you can use the BackupStorage from any namespace as long as it is permitted by the `.spec.usagePolicy` field.",
       "type": "object",
       "properties": {
@@ -14533,11 +14533,11 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorageSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorageSpec"
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorageStatus"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorageStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -14548,7 +14548,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorageList": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorageList": {
       "description": "BackupStorageList contains a list of BackupStorage",
       "type": "object",
       "required": [
@@ -14563,7 +14563,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorage"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorage"
           }
         },
         "kind": {
@@ -14583,7 +14583,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorageSpec": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorageSpec": {
       "description": "BackupStorageSpec defines information regarding remote backend, its access credentials, usage policy etc.",
       "type": "object",
       "properties": {
@@ -14598,15 +14598,15 @@
         "storage": {
           "description": "Storage specifies the remote storage information",
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Backend"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Backend"
         },
         "usagePolicy": {
           "description": "UsagePolicy specifies a policy of how this BackupStorage will be used. For example, you can use `allowedNamespaces` policy to restrict the usage of this BackupStorage to particular namespaces. This field is optional. If you don't provide the usagePolicy, then it can be used only from the current namespace.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.UsagePolicy"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.UsagePolicy"
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.BackupStorageStatus": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.BackupStorageStatus": {
       "description": "BackupStorageStatus defines the observed state of BackupStorage",
       "type": "object",
       "properties": {
@@ -14627,7 +14627,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RepositoryInfo"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RepositoryInfo"
           }
         },
         "totalSize": {
@@ -14636,7 +14636,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.ComponentStatus": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.ComponentStatus": {
       "description": "ComponentStatus represents the backup status of individual components",
       "type": "object",
       "properties": {
@@ -14658,23 +14658,23 @@
         },
         "resticStats": {
           "description": "ResticStats specifies the \"Restic\" driver specific information",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.ResticStats"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.ResticStats"
         },
         "volumeSnapshotterStats": {
           "description": "VolumeSnapshotterStats specifies the \"VolumeSnapshotter\" driver specific information",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.VolumeSnapshotterStats"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.VolumeSnapshotterStats"
         },
         "walSegments": {
           "description": "WalSegments specifies a list of wall segment for individual component",
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.WalSegment"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.WalSegment"
           }
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.FailedSnapshotsKeepPolicy": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.FailedSnapshotsKeepPolicy": {
       "description": "FailedSnapshotsKeepPolicy specifies the policy for keeping failed Snapshots",
       "type": "object",
       "properties": {
@@ -14685,7 +14685,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.GCSSpec": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.GCSSpec": {
       "type": "object",
       "properties": {
         "bucket": {
@@ -14707,7 +14707,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.LocalSpec": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.LocalSpec": {
       "type": "object",
       "properties": {
         "awsElasticBlockStore": {
@@ -14836,7 +14836,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.Repository": {
       "description": "Repository specifies the information about the targeted application that has been backed up and the BackupStorage where the backed up data is being stored. It also holds a list of recent Snapshots that have been taken in this Repository. Repository is a namespaced object. It must be in the same namespace as the targeted application.",
       "type": "object",
       "properties": {
@@ -14854,11 +14854,11 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RepositorySpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RepositorySpec"
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RepositoryStatus"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RepositoryStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -14869,7 +14869,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.RepositoryInfo": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.RepositoryInfo": {
       "description": "RepositoryInfo specifies information regarding a Repository using the BackupStorage",
       "type": "object",
       "properties": {
@@ -14899,7 +14899,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.RepositoryList": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.RepositoryList": {
       "description": "RepositoryList contains a list of Repository",
       "type": "object",
       "required": [
@@ -14914,7 +14914,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Repository"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Repository"
           }
         },
         "kind": {
@@ -14934,7 +14934,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.RepositorySpec": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.RepositorySpec": {
       "description": "RepositorySpec specifies the application reference and the BackupStorage reference.It also specifies what should be the behavior when a Repository CR is deleted from the cluster.",
       "type": "object",
       "properties": {
@@ -14966,7 +14966,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.RepositoryStatus": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.RepositoryStatus": {
       "description": "RepositoryStatus defines the observed state of Repository",
       "type": "object",
       "properties": {
@@ -14995,7 +14995,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.SnapshotInfo"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.SnapshotInfo"
           }
         },
         "size": {
@@ -15009,7 +15009,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.RestServerSpec": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.RestServerSpec": {
       "type": "object",
       "properties": {
         "secret": {
@@ -15022,7 +15022,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.ResticStats": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.ResticStats": {
       "description": "ResticStats specifies the \"Restic\" driver specific information",
       "type": "object",
       "properties": {
@@ -15044,7 +15044,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy": {
       "description": "RetentionPolicy specifies how the old Snapshots should be cleaned up. This is a namespaced CRD. However, you can refer it from other namespaces as long as it is permitted via `.spec.usagePolicy`.",
       "type": "object",
       "properties": {
@@ -15062,7 +15062,7 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicySpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicySpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -15073,7 +15073,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicyList": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicyList": {
       "description": "RetentionPolicyList contains a list of RetentionPolicy",
       "type": "object",
       "required": [
@@ -15088,7 +15088,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicy"
           }
         },
         "kind": {
@@ -15108,7 +15108,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.RetentionPolicySpec": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.RetentionPolicySpec": {
       "description": "RetentionPolicySpec defines the policy of cleaning old Snapshots",
       "type": "object",
       "properties": {
@@ -15118,7 +15118,7 @@
         },
         "failedSnapshots": {
           "description": "FailedSnapshots specifies how many failed Snapshots should be kept.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.FailedSnapshotsKeepPolicy"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.FailedSnapshotsKeepPolicy"
         },
         "maxRetentionPeriod": {
           "description": "MaxRetentionPeriod specifies a duration up to which the old Snapshots should be kept. Stash will remove all the Snapshots that are older than the MaxRetentionPeriod. For example, MaxRetentionPeriod of `30d` will keep only the Snapshots of last 30 days. Sample duration format: - years: \t2y - months: \t6mo - days: \t\t30d - hours: \t12h - minutes: \t30m You can also combine the above durations. For example: 30d12h30m",
@@ -15126,15 +15126,15 @@
         },
         "successfulSnapshots": {
           "description": "SuccessfulSnapshots specifies how many successful Snapshots should be kept.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.SuccessfulSnapshotsKeepPolicy"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.SuccessfulSnapshotsKeepPolicy"
         },
         "usagePolicy": {
           "description": "UsagePolicy specifies a policy of how this RetentionPolicy will be used. For example, you can use `allowedNamespaces` policy to restrict the usage of this RetentionPolicy to particular namespaces. This field is optional. If you don't provide the usagePolicy, then it can be used only from the current namespace.",
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.UsagePolicy"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.UsagePolicy"
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.S3Spec": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.S3Spec": {
       "type": "object",
       "properties": {
         "bucket": {
@@ -15159,7 +15159,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot": {
       "description": "Snapshot represents the state of a backup run to a particular Repository. Multiple components of the same target may be backed up in the same Snapshot. This is a namespaced CRD. It should be in the same namespace as the respective Repository. Stash operator is responsible for creating Snapshot CR. Snapshot is not supposed to be created/edited by the end user.",
       "type": "object",
       "properties": {
@@ -15177,11 +15177,11 @@
         },
         "spec": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.SnapshotSpec"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.SnapshotSpec"
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.SnapshotStatus"
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.SnapshotStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -15192,7 +15192,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.SnapshotInfo": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.SnapshotInfo": {
       "description": "SnapshotInfo specifies some basic information about the Snapshots stored in this Repository",
       "type": "object",
       "properties": {
@@ -15218,7 +15218,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.SnapshotList": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.SnapshotList": {
       "description": "SnapshotList contains a list of Snapshot",
       "type": "object",
       "required": [
@@ -15233,7 +15233,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.Snapshot"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Snapshot"
           }
         },
         "kind": {
@@ -15253,7 +15253,7 @@
         }
       ]
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.SnapshotSpec": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.SnapshotSpec": {
       "description": "SnapshotSpec specifies the information regarding the application that is being backed up, the Repository where the backed up data is being stored, and the session which is responsible for this snapshot etc.",
       "type": "object",
       "properties": {
@@ -15296,7 +15296,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.SnapshotStatus": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.SnapshotStatus": {
       "description": "SnapshotStatus defines the observed state of Snapshot",
       "type": "object",
       "properties": {
@@ -15305,7 +15305,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.appscode.stash.kubestash.apis.storage.v1alpha1.ComponentStatus"
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.ComponentStatus"
           }
         },
         "conditions": {
@@ -15342,7 +15342,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.SuccessfulSnapshotsKeepPolicy": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.SuccessfulSnapshotsKeepPolicy": {
       "description": "SuccessfulSnapshotsKeepPolicy specifies the policy for keeping successful Snapshots",
       "type": "object",
       "properties": {
@@ -15378,7 +15378,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.SwiftSpec": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.SwiftSpec": {
       "type": "object",
       "properties": {
         "container": {
@@ -15395,7 +15395,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.VolumeSnapshotterStats": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.VolumeSnapshotterStats": {
       "description": "VolumeSnapshotterStats specifies the \"VolumeSnapshotter\" driver specific information",
       "type": "object",
       "required": [
@@ -15408,7 +15408,7 @@
         }
       }
     },
-    "dev.appscode.stash.kubestash.apis.storage.v1alpha1.WalSegment": {
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.WalSegment": {
       "description": "WalSegment specifies the \"WalG\" driver specific information",
       "type": "object",
       "properties": {

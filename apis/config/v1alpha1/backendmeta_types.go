@@ -17,7 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"stash.appscode.dev/kubestash/apis/storage/v1alpha1"
+	"kubestash.dev/kubestash/apis/storage/v1alpha1"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

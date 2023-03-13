@@ -21,7 +21,7 @@ import (
 
 	glogs "gomodules.xyz/logs"
 	"k8s.io/klog/v2"
-	"stash.appscode.dev/kubestash/pkg/cmds"
+	"kubestash.dev/kubestash/pkg/cmds"
 	//+kubebuilder:scaffold:imports
 )
 

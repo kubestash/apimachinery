@@ -395,10 +395,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/prober/api/v1.FormEntry":                                        schema_kmodulesxyz_prober_api_v1_FormEntry(ref),
 		"kmodules.xyz/prober/api/v1.HTTPPostAction":                                   schema_kmodulesxyz_prober_api_v1_HTTPPostAction(ref),
 		"kmodules.xyz/prober/api/v1.Handler":                                          schema_kmodulesxyz_prober_api_v1_Handler(ref),
-		"stash.appscode.dev/kubestash/apis.AllowedNamespaces":                         schema_stashappscodedev_kubestash_apis_AllowedNamespaces(ref),
-		"stash.appscode.dev/kubestash/apis.ParameterDefinition":                       schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref),
-		"stash.appscode.dev/kubestash/apis.UsagePolicy":                               schema_stashappscodedev_kubestash_apis_UsagePolicy(ref),
-		"stash.appscode.dev/kubestash/apis.VolumeSource":                              schema_stashappscodedev_kubestash_apis_VolumeSource(ref),
+		"kubestash.dev/kubestash/apis.AllowedNamespaces":                              schema_kubestashdev_kubestash_apis_AllowedNamespaces(ref),
+		"kubestash.dev/kubestash/apis.ParameterDefinition":                            schema_kubestashdev_kubestash_apis_ParameterDefinition(ref),
+		"kubestash.dev/kubestash/apis.UsagePolicy":                                    schema_kubestashdev_kubestash_apis_UsagePolicy(ref),
+		"kubestash.dev/kubestash/apis.VolumeSource":                                   schema_kubestashdev_kubestash_apis_VolumeSource(ref),
 	}
 }
 
@@ -19782,7 +19782,7 @@ func schema_kmodulesxyz_prober_api_v1_Handler(ref common.ReferenceCallback) comm
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_AllowedNamespaces(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_AllowedNamespaces(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -19810,7 +19810,7 @@ func schema_stashappscodedev_kubestash_apis_AllowedNamespaces(ref common.Referen
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_ParameterDefinition(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -19851,7 +19851,7 @@ func schema_stashappscodedev_kubestash_apis_ParameterDefinition(ref common.Refer
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_UsagePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_UsagePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -19862,18 +19862,18 @@ func schema_stashappscodedev_kubestash_apis_UsagePolicy(ref common.ReferenceCall
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedNamespaces specifies which namespaces are allowed to use the resource",
 							Default:     map[string]interface{}{},
-							Ref:         ref("stash.appscode.dev/kubestash/apis.AllowedNamespaces"),
+							Ref:         ref("kubestash.dev/kubestash/apis.AllowedNamespaces"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"stash.appscode.dev/kubestash/apis.AllowedNamespaces"},
+			"kubestash.dev/kubestash/apis.AllowedNamespaces"},
 	}
 }
 
-func schema_stashappscodedev_kubestash_apis_VolumeSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestashdev_kubestash_apis_VolumeSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
