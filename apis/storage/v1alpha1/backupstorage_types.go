@@ -121,7 +121,7 @@ type RepositoryInfo struct {
 
 	// Synced specifies whether this Repository state has been synced with the cloud state or not
 	// +optional
-	Synced bool `json:"synced,omitempty"`
+	Synced *bool `json:"synced,omitempty"`
 
 	// Error specifies the reason in case of Repository sync failure.
 	// +optional

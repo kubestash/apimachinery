@@ -100,6 +100,22 @@ spec:
                 - Delete
                 - WipeOut
                 type: string
+              encryptionSecret:
+                description: EncryptionSecret refers to the Secret containing the
+                  encryption key which will be used to encode/decode the backed up
+                  data. You can refer to a Secret of a different namespace. If you
+                  don't provide the namespace field, Stash will look for the Secret
+                  in the same namespace as the BackupConfiguration / BackupBatch.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                    type: string
+                  namespace:
+                    description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                    type: string
+                required:
+                - name
+                type: object
               path:
                 description: Path represents the directory inside the BackupStorage
                   where this Repository is storing its data This path is relative

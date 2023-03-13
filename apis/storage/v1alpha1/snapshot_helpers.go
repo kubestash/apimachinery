@@ -28,10 +28,6 @@ func (_ Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralSnapshot))
 }
 
-func (s *Snapshot) IsCompleted() bool {
-	return s.Status.Phase == SnapshotFailed || s.Status.Phase == SnapshotSucceeded
-}
-
 func (s *Snapshot) CalculatePhase() SnapshotPhase {
 	if kmapi.IsConditionFalse(s.Status.Conditions, TypeBackendMetadataWritten) ||
 		kmapi.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) {

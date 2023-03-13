@@ -20476,14 +20476,12 @@ func schema_kubestash_apis_storage_v1alpha1_ComponentStatus(ref common.Reference
 					"resticStats": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ResticStats specifies the \"Restic\" driver specific information",
-							Default:     map[string]interface{}{},
 							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.ResticStats"),
 						},
 					},
 					"volumeSnapshotterStats": {
 						SchemaProps: spec.SchemaProps{
 							Description: "VolumeSnapshotterStats specifies the \"VolumeSnapshotter\" driver specific information",
-							Default:     map[string]interface{}{},
 							Ref:         ref("stash.appscode.dev/kubestash/apis/storage/v1alpha1.VolumeSnapshotterStats"),
 						},
 					},
@@ -21012,6 +21010,12 @@ func schema_kubestash_apis_storage_v1alpha1_RepositorySpec(ref common.ReferenceC
 							Format:      "",
 						},
 					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EncryptionSecret refers to the Secret containing the encryption key which will be used to encode/decode the backed up data. You can refer to a Secret of a different namespace. If you don't provide the namespace field, Stash will look for the Secret in the same namespace as the BackupConfiguration / BackupBatch.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Paused specifies whether the Repository is paused or not. If the Repository is paused, Stash will not process any further event for the Repository.",
@@ -21023,7 +21027,7 @@ func schema_kubestash_apis_storage_v1alpha1_RepositorySpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.TypedObjectReference"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TypedObjectReference"},
 	}
 }
 
