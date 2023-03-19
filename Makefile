@@ -24,7 +24,7 @@ BIN      := kubestash
 COMPRESS ?= no
 
 # Where to push the docker image.
-REGISTRY ?= stashed
+REGISTRY ?= ghcr.io/kubestash
 
 
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
@@ -120,12 +120,12 @@ help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 version: ## Print the version information resolved by this Makefile.
-	@echo ::set-output name=version::$(VERSION)
-	@echo ::set-output name=version_strategy::$(version_strategy)
-	@echo ::set-output name=git_tag::$(git_tag)
-	@echo ::set-output name=git_branch::$(git_branch)
-	@echo ::set-output name=commit_hash::$(commit_hash)
-	@echo ::set-output name=commit_timestamp::$(commit_timestamp)
+	@echo version::$(VERSION)
+	@echo version_strategy::$(version_strategy)
+	@echo git_tag::$(git_tag)
+	@echo git_branch::$(git_branch)
+	@echo commit_hash::$(commit_hash)
+	@echo commit_timestamp::$(commit_timestamp)
 
 .PHONY: clean
 clean: ## Cleanup build cache and other temporary files.
