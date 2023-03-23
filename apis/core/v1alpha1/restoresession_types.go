@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
 const (
@@ -67,6 +68,13 @@ type RestoreSessionSpec struct {
 	// If the session execution does not finish within this time period, KubeStash will consider this session as a failure.
 	// +optional
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	// RuntimeSettings allow to specify Resources, NodeSelector, Affinity, Toleration, ReadinessProbe etc.
+	// +optional
+	RuntimeSettings ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
+	// RestoreNamespace specifies the Namespace where the restored files will be applied if there is no target to
+	// restore. i.e.: manifest-restore
+	// +optional
+	RestoreNamespace string `json:"restoreNamespace,omitempty"`
 }
 
 // RestoreDataSource specifies the information about the data that will be restored
@@ -159,7 +167,7 @@ type RestoreSessionStatus struct {
 }
 
 // RestorePhase represents the current state of the restore process
-// +kubebuilder:validation:Enum=Pending;Running;Failed;Skipped
+// +kubebuilder:validation:Enum=Pending;Running;Failed;Succeeded
 type RestorePhase string
 
 const (

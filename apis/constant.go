@@ -23,6 +23,7 @@ const (
 
 	KubeStashCleanupFinalizer = "kubestash.com/cleanup"
 	KubeStashKey              = "kubestash.com"
+	KubeDBGroupName           = "kubedb.com"
 )
 
 // =================== Keys for structure logging =====================

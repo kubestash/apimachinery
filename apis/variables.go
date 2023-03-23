@@ -24,14 +24,13 @@ const (
 	InvokerKind = "invokerKind"
 	InvokerName = "invokerName"
 
+	RestoreNamespace = "restoreNamespace"
+
 	SnapshotName = "snapshotName"
 
 	Namespace      = "namespace"
 	BackupSession  = "backupSession"
 	RestoreSession = "restoreSession"
-
-	RepoName      = "repoName"
-	RepoNamespace = "repoNamespace"
 
 	TargetName      = "targetName"
 	TargetKind      = "targetKind"

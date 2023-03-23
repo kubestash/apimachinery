@@ -14002,6 +14002,15 @@
           "description": "Hooks specifies the restore hooks that should be executed before and/or after the restore.",
           "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreHooks"
         },
+        "restoreNamespace": {
+          "description": "RestoreNamespace specifies the Namespace where the restored files will be applied if there is no target to restore. i.e.: manifest-restore",
+          "type": "string"
+        },
+        "runtimeSettings": {
+          "description": "RuntimeSettings allow to specify Resources, NodeSelector, Affinity, Toleration, ReadinessProbe etc.",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.RuntimeSettings"
+        },
         "target": {
           "description": "Target indicates the target application where the data will be restored. The target must be in the same namespace as the RestoreSession CR.",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TypedObjectReference"

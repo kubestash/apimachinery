@@ -22272,11 +22272,25 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionSpec(ref common.Reference
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"runtimeSettings": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RuntimeSettings allow to specify Resources, NodeSelector, Affinity, Toleration, ReadinessProbe etc.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.RuntimeSettings"),
+						},
+					},
+					"restoreNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RestoreNamespace specifies the Namespace where the restored files will be applied if there is no target to restore. i.e.: manifest-restore",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "kubestash.dev/kubestash/apis/core/v1alpha1.AddonInfo", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreDataSource", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreHooks"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubestash.dev/kubestash/apis/core/v1alpha1.AddonInfo", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreDataSource", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreHooks"},
 	}
 }
 
