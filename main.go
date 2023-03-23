@@ -18,11 +18,12 @@ package main
 
 import (
 	"os"
+	//+kubebuilder:scaffold:imports
+
+	"kubestash.dev/kubestash/pkg/cmds"
 
 	glogs "gomodules.xyz/logs"
 	"k8s.io/klog/v2"
-	"kubestash.dev/kubestash/pkg/cmds"
-	//+kubebuilder:scaffold:imports
 )
 
 func main() {

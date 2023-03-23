@@ -58,8 +58,8 @@ RESTIC_VER       := 0.15.1
 ### These variables should not need tweaking.
 ###
 
-SRC_PKGS := apis controllers crds
-SRC_DIRS := $(SRC_PKGS) hack/gencrd # directories which hold app source (not vendored)
+SRC_PKGS := apis config controllers crds pkg tests
+SRC_DIRS := $(SRC_PKGS) hack/gencrd *.go # directories which hold app source (not vendored)
 
 DOCKER_PLATFORMS := linux/amd64 linux/arm linux/arm64
 BIN_PLATFORMS    := $(DOCKER_PLATFORMS) windows/amd64 darwin/amd64
