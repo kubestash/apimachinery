@@ -29,7 +29,7 @@ REGISTRY ?= ghcr.io/kubestash
 
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS          ?= "crd:generateEmbeddedObjectMeta=true"
-CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.25
+CODE_GENERATOR_IMAGE ?= ghcr.io/appscode/gengo:release-1.25
 API_GROUPS           ?= addons:v1alpha1 core:v1alpha1 storage:v1alpha1 config:v1alpha1
 
 # This version-strategy uses git tags to set the version string
