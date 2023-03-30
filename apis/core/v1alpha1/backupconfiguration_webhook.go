@@ -102,6 +102,10 @@ func (b *BackupConfiguration) validateRepositories(ctx context.Context, c client
 func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, c client.Client) error {
 	for _, session := range b.Spec.Sessions {
 		for _, repo := range session.Repositories {
+			if !b.backendMatched(repo) {
+				return fmt.Errorf("backend %q for repository %q doesn't match with any of the given backends", repo.Backend, repo.Name)
+			}
+
 			existingRepo, err := b.getRepo(ctx, c, repo.Name)
 			if err != nil {
 				if kerr.IsNotFound(err) {
@@ -135,6 +139,15 @@ func (b *BackupConfiguration) validateRepositoryNameUnique() error {
 		}
 	}
 	return nil
+}
+
+func (b *BackupConfiguration) backendMatched(repo RepositoryInfo) bool {
+	for _, b := range b.Spec.Backends {
+		if b.Name == repo.Backend {
+			return true
+		}
+	}
+	return false
 }
 
 func (b *BackupConfiguration) getRepo(ctx context.Context, c client.Client, name string) (*storageapi.Repository, error) {
