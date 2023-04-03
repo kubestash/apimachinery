@@ -14645,8 +14645,8 @@
         }
       }
     },
-    "dev.kubestash.kubestash.apis.storage.v1alpha1.ComponentStatus": {
-      "description": "ComponentStatus represents the backup status of individual components",
+    "dev.kubestash.kubestash.apis.storage.v1alpha1.Component": {
+      "description": "Component represents the backup information of individual components",
       "type": "object",
       "properties": {
         "driver": {
@@ -14667,10 +14667,12 @@
         },
         "resticStats": {
           "description": "ResticStats specifies the \"Restic\" driver specific information",
+          "default": {},
           "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.ResticStats"
         },
         "volumeSnapshotterStats": {
           "description": "VolumeSnapshotterStats specifies the \"VolumeSnapshotter\" driver specific information",
+          "default": {},
           "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.VolumeSnapshotterStats"
         },
         "walSegments": {
@@ -15275,6 +15277,14 @@
           "description": "BackupSession represents the name of the respective BackupSession which is responsible for this Snapshot.",
           "type": "string"
         },
+        "components": {
+          "description": "Components represents the backup information of the individual components of this Snapshot",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.Component"
+          }
+        },
         "deletionPolicy": {
           "description": "DeletionPolicy specifies what to do when you delete a Snapshot CR. The valid values are: - \"Delete\": This will delete just the Snapshot CR from the cluster but keep the backed up data in the remote backend. This is the default behavior. - \"WipeOut\": This will delete the Snapshot CR as well as the backed up data from the backend.",
           "type": "string"
@@ -15309,14 +15319,6 @@
       "description": "SnapshotStatus defines the observed state of Snapshot",
       "type": "object",
       "properties": {
-        "components": {
-          "description": "Components represents the backup status of the individual components of this Snapshot",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.ComponentStatus"
-          }
-        },
         "conditions": {
           "description": "Conditions represents list of conditions regarding this Snapshot",
           "type": "array",

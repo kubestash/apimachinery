@@ -42,7 +42,7 @@ func (s *Snapshot) GetComponentsPhase() SnapshotPhase {
 	successfulComponent := 0
 	pendingComponent := 0
 
-	for _, c := range s.Status.Components {
+	for _, c := range s.Spec.Components {
 		if c.Phase == ComponentPhaseSucceeded {
 			successfulComponent++
 		}
@@ -54,7 +54,7 @@ func (s *Snapshot) GetComponentsPhase() SnapshotPhase {
 		}
 	}
 
-	totalComponents := len(s.Status.Components)
+	totalComponents := len(s.Spec.Components)
 
 	if pendingComponent == totalComponents {
 		return SnapshotPending

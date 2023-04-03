@@ -90,52 +90,11 @@ spec:
                 description: BackupSession represents the name of the respective BackupSession
                   which is responsible for this Snapshot.
                 type: string
-              deletionPolicy:
-                description: 'DeletionPolicy specifies what to do when you delete
-                  a Snapshot CR. The valid values are: - "Delete": This will delete
-                  just the Snapshot CR from the cluster but keep the backed up data
-                  in the remote backend. This is the default behavior. - "WipeOut":
-                  This will delete the Snapshot CR as well as the backed up data from
-                  the backend.'
-                enum:
-                - Delete
-                - WipeOut
-                type: string
-              paused:
-                description: Paused specifies whether the Snapshot is paused or not.
-                  If the Snapshot is paused, Stash will not process any further event
-                  for the Snapshot.
-                type: boolean
-              repository:
-                description: Repository specifies the name of the Repository where
-                  this Snapshot is being stored.
-                type: string
-              session:
-                description: Session specifies the name of the session which is responsible
-                  for this Snapshot
-                type: string
-              snapshotID:
-                description: 'SnapshotID represents a "Universally Unique Lexicographically
-                  Sortable Identifier" (ULID) for the Snapshot. For more details about
-                  ULID, please see: https://github.com/oklog/ulid'
-                type: string
-              type:
-                description: Type specifies whether this snapshot represents a full
-                  or incremental backup
-                type: string
-              version:
-                description: Version denotes the respective data organization structure
-                  inside the Repository
-                type: string
-            type: object
-          status:
-            description: SnapshotStatus defines the observed state of Snapshot
-            properties:
               components:
-                description: Components represents the backup status of the individual
+                description: Components represents the backup information of the individual
                   components of this Snapshot
                 items:
-                  description: ComponentStatus represents the backup status of individual
+                  description: Component represents the backup information of individual
                     components
                   properties:
                     driver:
@@ -207,6 +166,47 @@ spec:
                       type: array
                   type: object
                 type: array
+              deletionPolicy:
+                description: 'DeletionPolicy specifies what to do when you delete
+                  a Snapshot CR. The valid values are: - "Delete": This will delete
+                  just the Snapshot CR from the cluster but keep the backed up data
+                  in the remote backend. This is the default behavior. - "WipeOut":
+                  This will delete the Snapshot CR as well as the backed up data from
+                  the backend.'
+                enum:
+                - Delete
+                - WipeOut
+                type: string
+              paused:
+                description: Paused specifies whether the Snapshot is paused or not.
+                  If the Snapshot is paused, Stash will not process any further event
+                  for the Snapshot.
+                type: boolean
+              repository:
+                description: Repository specifies the name of the Repository where
+                  this Snapshot is being stored.
+                type: string
+              session:
+                description: Session specifies the name of the session which is responsible
+                  for this Snapshot
+                type: string
+              snapshotID:
+                description: 'SnapshotID represents a "Universally Unique Lexicographically
+                  Sortable Identifier" (ULID) for the Snapshot. For more details about
+                  ULID, please see: https://github.com/oklog/ulid'
+                type: string
+              type:
+                description: Type specifies whether this snapshot represents a full
+                  or incremental backup
+                type: string
+              version:
+                description: Version denotes the respective data organization structure
+                  inside the Repository
+                type: string
+            type: object
+          status:
+            description: SnapshotStatus defines the observed state of Snapshot
+            properties:
               conditions:
                 description: Conditions represents list of conditions regarding this
                   Snapshot

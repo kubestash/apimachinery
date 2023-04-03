@@ -406,7 +406,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubestash.dev/kubestash/apis/storage/v1alpha1.BackupStorageList":             schema_kubestash_apis_storage_v1alpha1_BackupStorageList(ref),
 		"kubestash.dev/kubestash/apis/storage/v1alpha1.BackupStorageSpec":             schema_kubestash_apis_storage_v1alpha1_BackupStorageSpec(ref),
 		"kubestash.dev/kubestash/apis/storage/v1alpha1.BackupStorageStatus":           schema_kubestash_apis_storage_v1alpha1_BackupStorageStatus(ref),
-		"kubestash.dev/kubestash/apis/storage/v1alpha1.ComponentStatus":               schema_kubestash_apis_storage_v1alpha1_ComponentStatus(ref),
+		"kubestash.dev/kubestash/apis/storage/v1alpha1.Component":                     schema_kubestash_apis_storage_v1alpha1_Component(ref),
 		"kubestash.dev/kubestash/apis/storage/v1alpha1.Duration":                      schema_kubestash_apis_storage_v1alpha1_Duration(ref),
 		"kubestash.dev/kubestash/apis/storage/v1alpha1.FailedSnapshotsKeepPolicy":     schema_kubestash_apis_storage_v1alpha1_FailedSnapshotsKeepPolicy(ref),
 		"kubestash.dev/kubestash/apis/storage/v1alpha1.GCSSpec":                       schema_kubestash_apis_storage_v1alpha1_GCSSpec(ref),
@@ -20438,11 +20438,11 @@ func schema_kubestash_apis_storage_v1alpha1_BackupStorageStatus(ref common.Refer
 	}
 }
 
-func schema_kubestash_apis_storage_v1alpha1_ComponentStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kubestash_apis_storage_v1alpha1_Component(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ComponentStatus represents the backup status of individual components",
+				Description: "Component represents the backup information of individual components",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
@@ -20476,12 +20476,14 @@ func schema_kubestash_apis_storage_v1alpha1_ComponentStatus(ref common.Reference
 					"resticStats": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ResticStats specifies the \"Restic\" driver specific information",
+							Default:     map[string]interface{}{},
 							Ref:         ref("kubestash.dev/kubestash/apis/storage/v1alpha1.ResticStats"),
 						},
 					},
 					"volumeSnapshotterStats": {
 						SchemaProps: spec.SchemaProps{
 							Description: "VolumeSnapshotterStats specifies the \"VolumeSnapshotter\" driver specific information",
+							Default:     map[string]interface{}{},
 							Ref:         ref("kubestash.dev/kubestash/apis/storage/v1alpha1.VolumeSnapshotterStats"),
 						},
 					},
@@ -21575,11 +21577,25 @@ func schema_kubestash_apis_storage_v1alpha1_SnapshotSpec(ref common.ReferenceCal
 							Format:      "",
 						},
 					},
+					"components": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Components represents the backup information of the individual components of this Snapshot",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubestash.dev/kubestash/apis/storage/v1alpha1.Component"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.TypedObjectReference"},
+			"kmodules.xyz/client-go/api/v1.TypedObjectReference", "kubestash.dev/kubestash/apis/storage/v1alpha1.Component"},
 	}
 }
 
@@ -21630,20 +21646,6 @@ func schema_kubestash_apis_storage_v1alpha1_SnapshotStatus(ref common.ReferenceC
 							Format:      "",
 						},
 					},
-					"components": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Components represents the backup status of the individual components of this Snapshot",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubestash.dev/kubestash/apis/storage/v1alpha1.ComponentStatus"),
-									},
-								},
-							},
-						},
-					},
 					"conditions": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Conditions represents list of conditions regarding this Snapshot",
@@ -21662,7 +21664,7 @@ func schema_kubestash_apis_storage_v1alpha1_SnapshotStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "kubestash.dev/kubestash/apis/storage/v1alpha1.ComponentStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition"},
 	}
 }
 

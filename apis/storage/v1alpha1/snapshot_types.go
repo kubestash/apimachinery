@@ -100,6 +100,10 @@ type SnapshotSpec struct {
 	// Stash will not process any further event for the Snapshot.
 	// +optional
 	Paused bool `json:"paused,omitempty"`
+
+	// Components represents the backup information of the individual components of this Snapshot
+	// +optional
+	Components []Component `json:"components,omitempty"`
 }
 
 // SnapshotStatus defines the observed state of Snapshot
@@ -128,10 +132,6 @@ type SnapshotStatus struct {
 	// +optional
 	Integrity *bool `json:"integrity,omitempty"`
 
-	// Components represents the backup status of the individual components of this Snapshot
-	// +optional
-	Components []ComponentStatus `json:"components,omitempty"`
-
 	// Conditions represents list of conditions regarding this Snapshot
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
@@ -158,8 +158,8 @@ const (
 	SnapshotVerificationFailed VerificationStatus = "VerificationFailed"
 )
 
-// ComponentStatus represents the backup status of individual components
-type ComponentStatus struct {
+// Component represents the backup information of individual components
+type Component struct {
 	// Name specifies the name of the component
 	Name string `json:"name,omitempty"`
 
@@ -176,11 +176,11 @@ type ComponentStatus struct {
 
 	// ResticStats specifies the "Restic" driver specific information
 	// +optional
-	ResticStats *ResticStats `json:"resticStats,omitempty"`
+	ResticStats ResticStats `json:"resticStats,omitempty"`
 
 	// VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
 	// +optional
-	VolumeSnapshotterStats *VolumeSnapshotterStats `json:"volumeSnapshotterStats,omitempty"`
+	VolumeSnapshotterStats VolumeSnapshotterStats `json:"volumeSnapshotterStats,omitempty"`
 
 	// WalSegments specifies a list of wall segment for individual component
 	WalSegments []WalSegment `json:"walSegments,omitempty"`
