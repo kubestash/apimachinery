@@ -176,11 +176,11 @@ type Component struct {
 
 	// ResticStats specifies the "Restic" driver specific information
 	// +optional
-	ResticStats ResticStats `json:"resticStats,omitempty"`
+	ResticStats *ResticStats `json:"resticStats,omitempty"`
 
 	// VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
 	// +optional
-	VolumeSnapshotterStats VolumeSnapshotterStats `json:"volumeSnapshotterStats,omitempty"`
+	VolumeSnapshotterStats *VolumeSnapshotterStats `json:"volumeSnapshotterStats,omitempty"`
 
 	// WalSegments specifies a list of wall segment for individual component
 	WalSegments []WalSegment `json:"walSegments,omitempty"`

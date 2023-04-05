@@ -14667,12 +14667,10 @@
         },
         "resticStats": {
           "description": "ResticStats specifies the \"Restic\" driver specific information",
-          "default": {},
           "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.ResticStats"
         },
         "volumeSnapshotterStats": {
           "description": "VolumeSnapshotterStats specifies the \"VolumeSnapshotter\" driver specific information",
-          "default": {},
           "$ref": "#/definitions/dev.kubestash.kubestash.apis.storage.v1alpha1.VolumeSnapshotterStats"
         },
         "walSegments": {

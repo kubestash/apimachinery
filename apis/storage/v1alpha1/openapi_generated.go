@@ -20476,14 +20476,12 @@ func schema_kubestash_apis_storage_v1alpha1_Component(ref common.ReferenceCallba
 					"resticStats": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ResticStats specifies the \"Restic\" driver specific information",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kubestash.dev/kubestash/apis/storage/v1alpha1.ResticStats"),
 						},
 					},
 					"volumeSnapshotterStats": {
 						SchemaProps: spec.SchemaProps{
 							Description: "VolumeSnapshotterStats specifies the \"VolumeSnapshotter\" driver specific information",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kubestash.dev/kubestash/apis/storage/v1alpha1.VolumeSnapshotterStats"),
 						},
 					},
