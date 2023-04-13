@@ -1,11 +1,11 @@
 /*
 Copyright AppsCode Inc. and Contributors
 
-Licensed under the AppsCode Free Trial License 1.0.0 (the "License");
+Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Free-Trial-1.0.0.md
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,10 +20,8 @@ import (
 	"context"
 	"fmt"
 
-	"kubestash.dev/kubestash/apis"
-	storageapi "kubestash.dev/kubestash/apis/storage/v1alpha1"
-	"kubestash.dev/kubestash/pkg/storage"
-	"kubestash.dev/kubestash/pkg/target"
+	"kubestash.dev/apimachinery/apis"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -114,17 +112,24 @@ func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, 
 				return err
 			}
 
-			if !target.Matched(&existingRepo.Spec.AppRef, b.Spec.Target) {
+			if !Matched(&existingRepo.Spec.AppRef, b.Spec.Target) {
 				return fmt.Errorf("repository '%q' already exists in the cluster with a different target reference. Please, choose a different repository name", repo.Name)
 			}
 
-			if !storage.Matched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) {
+			if !Matched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) {
 				return fmt.Errorf("repository '%q' already exists in the cluster with a different storage reference. Please, choose a different repository name", repo.Name)
 			}
 
 		}
 	}
 	return nil
+}
+
+func Matched(t1, t2 *kmapi.TypedObjectReference) bool {
+	return t1.APIGroup == t2.APIGroup &&
+		t1.Kind == t2.Kind &&
+		t1.Namespace == t2.Namespace &&
+		t1.Name == t2.Name
 }
 
 func (b *BackupConfiguration) validateRepositoryNameUnique() error {

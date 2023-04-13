@@ -1,9 +1,9 @@
+
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   creationTimestamp: null
-  labels:
-    app.kubernetes.io/name: kubestash
   name: backupblueprints.core.kubestash.com
 spec:
   group: core.kubestash.com
@@ -5802,23 +5802,6 @@ spec:
                                                   into the PVC when creating it. No
                                                   other fields are allowed and will
                                                   be rejected during validation.
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  finalizers:
-                                                    items:
-                                                      type: string
-                                                    type: array
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  name:
-                                                    type: string
-                                                  namespace:
-                                                    type: string
                                                 type: object
                                               spec:
                                                 description: The specification for
@@ -7701,23 +7684,6 @@ spec:
                                                 the PVC when creating it. No other
                                                 fields are allowed and will be rejected
                                                 during validation.
-                                              properties:
-                                                annotations:
-                                                  additionalProperties:
-                                                    type: string
-                                                  type: object
-                                                finalizers:
-                                                  items:
-                                                    type: string
-                                                  type: array
-                                                labels:
-                                                  additionalProperties:
-                                                    type: string
-                                                  type: object
-                                                name:
-                                                  type: string
-                                                namespace:
-                                                  type: string
                                               type: object
                                             spec:
                                               description: The specification for the
@@ -8991,23 +8957,6 @@ spec:
                                             that will be copied into the PVC when
                                             creating it. No other fields are allowed
                                             and will be rejected during validation.
-                                          properties:
-                                            annotations:
-                                              additionalProperties:
-                                                type: string
-                                              type: object
-                                            finalizers:
-                                              items:
-                                                type: string
-                                              type: array
-                                            labels:
-                                              additionalProperties:
-                                                type: string
-                                              type: object
-                                            name:
-                                              type: string
-                                            namespace:
-                                              type: string
                                           type: object
                                         spec:
                                           description: The specification for the PersistentVolumeClaim.
@@ -9887,23 +9836,6 @@ spec:
                                                     into the PVC when creating it.
                                                     No other fields are allowed and
                                                     will be rejected during validation.
-                                                  properties:
-                                                    annotations:
-                                                      additionalProperties:
-                                                        type: string
-                                                      type: object
-                                                    finalizers:
-                                                      items:
-                                                        type: string
-                                                      type: array
-                                                    labels:
-                                                      additionalProperties:
-                                                        type: string
-                                                      type: object
-                                                    name:
-                                                      type: string
-                                                    namespace:
-                                                      type: string
                                                   type: object
                                                 spec:
                                                   description: The specification for
@@ -15154,23 +15086,6 @@ spec:
                                                 the PVC when creating it. No other
                                                 fields are allowed and will be rejected
                                                 during validation.
-                                              properties:
-                                                annotations:
-                                                  additionalProperties:
-                                                    type: string
-                                                  type: object
-                                                finalizers:
-                                                  items:
-                                                    type: string
-                                                  type: array
-                                                labels:
-                                                  additionalProperties:
-                                                    type: string
-                                                  type: object
-                                                name:
-                                                  type: string
-                                                namespace:
-                                                  type: string
                                               type: object
                                             spec:
                                               description: The specification for the
@@ -20188,23 +20103,6 @@ spec:
                                                 the PVC when creating it. No other
                                                 fields are allowed and will be rejected
                                                 during validation.
-                                              properties:
-                                                annotations:
-                                                  additionalProperties:
-                                                    type: string
-                                                  type: object
-                                                finalizers:
-                                                  items:
-                                                    type: string
-                                                  type: array
-                                                labels:
-                                                  additionalProperties:
-                                                    type: string
-                                                  type: object
-                                                name:
-                                                  type: string
-                                                namespace:
-                                                  type: string
                                               type: object
                                             spec:
                                               description: The specification for the
@@ -26740,23 +26638,6 @@ spec:
                                                       it. No other fields are allowed
                                                       and will be rejected during
                                                       validation.
-                                                    properties:
-                                                      annotations:
-                                                        additionalProperties:
-                                                          type: string
-                                                        type: object
-                                                      finalizers:
-                                                        items:
-                                                          type: string
-                                                        type: array
-                                                      labels:
-                                                        additionalProperties:
-                                                          type: string
-                                                        type: object
-                                                      name:
-                                                        type: string
-                                                      namespace:
-                                                        type: string
                                                     type: object
                                                   spec:
                                                     description: The specification
