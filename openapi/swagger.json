@@ -13761,6 +13761,52 @@
         }
       }
     },
+    "dev.kubestash.kubestash.apis.core.v1alpha1.ManifestRestoreOptions": {
+      "type": "object",
+      "properties": {
+        "mongoDB": {
+          "description": "MongoDB specifies the options for selecting particular MongoDB components to restore in manifest restore",
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.MongoManifestOptions"
+        },
+        "postgres": {
+          "description": "Postgres specifies the options for selecting particular Postgres components to restore in manifest restore",
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.PostgresManifestOptions"
+        },
+        "restoreNamespace": {
+          "description": "RestoreNamespace specifies the Namespace where the restored files will be applied",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubestash.kubestash.apis.core.v1alpha1.MongoManifestOptions": {
+      "type": "object",
+      "properties": {
+        "authSecret": {
+          "description": "AuthSecret specifies whether to restore the AuthSecret manifest or not",
+          "type": "boolean"
+        },
+        "authSecretName": {
+          "description": "AuthSecretName specifies new name of the AuthSecret yaml after restore",
+          "type": "string"
+        },
+        "configSecret": {
+          "description": "ConfigSecret specifies whether to restore the ConfigSecret manifest or not",
+          "type": "boolean"
+        },
+        "configSecretName": {
+          "description": "ConfigSecretName specifies new name of the ConfigSecret yaml after restore",
+          "type": "string"
+        },
+        "db": {
+          "description": "DB specifies whether to restore the DB manifest or not",
+          "type": "boolean"
+        },
+        "dbName": {
+          "description": "DBName specifies the new name of the DB yaml after restore",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubestash.kubestash.apis.core.v1alpha1.PITR": {
       "description": "PITR specifies the target time and behavior of Point-In-Time Recovery",
       "type": "object",
@@ -13790,6 +13836,23 @@
         "strategy": {
           "description": "Strategy specifies what should be the behavior when multiple pods are selected Valid values are: - \"ExecuteOnOne\": Execute hook on only one of the selected pods. This is default behavior - \"ExecuteOnAll\": Execute hook on all the selected pods.",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubestash.kubestash.apis.core.v1alpha1.PostgresManifestOptions": {
+      "type": "object",
+      "properties": {
+        "authSecret": {
+          "description": "AuthSecret specifies whether to restore the AuthSecret manifest or not",
+          "type": "boolean"
+        },
+        "configSecret": {
+          "description": "ConfigSecret specifies whether to restore the ConfigSecret manifest or not",
+          "type": "boolean"
+        },
+        "db": {
+          "description": "DB specifies whether to restore the DB manifest or not",
+          "type": "boolean"
         }
       }
     },
@@ -14002,9 +14065,9 @@
           "description": "Hooks specifies the restore hooks that should be executed before and/or after the restore.",
           "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.RestoreHooks"
         },
-        "restoreNamespace": {
-          "description": "RestoreNamespace specifies the Namespace where the restored files will be applied if there is no target to restore. i.e.: manifest-restore",
-          "type": "string"
+        "manifestOptions": {
+          "description": "ManifestOptions provide options to select particular manifest object to restore",
+          "$ref": "#/definitions/dev.kubestash.kubestash.apis.core.v1alpha1.ManifestRestoreOptions"
         },
         "runtimeSettings": {
           "description": "RuntimeSettings allow to specify Resources, NodeSelector, Affinity, Toleration, ReadinessProbe etc.",

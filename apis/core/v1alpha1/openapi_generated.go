@@ -428,9 +428,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubestash.dev/kubestash/apis/core/v1alpha1.HookTemplateList":                 schema_kubestash_apis_core_v1alpha1_HookTemplateList(ref),
 		"kubestash.dev/kubestash/apis/core/v1alpha1.HookTemplateSpec":                 schema_kubestash_apis_core_v1alpha1_HookTemplateSpec(ref),
 		"kubestash.dev/kubestash/apis/core/v1alpha1.JobTemplate":                      schema_kubestash_apis_core_v1alpha1_JobTemplate(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.ManifestRestoreOptions":           schema_kubestash_apis_core_v1alpha1_ManifestRestoreOptions(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.MongoManifestOptions":             schema_kubestash_apis_core_v1alpha1_MongoManifestOptions(ref),
 		"kubestash.dev/kubestash/apis/core/v1alpha1.OffshootStatus":                   schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref),
 		"kubestash.dev/kubestash/apis/core/v1alpha1.PITR":                             schema_kubestash_apis_core_v1alpha1_PITR(ref),
 		"kubestash.dev/kubestash/apis/core/v1alpha1.PodHookExecutorSpec":              schema_kubestash_apis_core_v1alpha1_PodHookExecutorSpec(ref),
+		"kubestash.dev/kubestash/apis/core/v1alpha1.PostgresManifestOptions":          schema_kubestash_apis_core_v1alpha1_PostgresManifestOptions(ref),
 		"kubestash.dev/kubestash/apis/core/v1alpha1.RepoStatus":                       schema_kubestash_apis_core_v1alpha1_RepoStatus(ref),
 		"kubestash.dev/kubestash/apis/core/v1alpha1.RepositoryInfo":                   schema_kubestash_apis_core_v1alpha1_RepositoryInfo(ref),
 		"kubestash.dev/kubestash/apis/core/v1alpha1.ResourceFoundStatus":              schema_kubestash_apis_core_v1alpha1_ResourceFoundStatus(ref),
@@ -21775,6 +21778,93 @@ func schema_kubestash_apis_core_v1alpha1_JobTemplate(ref common.ReferenceCallbac
 	}
 }
 
+func schema_kubestash_apis_core_v1alpha1_ManifestRestoreOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"restoreNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RestoreNamespace specifies the Namespace where the restored files will be applied",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"mongoDB": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MongoDB specifies the options for selecting particular MongoDB components to restore in manifest restore",
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.MongoManifestOptions"),
+						},
+					},
+					"postgres": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Postgres specifies the options for selecting particular Postgres components to restore in manifest restore",
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.PostgresManifestOptions"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubestash.dev/kubestash/apis/core/v1alpha1.MongoManifestOptions", "kubestash.dev/kubestash/apis/core/v1alpha1.PostgresManifestOptions"},
+	}
+}
+
+func schema_kubestash_apis_core_v1alpha1_MongoManifestOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DB specifies whether to restore the DB manifest or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"dbName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DBName specifies the new name of the DB yaml after restore",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"authSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AuthSecret specifies whether to restore the AuthSecret manifest or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"authSecretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AuthSecretName specifies new name of the AuthSecret yaml after restore",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret specifies whether to restore the ConfigSecret manifest or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"configSecretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecretName specifies new name of the ConfigSecret yaml after restore",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_kubestash_apis_core_v1alpha1_OffshootStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21905,6 +21995,39 @@ func schema_kubestash_apis_core_v1alpha1_PodHookExecutorSpec(ref common.Referenc
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.OwnerReference"},
+	}
+}
+
+func schema_kubestash_apis_core_v1alpha1_PostgresManifestOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DB specifies whether to restore the DB manifest or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"authSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AuthSecret specifies whether to restore the AuthSecret manifest or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret specifies whether to restore the ConfigSecret manifest or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -22279,18 +22402,17 @@ func schema_kubestash_apis_core_v1alpha1_RestoreSessionSpec(ref common.Reference
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.RuntimeSettings"),
 						},
 					},
-					"restoreNamespace": {
+					"manifestOptions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RestoreNamespace specifies the Namespace where the restored files will be applied if there is no target to restore. i.e.: manifest-restore",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "ManifestOptions provide options to select particular manifest object to restore",
+							Ref:         ref("kubestash.dev/kubestash/apis/core/v1alpha1.ManifestRestoreOptions"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubestash.dev/kubestash/apis/core/v1alpha1.AddonInfo", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreDataSource", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreHooks"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubestash.dev/kubestash/apis/core/v1alpha1.AddonInfo", "kubestash.dev/kubestash/apis/core/v1alpha1.ManifestRestoreOptions", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreDataSource", "kubestash.dev/kubestash/apis/core/v1alpha1.RestoreHooks"},
 	}
 }
 

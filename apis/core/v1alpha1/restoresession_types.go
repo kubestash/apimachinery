@@ -71,10 +71,56 @@ type RestoreSessionSpec struct {
 	// RuntimeSettings allow to specify Resources, NodeSelector, Affinity, Toleration, ReadinessProbe etc.
 	// +optional
 	RuntimeSettings ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
-	// RestoreNamespace specifies the Namespace where the restored files will be applied if there is no target to
-	// restore. i.e.: manifest-restore
+	// ManifestOptions provide options to select particular manifest object to restore
 	// +optional
+	ManifestOptions *ManifestRestoreOptions `json:"manifestOptions,omitempty"`
+}
+
+type ManifestRestoreOptions struct {
+	// RestoreNamespace specifies the Namespace where the restored files will be applied
+	//+optional
 	RestoreNamespace string `json:"restoreNamespace,omitempty"`
+	// MongoDB specifies the options for selecting particular MongoDB components to restore in manifest restore
+	// +optional
+	MongoDB *MongoManifestOptions `json:"mongoDB,omitempty"`
+	// Postgres specifies the options for selecting particular Postgres components to restore in manifest restore
+	// +optional
+	Postgres *PostgresManifestOptions `json:"postgres,omitempty"`
+}
+
+type MongoManifestOptions struct {
+	// DB specifies whether to restore the DB manifest or not
+	// +optional
+	DB bool `json:"db,omitempty"`
+	// DBName specifies the new name of the DB yaml after restore
+	// +optional
+	DBName string `json:"dbName,omitempty"`
+
+	// AuthSecret specifies whether to restore the AuthSecret manifest or not
+	// +optional
+	AuthSecret bool `json:"authSecret,omitempty"`
+	// AuthSecretName specifies new name of the AuthSecret yaml after restore
+	// +optional
+	AuthSecretName string `json:"authSecretName,omitempty"`
+
+	// ConfigSecret specifies whether to restore the ConfigSecret manifest or not
+	// +optional
+	ConfigSecret bool `json:"configSecret,omitempty"`
+	// ConfigSecretName specifies new name of the ConfigSecret yaml after restore
+	// +optional
+	ConfigSecretName string `json:"configSecretName,omitempty"`
+}
+
+type PostgresManifestOptions struct {
+	// DB specifies whether to restore the DB manifest or not
+	// +optional
+	DB bool `json:"db,omitempty"`
+	// AuthSecret specifies whether to restore the AuthSecret manifest or not
+	// +optional
+	AuthSecret bool `json:"authSecret,omitempty"`
+	// ConfigSecret specifies whether to restore the ConfigSecret manifest or not
+	// +optional
+	ConfigSecret bool `json:"configSecret,omitempty"`
 }
 
 // RestoreDataSource specifies the information about the data that will be restored

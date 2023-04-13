@@ -19737,10 +19737,61 @@ spec:
                       type: object
                     type: array
                 type: object
-              restoreNamespace:
-                description: 'RestoreNamespace specifies the Namespace where the restored
-                  files will be applied if there is no target to restore. i.e.: manifest-restore'
-                type: string
+              manifestOptions:
+                description: ManifestOptions provide options to select particular
+                  manifest object to restore
+                properties:
+                  mongoDB:
+                    description: MongoDB specifies the options for selecting particular
+                      MongoDB components to restore in manifest restore
+                    properties:
+                      authSecret:
+                        description: AuthSecret specifies whether to restore the AuthSecret
+                          manifest or not
+                        type: boolean
+                      authSecretName:
+                        description: AuthSecretName specifies new name of the AuthSecret
+                          yaml after restore
+                        type: string
+                      configSecret:
+                        description: ConfigSecret specifies whether to restore the
+                          ConfigSecret manifest or not
+                        type: boolean
+                      configSecretName:
+                        description: ConfigSecretName specifies new name of the ConfigSecret
+                          yaml after restore
+                        type: string
+                      db:
+                        description: DB specifies whether to restore the DB manifest
+                          or not
+                        type: boolean
+                      dbName:
+                        description: DBName specifies the new name of the DB yaml
+                          after restore
+                        type: string
+                    type: object
+                  postgres:
+                    description: Postgres specifies the options for selecting particular
+                      Postgres components to restore in manifest restore
+                    properties:
+                      authSecret:
+                        description: AuthSecret specifies whether to restore the AuthSecret
+                          manifest or not
+                        type: boolean
+                      configSecret:
+                        description: ConfigSecret specifies whether to restore the
+                          ConfigSecret manifest or not
+                        type: boolean
+                      db:
+                        description: DB specifies whether to restore the DB manifest
+                          or not
+                        type: boolean
+                    type: object
+                  restoreNamespace:
+                    description: RestoreNamespace specifies the Namespace where the
+                      restored files will be applied
+                    type: string
+                type: object
               runtimeSettings:
                 description: RuntimeSettings allow to specify Resources, NodeSelector,
                   Affinity, Toleration, ReadinessProbe etc.

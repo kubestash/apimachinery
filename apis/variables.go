@@ -26,6 +26,17 @@ const (
 
 	RestoreNamespace = "restoreNamespace"
 
+	MongoYaml   = "mongoYaml"
+	MongoDBName = "mongoDBName"
+
+	PostgresYaml = "pgYaml"
+
+	AuthSecretYaml = "authSecretYaml"
+	AuthSecretName = "authSecretName"
+
+	ConfigSecretYaml = "configSecretYaml"
+	ConfigSecretName = "configSecretName"
+
 	SnapshotName = "snapshotName"
 
 	Namespace      = "namespace"
