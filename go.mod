@@ -3,8 +3,11 @@ module kubestash.dev/apimachinery
 go 1.18
 
 require (
+	github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2
 	github.com/google/gofuzz v1.2.0
 	github.com/stretchr/testify v1.8.0
+	gomodules.xyz/go-sh v0.1.0
+	gomodules.xyz/pointer v0.1.0
 	k8s.io/api v0.25.1
 	k8s.io/apimachinery v0.25.1
 	k8s.io/client-go v0.25.1
@@ -12,6 +15,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1
 	kmodules.xyz/client-go v0.25.0
 	kmodules.xyz/crd-schema-fuzz v0.25.0
+	kmodules.xyz/objectstore-api v0.25.1
 	kmodules.xyz/offshoot-api v0.25.0
 	kmodules.xyz/prober v0.25.0
 	sigs.k8s.io/controller-runtime v0.13.0
@@ -22,6 +26,7 @@ require (
 	github.com/PuerkitoBio/purell v1.2.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.8.0 // indirect
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
