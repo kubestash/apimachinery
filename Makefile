@@ -54,6 +54,16 @@ help: ## Display this help.
 .PHONY: manifests
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd:allowDangerousTypes=true webhook paths="./..." output:crd:artifacts:config=crds
+	@$(MAKE) label-crds --no-print-directory
+
+.PHONY: label-crds
+label-crds:
+	@for f in crds/*.yaml; do \
+		echo "applying app.kubernetes.io/name=kubestash label to $$f"; \
+		kubectl label --overwrite -f $$f --local=true -o yaml app.kubernetes.io/name=kubestash > bin/crd.yaml; \
+		mv bin/crd.yaml $$f; \
+	done
+	@echo ""
 
 .PHONY: generate
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
