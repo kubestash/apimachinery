@@ -1,12 +1,18 @@
 # github.com/PuerkitoBio/purell v1.2.0
 ## explicit; go 1.19
 github.com/PuerkitoBio/purell
+# github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2
+## explicit
+github.com/armon/circbuf
 # github.com/beorn7/perks v1.0.1
 ## explicit; go 1.11
 github.com/beorn7/perks/quantile
 # github.com/cespare/xxhash/v2 v2.1.2
 ## explicit; go 1.11
 github.com/cespare/xxhash/v2
+# github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0
+## explicit
+github.com/codegangsta/inject
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
@@ -176,9 +182,15 @@ golang.org/x/text/width
 # golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9
 ## explicit
 golang.org/x/time/rate
+# gomodules.xyz/go-sh v0.1.0
+## explicit; go 1.15
+gomodules.xyz/go-sh
 # gomodules.xyz/jsonpatch/v2 v2.2.0
 ## explicit; go 1.12
 gomodules.xyz/jsonpatch/v2
+# gomodules.xyz/pointer v0.1.0
+## explicit; go 1.15
+gomodules.xyz/pointer
 # google.golang.org/appengine v1.6.7
 ## explicit; go 1.11
 google.golang.org/appengine/internal
@@ -330,6 +342,7 @@ k8s.io/apimachinery/pkg/util/managedfields
 k8s.io/apimachinery/pkg/util/mergepatch
 k8s.io/apimachinery/pkg/util/naming
 k8s.io/apimachinery/pkg/util/net
+k8s.io/apimachinery/pkg/util/rand
 k8s.io/apimachinery/pkg/util/runtime
 k8s.io/apimachinery/pkg/util/sets
 k8s.io/apimachinery/pkg/util/strategicpatch
@@ -449,6 +462,7 @@ k8s.io/client-go/plugin/pkg/client/auth/exec
 k8s.io/client-go/rest
 k8s.io/client-go/rest/watch
 k8s.io/client-go/restmapper
+k8s.io/client-go/testing
 k8s.io/client-go/tools/auth
 k8s.io/client-go/tools/cache
 k8s.io/client-go/tools/clientcmd
@@ -514,6 +528,9 @@ kmodules.xyz/client-go/meta
 # kmodules.xyz/crd-schema-fuzz v0.25.0
 ## explicit; go 1.18
 kmodules.xyz/crd-schema-fuzz
+# kmodules.xyz/objectstore-api v0.25.1
+## explicit; go 1.18
+kmodules.xyz/objectstore-api/api/v1
 # kmodules.xyz/offshoot-api v0.25.0
 ## explicit; go 1.18
 kmodules.xyz/offshoot-api/api/v1
@@ -531,6 +548,7 @@ sigs.k8s.io/controller-runtime/pkg/certwatcher/metrics
 sigs.k8s.io/controller-runtime/pkg/client
 sigs.k8s.io/controller-runtime/pkg/client/apiutil
 sigs.k8s.io/controller-runtime/pkg/client/config
+sigs.k8s.io/controller-runtime/pkg/client/fake
 sigs.k8s.io/controller-runtime/pkg/cluster
 sigs.k8s.io/controller-runtime/pkg/config
 sigs.k8s.io/controller-runtime/pkg/config/v1alpha1

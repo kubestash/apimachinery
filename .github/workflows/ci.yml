@@ -36,27 +36,8 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-#      - name: Login Docker
-#        env:
-#          DOCKER_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-#          USERNAME: 1gtm
-#        run: |
-#          docker login --username ${USERNAME} --password ${DOCKER_TOKEN}
-#
-#      - name: Push Docker Image
-#        env:
-#          REGISTRY: appscodeci
-#        run: |
-#          make push push-crd-installer
+      - name: Build
+        run: go build -v ./...
 
-      - name: Prepare Host
-        run: |
-          sudo apt-get -qq update || true
-          sudo apt-get install -y bzr
-          curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/amd64/kubectl
-          chmod +x ./kubectl
-          sudo mv ./kubectl /usr/local/bin/kubectl
-
-      - name: Run checks
-        run: |
-          make ci
+      - name: Test
+        run: go test -v ./...
