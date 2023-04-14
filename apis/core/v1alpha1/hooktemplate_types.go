@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"kubestash.dev/apimachinery/apis"
 
 	core "k8s.io/api/core/v1"
@@ -117,7 +118,7 @@ type FunctionHookExecutorSpec struct {
 
 	// Volumes specifies the volumes that will be mounted in the executor container
 	// +optional
-	Volumes []core.Volume `json:"volumes,omitempty"`
+	Volumes []ofst.Volume `json:"volumes,omitempty"`
 }
 
 // PodHookExecutorSpec specifies the criteria that will be used to select the pod which will execute the hook

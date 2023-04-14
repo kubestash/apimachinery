@@ -682,7 +682,7 @@ func (in *FunctionHookExecutorSpec) DeepCopyInto(out *FunctionHookExecutorSpec) 
 	}
 	if in.Volumes != nil {
 		in, out := &in.Volumes, &out.Volumes
-		*out = make([]corev1.Volume, len(*in))
+		*out = make([]offshoot_apiapiv1.Volume, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
@@ -773,7 +773,7 @@ func (in *HookInfo) DeepCopyInto(out *HookInfo) {
 	}
 	if in.Volumes != nil {
 		in, out := &in.Volumes, &out.Volumes
-		*out = make([]corev1.Volume, len(*in))
+		*out = make([]offshoot_apiapiv1.Volume, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
@@ -1607,7 +1607,7 @@ func (in *TargetVolumeInfo) DeepCopyInto(out *TargetVolumeInfo) {
 	*out = *in
 	if in.Volumes != nil {
 		in, out := &in.Volumes, &out.Volumes
-		*out = make([]corev1.Volume, len(*in))
+		*out = make([]offshoot_apiapiv1.Volume, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
