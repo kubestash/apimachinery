@@ -82,13 +82,13 @@ type ManifestRestoreOptions struct {
 	RestoreNamespace string `json:"restoreNamespace,omitempty"`
 	// MongoDB specifies the options for selecting particular MongoDB components to restore in manifest restore
 	// +optional
-	MongoDB *MongoManifestOptions `json:"mongoDB,omitempty"`
+	MongoDB *KubeDBManifestOptions `json:"mongoDB,omitempty"`
 	// Postgres specifies the options for selecting particular Postgres components to restore in manifest restore
 	// +optional
-	Postgres *PostgresManifestOptions `json:"postgres,omitempty"`
+	Postgres *KubeDBManifestOptions `json:"postgres,omitempty"`
 }
 
-type MongoManifestOptions struct {
+type KubeDBManifestOptions struct {
 	// DB specifies whether to restore the DB manifest or not
 	// +optional
 	DB bool `json:"db,omitempty"`
@@ -109,18 +109,6 @@ type MongoManifestOptions struct {
 	// ConfigSecretName specifies new name of the ConfigSecret yaml after restore
 	// +optional
 	ConfigSecretName string `json:"configSecretName,omitempty"`
-}
-
-type PostgresManifestOptions struct {
-	// DB specifies whether to restore the DB manifest or not
-	// +optional
-	DB bool `json:"db,omitempty"`
-	// AuthSecret specifies whether to restore the AuthSecret manifest or not
-	// +optional
-	AuthSecret bool `json:"authSecret,omitempty"`
-	// ConfigSecret specifies whether to restore the ConfigSecret manifest or not
-	// +optional
-	ConfigSecret bool `json:"configSecret,omitempty"`
 }
 
 // RestoreDataSource specifies the information about the data that will be restored

@@ -24,12 +24,14 @@ const (
 	InvokerKind = "invokerKind"
 	InvokerName = "invokerName"
 
-	RestoreNamespace = "restoreNamespace"
+	RestoreNamespace  = "restoreNamespace"
+	RestoreTargetKind = "targetKind"
 
 	MongoYaml   = "mongoYaml"
 	MongoDBName = "mongoDBName"
 
 	PostgresYaml = "pgYaml"
+	PostgresName = "pgName"
 
 	AuthSecretYaml = "authSecretYaml"
 	AuthSecretName = "authSecretName"
