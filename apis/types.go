@@ -19,8 +19,8 @@ limitations under the License.
 package apis
 
 import (
-	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
 // Driver specifies the name of underlying tool that is being used to upload the backed up data.
@@ -36,11 +36,11 @@ const (
 // VolumeSource specifies the source of volume to mount in the backup/restore executor
 // +k8s:openapi-gen=true
 type VolumeSource struct {
-	core.VolumeSource `json:",inline"`
+	ofst.VolumeSource `json:",inline"`
 
 	// VolumeClaimTemplate specifies a template for volume to use by the backup/restore executor
 	// +optional
-	VolumeClaimTemplate *core.PersistentVolumeClaimTemplate `json:"volumeClaimTemplate,omitempty"`
+	VolumeClaimTemplate *ofst.PersistentVolumeClaimTemplate `json:"volumeClaimTemplate,omitempty"`
 }
 
 // ParameterDefinition defines the parameter names, their usage, their requirements etc.

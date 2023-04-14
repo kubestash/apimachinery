@@ -17,7 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	core "k8s.io/api/core/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
 // DeletionPolicy specifies what to do if a resource is deleted
@@ -77,7 +77,7 @@ type Backend struct {
 type LocalSpec struct {
 	// Represents the source of a volume to mount. Only one of its members may be specified.
 	// Make sure the volume exist before using the volume as backend.
-	core.VolumeSource `json:",inline"`
+	ofst.VolumeSource `json:",inline"`
 
 	// MountPath specifies the directory where this volume will be mounted
 	MountPath string `json:"mountPath,omitempty"`
