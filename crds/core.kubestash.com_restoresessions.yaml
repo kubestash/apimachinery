@@ -20324,14 +20324,26 @@ spec:
                         description: AuthSecret specifies whether to restore the AuthSecret
                           manifest or not
                         type: boolean
+                      authSecretName:
+                        description: AuthSecretName specifies new name of the AuthSecret
+                          yaml after restore
+                        type: string
                       configSecret:
                         description: ConfigSecret specifies whether to restore the
                           ConfigSecret manifest or not
                         type: boolean
+                      configSecretName:
+                        description: ConfigSecretName specifies new name of the ConfigSecret
+                          yaml after restore
+                        type: string
                       db:
                         description: DB specifies whether to restore the DB manifest
                           or not
                         type: boolean
+                      dbName:
+                        description: DBName specifies the new name of the DB yaml
+                          after restore
+                        type: string
                     type: object
                   restoreNamespace:
                     description: RestoreNamespace specifies the Namespace where the
