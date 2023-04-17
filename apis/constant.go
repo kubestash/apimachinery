@@ -56,3 +56,8 @@ const (
 	ComponentPod        = "pod"
 	ComponentDeployment = "deployment"
 )
+
+const (
+	LabelApp          = "app"
+	AppLabelKubeStash = "kubestash"
+)
