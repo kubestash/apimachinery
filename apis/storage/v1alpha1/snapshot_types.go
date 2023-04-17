@@ -176,7 +176,7 @@ type Component struct {
 
 	// ResticStats specifies the "Restic" driver specific information
 	// +optional
-	ResticStats *ResticStats `json:"resticStats,omitempty"`
+	ResticStats []ResticStats `json:"resticStats,omitempty"`
 
 	// VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
 	// +optional
@@ -206,6 +206,10 @@ type ResticStats struct {
 	// +optional
 	Uploaded string `json:"uploaded,omitempty"`
 
+	// HostPath represents the backup path for which restic snapshot is taken.
+	//+optional
+	HostPath string `json:"hostPath,omitempty"`
+
 	// Size represents the restic snapshot size
 	// +optional
 	Size string `json:"size,omitempty"`
@@ -217,7 +221,7 @@ type ResticStats struct {
 
 // VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
 type VolumeSnapshotterStats struct {
-	VolumeSnapshotName string `json:"volumeSnapshotName"`
+	VolumeSnapshotName string `json:"volumeSnapshotName,omitempty"`
 }
 
 // WalSegment specifies the "WalG" driver specific information

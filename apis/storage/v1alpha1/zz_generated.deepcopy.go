@@ -221,8 +221,10 @@ func (in *Component) DeepCopyInto(out *Component) {
 	*out = *in
 	if in.ResticStats != nil {
 		in, out := &in.ResticStats, &out.ResticStats
-		*out = new(ResticStats)
-		(*in).DeepCopyInto(*out)
+		*out = make([]ResticStats, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
 	}
 	if in.VolumeSnapshotterStats != nil {
 		in, out := &in.VolumeSnapshotterStats, &out.VolumeSnapshotterStats

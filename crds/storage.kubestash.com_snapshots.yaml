@@ -124,30 +124,36 @@ spec:
                     resticStats:
                       description: ResticStats specifies the "Restic" driver specific
                         information
-                      properties:
-                        id:
-                          description: Id represents the restic snapshot id
-                          type: string
-                        integrity:
-                          description: Integrity represents the result of restic integrity
-                            check for this snapshot.
-                          type: boolean
-                        size:
-                          description: Size represents the restic snapshot size
-                          type: string
-                        uploaded:
-                          description: Uploaded specifies the amount of data that
-                            has been uploaded in the restic snapshot.
-                          type: string
-                      type: object
+                      items:
+                        description: ResticStats specifies the "Restic" driver specific
+                          information
+                        properties:
+                          hostPath:
+                            description: HostPath represents the backup path for which
+                              restic snapshot is taken.
+                            type: string
+                          id:
+                            description: Id represents the restic snapshot id
+                            type: string
+                          integrity:
+                            description: Integrity represents the result of restic
+                              integrity check for this snapshot.
+                            type: boolean
+                          size:
+                            description: Size represents the restic snapshot size
+                            type: string
+                          uploaded:
+                            description: Uploaded specifies the amount of data that
+                              has been uploaded in the restic snapshot.
+                            type: string
+                        type: object
+                      type: array
                     volumeSnapshotterStats:
                       description: VolumeSnapshotterStats specifies the "VolumeSnapshotter"
                         driver specific information
                       properties:
                         volumeSnapshotName:
                           type: string
-                      required:
-                      - volumeSnapshotName
                       type: object
                     walSegments:
                       description: WalSegments specifies a list of wall segment for
