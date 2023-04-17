@@ -207,7 +207,7 @@ type ResticStats struct {
 	Uploaded string `json:"uploaded,omitempty"`
 
 	// HostPath represents the backup path for which restic snapshot is taken.
-	//+optional
+	// +optional
 	HostPath string `json:"hostPath,omitempty"`
 
 	// Size represents the restic snapshot size
