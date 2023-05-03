@@ -38,6 +38,7 @@ const (
 const (
 	KindStatefulSet = "StatefulSet"
 	KindDaemonSet   = "DaemonSet"
+	KindDeployment  = "Deployment"
 	KindClusterRole = "ClusterRole"
 )
 
@@ -48,4 +49,15 @@ const (
 
 const (
 	OwnerKey = ".metadata.controller"
+)
+
+const (
+	ComponentName       = "COMPONENT_NAME"
+	ComponentPod        = "pod"
+	ComponentDeployment = "deployment"
+)
+
+const (
+	LabelApp          = "app"
+	AppLabelKubeStash = "kubestash"
 )
