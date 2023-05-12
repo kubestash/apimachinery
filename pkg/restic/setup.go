@@ -156,7 +156,7 @@ func (w *ResticWrapper) setupEnv() error {
 		}
 
 	case storage.ProviderGCS:
-		r := fmt.Sprintf("gs:%s:/%s", w.config.bucket, w.config.path)
+		r := fmt.Sprintf("gs:%s:/%s", w.config.bucket, filepath.Join(w.config.path, w.config.Directory))
 		w.sh.SetEnv(RESTIC_REPOSITORY, r)
 
 		if err := w.exportSecretKey(GOOGLE_PROJECT_ID, false); err != nil {
@@ -171,7 +171,7 @@ func (w *ResticWrapper) setupEnv() error {
 			w.sh.SetEnv(GOOGLE_APPLICATION_CREDENTIALS, filePath)
 		}
 	case storage.ProviderAzure:
-		r := fmt.Sprintf("azure:%s:/%s", w.config.bucket, w.config.path)
+		r := fmt.Sprintf("azure:%s:/%s", w.config.bucket, filepath.Join(w.config.path, w.config.Directory))
 		w.sh.SetEnv(RESTIC_REPOSITORY, r)
 
 		if err := w.exportSecretKey(AZURE_ACCOUNT_NAME, false); err != nil {
@@ -183,7 +183,7 @@ func (w *ResticWrapper) setupEnv() error {
 		}
 
 	case storage.ProviderSwift:
-		r := fmt.Sprintf("swift:%s:/%s", w.config.bucket, w.config.path)
+		r := fmt.Sprintf("swift:%s:/%s", w.config.bucket, filepath.Join(w.config.path, w.config.Directory))
 		w.sh.SetEnv(RESTIC_REPOSITORY, r)
 
 		// For keystone v1 authentication
@@ -293,7 +293,7 @@ func (w *ResticWrapper) setupEnv() error {
 		}
 
 	case storage.ProviderB2:
-		r := fmt.Sprintf("b2:%s:/%s", w.config.bucket, w.config.path)
+		r := fmt.Sprintf("b2:%s:/%s", w.config.bucket, filepath.Join(w.config.path, w.config.Directory))
 		w.sh.SetEnv(RESTIC_REPOSITORY, r)
 
 		if err := w.exportSecretKey(B2_ACCOUNT_ID, true); err != nil {
