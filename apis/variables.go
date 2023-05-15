@@ -39,6 +39,8 @@ const (
 	ConfigSecretYaml = "configSecretYaml"
 	ConfigSecretName = "configSecretName"
 
+	IssuerRefName = "issuerRefName"
+
 	SnapshotName = "snapshotName"
 
 	Namespace      = "namespace"
