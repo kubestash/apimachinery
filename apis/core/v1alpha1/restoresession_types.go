@@ -109,6 +109,10 @@ type KubeDBManifestOptions struct {
 	// ConfigSecretName specifies new name of the ConfigSecret yaml after restore
 	// +optional
 	ConfigSecretName string `json:"configSecretName,omitempty"`
+
+	// IssuerRefName specifies new name of the IssuerRef after restore
+	// +optional
+	IssuerRefName string `json:"issuerRefName,omitempty"`
 }
 
 // RestoreDataSource specifies the information about the data that will be restored
