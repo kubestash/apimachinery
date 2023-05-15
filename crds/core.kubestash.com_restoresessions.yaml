@@ -20315,6 +20315,10 @@ spec:
                         description: DBName specifies the new name of the DB yaml
                           after restore
                         type: string
+                      issuerRefName:
+                        description: IssuerRefName specifies new name of the IssuerRef
+                          after restore
+                        type: string
                     type: object
                   postgres:
                     description: Postgres specifies the options for selecting particular
@@ -20342,6 +20346,10 @@ spec:
                         type: boolean
                       dbName:
                         description: DBName specifies the new name of the DB yaml
+                          after restore
+                        type: string
+                      issuerRefName:
+                        description: IssuerRefName specifies new name of the IssuerRef
                           after restore
                         type: string
                     type: object
