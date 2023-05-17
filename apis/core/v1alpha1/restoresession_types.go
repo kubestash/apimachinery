@@ -186,6 +186,10 @@ type RestoreSessionStatus struct {
 
 	// Components represents the individual component restore status
 	// +optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
 	Components []ComponentRestoreStatus `json:"components,omitempty"`
 
 	// Hooks represents the hook execution status

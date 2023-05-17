@@ -103,6 +103,10 @@ type SnapshotSpec struct {
 
 	// Components represents the backup information of the individual components of this Snapshot
 	// +optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
 	Components []Component `json:"components,omitempty"`
 }
 

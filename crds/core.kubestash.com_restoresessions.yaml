@@ -22737,6 +22737,9 @@ spec:
                       type: string
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               conditions:
                 description: Conditions specifies a list of conditions related to
                   this restore session
