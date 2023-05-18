@@ -220,6 +220,7 @@ const (
 // ComponentRestoreStatus represents the restore status of individual components
 type ComponentRestoreStatus struct {
 	// Name indicate to the name of the component
+	// +kubebuilder:default=""
 	Name string `json:"name,omitempty"`
 
 	// Phase represents the restore phase of the component

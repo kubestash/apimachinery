@@ -106,6 +106,7 @@ spec:
                       - VolumeSnapshotter
                       type: string
                     name:
+                      default: ""
                       description: Name specifies the name of the component
                       type: string
                     path:

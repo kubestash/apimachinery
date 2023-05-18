@@ -22725,6 +22725,7 @@ spec:
                         for the component
                       type: string
                     name:
+                      default: ""
                       description: Name indicate to the name of the component
                       type: string
                     phase:
