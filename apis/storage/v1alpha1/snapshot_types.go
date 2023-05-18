@@ -103,8 +103,6 @@ type SnapshotSpec struct {
 
 	// Components represents the backup information of the individual components of this Snapshot
 	// +optional
-	// +patchMergeKey=name
-	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=name
 	Components []Component `json:"components,omitempty"`
@@ -165,7 +163,6 @@ const (
 // Component represents the backup information of individual components
 type Component struct {
 	// Name specifies the name of the component
-	// +kubebuilder:default="empty"
 	Name string `json:"name,omitempty"`
 
 	// Path specifies the path inside the Repository where the backed up data for this component has been stored.
