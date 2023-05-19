@@ -103,7 +103,8 @@ type SnapshotSpec struct {
 
 	// Components represents the backup information of the individual components of this Snapshot
 	// +optional
-	Components []Component `json:"components,omitempty"`
+	// +mapType=granular
+	Components map[string]Component `json:"components,omitempty"`
 }
 
 // SnapshotStatus defines the observed state of Snapshot
@@ -160,9 +161,6 @@ const (
 
 // Component represents the backup information of individual components
 type Component struct {
-	// Name specifies the name of the component
-	Name string `json:"name,omitempty"`
-
 	// Path specifies the path inside the Repository where the backed up data for this component has been stored.
 	// This path is relative to Repository path.
 	Path string `json:"path,omitempty"`

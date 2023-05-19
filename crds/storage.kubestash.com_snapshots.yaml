@@ -91,9 +91,7 @@ spec:
                   which is responsible for this Snapshot.
                 type: string
               components:
-                description: Components represents the backup information of the individual
-                  components of this Snapshot
-                items:
+                additionalProperties:
                   description: Component represents the backup information of individual
                     components
                   properties:
@@ -104,9 +102,6 @@ spec:
                       - Restic
                       - WalG
                       - VolumeSnapshotter
-                      type: string
-                    name:
-                      description: Name specifies the name of the component
                       type: string
                     path:
                       description: Path specifies the path inside the Repository where
@@ -171,7 +166,10 @@ spec:
                         type: object
                       type: array
                   type: object
-                type: array
+                description: Components represents the backup information of the individual
+                  components of this Snapshot
+                type: object
+                x-kubernetes-map-type: granular
               deletionPolicy:
                 description: 'DeletionPolicy specifies what to do when you delete
                   a Snapshot CR. The valid values are: - "Delete": This will delete

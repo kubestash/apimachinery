@@ -1282,8 +1282,10 @@ func (in *RestoreSessionStatus) DeepCopyInto(out *RestoreSessionStatus) {
 	}
 	if in.Components != nil {
 		in, out := &in.Components, &out.Components
-		*out = make([]ComponentRestoreStatus, len(*in))
-		copy(*out, *in)
+		*out = make(map[string]ComponentRestoreStatus, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
 	}
 	if in.Hooks != nil {
 		in, out := &in.Hooks, &out.Hooks

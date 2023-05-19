@@ -34,21 +34,17 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 		{
 			name: "RestoreSession should be Pending if all components are Pending",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
-				r.Status.Components = []ComponentRestoreStatus{
-					{
-						Name:  "manifest",
+				r.Status.Components = map[string]ComponentRestoreStatus{
+					"manifest": {
 						Phase: RestorePending,
 					},
-					{
-						Name:  "configserver",
+					"configserver": {
 						Phase: RestorePending,
 					},
-					{
-						Name:  "shard-0",
+					"shard-0": {
 						Phase: RestorePending,
 					},
-					{
-						Name:  "shard-1",
+					"shard-1": {
 						Phase: RestorePending,
 					},
 				}
@@ -59,21 +55,17 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 		{
 			name: "RestoreSession should be Running if any component is Running",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
-				r.Status.Components = []ComponentRestoreStatus{
-					{
-						Name:  "manifest",
+				r.Status.Components = map[string]ComponentRestoreStatus{
+					"manifest": {
 						Phase: RestoreRunning,
 					},
-					{
-						Name:  "configserver",
+					"configserver": {
 						Phase: RestorePending,
 					},
-					{
-						Name:  "shard-0",
+					"shard-0": {
 						Phase: RestorePending,
 					},
-					{
-						Name:  "shard-1",
+					"shard-1": {
 						Phase: RestorePending,
 					},
 				}
@@ -84,21 +76,17 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 		{
 			name: "RestoreSession should be Running if any component is not completed",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
-				r.Status.Components = []ComponentRestoreStatus{
-					{
-						Name:  "manifest",
+				r.Status.Components = map[string]ComponentRestoreStatus{
+					"manifest": {
 						Phase: RestoreSucceeded,
 					},
-					{
-						Name:  "configserver",
+					"configserver": {
 						Phase: RestoreFailed,
 					},
-					{
-						Name:  "shard-0",
+					"shard-0": {
 						Phase: RestoreFailed,
 					},
-					{
-						Name:  "shard-1",
+					"shard-1": {
 						Phase: RestorePending,
 					},
 				}
@@ -110,21 +98,17 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			name: "RestoreSession should be Failed if any component Failed",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				setPostRestoreHooksExecutionSucceededConditionToTrue(r)
-				r.Status.Components = []ComponentRestoreStatus{
-					{
-						Name:  "manifest",
+				r.Status.Components = map[string]ComponentRestoreStatus{
+					"manifest": {
 						Phase: RestoreFailed,
 					},
-					{
-						Name:  "configserver",
+					"configserver": {
 						Phase: RestoreFailed,
 					},
-					{
-						Name:  "shard-0",
+					"shard-0": {
 						Phase: RestoreSucceeded,
 					},
-					{
-						Name:  "shard-1",
+					"shard-1": {
 						Phase: RestoreSucceeded,
 					},
 				}
@@ -136,21 +120,17 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			name: "RestoreSession should be Failed if all components Failed",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				setPostRestoreHooksExecutionSucceededConditionToTrue(r)
-				r.Status.Components = []ComponentRestoreStatus{
-					{
-						Name:  "manifest",
+				r.Status.Components = map[string]ComponentRestoreStatus{
+					"manifest": {
 						Phase: RestoreFailed,
 					},
-					{
-						Name:  "configserver",
+					"configserver": {
 						Phase: RestoreFailed,
 					},
-					{
-						Name:  "shard-0",
+					"shard-0": {
 						Phase: RestoreFailed,
 					},
-					{
-						Name:  "shard-1",
+					"shard-1": {
 						Phase: RestoreFailed,
 					},
 				}
@@ -162,21 +142,17 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			name: "RestoreSession should be Succeeded if all components Succeeded",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				setPostRestoreHooksExecutionSucceededConditionToTrue(r)
-				r.Status.Components = []ComponentRestoreStatus{
-					{
-						Name:  "manifest",
+				r.Status.Components = map[string]ComponentRestoreStatus{
+					"manifest": {
 						Phase: RestoreSucceeded,
 					},
-					{
-						Name:  "configserver",
+					"configserver": {
 						Phase: RestoreSucceeded,
 					},
-					{
-						Name:  "shard-0",
+					"shard-0": {
 						Phase: RestoreSucceeded,
 					},
-					{
-						Name:  "shard-1",
+					"shard-1": {
 						Phase: RestoreSucceeded,
 					},
 				}
@@ -243,21 +219,17 @@ func TestRestoreSessionPhaseIsFailedIfDeadlineExceededConditionIsTrue(t *testing
 
 func TestRestoreSessionPhaseIsRunningIfPostRestoreHooksNotExecuted(test *testing.T) {
 	rs := sampleRestoreSession(func(r *RestoreSession) {
-		r.Status.Components = []ComponentRestoreStatus{
-			{
-				Name:  "manifest",
+		r.Status.Components = map[string]ComponentRestoreStatus{
+			"manifest": {
 				Phase: RestoreSucceeded,
 			},
-			{
-				Name:  "configserver",
+			"configserver": {
 				Phase: RestoreSucceeded,
 			},
-			{
-				Name:  "shard-0",
+			"shard-0": {
 				Phase: RestoreSucceeded,
 			},
-			{
-				Name:  "shard-0",
+			"shard-1": {
 				Phase: RestoreSucceeded,
 			},
 		}
