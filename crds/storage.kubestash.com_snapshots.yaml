@@ -103,9 +103,6 @@ spec:
                       - WalG
                       - VolumeSnapshotter
                       type: string
-                    name:
-                      description: Name specifies the name of the component
-                      type: string
                     path:
                       description: Path specifies the path inside the Repository where
                         the backed up data for this component has been stored. This

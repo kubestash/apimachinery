@@ -22722,9 +22722,6 @@ spec:
                       description: Error specifies the reason in case of restore failure
                         for the component
                       type: string
-                    name:
-                      description: Name indicate to the name of the component
-                      type: string
                     phase:
                       description: Phase represents the restore phase of the component
                       enum:

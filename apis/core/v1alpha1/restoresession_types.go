@@ -218,9 +218,6 @@ const (
 
 // ComponentRestoreStatus represents the restore status of individual components
 type ComponentRestoreStatus struct {
-	// Name indicate to the name of the component
-	Name string `json:"name,omitempty"`
-
 	// Phase represents the restore phase of the component
 	// +optional
 	Phase RestorePhase `json:"phase,omitempty"`
