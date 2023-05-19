@@ -186,9 +186,8 @@ type RestoreSessionStatus struct {
 
 	// Components represents the individual component restore status
 	// +optional
-	// +listType=map
-	// +listMapKey=name
-	Components []ComponentRestoreStatus `json:"components,omitempty"`
+	// +mapType=granular
+	Components map[string]ComponentRestoreStatus `json:"components,omitempty"`
 
 	// Hooks represents the hook execution status
 	// +optional
@@ -220,7 +219,6 @@ const (
 // ComponentRestoreStatus represents the restore status of individual components
 type ComponentRestoreStatus struct {
 	// Name indicate to the name of the component
-	// +kubebuilder:default=""
 	Name string `json:"name,omitempty"`
 
 	// Phase represents the restore phase of the component

@@ -22710,9 +22710,7 @@ spec:
             description: RestoreSessionStatus defines the observed state of RestoreSession
             properties:
               components:
-                description: Components represents the individual component restore
-                  status
-                items:
+                additionalProperties:
                   description: ComponentRestoreStatus represents the restore status
                     of individual components
                   properties:
@@ -22725,7 +22723,6 @@ spec:
                         for the component
                       type: string
                     name:
-                      default: ""
                       description: Name indicate to the name of the component
                       type: string
                     phase:
@@ -22737,10 +22734,10 @@ spec:
                       - Succeeded
                       type: string
                   type: object
-                type: array
-                x-kubernetes-list-map-keys:
-                - name
-                x-kubernetes-list-type: map
+                description: Components represents the individual component restore
+                  status
+                type: object
+                x-kubernetes-map-type: granular
               conditions:
                 description: Conditions specifies a list of conditions related to
                   this restore session

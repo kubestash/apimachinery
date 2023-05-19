@@ -683,9 +683,9 @@ func (in *SnapshotSpec) DeepCopyInto(out *SnapshotSpec) {
 	out.AppRef = in.AppRef
 	if in.Components != nil {
 		in, out := &in.Components, &out.Components
-		*out = make([]Component, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
+		*out = make(map[string]Component, len(*in))
+		for key, val := range *in {
+			(*out)[key] = *val.DeepCopy()
 		}
 	}
 }
