@@ -30,7 +30,8 @@ func (_ Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 
 func (s *Snapshot) CalculatePhase() SnapshotPhase {
 	if kmapi.IsConditionFalse(s.Status.Conditions, TypeBackendMetadataWritten) ||
-		kmapi.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) {
+		kmapi.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) ||
+		kmapi.IsConditionFalse(s.Status.Conditions, TypeBackupPrerequisiteSatisfied) {
 		return SnapshotFailed
 	}
 
@@ -42,7 +43,7 @@ func (s *Snapshot) GetComponentsPhase() SnapshotPhase {
 	successfulComponent := 0
 	pendingComponent := 0
 
-	for _, c := range s.Spec.Components {
+	for _, c := range s.Status.Components {
 		if c.Phase == ComponentPhaseSucceeded {
 			successfulComponent++
 		}
@@ -54,7 +55,7 @@ func (s *Snapshot) GetComponentsPhase() SnapshotPhase {
 		}
 	}
 
-	totalComponents := len(s.Spec.Components)
+	totalComponents := len(s.Status.Components)
 
 	if pendingComponent == totalComponents {
 		return SnapshotPending
