@@ -100,11 +100,6 @@ type SnapshotSpec struct {
 	// Stash will not process any further event for the Snapshot.
 	// +optional
 	Paused bool `json:"paused,omitempty"`
-
-	// Components represents the backup information of the individual components of this Snapshot
-	// +optional
-	// +mapType=granular
-	Components map[string]Component `json:"components,omitempty"`
 }
 
 // SnapshotStatus defines the observed state of Snapshot
@@ -136,6 +131,11 @@ type SnapshotStatus struct {
 	// Conditions represents list of conditions regarding this Snapshot
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+
+	// Components represents the backup information of the individual components of this Snapshot
+	// +optional
+	// +mapType=granular
+	Components map[string]Component `json:"components,omitempty"`
 }
 
 // SnapshotPhase represent the overall progress of this Snapshot
@@ -168,6 +168,10 @@ type Component struct {
 	// Phase represents the backup phase of the component
 	// +optional
 	Phase ComponentPhase `json:"phase,omitempty"`
+
+	// Error specifies the reason in case of backup failure for the component
+	// +optional
+	Error string `json:"error,omitempty"`
 
 	// Driver specifies the name of the tool that has been used to upload the underlying backed up data
 	Driver apis.Driver `json:"driver,omitempty"`
@@ -236,6 +240,11 @@ const (
 	TypeRecentSnapshotListUpdated               = "RecentSnapshotListUpdated"
 	ReasonFailedToUpdateRecentSnapshotList      = "FailedToUpdateRecentSnapshotList"
 	ReasonSuccessfullyUpdatedRecentSnapshotList = "SuccessfullyUpdatedRecentSnapshotList"
+
+	// TypeBackupPrerequisiteSatisfied indicates whether the backup prerequisites are satisfied or not.
+	TypeBackupPrerequisiteSatisfied      = "BackupPrerequisiteSatisfied"
+	ReasonBackupPrerequisiteNotSatisfied = "BackupPrerequisiteNotSatisfied"
+	ReasonBackupPrerequisiteSatisfied    = "BackupPrerequisiteSatisfied"
 )
 
 //+kubebuilder:object:root=true
