@@ -33,13 +33,12 @@ func (_ BackupStorage) CustomResourceDefinition() *apiextensions.CustomResourceD
 }
 
 func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
-	if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackendInitialized) &&
-		kmapi.IsConditionTrue(b.Status.Conditions, TypeRepositorySynced) {
-		return BackupStorageReady
-	} else if kmapi.IsConditionFalse(b.Status.Conditions, TypeBackupStorageSecretFound) {
-		return BackupStorageSecretNotFound
+	if kmapi.IsConditionFalse(b.Status.Conditions, TypeBackendInitialized) ||
+		kmapi.IsConditionFalse(b.Status.Conditions, TypeRepositorySynced) ||
+		kmapi.IsConditionFalse(b.Status.Conditions, TypeBackendStorageSecretFound) {
+		return BackupStorageNotReady
 	}
-	return BackupStorageNotReady
+	return BackupStorageReady
 }
 
 func (b *BackupStorage) UsageAllowed(srcNamespace *core.Namespace) bool {
