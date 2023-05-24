@@ -30,8 +30,9 @@ const (
 	ResourceSingularBackupStorage = "backupstorage"
 	ResourcePluralBackupStorage   = "backupstorages"
 
-	BackupStorageReady    BackupStoragePhase = "Ready"
-	BackupStorageNotReady BackupStoragePhase = "NotReady"
+	BackupStorageReady          BackupStoragePhase = "Ready"
+	BackupStorageNotReady       BackupStoragePhase = "NotReady"
+	BackupStorageSecretNotFound BackupStoragePhase = "SecretNotFound"
 )
 
 // +k8s:openapi-gen=true
@@ -136,6 +137,7 @@ const (
 	TypeRepositorySynced          = "RepositorySynced"
 	ReasonRepositorySyncSucceeded = "RepositorySyncSucceeded"
 	ReasonRepositorySyncFailed    = "RepositorySyncFailed"
+	TypeBackupStorageSecretFound  = "BackupStorageSecretFound"
 )
 
 //+kubebuilder:object:root=true

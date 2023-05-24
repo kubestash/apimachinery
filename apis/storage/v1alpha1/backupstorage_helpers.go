@@ -36,6 +36,8 @@ func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
 	if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackendInitialized) &&
 		kmapi.IsConditionTrue(b.Status.Conditions, TypeRepositorySynced) {
 		return BackupStorageReady
+	} else if kmapi.IsConditionFalse(b.Status.Conditions, TypeBackupStorageSecretFound) {
+		return BackupStorageSecretNotFound
 	}
 	return BackupStorageNotReady
 }
