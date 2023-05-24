@@ -136,7 +136,7 @@ const (
 	TypeRepositorySynced          = "RepositorySynced"
 	ReasonRepositorySyncSucceeded = "RepositorySyncSucceeded"
 	ReasonRepositorySyncFailed    = "RepositorySyncFailed"
-	TypeBackendStorageSecretFound = "BackupStorageSecretFound"
+	TypeBackendSecretFound        = "TypeBackendSecretFound"
 )
 
 //+kubebuilder:object:root=true
