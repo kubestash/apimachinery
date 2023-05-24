@@ -243,7 +243,7 @@ const (
 
 	// TypeBackupSetupFailed indicates whether the backup setup is failed.
 	TypeBackupSetupFailed   = "BackupSetupFailed"
-	ReasonBackupSetupFailed = "FailedBackupSetup"
+	ReasonBackupSetupFailed = "ErrorOccurredDuringBackupSetup"
 )
 
 //+kubebuilder:object:root=true
