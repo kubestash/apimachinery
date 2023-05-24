@@ -241,10 +241,9 @@ const (
 	ReasonFailedToUpdateRecentSnapshotList      = "FailedToUpdateRecentSnapshotList"
 	ReasonSuccessfullyUpdatedRecentSnapshotList = "SuccessfullyUpdatedRecentSnapshotList"
 
-	// TypeBackupPrerequisiteSatisfied indicates whether the backup prerequisites are satisfied or not.
-	TypeBackupPrerequisiteSatisfied      = "BackupPrerequisiteSatisfied"
-	ReasonBackupPrerequisiteNotSatisfied = "BackupPrerequisiteNotSatisfied"
-	ReasonBackupPrerequisiteSatisfied    = "BackupPrerequisiteSatisfied"
+	// TypeBackupSetupFailed indicates whether the backup setup is failed.
+	TypeBackupSetupFailed   = "BackupSetupFailed"
+	ReasonBackupSetupFailed = "FailedBackupSetup"
 )
 
 //+kubebuilder:object:root=true
