@@ -250,8 +250,7 @@ func sampleRestoreSession(transformFuncs ...func(*RestoreSession)) *RestoreSessi
 				Name:     "sample-mysql",
 			},
 			DataSource: &RestoreDataSource{
-				Repository: "sample-mysql-backup-gcs-storage",
-				Snapshot:   "sample-mysql-backup-1561974001",
+				Snapshot: "sample-mysql-backup-1561974001",
 			},
 			Addon: &AddonInfo{
 				Name: "stash-mysql-90.31",
