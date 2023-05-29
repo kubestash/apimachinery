@@ -240,10 +240,6 @@ const (
 	TypeRecentSnapshotListUpdated               = "RecentSnapshotListUpdated"
 	ReasonFailedToUpdateRecentSnapshotList      = "FailedToUpdateRecentSnapshotList"
 	ReasonSuccessfullyUpdatedRecentSnapshotList = "SuccessfullyUpdatedRecentSnapshotList"
-
-	// TypeBackupSetupFailed indicates whether the backup setup is failed.
-	TypeBackupSetupFailed   = "BackupSetupFailed"
-	ReasonBackupSetupFailed = "ErrorOccurredDuringBackupSetup"
 )
 
 //+kubebuilder:object:root=true

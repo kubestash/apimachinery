@@ -10890,10 +10890,6 @@ spec:
                         format: date-time
                         type: string
                     type: object
-                  repository:
-                    description: Repository points to the Repository name from which
-                      the data will be restored
-                    type: string
                   snapshot:
                     description: Snapshot specifies the Snapshot name that will be
                       restored. If you want to use Point-In-Time recovery option,

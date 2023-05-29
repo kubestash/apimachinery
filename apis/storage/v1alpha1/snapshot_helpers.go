@@ -17,8 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"fmt"
-	core "k8s.io/api/core/v1"
 	"kubestash.dev/apimachinery/crds"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -30,20 +28,9 @@ func (_ Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralSnapshot))
 }
 
-func (s *Snapshot) SetBackupSetupFailedConditionToTrue(err error) {
-	condition := kmapi.Condition{
-		Type:    TypeBackupSetupFailed,
-		Status:  core.ConditionTrue,
-		Reason:  ReasonBackupSetupFailed,
-		Message: fmt.Sprintf("Backup setup is failed. Reason: %q", err.Error()),
-	}
-	s.Status.Conditions = kmapi.SetCondition(s.Status.Conditions, condition)
-}
-
 func (s *Snapshot) CalculatePhase() SnapshotPhase {
 	if kmapi.IsConditionFalse(s.Status.Conditions, TypeBackendMetadataWritten) ||
-		kmapi.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) ||
-		kmapi.IsConditionTrue(s.Status.Conditions, TypeBackupSetupFailed) {
+		kmapi.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) {
 		return SnapshotFailed
 	}
 
