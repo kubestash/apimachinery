@@ -117,9 +117,6 @@ type KubeDBManifestOptions struct {
 
 // RestoreDataSource specifies the information about the data that will be restored
 type RestoreDataSource struct {
-	// Repository points to the Repository name from which the data will be restored
-	Repository string `json:"repository,omitempty"`
-
 	// Snapshot specifies the Snapshot name that will be restored.
 	// If you want to use Point-In-Time recovery option, don't specify this field. Specify `pitr` field instead.
 	// +optional
