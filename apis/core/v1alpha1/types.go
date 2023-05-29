@@ -166,7 +166,7 @@ const (
 type ResourceFoundStatus struct {
 	kmapi.TypedObjectReference `json:",inline"`
 	// Found indicates whether the resource was found or not
-	Found bool `json:"found,omitempty"`
+	Found *bool `json:"found,omitempty"`
 }
 
 // FailurePolicy specifies what to do if a backup/restore fails
