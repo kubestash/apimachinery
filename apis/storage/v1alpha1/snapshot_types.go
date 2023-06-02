@@ -169,11 +169,11 @@ type Component struct {
 	// +optional
 	Phase ComponentPhase `json:"phase,omitempty"`
 
-	// Size represents the size of repository after last backup
+	// Size represents the size of the restic repository for this component
 	// +optional
 	Size string `json:"size,omitempty"`
 
-	// Integrity represents the result of integrity check for the repository.
+	// Integrity represents the result of the restic repository integrity check for this component
 	// +optional
 	Integrity *bool `json:"integrity,omitempty"`
 

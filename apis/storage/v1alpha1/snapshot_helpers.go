@@ -80,11 +80,11 @@ func (s *Snapshot) GetIntegrity() *bool {
 	}
 
 	result := true
-	for _, componentInfo := range s.Status.Components {
-		if componentInfo.Integrity == nil {
+	for _, component := range s.Status.Components {
+		if component.Integrity == nil {
 			return nil
 		}
-		result = result && *componentInfo.Integrity
+		result = result && *component.Integrity
 	}
 	return &result
 }
@@ -95,12 +95,12 @@ func (s *Snapshot) GetSize() string {
 	}
 
 	var totalSizeInByte uint64
-	for _, componentInfo := range s.Status.Components {
-		if componentInfo.Size == "" {
+	for _, component := range s.Status.Components {
+		if component.Size == "" {
 			return ""
 		}
 
-		sizeWithUnit := strings.Split(componentInfo.Size, " ")
+		sizeWithUnit := strings.Split(component.Size, " ")
 		if len(sizeWithUnit) < 2 {
 			return ""
 		}

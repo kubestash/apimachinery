@@ -149,8 +149,8 @@ spec:
                         for the component
                       type: string
                     integrity:
-                      description: Integrity represents the result of integrity check
-                        for the repository.
+                      description: Integrity represents the result of the restic repository
+                        integrity check for this component
                       type: boolean
                     path:
                       description: Path specifies the path inside the Repository where
@@ -189,8 +189,8 @@ spec:
                         type: object
                       type: array
                     size:
-                      description: Size represents the size of repository after last
-                        backup
+                      description: Size represents the size of the restic repository
+                        for this component
                       type: string
                     volumeSnapshotterStats:
                       description: VolumeSnapshotterStats specifies the "VolumeSnapshotter"
