@@ -17,7 +17,10 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
 	"kubestash.dev/apimachinery/crds"
+	"strconv"
+	"strings"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
@@ -69,6 +72,84 @@ func (s *Snapshot) GetComponentsPhase() SnapshotPhase {
 	}
 
 	return SnapshotRunning
+}
+
+func (s *Snapshot) GetIntegrity() *bool {
+	if s.Status.Components == nil {
+		return nil
+	}
+
+	result := true
+	for _, componentInfo := range s.Status.Components {
+		if componentInfo.Integrity == nil {
+			return nil
+		}
+		result = result && *componentInfo.Integrity
+	}
+	return &result
+}
+
+func (s *Snapshot) GetSize() string {
+	if s.Status.Components == nil {
+		return ""
+	}
+
+	var totalSizeInByte uint64
+	for _, componentInfo := range s.Status.Components {
+		if componentInfo.Size == "" {
+			return ""
+		}
+
+		sizeWithUnit := strings.Split(componentInfo.Size, " ")
+		if len(sizeWithUnit) < 2 {
+			return ""
+		}
+
+		sizeInByte, err := convertSizeToByte(sizeWithUnit)
+		if err != nil {
+			return ""
+		}
+		totalSizeInByte += sizeInByte
+	}
+	return formatBytes(totalSizeInByte)
+}
+
+func convertSizeToByte(sizeWithUnit []string) (uint64, error) {
+	numeral, err := strconv.ParseFloat(sizeWithUnit[0], 64)
+	if err != nil {
+		return 0, err
+	}
+
+	switch sizeWithUnit[1] {
+	case "TiB":
+		return uint64(numeral * (1 << 40)), nil
+	case "GiB":
+		return uint64(numeral * (1 << 30)), nil
+	case "MiB":
+		return uint64(numeral * (1 << 20)), nil
+	case "KiB":
+		return uint64(numeral * (1 << 10)), nil
+	case "B":
+		return uint64(numeral), nil
+	default:
+		return 0, fmt.Errorf("no valid unit matched")
+	}
+}
+
+func formatBytes(c uint64) string {
+	b := float64(c)
+	switch {
+	case c > 1<<40:
+		return fmt.Sprintf("%.3f TiB", b/(1<<40))
+	case c > 1<<30:
+		return fmt.Sprintf("%.3f GiB", b/(1<<30))
+	case c > 1<<20:
+		return fmt.Sprintf("%.3f MiB", b/(1<<20))
+	case c > 1<<10:
+		return fmt.Sprintf("%.3f KiB", b/(1<<10))
+	default:
+		return fmt.Sprintf("%d B", c)
+	}
 }
 
 func GenerateSnapshotName(repoName, backupSession string) string {

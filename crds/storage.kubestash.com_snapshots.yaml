@@ -148,6 +148,10 @@ spec:
                       description: Error specifies the reason in case of backup failure
                         for the component
                       type: string
+                    integrity:
+                      description: Integrity represents the result of integrity check
+                        for the repository.
+                      type: boolean
                     path:
                       description: Path specifies the path inside the Repository where
                         the backed up data for this component has been stored. This
@@ -175,10 +179,6 @@ spec:
                           id:
                             description: Id represents the restic snapshot id
                             type: string
-                          integrity:
-                            description: Integrity represents the result of restic
-                              integrity check for this snapshot.
-                            type: boolean
                           size:
                             description: Size represents the restic snapshot size
                             type: string
@@ -188,6 +188,10 @@ spec:
                             type: string
                         type: object
                       type: array
+                    size:
+                      description: Size represents the size of repository after last
+                        backup
+                      type: string
                     volumeSnapshotterStats:
                       description: VolumeSnapshotterStats specifies the "VolumeSnapshotter"
                         driver specific information
