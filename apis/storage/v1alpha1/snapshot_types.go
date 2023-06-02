@@ -169,6 +169,14 @@ type Component struct {
 	// +optional
 	Phase ComponentPhase `json:"phase,omitempty"`
 
+	// Size represents the size of the restic repository for this component
+	// +optional
+	Size string `json:"size,omitempty"`
+
+	// Integrity represents the result of the restic repository integrity check for this component
+	// +optional
+	Integrity *bool `json:"integrity,omitempty"`
+
 	// Error specifies the reason in case of backup failure for the component
 	// +optional
 	Error string `json:"error,omitempty"`
@@ -215,10 +223,6 @@ type ResticStats struct {
 	// Size represents the restic snapshot size
 	// +optional
 	Size string `json:"size,omitempty"`
-
-	// Integrity represents the result of restic integrity check for this snapshot.
-	// +optional
-	Integrity *bool `json:"integrity,omitempty"`
 }
 
 // VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
