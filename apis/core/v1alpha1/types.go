@@ -77,7 +77,7 @@ type TargetVolumeInfo struct {
 	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
 
 	// VolumeClaimTemplates specifies a template for the PersistentVolumeClaims that will be created for each Pod in a StatefulSet.
-	VolumeClaimTemplates []core.PersistentVolumeClaim `json:"volumeClaimTemplates,omitempty"`
+	VolumeClaimTemplates []ofst.PersistentVolumeClaim `json:"volumeClaimTemplates,omitempty"`
 }
 
 // HookInfo specifies the information about the backup/restore hooks

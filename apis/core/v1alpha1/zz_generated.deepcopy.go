@@ -1619,7 +1619,7 @@ func (in *TargetVolumeInfo) DeepCopyInto(out *TargetVolumeInfo) {
 	}
 	if in.VolumeClaimTemplates != nil {
 		in, out := &in.VolumeClaimTemplates, &out.VolumeClaimTemplates
-		*out = make([]corev1.PersistentVolumeClaim, len(*in))
+		*out = make([]offshoot_apiapiv1.PersistentVolumeClaim, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
