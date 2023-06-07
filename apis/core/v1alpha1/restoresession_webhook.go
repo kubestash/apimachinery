@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -43,6 +44,14 @@ var _ webhook.Validator = &RestoreSession{}
 func (r *RestoreSession) ValidateCreate() error {
 	restoresessionlog.Info("validate create", "name", r.Name)
 
+	if err := r.checkIfSnapshotIsEmpty(); err != nil {
+		return err
+	}
+
+	if err := r.checkIfRepoIsEmptyForLatestSnapshot(); err != nil {
+		return err
+	}
+
 	// TODO(user): fill in your validation logic upon object creation.
 	return nil
 }
@@ -50,6 +59,14 @@ func (r *RestoreSession) ValidateCreate() error {
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *RestoreSession) ValidateUpdate(old runtime.Object) error {
 	restoresessionlog.Info("validate update", "name", r.Name)
+
+	if err := r.checkIfSnapshotIsEmpty(); err != nil {
+		return err
+	}
+
+	if err := r.checkIfRepoIsEmptyForLatestSnapshot(); err != nil {
+		return err
+	}
 
 	// TODO(user): fill in your validation logic upon object update.
 	return nil
@@ -60,5 +77,20 @@ func (r *RestoreSession) ValidateDelete() error {
 	restoresessionlog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.
+	return nil
+}
+
+func (r *RestoreSession) checkIfSnapshotIsEmpty() error {
+	if r.Spec.DataSource.Snapshot == "" {
+		return fmt.Errorf("snapshot can not be empty")
+	}
+	return nil
+}
+
+func (r *RestoreSession) checkIfRepoIsEmptyForLatestSnapshot() error {
+	if r.Spec.DataSource.Snapshot == "latest" &&
+		r.Spec.DataSource.Repository == "" {
+		return fmt.Errorf("repository can not be empty for latest snapshot")
+	}
 	return nil
 }
