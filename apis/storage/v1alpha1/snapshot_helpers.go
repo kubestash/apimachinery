@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"fmt"
 	"kubestash.dev/apimachinery/crds"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -153,5 +154,7 @@ func formatBytes(c uint64) string {
 }
 
 func GenerateSnapshotName(repoName, backupSession string) string {
-	return meta.ValidNameWithPrefix(repoName, backupSession)
+	backupSessionRegex := regexp.MustCompile("(.*)-([0-9]+)$")
+	subMatches := backupSessionRegex.FindStringSubmatch(backupSession)
+	return meta.ValidNameWithPrefixNSuffix(repoName, subMatches[1], subMatches[2])
 }
