@@ -27,7 +27,7 @@ type HostRestoreStats struct {
 	// Hostname indicate name of the host that has been restored
 	// +optional
 	Hostname string `json:"hostname,omitempty"`
-	// Phase indicates backup phase of this host
+	// Phase indicates restore phase of this host
 	// +optional
 	Phase HostRestorePhase `json:"phase,omitempty"`
 	// Duration indicates total time taken to complete restore for this hosts
