@@ -26,6 +26,16 @@ import (
 
 const FileModeRWXAll = 0o777
 
+type BackupOutput struct {
+	// Stats shows statistics of individual hosts
+	Stats []HostBackupStats `json:"stats,omitempty"`
+}
+
+type RestoreOutput struct {
+	// Stats shows restore statistics of individual hosts
+	Stats []HostRestoreStats `json:"stats,omitempty"`
+}
+
 type RepositoryStats struct {
 	// Integrity shows result of repository integrity check after last backup
 	Integrity *bool `json:"integrity,omitempty"`
@@ -35,11 +45,6 @@ type RepositoryStats struct {
 	SnapshotCount int64 `json:"snapshotCount,omitempty"`
 	// SnapshotsRemovedOnLastCleanup shows number of old snapshots cleaned up according to retention policy on last backup session
 	SnapshotsRemovedOnLastCleanup int64 `json:"snapshotsRemovedOnLastCleanup,omitempty"`
-}
-
-type RestoreOutput struct {
-	// RestoreTargetStatus shows the status of a restore target
-	RestoreTargetStatus RestoreMemberStatus `json:"targetStatus,omitempty"`
 }
 
 // ExtractBackupInfo extract information from output of "restic backup" command and

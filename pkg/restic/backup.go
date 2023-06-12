@@ -18,19 +18,31 @@ package restic
 
 import (
 	"gomodules.xyz/pointer"
-	kmapi "kmodules.xyz/client-go/api/v1"
+	"k8s.io/apimachinery/pkg/util/errors"
+	"sync"
+	"time"
 )
 
 // RunBackup takes backup, cleanup old snapshots, check repository integrity etc.
 // It extracts valuable information from respective restic command it runs and return them for further use.
-func (w *ResticWrapper) RunBackup(backupOption BackupOptions, targetRef kmapi.TypedObjectReference) (*HostBackupStats, error) {
+func (w *ResticWrapper) RunBackup(backupOption BackupOptions) (*BackupOutput, error) {
+	// Start clock to measure total session duration
+	startTime := time.Now()
+
 	// Run backup
 	hostStats, err := w.runBackup(backupOption)
+
 	if err != nil {
-		return nil, err
+		hostStats.Phase = HostBackupFailed
+		hostStats.Error = err.Error()
+	} else {
+		hostStats.Phase = HostBackupSucceeded
+		hostStats.Duration = time.Since(startTime).String()
 	}
 
-	return &hostStats, err
+	return &BackupOutput{
+		Stats: []HostBackupStats{hostStats},
+	}, err
 }
 
 func (w *ResticWrapper) runBackup(backupOption BackupOptions) (HostBackupStats, error) {
@@ -77,6 +89,67 @@ func (w *ResticWrapper) runBackup(backupOption BackupOptions) (HostBackupStats, 
 	return hostStats, nil
 }
 
+// RunParallelBackup runs multiple backup in parallel.
+// Host must be different for each backup.
+func (w *ResticWrapper) RunParallelBackup(backupOptions []BackupOptions, maxConcurrency int) (*BackupOutput, error) {
+	// WaitGroup to wait until all go routine finishes
+	wg := sync.WaitGroup{}
+	// concurrencyLimiter channel is used to limit maximum number simultaneous go routine
+	concurrencyLimiter := make(chan bool, maxConcurrency)
+	defer close(concurrencyLimiter)
+
+	var (
+		backupErrs []error
+		mu         sync.Mutex // use lock to avoid racing condition
+	)
+
+	backupOutput := &BackupOutput{}
+
+	for i := range backupOptions {
+		// try to send message in concurrencyLimiter channel.
+		// if maximum allowed concurrent backup is already running, program control will stuck here.
+		concurrencyLimiter <- true
+
+		// starting new go routine. add it to WaitGroup
+		wg.Add(1)
+
+		go func(opt BackupOptions, startTime time.Time) {
+			// when this go routine completes it task, release a slot from the concurrencyLimiter channel
+			// so that another go routine can start. Also, tell the WaitGroup that it is done with its task.
+			defer func() {
+				<-concurrencyLimiter
+				wg.Done()
+			}()
+
+			// sh field in ResticWrapper is a pointer. we must not use same w in multiple go routine.
+			// otherwise they might enter in racing condition.
+			nw := w.Copy()
+
+			hostStats, err := nw.runBackup(opt)
+
+			if err != nil {
+				hostStats.Phase = HostBackupFailed
+				hostStats.Error = err.Error()
+				mu.Lock()
+				backupErrs = append(backupErrs, err)
+				mu.Unlock()
+			} else {
+				hostStats.Phase = HostBackupSucceeded
+				hostStats.Duration = time.Since(startTime).String()
+			}
+			// add hostStats to backupOutput. use lock to avoid racing condition.
+			mu.Lock()
+			backupOutput.upsertHostBackupStats(hostStats)
+			mu.Unlock()
+		}(backupOptions[i], time.Now())
+	}
+
+	// wait for all the go routines to complete
+	wg.Wait()
+
+	return backupOutput, errors.NewAggregate(backupErrs)
+}
+
 func upsertSnapshotStats(hostStats HostBackupStats, snapStats SnapshotStats) HostBackupStats {
 	for i, s := range hostStats.Snapshots {
 		// if there is already an entry for this snapshot, then update it
@@ -88,6 +161,19 @@ func upsertSnapshotStats(hostStats HostBackupStats, snapStats SnapshotStats) Hos
 	// no entry for this snapshot. add a new entry
 	hostStats.Snapshots = append(hostStats.Snapshots, snapStats)
 	return hostStats
+}
+
+func (backupOutput *BackupOutput) upsertHostBackupStats(hostStats HostBackupStats) {
+	// check if a entry already exist for this host in backupOutput. If exist then update it.
+	for i, v := range backupOutput.Stats {
+		if v.Hostname == hostStats.Hostname {
+			backupOutput.Stats[i] = hostStats
+			return
+		}
+	}
+
+	// no entry for this host. add a new entry
+	backupOutput.Stats = append(backupOutput.Stats, hostStats)
 }
 
 func (w *ResticWrapper) RepositoryAlreadyExist() bool {
