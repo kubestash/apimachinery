@@ -77,8 +77,12 @@ func (r *BackupBlueprint) ValidateCreate() error {
 func (r *BackupBlueprint) ValidateUpdate(old runtime.Object) error {
 	backupblueprintlog.Info("validate update", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object update.
-	return nil
+	c, err := getNewRuntimeClient()
+	if err != nil {
+		return fmt.Errorf("failed to set Kubernetes client, Reason: %w", err)
+	}
+
+	return r.validateBackendsAgainstUsagePolicy(context.Background(), c)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
