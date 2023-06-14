@@ -61,3 +61,13 @@ const (
 	LabelApp          = "app"
 	AppLabelKubeStash = "kubestash"
 )
+
+const (
+	VariablesKey       = "variables.kubestash.com"
+	BackupBlueprintKey = "blueprint.kubestash.com"
+
+	KeyBlueprintName            = BackupBlueprintKey + "/name"
+	keyBlueprintNamespace       = BackupBlueprintKey + "/namespace"
+	keyBlueprintSessions        = BackupBlueprintKey + "/sessions"
+	keyBlueprintBackupNamespace = BackupBlueprintKey + "/backupNamespace"
+)
