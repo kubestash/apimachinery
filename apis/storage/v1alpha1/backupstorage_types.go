@@ -133,10 +133,6 @@ const (
 	ReasonBackendInitializationSucceeded = "BackendInitializationSucceeded"
 	ReasonBackendInitializationFailed    = "BackendInitializationFailed"
 
-	TypeRepositorySynced          = "RepositorySynced"
-	ReasonRepositorySyncSucceeded = "RepositorySyncSucceeded"
-	ReasonRepositorySyncFailed    = "RepositorySyncFailed"
-
 	TypeBackendSecretFound          = "BackendSecretFound"
 	ReasonBackendSecretNotAvailable = "BackendSecretNotAvailable"
 	ReasonBackendSecretAvailable    = "BackendSecretAvailable"

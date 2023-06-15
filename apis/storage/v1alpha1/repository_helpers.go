@@ -28,8 +28,7 @@ func (_ Repository) CustomResourceDefinition() *apiextensions.CustomResourceDefi
 }
 
 func (r *Repository) CalculatePhase() RepositoryPhase {
-	if kmapi.IsConditionTrue(r.Status.Conditions, TypeRepositoryInitialized) &&
-		kmapi.IsConditionTrue(r.Status.Conditions, TypeSnapshotsSynced) {
+	if kmapi.IsConditionTrue(r.Status.Conditions, TypeRepositoryInitialized) {
 		return RepositoryReady
 	}
 	return RepositoryNotReady
