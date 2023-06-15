@@ -51,8 +51,8 @@ func (b *BackupStorage) UsageAllowed(srcNamespace *core.Namespace) bool {
 	return b.isNamespaceAllowed(srcNamespace)
 }
 
-func (r *BackupStorage) isNamespaceAllowed(srcNamespace *core.Namespace) bool {
-	allowedNamespaces := r.Spec.UsagePolicy.AllowedNamespaces
+func (b *BackupStorage) isNamespaceAllowed(srcNamespace *core.Namespace) bool {
+	allowedNamespaces := b.Spec.UsagePolicy.AllowedNamespaces
 
 	if allowedNamespaces.From == nil {
 		return false
@@ -63,7 +63,7 @@ func (r *BackupStorage) isNamespaceAllowed(srcNamespace *core.Namespace) bool {
 	}
 
 	if *allowedNamespaces.From == apis.NamespacesFromSame {
-		return r.Namespace == srcNamespace.Name
+		return b.Namespace == srcNamespace.Name
 	}
 
 	return selectorMatches(allowedNamespaces.Selector, srcNamespace.Labels)

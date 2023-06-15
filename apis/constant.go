@@ -66,8 +66,7 @@ const (
 	VariablesKey       = "variables.kubestash.com"
 	BackupBlueprintKey = "blueprint.kubestash.com"
 
-	KeyBlueprintName            = BackupBlueprintKey + "/name"
-	KeyBlueprintNamespace       = BackupBlueprintKey + "/namespace"
-	KeyBlueprintSessions        = BackupBlueprintKey + "/sessions"
-	KeyBlueprintBackupNamespace = BackupBlueprintKey + "/backupNamespace"
+	KeyBlueprintName      = BackupBlueprintKey + "/name"
+	KeyBlueprintNamespace = BackupBlueprintKey + "/namespace"
+	KeyBlueprintSessions  = BackupBlueprintKey + "/sessions"
 )
