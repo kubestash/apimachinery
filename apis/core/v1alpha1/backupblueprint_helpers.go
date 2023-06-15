@@ -17,11 +17,39 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"kubestash.dev/apimachinery/crds"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/klog/v2"
 
 	"kmodules.xyz/client-go/apiextensions"
+
+	"kubestash.dev/apimachinery/apis"
+	"kubestash.dev/apimachinery/crds"
 )
 
 func (_ BackupBlueprint) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralBackupBlueprint))
+}
+
+func (b *BackupBlueprint) UsageAllowed(srcNamespace *corev1.Namespace) bool {
+	allowedNamespace := b.Spec.UsagePolicy.AllowedNamespaces
+	if *allowedNamespace.From == apis.NamespacesFromAll {
+		return true
+	}
+
+	if *allowedNamespace.From == apis.NamespacesFromSame {
+		return b.Namespace == srcNamespace.Name
+	}
+
+	return selectorMatches(allowedNamespace.Selector, srcNamespace.Labels)
+}
+
+func selectorMatches(ls *metav1.LabelSelector, srcLabels map[string]string) bool {
+	selector, err := metav1.LabelSelectorAsSelector(ls)
+	if err != nil {
+		klog.Infoln("invalid label selector: ", ls)
+		return false
+	}
+	return selector.Matches(labels.Set(srcLabels))
 }
