@@ -23168,8 +23168,8 @@ spec:
                     of individual components
                   properties:
                     duration:
-                      description: Duration specify total time taken to complete the
-                        restore process for this component
+                      description: Duration specifies the total time taken to complete
+                        the restore process for this component
                       type: string
                     error:
                       description: Error specifies the reason in case of restore failure
@@ -23268,8 +23268,8 @@ spec:
                   type: object
                 type: array
               duration:
-                description: Duration specify total time taken to complete the restore
-                  process
+                description: Duration specifies the total time taken to complete the
+                  restore process
                 type: string
               hooks:
                 description: Hooks represents the hook execution status

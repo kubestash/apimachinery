@@ -145,8 +145,8 @@ spec:
                       - VolumeSnapshotter
                       type: string
                     duration:
-                      description: Duration specify total time taken to complete the
-                        backup process for this component
+                      description: Duration specifies the total time taken to complete
+                        the backup process for this component
                       type: string
                     error:
                       description: Error specifies the reason in case of backup failure
