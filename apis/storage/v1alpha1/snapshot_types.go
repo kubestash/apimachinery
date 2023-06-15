@@ -173,7 +173,7 @@ type Component struct {
 	// +optional
 	Size string `json:"size,omitempty"`
 
-	// Duration specify total time taken to complete the backup process for this component
+	// Duration specifies the total time taken to complete the backup process for this component
 	// +optional
 	Duration string `json:"duration,omitempty"`
 
