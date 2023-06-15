@@ -33,7 +33,7 @@ func (_ Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 }
 
 func (s *Snapshot) CalculatePhase() SnapshotPhase {
-	if kmapi.IsConditionFalse(s.Status.Conditions, TypeBackendMetadataWritten) ||
+	if kmapi.IsConditionFalse(s.Status.Conditions, TypeSnapshotMetadataUploaded) ||
 		kmapi.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) {
 		return SnapshotFailed
 	}
