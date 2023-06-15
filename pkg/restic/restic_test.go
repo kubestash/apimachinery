@@ -205,7 +205,7 @@ func TestBackupRestoreDirs(t *testing.T) {
 	backupOpt := BackupOptions{
 		BackupPaths: []string{targetPath},
 	}
-	backupOut, err := w.RunBackup(backupOpt, testTargetRef)
+	backupOut, err := w.RunBackup(backupOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -220,7 +220,7 @@ func TestBackupRestoreDirs(t *testing.T) {
 	restoreOpt := RestoreOptions{
 		RestorePaths: []string{targetPath},
 	}
-	restoreOut, err := w.RunRestore(restoreOpt, testTargetRef)
+	restoreOut, err := w.RunRestore(restoreOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -261,7 +261,7 @@ func TestBackupRestoreStdin(t *testing.T) {
 		StdinPipeCommands: []Command{stdinPipeCommand},
 		StdinFileName:     fileName,
 	}
-	backupOut, err := w.RunBackup(backupOpt, testTargetRef)
+	backupOut, err := w.RunBackup(backupOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -272,7 +272,7 @@ func TestBackupRestoreStdin(t *testing.T) {
 		FileName:           fileName,
 		StdoutPipeCommands: []Command{stdoutPipeCommand},
 	}
-	dumpOut, err := w.Dump(dumpOpt, testTargetRef)
+	dumpOut, err := w.Dump(dumpOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -312,7 +312,7 @@ func TestBackupRestoreWithScheduling(t *testing.T) {
 	backupOpt := BackupOptions{
 		BackupPaths: []string{targetPath},
 	}
-	backupOut, err := w.RunBackup(backupOpt, testTargetRef)
+	backupOut, err := w.RunBackup(backupOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -327,7 +327,7 @@ func TestBackupRestoreWithScheduling(t *testing.T) {
 	restoreOpt := RestoreOptions{
 		RestorePaths: []string{targetPath},
 	}
-	restoreOut, err := w.RunRestore(restoreOpt, testTargetRef)
+	restoreOut, err := w.RunRestore(restoreOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -376,7 +376,7 @@ func TestBackupRestoreStdinWithScheduling(t *testing.T) {
 		StdinPipeCommands: []Command{stdinPipeCommand},
 		StdinFileName:     fileName,
 	}
-	backupOut, err := w.RunBackup(backupOpt, testTargetRef)
+	backupOut, err := w.RunBackup(backupOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -387,7 +387,7 @@ func TestBackupRestoreStdinWithScheduling(t *testing.T) {
 		FileName:           fileName,
 		StdoutPipeCommands: []Command{stdoutPipeCommand},
 	}
-	dumpOut, err := w.Dump(dumpOpt, testTargetRef)
+	dumpOut, err := w.Dump(dumpOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -447,7 +447,7 @@ func TestBackupRestoreWithArgs(t *testing.T) {
 			}
 			test.backupOpt.BackupPaths = []string{targetPath}
 
-			_, err = w.RunBackup(test.backupOpt, testTargetRef)
+			_, err = w.RunBackup(test.backupOpt)
 			if err != nil {
 				t.Error(err)
 				return
@@ -460,7 +460,7 @@ func TestBackupRestoreWithArgs(t *testing.T) {
 			}
 			test.restoreOpt.RestorePaths = []string{targetPath}
 
-			_, err = w.RunRestore(test.restoreOpt, testTargetRef)
+			_, err = w.RunRestore(test.restoreOpt)
 			if err != nil {
 				t.Error(err)
 				return
@@ -494,12 +494,12 @@ func TestVerifyRepositoryIntegrity(t *testing.T) {
 		BackupPaths: []string{targetPath},
 	}
 	// take two backup
-	_, err = w.RunBackup(backupOpt, testTargetRef)
+	_, err = w.RunBackup(backupOpt)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	_, err = w.RunBackup(backupOpt, testTargetRef)
+	_, err = w.RunBackup(backupOpt)
 	if err != nil {
 		t.Error(err)
 		return

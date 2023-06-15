@@ -175,7 +175,7 @@ type RestoreSessionStatus struct {
 	// +optional
 	TargetFound *bool `json:"targetFound,omitempty"`
 
-	// Duration specify total time taken to complete the restore process
+	// Duration specifies the total time taken to complete the restore process
 	// +optional
 	Duration string `json:"duration,omitempty"`
 
@@ -222,7 +222,7 @@ type ComponentRestoreStatus struct {
 	// +optional
 	Phase RestorePhase `json:"phase,omitempty"`
 
-	// Duration specify total time taken to complete the restore process for this component
+	// Duration specifies the total time taken to complete the restore process for this component
 	// +optional
 	Duration string `json:"duration,omitempty"`
 

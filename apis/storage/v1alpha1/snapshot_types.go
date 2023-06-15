@@ -173,6 +173,10 @@ type Component struct {
 	// +optional
 	Size string `json:"size,omitempty"`
 
+	// Duration specifies the total time taken to complete the backup process for this component
+	// +optional
+	Duration string `json:"duration,omitempty"`
+
 	// Integrity represents the result of the restic repository integrity check for this component
 	// +optional
 	Integrity *bool `json:"integrity,omitempty"`

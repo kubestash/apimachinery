@@ -148,9 +148,9 @@ type SnapshotInfo struct {
 }
 
 const (
-	TypeRepositoryInitialized               = "BackendInitialized"
-	ReasonRepositoryInitializationSucceeded = "BackendInitializationSucceeded"
-	ReasonRepositoryInitializationFailed    = "BackendInitializationFailed"
+	TypeRepositoryInitialized               = "RepositoryInitialized"
+	ReasonRepositoryInitializationSucceeded = "RepositoryInitializationSucceeded"
+	ReasonRepositoryInitializationFailed    = "RepositoryInitializationFailed"
 
 	TypeSnapshotsSynced          = "SnapshotsSynced"
 	ReasonSnapshotsSyncSucceeded = "SnapshotsSyncSucceeded"

@@ -16,36 +16,11 @@ limitations under the License.
 
 package restic
 
-import (
-	kmapi "kmodules.xyz/client-go/api/v1"
-)
-
-type RestoreMemberStatus struct {
-	// Ref is the reference to the respective target whose status is shown here.
-	Ref kmapi.TypedObjectReference `json:"ref"`
-	// Conditions shows the condition of different steps to restore this member.
-	// +optional
-	Conditions []kmapi.Condition `json:"conditions,omitempty"`
-	// TotalHosts specifies total number of hosts that will be restored for this member.
-	// +optional
-	TotalHosts *int32 `json:"totalHosts,omitempty"`
-	// Phase indicates restore phase of this member
-	// +optional
-	Phase RestoreTargetPhase `json:"phase,omitempty"`
-	// Stats shows restore statistics of individual hosts for this member
-	// +optional
-	Stats []HostRestoreStats `json:"stats,omitempty"`
-}
-
-// +kubebuilder:validation:Enum=Pending;Succeeded;Running;Failed
-type RestoreTargetPhase string
+type HostRestorePhase string
 
 const (
-	TargetRestorePending      RestoreTargetPhase = "Pending"
-	TargetRestoreRunning      RestoreTargetPhase = "Running"
-	TargetRestoreSucceeded    RestoreTargetPhase = "Succeeded"
-	TargetRestoreFailed       RestoreTargetPhase = "Failed"
-	TargetRestorePhaseUnknown RestoreTargetPhase = "Unknown"
+	HostRestoreSucceeded HostRestorePhase = "Succeeded"
+	HostRestoreFailed    HostRestorePhase = "Failed"
 )
 
 type HostRestoreStats struct {
@@ -63,14 +38,11 @@ type HostRestoreStats struct {
 	Error string `json:"error,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Succeeded;Failed;Running;Unknown
-type HostRestorePhase string
+type HostBackupPhase string
 
 const (
-	HostRestoreSucceeded HostRestorePhase = "Succeeded"
-	HostRestoreFailed    HostRestorePhase = "Failed"
-	HostRestoreRunning   HostRestorePhase = "Running"
-	HostRestoreUnknown   HostRestorePhase = "Unknown"
+	HostBackupSucceeded HostBackupPhase = "Succeeded"
+	HostBackupFailed    HostBackupPhase = "Failed"
 )
 
 type HostBackupStats struct {
@@ -116,21 +88,3 @@ type FileStats struct {
 	// UnmodifiedFiles shows total number of files that has not been changed since last backup
 	UnmodifiedFiles *int64 `json:"unmodifiedFiles,omitempty"`
 }
-
-// +kubebuilder:validation:Enum=Pending;Succeeded;Running;Failed
-type TargetPhase string
-
-const (
-	TargetBackupPending   TargetPhase = "Pending"
-	TargetBackupSucceeded TargetPhase = "Succeeded"
-	TargetBackupRunning   TargetPhase = "Running"
-	TargetBackupFailed    TargetPhase = "Failed"
-)
-
-// +kubebuilder:validation:Enum=Succeeded;Failed
-type HostBackupPhase string
-
-const (
-	HostBackupSucceeded HostBackupPhase = "Succeeded"
-	HostBackupFailed    HostBackupPhase = "Failed"
-)

@@ -52,14 +52,14 @@ const (
 )
 
 const (
-	ComponentName       = "COMPONENT_NAME"
+	EnvComponentName    = "COMPONENT_NAME"
 	ComponentPod        = "pod"
 	ComponentDeployment = "deployment"
 )
 
 const (
-	LabelApp          = "app"
-	AppLabelKubeStash = "kubestash"
+	LabelApp       = "app"
+	LabelKubeStash = "kubestash"
 )
 
 const (
