@@ -75,6 +75,10 @@ func (s *Snapshot) GetComponentsPhase() SnapshotPhase {
 	return SnapshotRunning
 }
 
+func (s *Snapshot) IsCompleted() bool {
+	return s.Status.Phase == SnapshotSucceeded || s.Status.Phase == SnapshotFailed
+}
+
 func (s *Snapshot) GetIntegrity() *bool {
 	if s.Status.Components == nil {
 		return nil
