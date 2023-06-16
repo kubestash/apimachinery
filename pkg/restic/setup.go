@@ -136,7 +136,7 @@ func (w *ResticWrapper) setupEnv() error {
 	switch w.config.provider {
 
 	case storage.ProviderLocal:
-		r := w.config.bucket
+		r := fmt.Sprintf("%s/%s", w.config.bucket, w.config.Directory)
 		w.sh.SetEnv(RESTIC_REPOSITORY, r)
 
 	case storage.ProviderS3:
