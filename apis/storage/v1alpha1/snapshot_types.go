@@ -241,9 +241,9 @@ type WalSegment struct {
 }
 
 const (
-	TypeBackendMetadataWritten               = "BackendMetadataWritten"
-	ReasonFailedToWriteBackendMetadata       = "FailedToWriteBackendMetadata"
-	ReasonSuccessfullyWrittenBackendMetadata = "SuccessfullyWrittenBackendMetadata "
+	TypeSnapshotMetadataUploaded               = "SnapshotMetadataUploaded"
+	ReasonFailedToUploadSnapshotMetadata       = "FailedToUploadSnapshotMetadata"
+	ReasonSuccessfullyUploadedSnapshotMetadata = "SuccessfullyUploadedSnapshotMetadata"
 
 	TypeRecentSnapshotListUpdated               = "RecentSnapshotListUpdated"
 	ReasonFailedToUpdateRecentSnapshotList      = "FailedToUpdateRecentSnapshotList"

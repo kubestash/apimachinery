@@ -151,10 +151,6 @@ const (
 	TypeRepositoryInitialized               = "RepositoryInitialized"
 	ReasonRepositoryInitializationSucceeded = "RepositoryInitializationSucceeded"
 	ReasonRepositoryInitializationFailed    = "RepositoryInitializationFailed"
-
-	TypeSnapshotsSynced          = "SnapshotsSynced"
-	ReasonSnapshotsSyncSucceeded = "SnapshotsSyncSucceeded"
-	ReasonSnapshotsSyncFailed    = "SnapshotsSyncFailed"
 )
 
 //+kubebuilder:object:root=true

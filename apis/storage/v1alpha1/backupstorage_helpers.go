@@ -33,7 +33,7 @@ func (_ BackupStorage) CustomResourceDefinition() *apiextensions.CustomResourceD
 }
 
 func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
-	if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackendInitialized) && kmapi.IsConditionTrue(b.Status.Conditions, TypeRepositorySynced) {
+	if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackendInitialized) {
 		if !kmapi.HasCondition(b.Status.Conditions, TypeBackendSecretFound) {
 			return BackupStorageReady
 		}
