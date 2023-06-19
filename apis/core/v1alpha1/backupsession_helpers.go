@@ -63,13 +63,11 @@ func (b *BackupSession) sessionHistoryCleanupFailed() bool {
 }
 
 func (b *BackupSession) failedToEnsureSnapshots() bool {
-	return !kmapi.HasCondition(b.Status.Conditions, TypeSnapshotsEnsured) ||
-		kmapi.IsConditionFalse(b.Status.Conditions, TypeSnapshotsEnsured)
+	return kmapi.IsConditionFalse(b.Status.Conditions, TypeSnapshotsEnsured)
 }
 
 func (b *BackupSession) failedToEnsurebackupExecutor() bool {
-	return !kmapi.HasCondition(b.Status.Conditions, TypeBackupExecutorEnsured) ||
-		kmapi.IsConditionFalse(b.Status.Conditions, TypeBackupExecutorEnsured)
+	return kmapi.IsConditionFalse(b.Status.Conditions, TypeBackupExecutorEnsured)
 }
 
 func (b *BackupSession) FinalStepExecuted() bool {
