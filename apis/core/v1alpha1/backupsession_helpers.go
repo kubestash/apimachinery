@@ -160,6 +160,7 @@ func (b *BackupSession) OffshootLabels() map[string]string {
 	labels[meta_util.ComponentLabelKey] = apis.KubeStashBackupComponent
 	labels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
 	labels[meta_util.PartOfLabelKey] = b.Name
+	labels[apis.KubeStashInvokerNamespace] = b.Namespace
 
 	return upsertLabels(b.Labels, labels)
 }

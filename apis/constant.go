@@ -31,8 +31,13 @@ const (
 )
 
 const (
-	KubeStashBackupComponent  = "kubestash.com/backup"
-	KubeStashRestoreComponent = "kubestash.com/restore"
+	KubeStashBackupComponent  = "kubestash-backup"
+	KubeStashRestoreComponent = "kubestash-restore"
+)
+
+// Keys for offshoot labels
+const (
+	KubeStashInvokerNamespace = "kubestash.com/invoker-ns"
 )
 
 // Keys for structure logging
