@@ -100,7 +100,7 @@ func (rs *RestoreSession) OffshootLabels() map[string]string {
 	labels := make(map[string]string)
 	labels[meta_util.ComponentLabelKey] = apis.KubeStashRestoreComponent
 	labels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
-	labels[meta_util.PartOfLabelKey] = rs.Name
+	labels[apis.KubeStashInvokerName] = rs.Name
 	labels[apis.KubeStashInvokerNamespace] = rs.Namespace
 
 	return upsertLabels(rs.Labels, labels)

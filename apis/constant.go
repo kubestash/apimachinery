@@ -37,7 +37,8 @@ const (
 
 // Keys for offshoot labels
 const (
-	KubeStashInvokerNamespace = "kubestash.com/invoker-ns"
+	KubeStashInvokerName      = "kubestash.com/invoker-name"
+	KubeStashInvokerNamespace = "kubestash.com/invoker-namespace"
 )
 
 // Keys for structure logging
