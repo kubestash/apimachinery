@@ -164,13 +164,3 @@ func (b *BackupSession) OffshootLabels() map[string]string {
 
 	return upsertLabels(b.Labels, labels)
 }
-
-func upsertLabels(oldLabels, newLabels map[string]string) map[string]string {
-	if oldLabels == nil {
-		oldLabels = make(map[string]string, len(newLabels))
-	}
-	for k, v := range newLabels {
-		oldLabels[k] = v
-	}
-	return oldLabels
-}
