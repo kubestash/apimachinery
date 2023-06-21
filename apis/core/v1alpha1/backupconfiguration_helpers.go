@@ -17,8 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	meta_util "kmodules.xyz/client-go/meta"
-	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -92,24 +90,4 @@ func (b *BackupConfiguration) GetStorageRef(backend string) *kmapi.TypedObjectRe
 		}
 	}
 	return nil
-}
-
-func (b *BackupConfiguration) OffshootLabels() map[string]string {
-	labels := make(map[string]string)
-	labels[meta_util.ComponentLabelKey] = apis.KubeStashBackupComponent
-	labels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
-	labels[apis.KubeStashInvokerName] = b.Name
-	labels[apis.KubeStashInvokerNamespace] = b.Namespace
-
-	return upsertLabels(b.Labels, labels)
-}
-
-func upsertLabels(oldLabels, newLabels map[string]string) map[string]string {
-	if oldLabels == nil {
-		oldLabels = make(map[string]string, len(newLabels))
-	}
-	for k, v := range newLabels {
-		oldLabels[k] = v
-	}
-	return oldLabels
 }
