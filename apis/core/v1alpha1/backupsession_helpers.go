@@ -36,6 +36,14 @@ func (b *BackupSession) IsRunning() bool {
 	return b.Status.Phase == BackupSessionRunning
 }
 
+func (b *BackupSession) IsCompleted() bool {
+	phase := b.Status.Phase
+
+	return phase == BackupSessionSucceeded ||
+		phase == BackupSessionFailed ||
+		phase == BackupSessionSkipped
+}
+
 func (b *BackupSession) CalculatePhase() BackupSessionPhase {
 	if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackupSkipped) {
 		return BackupSessionSkipped
