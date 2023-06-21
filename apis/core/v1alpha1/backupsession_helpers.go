@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"fmt"
+	"kubestash.dev/apimachinery/apis"
 	"time"
 
 	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
@@ -26,6 +27,7 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	"kmodules.xyz/client-go/meta"
+	meta_util "kmodules.xyz/client-go/meta"
 )
 
 func (_ BackupSession) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -151,4 +153,24 @@ func (b *BackupSession) calculateBackupSessionPhaseFromSnapshots() BackupSession
 
 func GenerateBackupSessionName(invokerName, sessionName string) string {
 	return meta.ValidNameWithPrefixNSuffix(invokerName, sessionName, fmt.Sprintf("%d", time.Now().Unix()))
+}
+
+func (b *BackupSession) OffshootLabels() map[string]string {
+	labels := make(map[string]string)
+	labels[meta_util.ComponentLabelKey] = apis.KubeStashBackupComponent
+	labels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
+	labels[apis.KubeStashInvokerName] = b.Name
+	labels[apis.KubeStashInvokerNamespace] = b.Namespace
+
+	return upsertLabels(b.Labels, labels)
+}
+
+func upsertLabels(oldLabels, newLabels map[string]string) map[string]string {
+	if oldLabels == nil {
+		oldLabels = make(map[string]string, len(newLabels))
+	}
+	for k, v := range newLabels {
+		oldLabels[k] = v
+	}
+	return oldLabels
 }

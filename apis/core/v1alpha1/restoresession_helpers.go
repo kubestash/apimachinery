@@ -17,10 +17,12 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	meta_util "kmodules.xyz/client-go/meta"
 )
 
 func (_ RestoreSession) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -92,4 +94,14 @@ func (rs *RestoreSession) getComponentsPhase() RestorePhase {
 	}
 
 	return RestoreFailed
+}
+
+func (rs *RestoreSession) OffshootLabels() map[string]string {
+	labels := make(map[string]string)
+	labels[meta_util.ComponentLabelKey] = apis.KubeStashRestoreComponent
+	labels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
+	labels[apis.KubeStashInvokerName] = rs.Name
+	labels[apis.KubeStashInvokerNamespace] = rs.Namespace
+
+	return upsertLabels(rs.Labels, labels)
 }

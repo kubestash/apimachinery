@@ -26,7 +26,22 @@ const (
 	KubeDBGroupName           = "kubedb.com"
 )
 
-// =================== Keys for structure logging =====================
+const (
+	OwnerKey = ".metadata.controller"
+)
+
+const (
+	KubeStashBackupComponent  = "kubestash-backup"
+	KubeStashRestoreComponent = "kubestash-restore"
+)
+
+// Keys for offshoot labels
+const (
+	KubeStashInvokerName      = "kubestash.com/invoker-name"
+	KubeStashInvokerNamespace = "kubestash.com/invoker-namespace"
+)
+
+// Keys for structure logging
 const (
 	KeyTargetKind      = "target_kind"
 	KeyTargetName      = "target_name"
@@ -35,33 +50,7 @@ const (
 	KeyName            = "name"
 )
 
-const (
-	KindStatefulSet = "StatefulSet"
-	KindDaemonSet   = "DaemonSet"
-	KindDeployment  = "Deployment"
-	KindClusterRole = "ClusterRole"
-)
-
-const (
-	Requeue      = true
-	DoNotRequeue = false
-)
-
-const (
-	OwnerKey = ".metadata.controller"
-)
-
-const (
-	EnvComponentName    = "COMPONENT_NAME"
-	ComponentPod        = "pod"
-	ComponentDeployment = "deployment"
-)
-
-const (
-	LabelApp       = "app"
-	LabelKubeStash = "kubestash"
-)
-
+// Keys for BackupBlueprint
 const (
 	VariablesKey       = "variables.kubestash.com"
 	BackupBlueprintKey = "blueprint.kubestash.com"
@@ -69,4 +58,30 @@ const (
 	KeyBlueprintName      = BackupBlueprintKey + "/name"
 	KeyBlueprintNamespace = BackupBlueprintKey + "/namespace"
 	KeyBlueprintSessions  = BackupBlueprintKey + "/sessions"
+)
+
+// RBAC related constants
+const (
+	KindClusterRole = "ClusterRole"
+
+	KubeStashBackupJobClusterRole  = "kubestash-backup-job"
+	KubeStashRestoreJobClusterRole = "kubestash-restore-job"
+	KubeStashCronJobClusterRole    = "kubestash-cron-job"
+)
+
+// Reconciliation related constants
+const (
+	Requeue      = true
+	DoNotRequeue = false
+)
+
+// Workload related constants
+const (
+	EnvComponentName    = "COMPONENT_NAME"
+	ComponentPod        = "pod"
+	ComponentDeployment = "deployment"
+
+	KindStatefulSet = "StatefulSet"
+	KindDaemonSet   = "DaemonSet"
+	KindDeployment  = "Deployment"
 )
