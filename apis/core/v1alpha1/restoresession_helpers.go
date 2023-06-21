@@ -97,11 +97,11 @@ func (rs *RestoreSession) getComponentsPhase() RestorePhase {
 }
 
 func (rs *RestoreSession) OffshootLabels() map[string]string {
-	labels := make(map[string]string)
-	labels[meta_util.ComponentLabelKey] = apis.KubeStashRestoreComponent
-	labels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
-	labels[apis.KubeStashInvokerName] = rs.Name
-	labels[apis.KubeStashInvokerNamespace] = rs.Namespace
+	newLabels := make(map[string]string)
+	newLabels[meta_util.ComponentLabelKey] = apis.KubeStashRestoreComponent
+	newLabels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
+	newLabels[apis.KubeStashInvokerName] = rs.Name
+	newLabels[apis.KubeStashInvokerNamespace] = rs.Namespace
 
-	return upsertLabels(rs.Labels, labels)
+	return upsertLabels(rs.Labels, newLabels)
 }

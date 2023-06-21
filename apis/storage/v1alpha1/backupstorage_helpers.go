@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	meta_util "kmodules.xyz/client-go/meta"
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
@@ -76,4 +77,23 @@ func selectorMatches(ls *metav1.LabelSelector, srcLabels map[string]string) bool
 		return false
 	}
 	return selector.Matches(labels.Set(srcLabels))
+}
+
+func (b *BackupStorage) OffshootLabels() map[string]string {
+	newLabels := make(map[string]string)
+	newLabels[meta_util.ComponentLabelKey] = apis.KubeStashStorageComponent
+	newLabels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
+	newLabels[apis.KubeStashInvokerName] = b.Name
+	newLabels[apis.KubeStashInvokerNamespace] = b.Namespace
+	return upsertLabels(b.Labels, newLabels)
+}
+
+func upsertLabels(oldLabels, newLabels map[string]string) map[string]string {
+	if oldLabels == nil {
+		oldLabels = make(map[string]string, len(newLabels))
+	}
+	for k, v := range newLabels {
+		oldLabels[k] = v
+	}
+	return oldLabels
 }
