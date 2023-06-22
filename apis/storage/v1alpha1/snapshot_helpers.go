@@ -170,5 +170,5 @@ func (s *Snapshot) OffshootLabels() map[string]string {
 	newLabels[meta.ManagedByLabelKey] = apis.KubeStashKey
 	newLabels[apis.KubeStashInvokerName] = s.Name
 	newLabels[apis.KubeStashInvokerNamespace] = s.Namespace
-	return upsertLabels(s.Labels, newLabels)
+	return apis.UpsertLabels(s.Labels, newLabels)
 }

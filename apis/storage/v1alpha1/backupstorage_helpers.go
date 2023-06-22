@@ -85,15 +85,5 @@ func (b *BackupStorage) OffshootLabels() map[string]string {
 	newLabels[meta.ManagedByLabelKey] = apis.KubeStashKey
 	newLabels[apis.KubeStashInvokerName] = b.Name
 	newLabels[apis.KubeStashInvokerNamespace] = b.Namespace
-	return upsertLabels(b.Labels, newLabels)
-}
-
-func upsertLabels(oldLabels, newLabels map[string]string) map[string]string {
-	if oldLabels == nil {
-		oldLabels = make(map[string]string, len(newLabels))
-	}
-	for k, v := range newLabels {
-		oldLabels[k] = v
-	}
-	return oldLabels
+	return apis.UpsertLabels(b.Labels, newLabels)
 }

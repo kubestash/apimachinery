@@ -42,5 +42,5 @@ func (r *Repository) OffshootLabels() map[string]string {
 	newLabels[meta.ManagedByLabelKey] = apis.KubeStashKey
 	newLabels[apis.KubeStashInvokerName] = r.Name
 	newLabels[apis.KubeStashInvokerNamespace] = r.Namespace
-	return upsertLabels(r.Labels, newLabels)
+	return apis.UpsertLabels(r.Labels, newLabels)
 }

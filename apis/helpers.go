@@ -14,20 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package apis
 
-import core "k8s.io/api/core/v1"
-
-// ToVolumeAndMount returns volumes and mounts for local backend
-func (l LocalSpec) ToVolumeAndMount(volName string) (core.Volume, core.VolumeMount) {
-	vol := core.Volume{
-		Name:         volName,
-		VolumeSource: *l.VolumeSource.ToAPIObject(),
+func UpsertLabels(oldLabels, newLabels map[string]string) map[string]string {
+	if oldLabels == nil {
+		oldLabels = make(map[string]string, len(newLabels))
 	}
-	mnt := core.VolumeMount{
-		Name:      volName,
-		MountPath: l.MountPath,
-		SubPath:   l.SubPath,
+	for k, v := range newLabels {
+		oldLabels[k] = v
 	}
-	return vol, mnt
+	return oldLabels
 }

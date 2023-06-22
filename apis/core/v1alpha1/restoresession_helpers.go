@@ -103,5 +103,5 @@ func (rs *RestoreSession) OffshootLabels() map[string]string {
 	newLabels[apis.KubeStashInvokerName] = rs.Name
 	newLabels[apis.KubeStashInvokerNamespace] = rs.Namespace
 
-	return upsertLabels(rs.Labels, newLabels)
+	return apis.UpsertLabels(rs.Labels, newLabels)
 }

@@ -104,7 +104,7 @@ func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, 
 				return fmt.Errorf("backend %q for repository %q doesn't match with any of the given backends", repo.Backend, repo.Name)
 			}
 
-			existingRepo, err := b.getRepo(ctx, c, repo.Name)
+			existingRepo, err := b.getRepository(ctx, c, repo.Name)
 			if err != nil {
 				if kerr.IsNotFound(err) {
 					continue
@@ -112,11 +112,11 @@ func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, 
 				return err
 			}
 
-			if !Matched(&existingRepo.Spec.AppRef, b.Spec.Target) {
+			if !targetMatched(&existingRepo.Spec.AppRef, b.Spec.Target) {
 				return fmt.Errorf("repository '%q' already exists in the cluster with a different target reference. Please, choose a different repository name", repo.Name)
 			}
 
-			if !Matched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) {
+			if !targetMatched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) {
 				return fmt.Errorf("repository '%q' already exists in the cluster with a different storage reference. Please, choose a different repository name", repo.Name)
 			}
 
@@ -125,7 +125,7 @@ func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, 
 	return nil
 }
 
-func Matched(t1, t2 *kmapi.TypedObjectReference) bool {
+func targetMatched(t1, t2 *kmapi.TypedObjectReference) bool {
 	return t1.APIGroup == t2.APIGroup &&
 		t1.Kind == t2.Kind &&
 		t1.Namespace == t2.Namespace &&
@@ -155,7 +155,7 @@ func (b *BackupConfiguration) backendMatched(repo RepositoryInfo) bool {
 	return false
 }
 
-func (b *BackupConfiguration) getRepo(ctx context.Context, c client.Client, name string) (*storageapi.Repository, error) {
+func (b *BackupConfiguration) getRepository(ctx context.Context, c client.Client, name string) (*storageapi.Repository, error) {
 	repo := &storageapi.Repository{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      name,
