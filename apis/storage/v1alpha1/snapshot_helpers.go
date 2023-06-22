@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"fmt"
+	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 	"regexp"
 	"strconv"
@@ -161,4 +162,13 @@ func GenerateSnapshotName(repoName, backupSession string) string {
 	backupSessionRegex := regexp.MustCompile("(.*)-([0-9]+)$")
 	subMatches := backupSessionRegex.FindStringSubmatch(backupSession)
 	return meta.ValidNameWithPrefixNSuffix(repoName, subMatches[1], subMatches[2])
+}
+
+func (s *Snapshot) OffshootLabels() map[string]string {
+	newLabels := make(map[string]string)
+	newLabels[meta.ComponentLabelKey] = apis.KubeStashStorageComponent
+	newLabels[meta.ManagedByLabelKey] = apis.KubeStashKey
+	newLabels[apis.KubeStashInvokerName] = s.Name
+	newLabels[apis.KubeStashInvokerNamespace] = s.Namespace
+	return upsertLabels(s.Labels, newLabels)
 }

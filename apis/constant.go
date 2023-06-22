@@ -31,9 +31,11 @@ const (
 )
 
 const (
-	KubeStashBackupComponent  = "kubestash-backup"
-	KubeStashRestoreComponent = "kubestash-restore"
-	KubeStashStorageComponent = "kubestash-storage"
+	KubeStashBackupComponent     = "kubestash-backup"
+	KubeStashRestoreComponent    = "kubestash-restore"
+	KubeStashStorageComponent    = "kubestash-storage"
+	KubeStashRepositoryComponent = "kubestash-repository"
+	KubeStashSnapshotComponent   = "kubestash-snapshot"
 )
 
 // Keys for offshoot labels
