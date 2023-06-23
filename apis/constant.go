@@ -31,8 +31,11 @@ const (
 )
 
 const (
-	KubeStashBackupComponent  = "kubestash-backup"
-	KubeStashRestoreComponent = "kubestash-restore"
+	KubeStashBackupComponent     = "kubestash-backup"
+	KubeStashRestoreComponent    = "kubestash-restore"
+	KubeStashStorageComponent    = "kubestash-storage"
+	KubeStashRepositoryComponent = "kubestash-repository"
+	KubeStashSnapshotComponent   = "kubestash-snapshot"
 )
 
 // Keys for offshoot labels
@@ -63,6 +66,7 @@ const (
 // RBAC related constants
 const (
 	KindClusterRole = "ClusterRole"
+	KindRole        = "Role"
 
 	KubeStashBackupJobClusterRole  = "kubestash-backup-job"
 	KubeStashRestoreJobClusterRole = "kubestash-restore-job"

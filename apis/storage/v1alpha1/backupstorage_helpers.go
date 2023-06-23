@@ -26,6 +26,7 @@ import (
 	"k8s.io/klog/v2"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	"kmodules.xyz/client-go/meta"
 )
 
 func (_ BackupStorage) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -76,4 +77,13 @@ func selectorMatches(ls *metav1.LabelSelector, srcLabels map[string]string) bool
 		return false
 	}
 	return selector.Matches(labels.Set(srcLabels))
+}
+
+func (b *BackupStorage) OffshootLabels() map[string]string {
+	newLabels := make(map[string]string)
+	newLabels[meta.ComponentLabelKey] = apis.KubeStashStorageComponent
+	newLabels[meta.ManagedByLabelKey] = apis.KubeStashKey
+	newLabels[apis.KubeStashInvokerName] = b.Name
+	newLabels[apis.KubeStashInvokerNamespace] = b.Namespace
+	return apis.UpsertLabels(b.Labels, newLabels)
 }

@@ -156,21 +156,11 @@ func GenerateBackupSessionName(invokerName, sessionName string) string {
 }
 
 func (b *BackupSession) OffshootLabels() map[string]string {
-	labels := make(map[string]string)
-	labels[meta_util.ComponentLabelKey] = apis.KubeStashBackupComponent
-	labels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
-	labels[apis.KubeStashInvokerName] = b.Name
-	labels[apis.KubeStashInvokerNamespace] = b.Namespace
+	newLabels := make(map[string]string)
+	newLabels[meta_util.ComponentLabelKey] = apis.KubeStashBackupComponent
+	newLabels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
+	newLabels[apis.KubeStashInvokerName] = b.Name
+	newLabels[apis.KubeStashInvokerNamespace] = b.Namespace
 
-	return upsertLabels(b.Labels, labels)
-}
-
-func upsertLabels(oldLabels, newLabels map[string]string) map[string]string {
-	if oldLabels == nil {
-		oldLabels = make(map[string]string, len(newLabels))
-	}
-	for k, v := range newLabels {
-		oldLabels[k] = v
-	}
-	return oldLabels
+	return apis.UpsertLabels(b.Labels, newLabels)
 }
