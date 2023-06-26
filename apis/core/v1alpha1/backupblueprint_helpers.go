@@ -21,6 +21,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/klog/v2"
+	meta_util "kmodules.xyz/client-go/meta"
 
 	"kmodules.xyz/client-go/apiextensions"
 
@@ -52,4 +53,13 @@ func selectorMatches(ls *metav1.LabelSelector, srcLabels map[string]string) bool
 		return false
 	}
 	return selector.Matches(labels.Set(srcLabels))
+}
+
+func (b *BackupBlueprint) OffshootLabels() map[string]string {
+	newLabels := make(map[string]string)
+	newLabels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
+	newLabels[apis.KubeStashInvokerName] = b.Name
+	newLabels[apis.KubeStashInvokerNamespace] = b.Namespace
+
+	return apis.UpsertLabels(b.Labels, newLabels)
 }
