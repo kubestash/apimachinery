@@ -103,6 +103,10 @@ func (r *BackupBlueprint) setDefaultUsagePolicy() {
 }
 
 func (r *BackupBlueprint) validateBackendsAgainstUsagePolicy(ctx context.Context, c client.Client) error {
+	if r.Spec.BackupConfigurationTemplate == nil {
+		return fmt.Errorf("backupConfigurationTemplate can not be empty")
+	}
+
 	for _, backend := range r.Spec.BackupConfigurationTemplate.Backends {
 		bs, err := r.getBackupStorage(ctx, c, backend.StorageRef)
 		if err != nil {

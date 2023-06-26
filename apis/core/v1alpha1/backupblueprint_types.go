@@ -46,7 +46,7 @@ type BackupBlueprint struct {
 // BackupBlueprintSpec defines the desired state of BackupBlueprint
 type BackupBlueprintSpec struct {
 	// BackupConfigurationTemplate Specifies the BackupConfiguration that will be created by BackupBlueprint.
-	BackupConfigurationTemplate BackupConfigurationTemplate `json:"backupConfigurationTemplate,omitempty"`
+	BackupConfigurationTemplate *BackupConfigurationTemplate `json:"backupConfigurationTemplate,omitempty"`
 
 	// Subjects specify a list of subject to which this BackupBlueprint is applicable. KubeStash will start watcher for these resources.
 	// Multiple BackupBlueprints can have common subject. The watcher will find the appropriate blueprint from its annotations.
