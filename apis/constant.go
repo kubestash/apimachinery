@@ -68,9 +68,10 @@ const (
 	KindClusterRole = "ClusterRole"
 	KindRole        = "Role"
 
-	KubeStashBackupJobClusterRole  = "kubestash-backup-job"
-	KubeStashRestoreJobClusterRole = "kubestash-restore-job"
-	KubeStashCronJobClusterRole    = "kubestash-cron-job"
+	KubeStashBackupJobClusterRole       = "kubestash-backup-job"
+	KubeStashRestoreJobClusterRole      = "kubestash-restore-job"
+	KubeStashCronJobClusterRole         = "kubestash-cron-job"
+	KubeStashLocalBackendJobClusterRole = "kubestash-localBackend-job"
 )
 
 // Reconciliation related constants
