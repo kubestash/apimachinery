@@ -166,7 +166,6 @@ func GenerateSnapshotName(repoName, backupSession string) string {
 
 func (s *Snapshot) OffshootLabels() map[string]string {
 	newLabels := make(map[string]string)
-	newLabels[meta.ComponentLabelKey] = apis.KubeStashSnapshotComponent
 	newLabels[meta.ManagedByLabelKey] = apis.KubeStashKey
 	newLabels[apis.KubeStashInvokerName] = s.Name
 	newLabels[apis.KubeStashInvokerNamespace] = s.Namespace
