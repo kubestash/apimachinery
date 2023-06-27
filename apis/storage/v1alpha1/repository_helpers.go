@@ -38,7 +38,6 @@ func (r *Repository) CalculatePhase() RepositoryPhase {
 
 func (r *Repository) OffshootLabels() map[string]string {
 	newLabels := make(map[string]string)
-	newLabels[meta.ComponentLabelKey] = apis.KubeStashRepositoryComponent
 	newLabels[meta.ManagedByLabelKey] = apis.KubeStashKey
 	newLabels[apis.KubeStashInvokerName] = r.Name
 	newLabels[apis.KubeStashInvokerNamespace] = r.Namespace

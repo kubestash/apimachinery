@@ -31,11 +31,11 @@ const (
 )
 
 const (
-	KubeStashBackupComponent     = "kubestash-backup"
-	KubeStashRestoreComponent    = "kubestash-restore"
-	KubeStashStorageComponent    = "kubestash-storage"
-	KubeStashRepositoryComponent = "kubestash-repository"
-	KubeStashSnapshotComponent   = "kubestash-snapshot"
+	KubeStashBackupComponent      = "kubestash-backup"
+	KubeStashRestoreComponent     = "kubestash-restore"
+	KubeStashInitializerComponent = "kubestash-initializer"
+	KubeStashUploaderComponent    = "kubestash-uploader"
+	KubeStashCleanerComponent     = "kubestash-cleaner"
 )
 
 // Keys for offshoot labels
@@ -68,9 +68,10 @@ const (
 	KindClusterRole = "ClusterRole"
 	KindRole        = "Role"
 
-	KubeStashBackupJobClusterRole  = "kubestash-backup-job"
-	KubeStashRestoreJobClusterRole = "kubestash-restore-job"
-	KubeStashCronJobClusterRole    = "kubestash-cron-job"
+	KubeStashBackupJobClusterRole       = "kubestash-backup-job"
+	KubeStashRestoreJobClusterRole      = "kubestash-restore-job"
+	KubeStashCronJobClusterRole         = "kubestash-cron-job"
+	KubeStashLocalBackendJobClusterRole = "kubestash-localBackend-job"
 )
 
 // Reconciliation related constants
@@ -88,4 +89,10 @@ const (
 	KindStatefulSet = "StatefulSet"
 	KindDaemonSet   = "DaemonSet"
 	KindDeployment  = "Deployment"
+)
+
+// Local backend job related constants
+const (
+	PrefixInit   = "init"
+	PrefixUpload = "upload"
 )
