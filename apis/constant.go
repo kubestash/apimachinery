@@ -90,3 +90,9 @@ const (
 	KindDaemonSet   = "DaemonSet"
 	KindDeployment  = "Deployment"
 )
+
+// Local backend job related constants
+const (
+	PrefixInit   = "init"
+	PrefixUpload = "upload"
+)
