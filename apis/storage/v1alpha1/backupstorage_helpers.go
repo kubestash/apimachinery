@@ -86,3 +86,10 @@ func (b *BackupStorage) OffshootLabels() map[string]string {
 	newLabels[apis.KubeStashInvokerNamespace] = b.Namespace
 	return apis.UpsertLabels(b.Labels, newLabels)
 }
+
+func (b *BackupStorage) LocalProvider() bool {
+	if b.Spec.Storage.Provider == ProviderLocal {
+		return true
+	}
+	return false
+}
