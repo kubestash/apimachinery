@@ -65,6 +65,10 @@ func (s *Snapshot) GetComponentsPhase() SnapshotPhase {
 		return SnapshotPending
 	}
 
+	if s.Status.RemainingTasks != 0 {
+		return SnapshotRunning
+	}
+
 	if successfulComponent == totalComponents {
 		return SnapshotSucceeded
 	}

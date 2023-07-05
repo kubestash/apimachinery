@@ -288,6 +288,11 @@ spec:
                 - Succeeded
                 - Failed
                 type: string
+              remainingTasks:
+                description: RemainingTasks represent the number of tasks remained
+                  to be completed
+                format: int32
+                type: integer
               size:
                 description: Size represents the size of the Snapshot
                 type: string

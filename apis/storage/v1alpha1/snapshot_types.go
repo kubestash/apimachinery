@@ -136,6 +136,10 @@ type SnapshotStatus struct {
 	// +optional
 	// +mapType=granular
 	Components map[string]Component `json:"components,omitempty"`
+
+	// RemainingTasks represent the number of tasks remained to be completed
+	// +optional
+	RemainingTasks int32 `json:"remainingTasks,omitempty"`
 }
 
 // SnapshotPhase represent the overall progress of this Snapshot
