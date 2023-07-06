@@ -88,8 +88,5 @@ func (b *BackupStorage) OffshootLabels() map[string]string {
 }
 
 func (b *BackupStorage) LocalProvider() bool {
-	if b.Spec.Storage.Provider == ProviderLocal {
-		return true
-	}
-	return false
+	return b.Spec.Storage.Provider == ProviderLocal
 }
