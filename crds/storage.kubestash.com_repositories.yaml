@@ -205,6 +205,10 @@ spec:
                 description: Integrity specifies whether the backed up data of this
                   Repository has been corrupted or not
                 type: boolean
+              job:
+                description: Job holds the cleanup jobs Information that's created
+                  regarding this Repository
+                type: string
               lastBackupTime:
                 description: LastBackupTime specifies the timestamp when the last
                   successful backup has been taken
