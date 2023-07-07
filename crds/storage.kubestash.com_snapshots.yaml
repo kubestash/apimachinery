@@ -306,6 +306,7 @@ spec:
                       type: integer
                   type: object
                 type: object
+                x-kubernetes-map-type: granular
               verificationStatus:
                 description: VerificationStatus specifies whether this Snapshot has
                   been verified or not

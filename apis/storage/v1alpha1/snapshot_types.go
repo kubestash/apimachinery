@@ -132,6 +132,7 @@ type SnapshotStatus struct {
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 
+	// +mapType=granular
 	Tasks map[string]Task `json:"tasks,omitempty"`
 }
 
