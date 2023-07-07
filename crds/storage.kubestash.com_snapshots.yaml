@@ -288,11 +288,6 @@ spec:
                 - Succeeded
                 - Failed
                 type: string
-              remainingTasks:
-                description: RemainingTasks represent the number of tasks remained
-                  to be completed
-                format: int32
-                type: integer
               size:
                 description: Size represents the size of the Snapshot
                 type: string
@@ -301,6 +296,11 @@ spec:
                   was taken.
                 format: date-time
                 type: string
+              totalComponents:
+                description: RemainingTasks represent the number of tasks remained
+                  to be completed
+                format: int32
+                type: integer
               verificationStatus:
                 description: VerificationStatus specifies whether this Snapshot has
                   been verified or not

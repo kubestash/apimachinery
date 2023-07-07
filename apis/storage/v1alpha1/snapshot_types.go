@@ -139,7 +139,7 @@ type SnapshotStatus struct {
 
 	// RemainingTasks represent the number of tasks remained to be completed
 	// +optional
-	RemainingTasks int32 `json:"remainingTasks,omitempty"`
+	TotalComponents int32 `json:"totalComponents,omitempty"`
 }
 
 // SnapshotPhase represent the overall progress of this Snapshot
