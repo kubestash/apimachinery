@@ -132,10 +132,7 @@ type SnapshotStatus struct {
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 
-	// Components represents the backup information of the individual components of this Snapshot
-	// +optional
-	// +mapType=granular
-	Components map[string]Component `json:"components,omitempty"`
+	Tasks map[string]Task `json:"tasks,omitempty"`
 }
 
 // SnapshotPhase represent the overall progress of this Snapshot
@@ -158,6 +155,14 @@ const (
 	SnapshotNotVerified        VerificationStatus = "NotVerified"
 	SnapshotVerificationFailed VerificationStatus = "VerificationFailed"
 )
+
+type Task struct {
+	TotalComponents int32 `json:"totalComponents,omitempty"`
+	// Components represents the backup information of the individual components of this Snapshot
+	// +optional
+	// +mapType=granular
+	Components map[string]Component `json:"components,omitempty"`
+}
 
 // Component represents the backup information of individual components
 type Component struct {
