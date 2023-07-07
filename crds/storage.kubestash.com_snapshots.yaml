@@ -297,8 +297,8 @@ spec:
                 format: date-time
                 type: string
               totalComponents:
-                description: RemainingTasks represent the number of tasks remained
-                  to be completed
+                description: TotalComponents represents the number of total components
+                  for this Snapshot
                 format: int32
                 type: integer
               verificationStatus:
