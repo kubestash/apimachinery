@@ -184,6 +184,10 @@ type RestoreSessionStatus struct {
 	// +optional
 	Deadline *metav1.Time `json:"deadline,omitempty"`
 
+	// TotalComponents represents the number of total components for this RestoreSession
+	// +optional
+	TotalComponents int32 `json:"totalComponents,omitempty"`
+
 	// Components represents the individual component restore status
 	// +optional
 	// +mapType=granular

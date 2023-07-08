@@ -63,9 +63,12 @@ func (rs *RestoreSession) postHooksExecutionCompleted() bool {
 }
 
 func (rs *RestoreSession) getComponentsPhase() RestorePhase {
+	if len(rs.Status.Components) == 0 {
+		return RestorePending
+	}
+
 	failedComponent := 0
 	successfulComponent := 0
-	pendingComponent := 0
 
 	for _, c := range rs.Status.Components {
 		if c.Phase == RestoreSucceeded {
@@ -74,26 +77,19 @@ func (rs *RestoreSession) getComponentsPhase() RestorePhase {
 		if c.Phase == RestoreFailed {
 			failedComponent++
 		}
-		if c.Phase == RestorePending {
-			pendingComponent++
-		}
 	}
 
-	totalComponents := len(rs.Status.Components)
-
-	if pendingComponent == totalComponents {
-		return RestorePending
-	}
+	totalComponents := int(rs.Status.TotalComponents)
 
 	if successfulComponent == totalComponents {
 		return RestoreSucceeded
 	}
 
-	if successfulComponent+failedComponent != totalComponents {
-		return RestoreRunning
+	if successfulComponent+failedComponent == totalComponents {
+		return RestoreFailed
 	}
 
-	return RestoreFailed
+	return RestoreRunning
 }
 
 func (rs *RestoreSession) OffshootLabels() map[string]string {

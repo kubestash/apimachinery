@@ -23436,6 +23436,11 @@ spec:
                 description: TargetFound specifies whether the restore target exist
                   or not
                 type: boolean
+              totalComponents:
+                description: TotalComponents represents the number of total components
+                  for this RestoreSession
+                format: int32
+                type: integer
             type: object
         type: object
     served: true
