@@ -64,7 +64,7 @@ type TaskReference struct {
 	// AddonVolumes lets you overwrite the volume sources used in the VolumeTemplate section of Addon.
 	// Make sure that name of your volume matches with the name of the volume you want to overwrite.
 	// +optional
-	AddonVolumes []apis.VolumeSource `json:"addonVolumes,omitempty"`
+	AddonVolumes []AddonVolumeInfo `json:"addonVolumes,omitempty"`
 }
 
 // TargetVolumeInfo specifies the volumes and their mounts of the targeted application that should
@@ -78,6 +78,15 @@ type TargetVolumeInfo struct {
 
 	// VolumeClaimTemplates specifies a template for the PersistentVolumeClaims that will be created for each Pod in a StatefulSet.
 	VolumeClaimTemplates []ofst.PersistentVolumeClaim `json:"volumeClaimTemplates,omitempty"`
+}
+
+// AddonVolumeInfo specifies the name and the source of volume
+type AddonVolumeInfo struct {
+	// Name specifies the name of the volume
+	Name string `json:"name,omitempty"`
+
+	// Source specifies the source of this volume.
+	Source *apis.VolumeSource `json:"source,omitempty"`
 }
 
 // HookInfo specifies the information about the backup/restore hooks
