@@ -82,6 +82,7 @@ spec:
                         to execute the backup/restore task.'
                       enum:
                       - Job
+                      - BatchJob
                       - Sidecar
                       - EphemeralContainer
                       - MultiLevelJob
@@ -2382,6 +2383,7 @@ spec:
                         to execute the backup/restore task.'
                       enum:
                       - Job
+                      - BatchJob
                       - Sidecar
                       - EphemeralContainer
                       - MultiLevelJob
