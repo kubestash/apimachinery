@@ -132,6 +132,10 @@ type SnapshotStatus struct {
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 
+	// TotalComponents represents the number of total components for this Snapshot
+	// +optional
+	TotalComponents int32 `json:"totalComponents,omitempty"`
+
 	// Components represents the backup information of the individual components of this Snapshot
 	// +optional
 	// +mapType=granular

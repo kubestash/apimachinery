@@ -296,6 +296,11 @@ spec:
                   was taken.
                 format: date-time
                 type: string
+              totalComponents:
+                description: TotalComponents represents the number of total components
+                  for this Snapshot
+                format: int32
+                type: integer
               verificationStatus:
                 description: VerificationStatus specifies whether this Snapshot has
                   been verified or not

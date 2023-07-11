@@ -108,11 +108,12 @@ type Task struct {
 }
 
 // TaskExecutor defines the type of the executor that will execute the backup/restore task.
-// +kubebuilder:validation:Enum=Job;Sidecar;EphemeralContainer;MultiLevelJob
+// +kubebuilder:validation:Enum=Job;BatchJob;Sidecar;EphemeralContainer;MultiLevelJob
 type TaskExecutor string
 
 const (
 	ExecutorJob                TaskExecutor = "Job"
+	ExecutorBatchJob           TaskExecutor = "BatchJob"
 	ExecutorSidecar            TaskExecutor = "Sidecar"
 	ExecutorEphemeralContainer TaskExecutor = "EphemeralContainer"
 	ExecutorMultiLevelJob      TaskExecutor = "MultiLevelJob"

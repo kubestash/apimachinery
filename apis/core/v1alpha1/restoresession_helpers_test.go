@@ -32,22 +32,9 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 		expectedPhase  RestorePhase
 	}{
 		{
-			name: "RestoreSession should be Pending if all components are Pending",
+			name: "RestoreSession should be Pending if no component is initialized",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
-				r.Status.Components = map[string]ComponentRestoreStatus{
-					"manifest": {
-						Phase: RestorePending,
-					},
-					"configserver": {
-						Phase: RestorePending,
-					},
-					"shard-0": {
-						Phase: RestorePending,
-					},
-					"shard-1": {
-						Phase: RestorePending,
-					},
-				}
+				r.Status.TotalComponents = 4
 			}),
 
 			expectedPhase: RestorePending,
@@ -55,6 +42,7 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 		{
 			name: "RestoreSession should be Running if any component is Running",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
+				r.Status.TotalComponents = 4
 				r.Status.Components = map[string]ComponentRestoreStatus{
 					"manifest": {
 						Phase: RestoreRunning,
@@ -76,6 +64,7 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 		{
 			name: "RestoreSession should be Running if any component is not completed",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
+				r.Status.TotalComponents = 4
 				r.Status.Components = map[string]ComponentRestoreStatus{
 					"manifest": {
 						Phase: RestoreSucceeded,
@@ -98,6 +87,7 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			name: "RestoreSession should be Failed if any component Failed",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				setPostRestoreHooksExecutionSucceededConditionToTrue(r)
+				r.Status.TotalComponents = 4
 				r.Status.Components = map[string]ComponentRestoreStatus{
 					"manifest": {
 						Phase: RestoreFailed,
@@ -120,6 +110,7 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			name: "RestoreSession should be Failed if all components Failed",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				setPostRestoreHooksExecutionSucceededConditionToTrue(r)
+				r.Status.TotalComponents = 4
 				r.Status.Components = map[string]ComponentRestoreStatus{
 					"manifest": {
 						Phase: RestoreFailed,
@@ -142,6 +133,7 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			name: "RestoreSession should be Succeeded if all components Succeeded",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				setPostRestoreHooksExecutionSucceededConditionToTrue(r)
+				r.Status.TotalComponents = 4
 				r.Status.Components = map[string]ComponentRestoreStatus{
 					"manifest": {
 						Phase: RestoreSucceeded,

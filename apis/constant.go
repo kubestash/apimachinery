@@ -82,9 +82,13 @@ const (
 
 // Workload related constants
 const (
-	EnvComponentName    = "COMPONENT_NAME"
+	EnvComponentName = "COMPONENT_NAME"
+
 	ComponentPod        = "pod"
 	ComponentDeployment = "deployment"
+
+	TaskWorkloadBackup  = "workload-backup"
+	TaskWorkloadRestore = "workload-restore"
 
 	KindStatefulSet = "StatefulSet"
 	KindDaemonSet   = "DaemonSet"
