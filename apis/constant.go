@@ -87,9 +87,6 @@ const (
 	ComponentPod        = "pod"
 	ComponentDeployment = "deployment"
 
-	TaskWorkloadBackup  = "workload-backup"
-	TaskWorkloadRestore = "workload-restore"
-
 	KindStatefulSet = "StatefulSet"
 	KindDaemonSet   = "DaemonSet"
 	KindDeployment  = "Deployment"
