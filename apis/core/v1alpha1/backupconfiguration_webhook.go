@@ -63,7 +63,11 @@ func (b *BackupConfiguration) ValidateCreate() error {
 	if err := b.validateRepositories(context.Background(), c); err != nil {
 		return err
 	}
-	return b.validateBackendsAgainstUsagePolicy(context.Background(), c)
+	if err := b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
+		return err
+	}
+
+	return b.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
 }
 
 func getNewRuntimeClient() (client.Client, error) {
@@ -209,6 +213,55 @@ func (b *BackupConfiguration) getBackupStorage(ctx context.Context, c client.Cli
 	return bs, nil
 }
 
+func (b *BackupConfiguration) validateHookTemplatesAgainstUsagePolicy(ctx context.Context, c client.Client) error {
+	hookTemplates := b.getHookTemplates()
+	for _, ht := range hookTemplates {
+		err := c.Get(ctx, client.ObjectKeyFromObject(&ht), &ht)
+		if err != nil {
+			if kerr.IsNotFound(err) {
+				continue
+			}
+			return err
+		}
+
+		ns := &core.Namespace{ObjectMeta: v1.ObjectMeta{Name: b.Namespace}}
+		if err := c.Get(ctx, client.ObjectKeyFromObject(ns), ns); err != nil {
+			return err
+		}
+
+		if !ht.UsageAllowed(ns) {
+			return fmt.Errorf("namespace %q is not allowed to refer HookTemplate %s/%s. Please, check the `usagePolicy` of the HookTemplate", b.Namespace, ht.Name, ht.Namespace)
+		}
+	}
+	return nil
+}
+
+func (b *BackupConfiguration) getHookTemplates() []HookTemplate {
+	var hookTemplates []HookTemplate
+	for _, session := range b.Spec.Sessions {
+		if session.Hooks != nil {
+			hookTemplates = append(hookTemplates, b.getHookTemplatesFromHookInfo(session.Hooks.PreBackup)...)
+			hookTemplates = append(hookTemplates, b.getHookTemplatesFromHookInfo(session.Hooks.PostBackup)...)
+		}
+	}
+	return hookTemplates
+}
+
+func (b *BackupConfiguration) getHookTemplatesFromHookInfo(hooks []HookInfo) []HookTemplate {
+	var hookTemplates []HookTemplate
+	for _, hook := range hooks {
+		if hook.HookTemplate != nil {
+			hookTemplates = append(hookTemplates, HookTemplate{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      hook.HookTemplate.Name,
+					Namespace: hook.HookTemplate.Namespace,
+				},
+			})
+		}
+	}
+	return hookTemplates
+}
+
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) error {
 	backupconfigurationlog.Info("validate update", apis.KeyName, b.Name)
@@ -220,7 +273,10 @@ func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) error {
 	if err := b.validateRepositories(context.Background(), c); err != nil {
 		return err
 	}
-	return b.validateBackendsAgainstUsagePolicy(context.Background(), c)
+	if err := b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
+		return err
+	}
+	return b.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
