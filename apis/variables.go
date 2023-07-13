@@ -44,6 +44,7 @@ const (
 	SnapshotName = "snapshotName"
 
 	Namespace      = "namespace"
+	Name           = "name"
 	BackupSession  = "backupSession"
 	RestoreSession = "restoreSession"
 

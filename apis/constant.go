@@ -97,3 +97,10 @@ const (
 	PrefixInit   = "init"
 	PrefixUpload = "upload"
 )
+
+// Backend cleanup job related constants
+const (
+	PrefixCleanup     = "cleanup"
+	StorageCleaner    = "storageCleaner"
+	RepositoryCleaner = "repositoryCleaner"
+)
