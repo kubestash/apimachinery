@@ -1969,6 +1969,10 @@ spec:
                   - type
                   type: object
                 type: array
+              job:
+                description: Job holds the cleanup jobs Information that's created
+                  regarding this BackupStorage
+                type: string
               phase:
                 description: Phase indicates the overall phase of the backup BackupStorage.
                   Phase will be "Ready" only if the Backend is initialized and Repositories

@@ -116,7 +116,7 @@ type RepositoryStatus struct {
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 
-	// Job holds the cleanup jobs Information that's created regarding this Repository
+	// Job holds the cleaner jobs information for this repository
 	// +optional
 	Job string `json:"job,omitempty"`
 }

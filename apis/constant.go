@@ -42,6 +42,7 @@ const (
 const (
 	KubeStashInvokerName      = "kubestash.com/invoker-name"
 	KubeStashInvokerNamespace = "kubestash.com/invoker-namespace"
+	KubeStashInvokerKind      = "kubestash.com/invoker-kind"
 )
 
 // Keys for structure logging
@@ -68,11 +69,10 @@ const (
 	KindClusterRole = "ClusterRole"
 	KindRole        = "Role"
 
-	KubeStashBackupJobClusterRole         = "kubestash-backup-job"
-	KubeStashRestoreJobClusterRole        = "kubestash-restore-job"
-	KubeStashCronJobClusterRole           = "kubestash-cron-job"
-	KubeStashLocalBackendJobClusterRole   = "kubestash-localBackend-job"
-	KubeStashBackendCleanupJobClusterRole = "kubestash-BackendCleanup-job"
+	KubeStashBackupJobClusterRole  = "kubestash-backup-job"
+	KubeStashRestoreJobClusterRole = "kubestash-restore-job"
+	KubeStashCronJobClusterRole    = "kubestash-cron-job"
+	KubeStashBackendJobClusterRole = "kubestash-backend-job"
 )
 
 // Reconciliation related constants
@@ -94,7 +94,9 @@ const (
 )
 
 const (
-	PrefixTrigger = "trigger"
-	PrefixInit    = "init"
-	PrefixUpload  = "upload"
+	PrefixTrigger         = "trigger"
+	PrefixInit            = "init"
+	PrefixUpload          = "upload"
+	PrefixCleanup         = "cleanup"
+	PrefixRetentionPolicy = "retentionpolicy"
 )

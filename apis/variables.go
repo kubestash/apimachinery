@@ -46,6 +46,7 @@ const (
 	TaskName = "taskName"
 
 	Namespace      = "namespace"
+	Name           = "name"
 	BackupSession  = "backupSession"
 	RestoreSession = "restoreSession"
 

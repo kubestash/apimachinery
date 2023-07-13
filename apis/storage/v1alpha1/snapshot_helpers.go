@@ -38,8 +38,13 @@ func (s *Snapshot) CalculatePhase() SnapshotPhase {
 		cutil.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) {
 		return SnapshotFailed
 	}
-
-	return s.GetComponentsPhase()
+	if s.GetComponentsPhase() == SnapshotPending {
+		return SnapshotPending
+	}
+	if cutil.HasCondition(s.Status.Conditions, TypeSnapshotMetadataUploaded) {
+		return s.GetComponentsPhase()
+	}
+	return SnapshotRunning
 }
 
 func (s *Snapshot) GetComponentsPhase() SnapshotPhase {
@@ -162,6 +167,7 @@ func GenerateSnapshotName(repoName, backupSession string) string {
 
 func (s *Snapshot) OffshootLabels() map[string]string {
 	newLabels := make(map[string]string)
+	newLabels[apis.KubeStashInvokerKind] = ResourceKindBackupStorage
 	newLabels[meta.ManagedByLabelKey] = apis.KubeStashKey
 	newLabels[apis.KubeStashInvokerName] = s.Name
 	newLabels[apis.KubeStashInvokerNamespace] = s.Namespace
