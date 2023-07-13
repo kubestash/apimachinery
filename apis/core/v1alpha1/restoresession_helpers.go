@@ -30,6 +30,10 @@ func (_ RestoreSession) CustomResourceDefinition() *apiextensions.CustomResource
 }
 
 func (rs *RestoreSession) CalculatePhase() RestorePhase {
+	if kmapi.IsConditionFalse(rs.Status.Conditions, TypeValidationPassed) {
+		return RestoreInvalid
+	}
+
 	if kmapi.IsConditionTrue(rs.Status.Conditions, TypeDeadlineExceeded) ||
 		kmapi.IsConditionFalse(rs.Status.Conditions, TypePreRestoreHooksExecutionSucceeded) ||
 		kmapi.IsConditionFalse(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded) ||

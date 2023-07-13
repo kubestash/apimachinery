@@ -17,7 +17,9 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
 	"k8s.io/apimachinery/pkg/runtime"
+	"kubestash.dev/apimachinery/apis"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -42,7 +44,9 @@ var _ webhook.Defaulter = &HookTemplate{}
 func (r *HookTemplate) Default() {
 	hooktemplatelog.Info("default", "name", r.Name)
 
-	// TODO(user): fill in your defaulting logic.
+	if r.Spec.UsagePolicy == nil {
+		r.setDefaultUsagePolicy()
+	}
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
@@ -54,16 +58,28 @@ var _ webhook.Validator = &HookTemplate{}
 func (r *HookTemplate) ValidateCreate() error {
 	hooktemplatelog.Info("validate create", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object creation.
-	return nil
+	if r.Spec.Action == nil {
+		return fmt.Errorf("action can not be empty")
+	}
+
+	if r.Spec.Executor == nil {
+		return fmt.Errorf("executor can not be empty")
+	}
+	return r.ValidateExecutorInfo()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *HookTemplate) ValidateUpdate(old runtime.Object) error {
 	hooktemplatelog.Info("validate update", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object update.
-	return nil
+	if r.Spec.Action == nil {
+		return fmt.Errorf("action field can not be empty")
+	}
+
+	if r.Spec.Executor == nil {
+		return fmt.Errorf("executor field can not be empty")
+	}
+	return r.ValidateExecutorInfo()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -71,5 +87,32 @@ func (r *HookTemplate) ValidateDelete() error {
 	hooktemplatelog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.
+	return nil
+}
+
+func (r *HookTemplate) setDefaultUsagePolicy() {
+	fromSameNamespace := apis.NamespacesFromSame
+	r.Spec.UsagePolicy = &apis.UsagePolicy{
+		AllowedNamespaces: apis.AllowedNamespaces{
+			From: &fromSameNamespace,
+		},
+	}
+}
+
+func (r *HookTemplate) ValidateExecutorInfo() error {
+	if r.Spec.Executor.Type == HookExecutorFunction {
+		if r.Spec.Executor.Function == nil {
+			return fmt.Errorf("function field can not be empty")
+		}
+	}
+
+	if r.Spec.Executor.Type == HookExecutorPod {
+		if r.Spec.Executor.Pod == nil {
+			return fmt.Errorf("pod field can not be empty")
+		}
+		if r.Spec.Executor.Pod.Selector == "" {
+			return fmt.Errorf("selector field can not be empty")
+		}
+	}
 	return nil
 }
