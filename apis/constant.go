@@ -92,8 +92,8 @@ const (
 	KindDeployment  = "Deployment"
 )
 
-// Local backend job related constants
 const (
-	PrefixInit   = "init"
-	PrefixUpload = "upload"
+	PrefixTrigger = "trigger"
+	PrefixInit    = "init"
+	PrefixUpload  = "upload"
 )
