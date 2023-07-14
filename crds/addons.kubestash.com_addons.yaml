@@ -82,7 +82,6 @@ spec:
                         to execute the backup/restore task.'
                       enum:
                       - Job
-                      - BatchJob
                       - Sidecar
                       - EphemeralContainer
                       - MultiLevelJob
@@ -167,6 +166,10 @@ spec:
                         - name
                         type: object
                       type: array
+                    singleton:
+                      description: Singleton specifies whether this task will be executed
+                        on a single job or across multiple jobs.
+                      type: boolean
                     volumeMounts:
                       description: VolumeMounts specifies the mount path of the volumes
                         specified in the VolumeTemplate section. These volumes will
@@ -2383,7 +2386,6 @@ spec:
                         to execute the backup/restore task.'
                       enum:
                       - Job
-                      - BatchJob
                       - Sidecar
                       - EphemeralContainer
                       - MultiLevelJob
@@ -2468,6 +2470,10 @@ spec:
                         - name
                         type: object
                       type: array
+                    singleton:
+                      description: Singleton specifies whether this task will be executed
+                        on a single job or across multiple jobs.
+                      type: boolean
                     volumeMounts:
                       description: VolumeMounts specifies the mount path of the volumes
                         specified in the VolumeTemplate section. These volumes will
