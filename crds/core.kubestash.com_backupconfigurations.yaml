@@ -15679,10 +15679,9 @@ spec:
                                   type: object
                                 type: array
                               volumeMounts:
-                                description: Volumes indicates the list of volumes
-                                  of targeted application that should be mounted on
-                                  the hook executor. Use this field only for `Function`
-                                  type hook executor.
+                                description: VolumeMounts specifies the mount for
+                                  the volumes specified in `Volumes` section Use this
+                                  field only for `Function` type hook executor.
                                 items:
                                   description: VolumeMount describes a mounting of
                                     a Volume within a container.
@@ -15726,9 +15725,10 @@ spec:
                                   type: object
                                 type: array
                               volumes:
-                                description: VolumeMounts specifies the mount for
-                                  the volumes specified in `Volumes` section Use this
-                                  field only for `Function` type hook executor.
+                                description: Volumes indicates the list of volumes
+                                  of targeted application that should be mounted on
+                                  the hook executor. Use this field only for `Function`
+                                  type hook executor.
                                 items:
                                   description: Volume represents a named volume in
                                     a pod that may be accessed by any container in
@@ -20813,10 +20813,9 @@ spec:
                                   type: object
                                 type: array
                               volumeMounts:
-                                description: Volumes indicates the list of volumes
-                                  of targeted application that should be mounted on
-                                  the hook executor. Use this field only for `Function`
-                                  type hook executor.
+                                description: VolumeMounts specifies the mount for
+                                  the volumes specified in `Volumes` section Use this
+                                  field only for `Function` type hook executor.
                                 items:
                                   description: VolumeMount describes a mounting of
                                     a Volume within a container.
@@ -20860,9 +20859,10 @@ spec:
                                   type: object
                                 type: array
                               volumes:
-                                description: VolumeMounts specifies the mount for
-                                  the volumes specified in `Volumes` section Use this
-                                  field only for `Function` type hook executor.
+                                description: Volumes indicates the list of volumes
+                                  of targeted application that should be mounted on
+                                  the hook executor. Use this field only for `Function`
+                                  type hook executor.
                                 items:
                                   description: Volume represents a named volume in
                                     a pod that may be accessed by any container in

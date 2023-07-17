@@ -132,12 +132,12 @@ type HookInfo struct {
 	// Volumes indicates the list of volumes of targeted application that should be mounted on the hook executor.
 	// Use this field only for `Function` type hook executor.
 	// +optional
-	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
+	Volumes []ofst.Volume `json:"volumes,omitempty"`
 
 	// VolumeMounts specifies the mount for the volumes specified in `Volumes` section
 	// Use this field only for `Function` type hook executor.
 	// +optional
-	Volumes []ofst.Volume `json:"volumes,omitempty"`
+	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
 
 	// RuntimeSettings specifies runtime configurations for the hook executor Job.
 	// Use this field only for `Function` type hook executor.
