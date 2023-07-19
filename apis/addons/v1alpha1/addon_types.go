@@ -82,6 +82,9 @@ type Task struct {
 	// - "MultiLevelJob": Stash will create a Job that will create additional Jobs/Pods to execute the backup/restore task.
 	Executor TaskExecutor `json:"executor,omitempty"`
 
+	// Singleton specifies whether this task will be executed on a single job or across multiple jobs.
+	Singleton bool `json:"singleton,omitempty"`
+
 	// Parameters defines a list of parameters that is used by the task to execute its logic.
 	// +optional
 	Parameters []apis.ParameterDefinition `json:"parameters,omitempty"`
@@ -108,12 +111,11 @@ type Task struct {
 }
 
 // TaskExecutor defines the type of the executor that will execute the backup/restore task.
-// +kubebuilder:validation:Enum=Job;BatchJob;Sidecar;EphemeralContainer;MultiLevelJob
+// +kubebuilder:validation:Enum=Job;Sidecar;EphemeralContainer;MultiLevelJob
 type TaskExecutor string
 
 const (
 	ExecutorJob                TaskExecutor = "Job"
-	ExecutorBatchJob           TaskExecutor = "BatchJob"
 	ExecutorSidecar            TaskExecutor = "Sidecar"
 	ExecutorEphemeralContainer TaskExecutor = "EphemeralContainer"
 	ExecutorMultiLevelJob      TaskExecutor = "MultiLevelJob"
