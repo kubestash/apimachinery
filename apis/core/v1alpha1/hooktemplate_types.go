@@ -61,7 +61,7 @@ type HookTemplateSpec struct {
 
 	// Params defines a list of parameters that is used by the HookTemplate to execute its logic.
 	// +optional
-	Params *[]apis.ParameterDefinition `json:"params,omitempty"`
+	Params []apis.ParameterDefinition `json:"params,omitempty"`
 
 	// Action specifies the operation that is performed by this HookTemplate
 	// Valid values are:

@@ -905,12 +905,8 @@ func (in *HookTemplateSpec) DeepCopyInto(out *HookTemplateSpec) {
 	}
 	if in.Params != nil {
 		in, out := &in.Params, &out.Params
-		*out = new([]apis.ParameterDefinition)
-		if **in != nil {
-			in, out := *in, *out
-			*out = make([]apis.ParameterDefinition, len(*in))
-			copy(*out, *in)
-		}
+		*out = make([]apis.ParameterDefinition, len(*in))
+		copy(*out, *in)
 	}
 	if in.Action != nil {
 		in, out := &in.Action, &out.Action
