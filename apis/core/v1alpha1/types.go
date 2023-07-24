@@ -55,7 +55,7 @@ type TaskReference struct {
 	// Params specifies parameters for the task. You must provide the parameter in the Addon desired structure.
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +optional
-	Params map[string]*runtime.RawExtension `json:"params,omitempty"`
+	Params *runtime.RawExtension `json:"params,omitempty"`
 
 	// TargetVolumes specifies which volumes from the target should be mounted in the backup/restore job/container.
 	// +optional

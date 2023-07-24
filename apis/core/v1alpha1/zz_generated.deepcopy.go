@@ -1688,18 +1688,8 @@ func (in *TaskReference) DeepCopyInto(out *TaskReference) {
 	}
 	if in.Params != nil {
 		in, out := &in.Params, &out.Params
-		*out = make(map[string]*runtime.RawExtension, len(*in))
-		for key, val := range *in {
-			var outVal *runtime.RawExtension
-			if val == nil {
-				(*out)[key] = nil
-			} else {
-				in, out := &val, &outVal
-				*out = new(runtime.RawExtension)
-				(*in).DeepCopyInto(*out)
-			}
-			(*out)[key] = outVal
-		}
+		*out = new(runtime.RawExtension)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.TargetVolumes != nil {
 		in, out := &in.TargetVolumes, &out.TargetVolumes
