@@ -23293,6 +23293,7 @@ spec:
                       - Running
                       - Failed
                       - Succeeded
+                      - Invalid
                       type: string
                   type: object
                 description: Components represents the individual component restore
@@ -23432,6 +23433,7 @@ spec:
                 - Running
                 - Failed
                 - Succeeded
+                - Invalid
                 type: string
               targetFound:
                 description: TargetFound specifies whether the restore target exist

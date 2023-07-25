@@ -30,6 +30,10 @@ func (_ RestoreSession) CustomResourceDefinition() *apiextensions.CustomResource
 }
 
 func (rs *RestoreSession) CalculatePhase() RestorePhase {
+	if cutil.IsConditionFalse(rs.Status.Conditions, TypeValidationPassed) {
+		return RestoreInvalid
+	}
+
 	if cutil.IsConditionTrue(rs.Status.Conditions, TypeDeadlineExceeded) ||
 		cutil.IsConditionFalse(rs.Status.Conditions, TypePreRestoreHooksExecutionSucceeded) ||
 		cutil.IsConditionFalse(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded) ||
