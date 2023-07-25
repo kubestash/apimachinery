@@ -24,8 +24,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/klog/v2"
-	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	cutil "kmodules.xyz/client-go/conditions"
 	"kmodules.xyz/client-go/meta"
 )
 
@@ -34,11 +34,11 @@ func (_ BackupStorage) CustomResourceDefinition() *apiextensions.CustomResourceD
 }
 
 func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
-	if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackendInitialized) {
-		if !kmapi.HasCondition(b.Status.Conditions, TypeBackendSecretFound) {
+	if cutil.IsConditionTrue(b.Status.Conditions, TypeBackendInitialized) {
+		if !cutil.HasCondition(b.Status.Conditions, TypeBackendSecretFound) {
 			return BackupStorageReady
 		}
-		if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackendSecretFound) {
+		if cutil.IsConditionTrue(b.Status.Conditions, TypeBackendSecretFound) {
 			return BackupStorageReady
 		}
 	}

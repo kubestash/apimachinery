@@ -24,8 +24,8 @@ import (
 	"strconv"
 	"strings"
 
-	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	cutil "kmodules.xyz/client-go/conditions"
 	"kmodules.xyz/client-go/meta"
 )
 
@@ -34,8 +34,8 @@ func (_ Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 }
 
 func (s *Snapshot) CalculatePhase() SnapshotPhase {
-	if kmapi.IsConditionFalse(s.Status.Conditions, TypeSnapshotMetadataUploaded) ||
-		kmapi.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) {
+	if cutil.IsConditionFalse(s.Status.Conditions, TypeSnapshotMetadataUploaded) ||
+		cutil.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) {
 		return SnapshotFailed
 	}
 

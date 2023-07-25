@@ -107,7 +107,7 @@ func (w *ResticWrapper) RunParallelBackup(backupOptions []BackupOptions, maxConc
 
 	for i := range backupOptions {
 		// try to send message in concurrencyLimiter channel.
-		// if maximum allowed concurrent backup is already running, program control will stuck here.
+		// if maximum allowed concurrent backup is already running, program control will get stuck here.
 		concurrencyLimiter <- true
 
 		// starting new go routine. add it to WaitGroup
@@ -164,7 +164,7 @@ func upsertSnapshotStats(hostStats HostBackupStats, snapStats SnapshotStats) Hos
 }
 
 func (backupOutput *BackupOutput) upsertHostBackupStats(hostStats HostBackupStats) {
-	// check if a entry already exist for this host in backupOutput. If exist then update it.
+	// check if an entry already exist for this host in backupOutput. If exist then update it.
 	for i, v := range backupOutput.Stats {
 		if v.Hostname == hostStats.Hostname {
 			backupOutput.Stats[i] = hostStats
