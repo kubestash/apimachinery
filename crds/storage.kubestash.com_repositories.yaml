@@ -151,7 +151,7 @@ spec:
             properties:
               cleanerJob:
                 description: CleanerJob holds the cleaner jobs information for this
-                  BackupStorage
+                  Repository
                 type: string
               conditions:
                 description: Conditions represents list of conditions regarding this
