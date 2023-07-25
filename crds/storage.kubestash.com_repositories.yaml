@@ -149,6 +149,10 @@ spec:
           status:
             description: RepositoryStatus defines the observed state of Repository
             properties:
+              cleanerJob:
+                description: CleanerJob holds the cleaner jobs information for this
+                  BackupStorage
+                type: string
               conditions:
                 description: Conditions represents list of conditions regarding this
                   Repository
@@ -205,10 +209,6 @@ spec:
                 description: Integrity specifies whether the backed up data of this
                   Repository has been corrupted or not
                 type: boolean
-              job:
-                description: Job holds the cleanup jobs Information that's created
-                  regarding this Repository
-                type: string
               lastBackupTime:
                 description: LastBackupTime specifies the timestamp when the last
                   successful backup has been taken

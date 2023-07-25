@@ -43,10 +43,3 @@ func (r *Repository) OffshootLabels() map[string]string {
 	newLabels[apis.KubeStashInvokerNamespace] = r.Namespace
 	return apis.UpsertLabels(r.Labels, newLabels)
 }
-
-func (r *Repository) GetCleanerJobLabels() map[string]string {
-	newLabels := make(map[string]string)
-	newLabels[meta.ComponentLabelKey] = apis.KubeStashCleanerComponent
-	newLabels[apis.KubeStashInvokerKind] = ResourceKindRepository
-	return apis.UpsertLabels(r.Labels, newLabels)
-}

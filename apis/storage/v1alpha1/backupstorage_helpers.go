@@ -88,13 +88,6 @@ func (b *BackupStorage) OffshootLabels() map[string]string {
 	return apis.UpsertLabels(b.Labels, newLabels)
 }
 
-func (b *BackupStorage) GetCleanerJobLabels() map[string]string {
-	newLabels := make(map[string]string)
-	newLabels[meta.ComponentLabelKey] = apis.KubeStashCleanerComponent
-	newLabels[apis.KubeStashInvokerKind] = ResourceKindBackupStorage
-	return apis.UpsertLabels(b.Labels, newLabels)
-}
-
 func (b *BackupStorage) LocalProvider() bool {
 	return b.Spec.Storage.Provider == ProviderLocal
 }
