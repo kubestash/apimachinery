@@ -51,11 +51,6 @@ var (
 	stdoutPipeCommand = Command{Name: "cat"}
 )
 
-var testTargetRef = kmapi.TypedObjectReference{
-	Kind: "UnitTest",
-	Name: "unit-test-demo",
-}
-
 func setupTest(tempDir string) (*ResticWrapper, error) {
 	localRepoDir = filepath.Join(tempDir, "repo")
 	scratchDir = filepath.Join(tempDir, "scratch")

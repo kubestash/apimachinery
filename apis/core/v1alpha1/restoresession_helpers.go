@@ -20,8 +20,8 @@ import (
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
-	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	cutil "kmodules.xyz/client-go/conditions"
 	meta_util "kmodules.xyz/client-go/meta"
 )
 
@@ -30,10 +30,10 @@ func (_ RestoreSession) CustomResourceDefinition() *apiextensions.CustomResource
 }
 
 func (rs *RestoreSession) CalculatePhase() RestorePhase {
-	if kmapi.IsConditionTrue(rs.Status.Conditions, TypeDeadlineExceeded) ||
-		kmapi.IsConditionFalse(rs.Status.Conditions, TypePreRestoreHooksExecutionSucceeded) ||
-		kmapi.IsConditionFalse(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded) ||
-		kmapi.IsConditionFalse(rs.Status.Conditions, TypeRestoreExecutorEnsured) {
+	if cutil.IsConditionTrue(rs.Status.Conditions, TypeDeadlineExceeded) ||
+		cutil.IsConditionFalse(rs.Status.Conditions, TypePreRestoreHooksExecutionSucceeded) ||
+		cutil.IsConditionFalse(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded) ||
+		cutil.IsConditionFalse(rs.Status.Conditions, TypeRestoreExecutorEnsured) {
 		return RestoreFailed
 	}
 
@@ -57,7 +57,7 @@ func (rs *RestoreSession) AllComponentsCompleted() bool {
 func (rs *RestoreSession) postHooksExecutionCompleted() bool {
 	hooks := rs.Spec.Hooks
 	if hooks != nil && hooks.PostRestore != nil {
-		return kmapi.HasCondition(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded)
+		return cutil.HasCondition(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded)
 	}
 	return true
 }

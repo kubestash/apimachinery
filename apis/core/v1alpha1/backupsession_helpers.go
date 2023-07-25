@@ -24,8 +24,8 @@ import (
 	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"kubestash.dev/apimachinery/crds"
 
-	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	cutil "kmodules.xyz/client-go/conditions"
 	"kmodules.xyz/client-go/meta"
 	meta_util "kmodules.xyz/client-go/meta"
 )
@@ -47,7 +47,7 @@ func (b *BackupSession) IsCompleted() bool {
 }
 
 func (b *BackupSession) CalculatePhase() BackupSessionPhase {
-	if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackupSkipped) {
+	if cutil.IsConditionTrue(b.Status.Conditions, TypeBackupSkipped) {
 		return BackupSessionSkipped
 	}
 
@@ -69,19 +69,19 @@ func (b *BackupSession) CalculatePhase() BackupSessionPhase {
 }
 
 func (b *BackupSession) sessionHistoryCleanupFailed() bool {
-	return kmapi.IsConditionFalse(b.Status.Conditions, TypeSessionHistoryCleaned)
+	return cutil.IsConditionFalse(b.Status.Conditions, TypeSessionHistoryCleaned)
 }
 
 func (b *BackupSession) failedToEnsureSnapshots() bool {
-	return kmapi.IsConditionFalse(b.Status.Conditions, TypeSnapshotsEnsured)
+	return cutil.IsConditionFalse(b.Status.Conditions, TypeSnapshotsEnsured)
 }
 
 func (b *BackupSession) failedToEnsurebackupExecutor() bool {
-	return kmapi.IsConditionFalse(b.Status.Conditions, TypeBackupExecutorEnsured)
+	return cutil.IsConditionFalse(b.Status.Conditions, TypeBackupExecutorEnsured)
 }
 
 func (b *BackupSession) FinalStepExecuted() bool {
-	return kmapi.HasCondition(b.Status.Conditions, TypeSessionHistoryCleaned)
+	return cutil.HasCondition(b.Status.Conditions, TypeSessionHistoryCleaned)
 }
 
 func (b *BackupSession) failedToApplyRetentionPolicy() bool {

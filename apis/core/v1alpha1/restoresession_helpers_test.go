@@ -20,9 +20,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	v1 "k8s.io/api/core/v1"
-	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	cutil "kmodules.xyz/client-go/conditions"
 )
 
 func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
@@ -165,7 +165,7 @@ func TestRestoreSessionPhaseIsFailedIfPreRestoreHooksExecutionSucceededCondition
 	rs := sampleRestoreSession(func(r *RestoreSession) {
 		r.Status.Conditions = append(r.Status.Conditions, kmapi.Condition{
 			Type:   TypePreRestoreHooksExecutionSucceeded,
-			Status: v1.ConditionFalse,
+			Status: metav1.ConditionFalse,
 			Reason: ReasonFailedToExecutePreRestoreHooks,
 		})
 	})
@@ -177,7 +177,7 @@ func TestRestoreSessionPhaseIsFailedIfPostRestoreHooksExecutionSucceededConditio
 	rs := sampleRestoreSession(func(r *RestoreSession) {
 		r.Status.Conditions = append(r.Status.Conditions, kmapi.Condition{
 			Type:   TypePostRestoreHooksExecutionSucceeded,
-			Status: v1.ConditionFalse,
+			Status: metav1.ConditionFalse,
 			Reason: ReasonFailedToExecutePostRestoreHooks,
 		})
 	})
@@ -189,7 +189,7 @@ func TestRestoreSessionPhaseIsFailedIfRestoreExecutorEnsuredConditionIsFalse(t *
 	rs := sampleRestoreSession(func(r *RestoreSession) {
 		r.Status.Conditions = append(r.Status.Conditions, kmapi.Condition{
 			Type:   TypeRestoreExecutorEnsured,
-			Status: v1.ConditionFalse,
+			Status: metav1.ConditionFalse,
 			Reason: ReasonFailedToEnsureRestoreExecutor,
 		})
 	})
@@ -201,7 +201,7 @@ func TestRestoreSessionPhaseIsFailedIfDeadlineExceededConditionIsTrue(t *testing
 	rs := sampleRestoreSession(func(r *RestoreSession) {
 		r.Status.Conditions = append(r.Status.Conditions, kmapi.Condition{
 			Type:   TypeDeadlineExceeded,
-			Status: v1.ConditionTrue,
+			Status: metav1.ConditionTrue,
 			Reason: ReasonFailedToCompleteWithinDeadline,
 		})
 	})
@@ -231,7 +231,7 @@ func TestRestoreSessionPhaseIsRunningIfPostRestoreHooksNotExecuted(test *testing
 
 func sampleRestoreSession(transformFuncs ...func(*RestoreSession)) *RestoreSession {
 	rs := &RestoreSession{
-		ObjectMeta: v12.ObjectMeta{
+		ObjectMeta: metav1.ObjectMeta{
 			Name:      "sample-mysql-restore",
 			Namespace: "demo",
 		},
@@ -288,9 +288,9 @@ func sampleRestoreSession(transformFuncs ...func(*RestoreSession)) *RestoreSessi
 func setPostRestoreHooksExecutionSucceededConditionToTrue(rs *RestoreSession) {
 	newCond := kmapi.Condition{
 		Type:    TypePostRestoreHooksExecutionSucceeded,
-		Status:  v1.ConditionTrue,
+		Status:  metav1.ConditionTrue,
 		Reason:  ReasonSuccessfullyExecutedPostRestoreHooks,
 		Message: "Post-Restore Hooks have been executed successfully.",
 	}
-	rs.Status.Conditions = kmapi.SetCondition(rs.Status.Conditions, newCond)
+	rs.Status.Conditions = cutil.SetCondition(rs.Status.Conditions, newCond)
 }
