@@ -20,8 +20,8 @@ import (
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
-	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	cutil "kmodules.xyz/client-go/conditions"
 	"kmodules.xyz/client-go/meta"
 )
 
@@ -30,7 +30,7 @@ func (_ Repository) CustomResourceDefinition() *apiextensions.CustomResourceDefi
 }
 
 func (r *Repository) CalculatePhase() RepositoryPhase {
-	if kmapi.IsConditionTrue(r.Status.Conditions, TypeRepositoryInitialized) {
+	if cutil.IsConditionTrue(r.Status.Conditions, TypeRepositoryInitialized) {
 		return RepositoryReady
 	}
 	return RepositoryNotReady

@@ -10494,9 +10494,6 @@ spec:
                                       task
                                     type: string
                                   params:
-                                    additionalProperties:
-                                      type: object
-                                      x-kubernetes-preserve-unknown-fields: true
                                     description: Params specifies parameters for the
                                       task. You must provide the parameter in the
                                       Addon desired structure.
