@@ -149,10 +149,6 @@ spec:
           status:
             description: RepositoryStatus defines the observed state of Repository
             properties:
-              cleanerJob:
-                description: CleanerJob holds the cleaner jobs information for this
-                  Repository
-                type: string
               conditions:
                 description: Conditions represents list of conditions regarding this
                   Repository

@@ -1917,10 +1917,6 @@ spec:
           status:
             description: BackupStorageStatus defines the observed state of BackupStorage
             properties:
-              cleanerJob:
-                description: CleanerJob holds the cleaner jobs information for this
-                  BackupStorage
-                type: string
               conditions:
                 description: Conditions represents list of conditions regarding this
                   BackupStorage
