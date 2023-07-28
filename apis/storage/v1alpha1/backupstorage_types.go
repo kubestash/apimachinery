@@ -100,10 +100,6 @@ type BackupStorageStatus struct {
 	// Conditions represents list of conditions regarding this BackupStorage
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
-
-	// CleanerJob holds the cleaner jobs information for this BackupStorage
-	// +optional
-	CleanerJob string `json:"cleanerJob,omitempty"`
 }
 
 // RepositoryInfo specifies information regarding a Repository using the BackupStorage
