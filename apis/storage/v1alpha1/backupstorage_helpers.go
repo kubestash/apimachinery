@@ -82,6 +82,7 @@ func selectorMatches(ls *metav1.LabelSelector, srcLabels map[string]string) bool
 func (b *BackupStorage) OffshootLabels() map[string]string {
 	newLabels := make(map[string]string)
 	newLabels[meta.ManagedByLabelKey] = apis.KubeStashKey
+	newLabels[apis.KubeStashInvokerKind] = ResourceKindBackupStorage
 	newLabels[apis.KubeStashInvokerName] = b.Name
 	newLabels[apis.KubeStashInvokerNamespace] = b.Namespace
 	return apis.UpsertLabels(b.Labels, newLabels)
