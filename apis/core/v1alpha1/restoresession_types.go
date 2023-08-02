@@ -193,9 +193,13 @@ type RestoreSessionStatus struct {
 	// +mapType=granular
 	Components map[string]ComponentRestoreStatus `json:"components,omitempty"`
 
-	// Hooks represents the hook execution status
+	// PreHooks represents the pre-restore hook execution status
 	// +optional
-	Hooks []HookExecutionStatus `json:"hooks,omitempty"`
+	PreHooks []HookExecutionStatus `json:"preHooks,omitempty"`
+
+	// PostHooks represents the post-restore hook execution status
+	// +optional
+	PostHooks []HookExecutionStatus `json:"postHooks,omitempty"`
 
 	// Dependencies specifies whether the objects required by this RestoreSession exist or not
 	// +optional

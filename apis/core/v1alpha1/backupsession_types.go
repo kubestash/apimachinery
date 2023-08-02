@@ -84,9 +84,13 @@ type BackupSessionStatus struct {
 	// +optional
 	Snapshots []SnapshotStatus `json:"snapshots,omitempty"`
 
-	// Hooks specifies the hook execution status
+	// PreHooks represents the pre-backup hook execution status
 	// +optional
-	Hooks []HookExecutionStatus `json:"hooks,omitempty"`
+	PreHooks []HookExecutionStatus `json:"preHooks,omitempty"`
+
+	// PostHooks represents the post-backup hook execution status
+	// +optional
+	PostHooks []HookExecutionStatus `json:"postHooks,omitempty"`
 
 	// Verifications specifies the backup verification status
 	// +optional

@@ -147,8 +147,23 @@ spec:
                 description: Duration specifies the time required to complete the
                   backup process
                 type: string
-              hooks:
-                description: Hooks specifies the hook execution status
+              nextRetry:
+                description: NextRetry specifies the time when Stash should retry
+                  the current failed backup. This field will exist only if the `retryConfig`
+                  has been set in the respective backup invoker.
+                format: date-time
+                type: string
+              phase:
+                description: Phase represents the current state of the backup process.
+                enum:
+                - Pending
+                - Running
+                - Succeeded
+                - Failed
+                - Skipped
+                type: string
+              postHooks:
+                description: PostHooks represents the post-backup hook execution status
                 items:
                   description: HookExecutionStatus represents the state of the hook
                     execution
@@ -165,21 +180,24 @@ spec:
                       type: string
                   type: object
                 type: array
-              nextRetry:
-                description: NextRetry specifies the time when Stash should retry
-                  the current failed backup. This field will exist only if the `retryConfig`
-                  has been set in the respective backup invoker.
-                format: date-time
-                type: string
-              phase:
-                description: Phase represents the current state of the backup process.
-                enum:
-                - Pending
-                - Running
-                - Succeeded
-                - Failed
-                - Skipped
-                type: string
+              preHooks:
+                description: PreHooks represents the pre-backup hook execution status
+                items:
+                  description: HookExecutionStatus represents the state of the hook
+                    execution
+                  properties:
+                    name:
+                      description: Name indicates the name of the hook whose status
+                        is being shown here.
+                      type: string
+                    phase:
+                      description: Phase represents the hook execution phase
+                      enum:
+                      - Succeeded
+                      - Failed
+                      type: string
+                  type: object
+                type: array
               retentionPolicy:
                 description: RetentionPolices specifies whether the retention policies
                   were properly applied on the repositories or not

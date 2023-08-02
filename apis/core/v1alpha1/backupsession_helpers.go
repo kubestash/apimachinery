@@ -95,7 +95,8 @@ func (b *BackupSession) failedToApplyRetentionPolicy() bool {
 }
 
 func (b *BackupSession) failedToExecuteHooks() bool {
-	for _, h := range b.Status.Hooks {
+	hooks := append(b.Status.PreHooks, b.Status.PostHooks...)
+	for _, h := range hooks {
 		if h.Phase == HookExecutionFailed {
 			return true
 		}

@@ -300,7 +300,7 @@ func TestBackupSessionPhaseFailedIfBackupExecutorFailedToEnsure(t *testing.T) {
 
 func TestBackupSessionPhaseFailedOnHookExecutionFailure(t *testing.T) {
 	bs := getSampleBackupSession(func(b *BackupSession) {
-		b.Status.Hooks = []HookExecutionStatus{
+		b.Status.PreHooks = []HookExecutionStatus{
 			{
 				Name:  "pre-backup-hook",
 				Phase: HookExecutionFailed,
@@ -309,6 +309,8 @@ func TestBackupSessionPhaseFailedOnHookExecutionFailure(t *testing.T) {
 				Name:  "pre-backup-hook-2",
 				Phase: HookExecutionSucceeded,
 			},
+		}
+		b.Status.PostHooks = []HookExecutionStatus{
 			{
 				Name:  "post-backup-hook",
 				Phase: HookExecutionSucceeded,

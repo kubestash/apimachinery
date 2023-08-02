@@ -620,8 +620,13 @@ func (in *BackupSessionStatus) DeepCopyInto(out *BackupSessionStatus) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	if in.Hooks != nil {
-		in, out := &in.Hooks, &out.Hooks
+	if in.PreHooks != nil {
+		in, out := &in.PreHooks, &out.PreHooks
+		*out = make([]HookExecutionStatus, len(*in))
+		copy(*out, *in)
+	}
+	if in.PostHooks != nil {
+		in, out := &in.PostHooks, &out.PostHooks
 		*out = make([]HookExecutionStatus, len(*in))
 		copy(*out, *in)
 	}
@@ -1332,8 +1337,13 @@ func (in *RestoreSessionStatus) DeepCopyInto(out *RestoreSessionStatus) {
 			(*out)[key] = val
 		}
 	}
-	if in.Hooks != nil {
-		in, out := &in.Hooks, &out.Hooks
+	if in.PreHooks != nil {
+		in, out := &in.PreHooks, &out.PreHooks
+		*out = make([]HookExecutionStatus, len(*in))
+		copy(*out, *in)
+	}
+	if in.PostHooks != nil {
+		in, out := &in.PostHooks, &out.PostHooks
 		*out = make([]HookExecutionStatus, len(*in))
 		copy(*out, *in)
 	}
