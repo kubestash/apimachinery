@@ -163,9 +163,6 @@ type HookExecutionStatus struct {
 	// Phase represents the hook execution phase
 	// +optional
 	Phase HookExecutionPhase `json:"phase,omitempty"`
-
-	// Retried represents the number of time the hook execution is retried
-	Retried int32 `json:"retried,omitempty"`
 }
 
 // HookExecutionPhase specifies the state of the hook execution
