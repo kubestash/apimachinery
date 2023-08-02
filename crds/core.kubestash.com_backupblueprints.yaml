@@ -16794,8 +16794,7 @@ spec:
                                       will consider this hook execution as failure.
                                       Then, it will be re-tried according to MaxRetry
                                       policy.
-                                    format: int32
-                                    type: integer
+                                    type: string
                                   variables:
                                     description: Variables specifies a list of variables
                                       and their sources that will be used to resolve
@@ -22354,8 +22353,7 @@ spec:
                                       will consider this hook execution as failure.
                                       Then, it will be re-tried according to MaxRetry
                                       policy.
-                                    format: int32
-                                    type: integer
+                                    type: string
                                   variables:
                                     description: Variables specifies a list of variables
                                       and their sources that will be used to resolve

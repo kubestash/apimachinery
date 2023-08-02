@@ -801,7 +801,7 @@ func (in *HookInfo) DeepCopyInto(out *HookInfo) {
 	}
 	if in.Timeout != nil {
 		in, out := &in.Timeout, &out.Timeout
-		*out = new(int32)
+		*out = new(metav1.Duration)
 		**out = **in
 	}
 	if in.Variables != nil {

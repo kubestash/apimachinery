@@ -114,7 +114,7 @@ type HookInfo struct {
 	// If the hook execution does not finish within this time period, KubeStash will consider this hook execution as failure.
 	// Then, it will be re-tried according to MaxRetry policy.
 	// +optional
-	Timeout *int32 `json:"timeout,omitempty"`
+	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
 	// ExecutionPolicy specifies when to execute the hook.
 	// Valid values are:
