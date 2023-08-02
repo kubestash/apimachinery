@@ -36,6 +36,7 @@ const (
 	KubeStashInitializerComponent = "kubestash-initializer"
 	KubeStashUploaderComponent    = "kubestash-uploader"
 	KubeStashCleanerComponent     = "kubestash-cleaner"
+	KubeStashHookComponent        = "kubestash-hook"
 )
 
 // Keys for offshoot labels
