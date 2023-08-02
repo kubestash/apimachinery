@@ -100,3 +100,8 @@ const (
 	PrefixCleanup         = "cleanup"
 	PrefixRetentionPolicy = "retentionpolicy"
 )
+
+const (
+	CallerJob        = "job"
+	CallerController = "controller"
+)
