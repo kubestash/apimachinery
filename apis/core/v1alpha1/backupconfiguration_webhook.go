@@ -78,6 +78,7 @@ func getNewRuntimeClient() (client.Client, error) {
 	scheme := runtime.NewScheme()
 	utilruntime.Must(storageapi.AddToScheme(scheme))
 	utilruntime.Must(core.AddToScheme(scheme))
+	utilruntime.Must(AddToScheme(scheme))
 
 	mapper, err := apiutil.NewDynamicRESTMapper(config)
 	if err != nil {
