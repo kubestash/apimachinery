@@ -135,7 +135,7 @@ type PodHookExecutorSpec struct {
 	// Valid values are:
 	// - "ExecuteOnOne": Execute hook on only one of the selected pods. This is default behavior
 	// - "ExecuteOnAll": Execute hook on all the selected pods.
-	// +kubebuilder:validation:default=ExecuteOnOne
+	// +kubebuilder:default=ExecuteOnOne
 	Strategy PodHookExecutionStrategy `json:"strategy,omitempty"`
 }
 

@@ -11476,6 +11476,7 @@ spec:
                         hooks
                       properties:
                         executionPolicy:
+                          default: Always
                           description: 'ExecutionPolicy specifies when to execute
                             the hook. Valid values are: - "Always": Stash will execute
                             this hook no matter the backup/restore failed. This is
@@ -16164,6 +16165,7 @@ spec:
                         hooks
                       properties:
                         executionPolicy:
+                          default: Always
                           description: 'ExecutionPolicy specifies when to execute
                             the hook. Valid values are: - "Always": Stash will execute
                             this hook no matter the backup/restore failed. This is

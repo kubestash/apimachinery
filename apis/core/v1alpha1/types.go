@@ -121,7 +121,7 @@ type HookInfo struct {
 	// - "Always": Stash will execute this hook no matter the backup/restore failed. This is the default execution policy.
 	// - "OnSuccess": Stash will execute this hook only if the backup/restore has succeeded.
 	// - "OnFailure": Stash will execute this hook only if the backup/restore has failed.
-	// +kubebuilder:validation:default=Always
+	// +kubebuilder:default=Always
 	// +optional
 	ExecutionPolicy HookExecutionPolicy `json:"executionPolicy,omitempty"`
 
@@ -194,7 +194,7 @@ const (
 type RetryConfig struct {
 	// MaxRetry specifies the maximum number of times Stash should retry the backup/restore process.
 	// By default, Stash will retry only 1 time.
-	// +kubebuilder:validation:default=1
+	// +kubebuilder:default=1
 	// +kubebuilder:validation:Minimum=1
 	MaxRetry int32 `json:"maxRetry,omitempty"`
 

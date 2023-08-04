@@ -12550,6 +12550,7 @@ spec:
                               the backup/restore hooks
                             properties:
                               executionPolicy:
+                                default: Always
                                 description: 'ExecutionPolicy specifies when to execute
                                   the hook. Valid values are: - "Always": Stash will
                                   execute this hook no matter the backup/restore failed.
@@ -17683,6 +17684,7 @@ spec:
                               the backup/restore hooks
                             properties:
                               executionPolicy:
+                                default: Always
                                 description: 'ExecutionPolicy specifies when to execute
                                   the hook. Valid values are: - "Always": Stash will
                                   execute this hook no matter the backup/restore failed.
@@ -22872,6 +22874,7 @@ spec:
                             Format: 30s, 2m, 1h etc.'
                           type: string
                         maxRetry:
+                          default: 1
                           description: MaxRetry specifies the maximum number of times
                             Stash should retry the backup/restore process. By default,
                             Stash will retry only 1 time.
@@ -29716,6 +29719,7 @@ spec:
                                   retry immediately. Format: 30s, 2m, 1h etc.'
                                 type: string
                               maxRetry:
+                                default: 1
                                 description: MaxRetry specifies the maximum number
                                   of times Stash should retry the backup/restore process.
                                   By default, Stash will retry only 1 time.

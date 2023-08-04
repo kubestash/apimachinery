@@ -90,6 +90,7 @@ spec:
                 - name
                 type: object
               deletionPolicy:
+                default: Delete
                 description: 'DeletionPolicy specifies what to do when you delete
                   a Repository CR. The valid values are: "Delete": This will delete
                   the respective Snapshot CRs from the cluster but keep the backed
