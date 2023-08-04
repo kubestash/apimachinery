@@ -53,7 +53,8 @@ func (b *BackupSession) CalculatePhase() BackupSessionPhase {
 
 	if b.failedToEnsurebackupExecutor() ||
 		b.failedToEnsureSnapshots() ||
-		b.failedToExecuteHooks() ||
+		b.failedToExecutePreBackupHooks() ||
+		b.failedToExecutePostBackupHooks() ||
 		b.failedToApplyRetentionPolicy() ||
 		b.verificationsFailed() ||
 		b.sessionHistoryCleanupFailed() {
@@ -84,20 +85,17 @@ func (b *BackupSession) FinalStepExecuted() bool {
 	return cutil.HasCondition(b.Status.Conditions, TypeSessionHistoryCleaned)
 }
 
+func (b *BackupSession) failedToExecutePreBackupHooks() bool {
+	return cutil.IsConditionFalse(b.Status.Conditions, TypePreBackupHooksExecutionSucceeded)
+}
+
+func (b *BackupSession) failedToExecutePostBackupHooks() bool {
+	return cutil.IsConditionFalse(b.Status.Conditions, TypePostBackupHooksExecutionSucceeded)
+}
+
 func (b *BackupSession) failedToApplyRetentionPolicy() bool {
 	for _, status := range b.Status.RetentionPolicies {
 		if status.Phase == RetentionPolicyFailedToApply {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (b *BackupSession) failedToExecuteHooks() bool {
-	hooks := append(b.Status.PreHooks, b.Status.PostHooks...)
-	for _, h := range hooks {
-		if h.Phase == HookExecutionFailed {
 			return true
 		}
 	}
