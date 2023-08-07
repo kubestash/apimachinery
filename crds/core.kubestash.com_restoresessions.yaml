@@ -23433,6 +23433,7 @@ spec:
                       enum:
                       - Succeeded
                       - Failed
+                      - Pending
                       type: string
                   type: object
                 type: array
@@ -23451,6 +23452,7 @@ spec:
                       enum:
                       - Succeeded
                       - Failed
+                      - Pending
                       type: string
                   type: object
                 type: array

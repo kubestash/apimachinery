@@ -166,12 +166,13 @@ type HookExecutionStatus struct {
 }
 
 // HookExecutionPhase specifies the state of the hook execution
-// +kubebuilder:validation:Enum=Succeeded;Failed
+// +kubebuilder:validation:Enum=Succeeded;Failed;Pending
 type HookExecutionPhase string
 
 const (
 	HookExecutionSucceeded HookExecutionPhase = "Succeeded"
 	HookExecutionFailed    HookExecutionPhase = "Failed"
+	HookExecutionPending   HookExecutionPhase = "Pending"
 )
 
 // ResourceFoundStatus specifies whether a resource was found or not

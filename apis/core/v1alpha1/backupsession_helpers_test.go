@@ -298,29 +298,6 @@ func TestBackupSessionPhaseFailedIfBackupExecutorFailedToEnsure(t *testing.T) {
 	assert.Equal(t, BackupSessionFailed, bs.CalculatePhase())
 }
 
-func TestBackupSessionPhaseFailedOnHookExecutionFailure(t *testing.T) {
-	bs := getSampleBackupSession(func(b *BackupSession) {
-		b.Status.PreHooks = []HookExecutionStatus{
-			{
-				Name:  "pre-backup-hook",
-				Phase: HookExecutionFailed,
-			},
-			{
-				Name:  "pre-backup-hook-2",
-				Phase: HookExecutionSucceeded,
-			},
-		}
-		b.Status.PostHooks = []HookExecutionStatus{
-			{
-				Name:  "post-backup-hook",
-				Phase: HookExecutionSucceeded,
-			},
-		}
-	})
-
-	assert.Equal(t, BackupSessionFailed, bs.CalculatePhase())
-}
-
 func TestBackupSessionPhaseSucceededIfAllCriteriaSatisfied(t *testing.T) {
 	cond := kmapi.Condition{
 		Type:   TypeSessionHistoryCleaned,
