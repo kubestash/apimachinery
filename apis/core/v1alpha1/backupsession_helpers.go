@@ -86,11 +86,21 @@ func (b *BackupSession) FinalStepExecuted() bool {
 }
 
 func (b *BackupSession) failedToExecutePreBackupHooks() bool {
-	return cutil.IsConditionFalse(b.Status.Conditions, TypePreBackupHooksExecutionSucceeded)
+	for _, hook := range b.Status.PreHooks {
+		if hook.Phase == HookExecutionFailed {
+			return true
+		}
+	}
+	return false
 }
 
 func (b *BackupSession) failedToExecutePostBackupHooks() bool {
-	return cutil.IsConditionFalse(b.Status.Conditions, TypePostBackupHooksExecutionSucceeded)
+	for _, hook := range b.Status.PostHooks {
+		if hook.Phase == HookExecutionFailed {
+			return true
+		}
+	}
+	return false
 }
 
 func (b *BackupSession) failedToApplyRetentionPolicy() bool {
