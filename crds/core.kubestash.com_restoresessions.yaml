@@ -23387,6 +23387,53 @@ spec:
                 description: Duration specifies the total time taken to complete the
                   restore process
                 type: string
+              hooks:
+                description: Hooks represents the hook execution status
+                items:
+                  description: HookStatus represents the status of the hooks
+                  properties:
+                    postHooks:
+                      description: PostHooks represents the post-restore hook execution
+                        status
+                      items:
+                        description: HookExecutionStatus represents the state of the
+                          hook execution
+                        properties:
+                          name:
+                            description: Name indicates the name of the hook whose
+                              status is being shown here.
+                            type: string
+                          phase:
+                            description: Phase represents the hook execution phase
+                            enum:
+                            - Succeeded
+                            - Failed
+                            - Pending
+                            type: string
+                        type: object
+                      type: array
+                    preHooks:
+                      description: PreHooks represents the pre-restore hook execution
+                        status
+                      items:
+                        description: HookExecutionStatus represents the state of the
+                          hook execution
+                        properties:
+                          name:
+                            description: Name indicates the name of the hook whose
+                              status is being shown here.
+                            type: string
+                          phase:
+                            description: Phase represents the hook execution phase
+                            enum:
+                            - Succeeded
+                            - Failed
+                            - Pending
+                            type: string
+                        type: object
+                      type: array
+                  type: object
+                type: array
               pausedBackups:
                 description: PausedBackups represents the list of backups that have
                   been paused before restore.
@@ -23417,45 +23464,6 @@ spec:
                 - Succeeded
                 - Invalid
                 type: string
-              postHooks:
-                description: PostHooks represents the post-restore hook execution
-                  status
-                items:
-                  description: HookExecutionStatus represents the state of the hook
-                    execution
-                  properties:
-                    name:
-                      description: Name indicates the name of the hook whose status
-                        is being shown here.
-                      type: string
-                    phase:
-                      description: Phase represents the hook execution phase
-                      enum:
-                      - Succeeded
-                      - Failed
-                      - Pending
-                      type: string
-                  type: object
-                type: array
-              preHooks:
-                description: PreHooks represents the pre-restore hook execution status
-                items:
-                  description: HookExecutionStatus represents the state of the hook
-                    execution
-                  properties:
-                    name:
-                      description: Name indicates the name of the hook whose status
-                        is being shown here.
-                      type: string
-                    phase:
-                      description: Phase represents the hook execution phase
-                      enum:
-                      - Succeeded
-                      - Failed
-                      - Pending
-                      type: string
-                  type: object
-                type: array
               targetFound:
                 description: TargetFound specifies whether the restore target exist
                   or not

@@ -145,6 +145,17 @@ type HookInfo struct {
 	RuntimeSettings *ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
 }
 
+// HookStatus represents the status of the hooks
+type HookStatus struct {
+	// PreHooks represents the pre-restore hook execution status
+	// +optional
+	PreHooks []HookExecutionStatus `json:"preHooks,omitempty"`
+
+	// PostHooks represents the post-restore hook execution status
+	// +optional
+	PostHooks []HookExecutionStatus `json:"postHooks,omitempty"`
+}
+
 // HookExecutionPolicy specifies when to execute the hook.
 // +kubebuilder:validation:Enum=Always;OnSuccess;OnFailure
 type HookExecutionPolicy string

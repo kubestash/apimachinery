@@ -58,28 +58,30 @@ var _ webhook.Validator = &HookTemplate{}
 func (r *HookTemplate) ValidateCreate() error {
 	hooktemplatelog.Info("validate create", "name", r.Name)
 
-	if r.Spec.Action == nil {
-		return fmt.Errorf("action can not be empty")
-	}
-
 	if r.Spec.Executor == nil {
 		return fmt.Errorf("executor can not be empty")
 	}
-	return r.ValidateExecutorInfo()
+
+	if err := r.validateActionForNonFunctionExecutor(); err != nil {
+		return err
+	}
+
+	return r.validateExecutorInfo()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *HookTemplate) ValidateUpdate(old runtime.Object) error {
 	hooktemplatelog.Info("validate update", "name", r.Name)
 
-	if r.Spec.Action == nil {
-		return fmt.Errorf("action field can not be empty")
-	}
-
 	if r.Spec.Executor == nil {
 		return fmt.Errorf("executor field can not be empty")
 	}
-	return r.ValidateExecutorInfo()
+
+	if err := r.validateActionForNonFunctionExecutor(); err != nil {
+		return err
+	}
+
+	return r.validateExecutorInfo()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -99,20 +101,28 @@ func (r *HookTemplate) setDefaultUsagePolicy() {
 	}
 }
 
-func (r *HookTemplate) ValidateExecutorInfo() error {
+func (r *HookTemplate) validateExecutorInfo() error {
 	if r.Spec.Executor.Type == HookExecutorFunction {
 		if r.Spec.Executor.Function == nil {
-			return fmt.Errorf("function field can not be empty")
+			return fmt.Errorf("function field can not be empty for function type executor")
 		}
 	}
 
 	if r.Spec.Executor.Type == HookExecutorPod {
 		if r.Spec.Executor.Pod == nil {
-			return fmt.Errorf("pod field can not be empty")
+			return fmt.Errorf("pod field can not be empty for pod type executor")
 		}
 		if r.Spec.Executor.Pod.Selector == "" {
-			return fmt.Errorf("selector field can not be empty")
+			return fmt.Errorf("selector field can not be empty for pod type executor")
 		}
+	}
+	return nil
+}
+
+func (r *HookTemplate) validateActionForNonFunctionExecutor() error {
+	if r.Spec.Executor.Type != HookExecutorFunction &&
+		r.Spec.Action == nil {
+		return fmt.Errorf("action can not be empty for pod or operator type executor")
 	}
 	return nil
 }
