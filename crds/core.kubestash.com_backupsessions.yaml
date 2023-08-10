@@ -149,51 +149,48 @@ spec:
                 type: string
               hooks:
                 description: Hooks represents the hook execution status
-                items:
-                  description: HookStatus represents the status of the hooks
-                  properties:
-                    postHooks:
-                      description: PostHooks represents the post-restore hook execution
-                        status
-                      items:
-                        description: HookExecutionStatus represents the state of the
-                          hook execution
-                        properties:
-                          name:
-                            description: Name indicates the name of the hook whose
-                              status is being shown here.
-                            type: string
-                          phase:
-                            description: Phase represents the hook execution phase
-                            enum:
-                            - Succeeded
-                            - Failed
-                            - Pending
-                            type: string
-                        type: object
-                      type: array
-                    preHooks:
-                      description: PreHooks represents the pre-restore hook execution
-                        status
-                      items:
-                        description: HookExecutionStatus represents the state of the
-                          hook execution
-                        properties:
-                          name:
-                            description: Name indicates the name of the hook whose
-                              status is being shown here.
-                            type: string
-                          phase:
-                            description: Phase represents the hook execution phase
-                            enum:
-                            - Succeeded
-                            - Failed
-                            - Pending
-                            type: string
-                        type: object
-                      type: array
-                  type: object
-                type: array
+                properties:
+                  postHooks:
+                    description: PostHooks represents the post-restore hook execution
+                      status
+                    items:
+                      description: HookExecutionStatus represents the state of the
+                        hook execution
+                      properties:
+                        name:
+                          description: Name indicates the name of the hook whose status
+                            is being shown here.
+                          type: string
+                        phase:
+                          description: Phase represents the hook execution phase
+                          enum:
+                          - Succeeded
+                          - Failed
+                          - Pending
+                          type: string
+                      type: object
+                    type: array
+                  preHooks:
+                    description: PreHooks represents the pre-restore hook execution
+                      status
+                    items:
+                      description: HookExecutionStatus represents the state of the
+                        hook execution
+                      properties:
+                        name:
+                          description: Name indicates the name of the hook whose status
+                            is being shown here.
+                          type: string
+                        phase:
+                          description: Phase represents the hook execution phase
+                          enum:
+                          - Succeeded
+                          - Failed
+                          - Pending
+                          type: string
+                      type: object
+                    type: array
+                type: object
               nextRetry:
                 description: NextRetry specifies the time when Stash should retry
                   the current failed backup. This field will exist only if the `retryConfig`

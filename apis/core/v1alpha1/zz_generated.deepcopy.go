@@ -620,13 +620,7 @@ func (in *BackupSessionStatus) DeepCopyInto(out *BackupSessionStatus) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	if in.Hooks != nil {
-		in, out := &in.Hooks, &out.Hooks
-		*out = make([]HookStatus, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
-		}
-	}
+	in.Hooks.DeepCopyInto(&out.Hooks)
 	if in.Verifications != nil {
 		in, out := &in.Verifications, &out.Verifications
 		*out = make([]VerificationStatus, len(*in))
@@ -1359,13 +1353,7 @@ func (in *RestoreSessionStatus) DeepCopyInto(out *RestoreSessionStatus) {
 			(*out)[key] = val
 		}
 	}
-	if in.Hooks != nil {
-		in, out := &in.Hooks, &out.Hooks
-		*out = make([]HookStatus, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
-		}
-	}
+	in.Hooks.DeepCopyInto(&out.Hooks)
 	if in.Dependencies != nil {
 		in, out := &in.Dependencies, &out.Dependencies
 		*out = make([]ResourceFoundStatus, len(*in))

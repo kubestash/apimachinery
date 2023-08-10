@@ -195,7 +195,7 @@ type RestoreSessionStatus struct {
 
 	// Hooks represents the hook execution status
 	// +optional
-	Hooks []HookStatus `json:"hooks,omitempty"`
+	Hooks HookStatus `json:"hooks,omitempty"`
 
 	// Dependencies specifies whether the objects required by this RestoreSession exist or not
 	// +optional
