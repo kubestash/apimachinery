@@ -342,8 +342,15 @@ func getSampleBackupSession(transformFuncs ...func(configuration *BackupSession)
 		Reason: ReasonSuccessfullyEnsuredSnapshots,
 	}
 
+	metricsCond := kmapi.Condition{
+		Type:   TypeMetricsPushed,
+		Status: metav1.ConditionTrue,
+		Reason: ReasonSuccessfullyPushedMetrics,
+	}
+
 	bs.Status.Conditions = cutil.SetCondition(bs.Status.Conditions, executorCond)
 	bs.Status.Conditions = cutil.SetCondition(bs.Status.Conditions, snapCond)
+	bs.Status.Conditions = cutil.SetCondition(bs.Status.Conditions, metricsCond)
 
 	for _, fn := range transformFuncs {
 		fn(bs)

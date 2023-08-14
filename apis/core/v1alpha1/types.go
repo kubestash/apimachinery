@@ -221,7 +221,7 @@ const (
 	ReasonFailedToCompleteWithinDeadline = "FailedToCompleteWithinDeadline"
 
 	// TypeMetricsPushed indicates whether Metrics are pushed or not
-	TypeMetricsPushed             = "MetricsPushed"
-	ReasonSuccessfullyPushMetrics = "SuccessfullyPushedMetrics"
-	ReasonFailedToPushMetrics     = "FailedToPushMetrics"
+	TypeMetricsPushed               = "MetricsPushed"
+	ReasonSuccessfullyPushedMetrics = "SuccessfullyPushedMetrics"
+	ReasonFailedToPushMetrics       = "FailedToPushMetrics"
 )
