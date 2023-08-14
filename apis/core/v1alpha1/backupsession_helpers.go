@@ -18,10 +18,12 @@ package v1alpha1
 
 import (
 	"fmt"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kubestash.dev/apimachinery/apis"
 	"time"
 
-	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"kubestash.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -124,13 +126,13 @@ func (b *BackupSession) calculateBackupSessionPhaseFromSnapshots() BackupSession
 	succeeded := 0
 
 	for _, s := range status {
-		if s.Phase == v1alpha1.SnapshotFailed {
+		if s.Phase == storageapi.SnapshotFailed {
 			failed++
 		}
-		if s.Phase == v1alpha1.SnapshotPending {
+		if s.Phase == storageapi.SnapshotPending {
 			pending++
 		}
-		if s.Phase == v1alpha1.SnapshotSucceeded {
+		if s.Phase == storageapi.SnapshotSucceeded {
 			succeeded++
 		}
 	}
@@ -161,4 +163,63 @@ func (b *BackupSession) OffshootLabels() map[string]string {
 	newLabels[apis.KubeStashInvokerNamespace] = b.Namespace
 
 	return apis.UpsertLabels(b.Labels, newLabels)
+}
+
+func (b *BackupSession) GetSummary(targetRef *kmapi.TypedObjectReference) *Summary {
+	errMsg := b.getFailureMessage()
+	phase := BackupSessionSucceeded
+	if errMsg != "" {
+		phase = BackupSessionFailed
+	}
+
+	return &Summary{
+		Name:      b.Name,
+		Namespace: b.Namespace,
+
+		Invoker: &kmapi.TypedObjectReference{
+			APIGroup:  GroupVersion.Group,
+			Kind:      b.Spec.Invoker.Kind,
+			Name:      b.Spec.Invoker.Name,
+			Namespace: b.Namespace,
+		},
+
+		Target: targetRef,
+
+		Status: TargetStatus{
+			Phase:    string(phase),
+			Duration: b.Status.Duration,
+			Error:    errMsg,
+		},
+	}
+}
+
+func (b *BackupSession) getFailureMessage() string {
+	failureFound, reason := b.checkFailureInConditions()
+	if failureFound {
+		return reason
+	}
+	failureFound, reason = b.checkFailureInSnapshots()
+	if failureFound {
+		return reason
+	}
+	return ""
+}
+
+func (b *BackupSession) checkFailureInConditions() (bool, string) {
+	for _, condition := range b.Status.Conditions {
+		if condition.Status == metav1.ConditionFalse {
+			return true, condition.Message
+		}
+	}
+
+	return false, ""
+}
+
+func (b *BackupSession) checkFailureInSnapshots() (bool, string) {
+	for _, snapStatus := range b.Status.Snapshots {
+		if snapStatus.Phase == storageapi.SnapshotFailed {
+			return true, "one or more snapshots are failed"
+		}
+	}
+	return false, ""
 }

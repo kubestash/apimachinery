@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
@@ -103,4 +105,64 @@ func (rs *RestoreSession) OffshootLabels() map[string]string {
 	newLabels[apis.KubeStashInvokerNamespace] = rs.Namespace
 
 	return apis.UpsertLabels(rs.Labels, newLabels)
+}
+
+func (rs *RestoreSession) GetSummary(targetRef *kmapi.TypedObjectReference) *Summary {
+	errMsg := rs.getFailureMessage()
+	phase := RestoreSucceeded
+	if errMsg != "" {
+		phase = RestoreFailed
+	}
+
+	return &Summary{
+		Name:      rs.Name,
+		Namespace: rs.Namespace,
+
+		Invoker: &kmapi.TypedObjectReference{
+			APIGroup:  GroupVersion.Group,
+			Kind:      rs.Kind,
+			Name:      rs.Name,
+			Namespace: rs.Namespace,
+		},
+
+		Target: targetRef,
+
+		Status: TargetStatus{
+			Phase:    string(phase),
+			Duration: rs.Status.Duration,
+			Error:    errMsg,
+		},
+	}
+}
+
+func (rs *RestoreSession) getFailureMessage() string {
+	failureFound, reason := rs.checkFailureInConditions()
+	if failureFound {
+		return reason
+	}
+	failureFound, reason = rs.checkFailureInComponents()
+	if failureFound {
+		return reason
+	}
+	return ""
+}
+
+func (rs *RestoreSession) checkFailureInConditions() (bool, string) {
+	for _, condition := range rs.Status.Conditions {
+		if condition.Status == metav1.ConditionFalse {
+			return true, condition.Message
+		}
+	}
+
+	return false, ""
+}
+
+func (rs *RestoreSession) checkFailureInComponents() (bool, string) {
+	for _, comp := range rs.Status.Components {
+		if comp.Phase == RestoreFailed {
+			return true, comp.Error
+		}
+	}
+
+	return false, ""
 }
