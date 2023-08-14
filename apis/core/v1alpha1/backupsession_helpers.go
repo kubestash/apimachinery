@@ -49,17 +49,22 @@ func (b *BackupSession) IsCompleted() bool {
 }
 
 func (b *BackupSession) CalculatePhase() BackupSessionPhase {
+	if cutil.IsConditionFalse(b.Status.Conditions, TypeMetricsPushed) {
+		return BackupSessionFailed
+	}
+
 	if cutil.IsConditionTrue(b.Status.Conditions, TypeBackupSkipped) {
 		return BackupSessionSkipped
 	}
 
-	if b.failedToEnsurebackupExecutor() ||
-		b.failedToEnsureSnapshots() ||
-		b.failedToExecutePreBackupHooks() ||
-		b.failedToExecutePostBackupHooks() ||
-		b.failedToApplyRetentionPolicy() ||
-		b.verificationsFailed() ||
-		b.sessionHistoryCleanupFailed() {
+	if cutil.IsConditionTrue(b.Status.Conditions, TypeMetricsPushed) &&
+		(b.failedToEnsurebackupExecutor() ||
+			b.failedToEnsureSnapshots() ||
+			b.failedToExecutePreBackupHooks() ||
+			b.failedToExecutePostBackupHooks() ||
+			b.failedToApplyRetentionPolicy() ||
+			b.verificationsFailed() ||
+			b.sessionHistoryCleanupFailed()) {
 		return BackupSessionFailed
 	}
 
