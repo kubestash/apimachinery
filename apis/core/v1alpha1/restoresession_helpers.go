@@ -49,11 +49,7 @@ func (rs *RestoreSession) CalculatePhase() RestorePhase {
 	}
 
 	componentsPhase := rs.getComponentsPhase()
-	if componentsPhase == RestorePending || componentsPhase == RestoreRunning {
-		return componentsPhase
-	}
-
-	if rs.postHooksExecutionCompleted() {
+	if componentsPhase == RestorePending || rs.FinalStepExecuted() {
 		return componentsPhase
 	}
 
@@ -65,12 +61,8 @@ func (rs *RestoreSession) AllComponentsCompleted() bool {
 	return phase == RestoreSucceeded || phase == RestoreFailed
 }
 
-func (rs *RestoreSession) postHooksExecutionCompleted() bool {
-	hooks := rs.Spec.Hooks
-	if hooks != nil && hooks.PostRestore != nil {
-		return cutil.HasCondition(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded)
-	}
-	return true
+func (rs *RestoreSession) FinalStepExecuted() bool {
+	return cutil.HasCondition(rs.Status.Conditions, TypeMetricsPushed)
 }
 
 func (rs *RestoreSession) getComponentsPhase() RestorePhase {

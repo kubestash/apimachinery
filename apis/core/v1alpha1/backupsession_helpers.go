@@ -89,7 +89,7 @@ func (b *BackupSession) failedToEnsurebackupExecutor() bool {
 }
 
 func (b *BackupSession) FinalStepExecuted() bool {
-	return cutil.HasCondition(b.Status.Conditions, TypeSessionHistoryCleaned)
+	return cutil.HasCondition(b.Status.Conditions, TypeMetricsPushed)
 }
 
 func (b *BackupSession) failedToExecutePreBackupHooks() bool {
@@ -207,6 +207,11 @@ func (b *BackupSession) getFailureMessage() string {
 	if failureFound {
 		return reason
 	}
+	failureFound, reason = b.checkFailureInRetentionPolicy()
+	if failureFound {
+		return reason
+	}
+
 	return ""
 }
 
@@ -224,6 +229,15 @@ func (b *BackupSession) checkFailureInSnapshots() (bool, string) {
 	for _, snapStatus := range b.Status.Snapshots {
 		if snapStatus.Phase == storageapi.SnapshotFailed {
 			return true, "one or more snapshots are failed"
+		}
+	}
+	return false, ""
+}
+
+func (b *BackupSession) checkFailureInRetentionPolicy() (bool, string) {
+	for _, retention := range b.Status.RetentionPolicies {
+		if retention.Phase == RetentionPolicyFailedToApply {
+			return true, "one or more retention policies are failed to apply"
 		}
 	}
 	return false, ""

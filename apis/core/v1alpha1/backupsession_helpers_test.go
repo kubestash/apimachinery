@@ -35,6 +35,12 @@ func TestBackupSessionPhaseBasedOnSnapshotPhase(t *testing.T) {
 		Reason: ReasonSuccessfullyCleanedSessionHistory,
 	}
 
+	finalStep := kmapi.Condition{
+		Type:   TypeMetricsPushed,
+		Status: metav1.ConditionTrue,
+		Reason: ReasonSuccessfullyPushedMetrics,
+	}
+
 	tests := []struct {
 		name          string
 		backupSession *BackupSession
@@ -169,6 +175,7 @@ func TestBackupSessionPhaseBasedOnSnapshotPhase(t *testing.T) {
 				}
 
 				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, cond)
+				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, finalStep)
 			}),
 			expectedPhase: BackupSessionFailed,
 		},
@@ -194,6 +201,7 @@ func TestBackupSessionPhaseBasedOnSnapshotPhase(t *testing.T) {
 				}
 
 				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, cond)
+				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, finalStep)
 			}),
 			expectedPhase: BackupSessionFailed,
 		},
@@ -219,6 +227,7 @@ func TestBackupSessionPhaseBasedOnSnapshotPhase(t *testing.T) {
 				}
 
 				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, cond)
+				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, finalStep)
 			}),
 
 			expectedPhase: BackupSessionSucceeded,
@@ -239,8 +248,15 @@ func TestBackupSessionPhaseFailedIfFailedToEnsureSnapshots(t *testing.T) {
 		Reason: ReasonFailedToEnsureSnapshots,
 	}
 
+	finalStep := kmapi.Condition{
+		Type:   TypeMetricsPushed,
+		Status: metav1.ConditionTrue,
+		Reason: ReasonSuccessfullyPushedMetrics,
+	}
+
 	bs := getSampleBackupSession(func(b *BackupSession) {
 		b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, cond)
+		b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, finalStep)
 	})
 
 	assert.Equal(t, BackupSessionFailed, bs.CalculatePhase())
@@ -267,15 +283,29 @@ func TestBackupSessionPhaseFailedIfSessionHistoryCleanupFailed(t *testing.T) {
 		Reason: ReasonFailedToCleanSessionHistory,
 	}
 
+	finalStep := kmapi.Condition{
+		Type:   TypeMetricsPushed,
+		Status: metav1.ConditionTrue,
+		Reason: ReasonSuccessfullyPushedMetrics,
+	}
+
 	bs := getSampleBackupSession(func(b *BackupSession) {
 		b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, cond)
+		b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, finalStep)
 	})
 
 	assert.Equal(t, BackupSessionFailed, bs.CalculatePhase())
 }
 
 func TestBackupSessionPhaseFailedIfRetentionPolicyFailedToApply(t *testing.T) {
+	finalStep := kmapi.Condition{
+		Type:   TypeMetricsPushed,
+		Status: metav1.ConditionTrue,
+		Reason: ReasonSuccessfullyPushedMetrics,
+	}
+
 	bs := getSampleBackupSession(func(b *BackupSession) {
+		b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, finalStep)
 		b.Status.RetentionPolicies = append(b.Status.RetentionPolicies, RetentionPolicyApplyStatus{
 			Phase: RetentionPolicyFailedToApply,
 		})
@@ -291,8 +321,15 @@ func TestBackupSessionPhaseFailedIfBackupExecutorFailedToEnsure(t *testing.T) {
 		Reason: ReasonFailedToEnsureBackupExecutor,
 	}
 
+	finalStep := kmapi.Condition{
+		Type:   TypeMetricsPushed,
+		Status: metav1.ConditionTrue,
+		Reason: ReasonSuccessfullyPushedMetrics,
+	}
+
 	bs := getSampleBackupSession(func(b *BackupSession) {
 		b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, cond)
+		b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, finalStep)
 	})
 
 	assert.Equal(t, BackupSessionFailed, bs.CalculatePhase())
@@ -305,6 +342,12 @@ func TestBackupSessionPhaseSucceededIfAllCriteriaSatisfied(t *testing.T) {
 		Reason: ReasonSuccessfullyCleanedSessionHistory,
 	}
 
+	finalStep := kmapi.Condition{
+		Type:   TypeMetricsPushed,
+		Status: metav1.ConditionTrue,
+		Reason: ReasonSuccessfullyPushedMetrics,
+	}
+
 	bs := getSampleBackupSession(func(b *BackupSession) {
 		b.Status.Snapshots = []SnapshotStatus{
 			{
@@ -314,6 +357,7 @@ func TestBackupSessionPhaseSucceededIfAllCriteriaSatisfied(t *testing.T) {
 		}
 
 		b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, cond)
+		b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, finalStep)
 	})
 
 	assert.Equal(t, BackupSessionSucceeded, bs.CalculatePhase())
@@ -342,15 +386,8 @@ func getSampleBackupSession(transformFuncs ...func(configuration *BackupSession)
 		Reason: ReasonSuccessfullyEnsuredSnapshots,
 	}
 
-	metricsCond := kmapi.Condition{
-		Type:   TypeMetricsPushed,
-		Status: metav1.ConditionTrue,
-		Reason: ReasonSuccessfullyPushedMetrics,
-	}
-
 	bs.Status.Conditions = cutil.SetCondition(bs.Status.Conditions, executorCond)
 	bs.Status.Conditions = cutil.SetCondition(bs.Status.Conditions, snapCond)
-	bs.Status.Conditions = cutil.SetCondition(bs.Status.Conditions, metricsCond)
 
 	for _, fn := range transformFuncs {
 		fn(bs)
