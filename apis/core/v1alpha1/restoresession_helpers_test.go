@@ -26,7 +26,7 @@ import (
 )
 
 func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
-	finalStep := kmapi.Condition{
+	cond := kmapi.Condition{
 		Type:   TypeMetricsPushed,
 		Status: metav1.ConditionTrue,
 		Reason: ReasonSuccessfullyPushedMetrics,
@@ -109,7 +109,7 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 					},
 				}
 
-				r.Status.Conditions = cutil.SetCondition(r.Status.Conditions, finalStep)
+				r.Status.Conditions = cutil.SetCondition(r.Status.Conditions, cond)
 			}),
 
 			expectedPhase: RestoreFailed,
@@ -134,7 +134,7 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 					},
 				}
 
-				r.Status.Conditions = cutil.SetCondition(r.Status.Conditions, finalStep)
+				r.Status.Conditions = cutil.SetCondition(r.Status.Conditions, cond)
 			}),
 
 			expectedPhase: RestoreFailed,
@@ -159,7 +159,7 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 					},
 				}
 
-				r.Status.Conditions = cutil.SetCondition(r.Status.Conditions, finalStep)
+				r.Status.Conditions = cutil.SetCondition(r.Status.Conditions, cond)
 			}),
 
 			expectedPhase: RestoreSucceeded,

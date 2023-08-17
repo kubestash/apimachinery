@@ -30,12 +30,6 @@ import (
 
 func TestBackupSessionPhaseBasedOnSnapshotPhase(t *testing.T) {
 	cond := kmapi.Condition{
-		Type:   TypeSessionHistoryCleaned,
-		Status: metav1.ConditionTrue,
-		Reason: ReasonSuccessfullyCleanedSessionHistory,
-	}
-
-	finalStep := kmapi.Condition{
 		Type:   TypeMetricsPushed,
 		Status: metav1.ConditionTrue,
 		Reason: ReasonSuccessfullyPushedMetrics,
@@ -175,7 +169,6 @@ func TestBackupSessionPhaseBasedOnSnapshotPhase(t *testing.T) {
 				}
 
 				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, cond)
-				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, finalStep)
 			}),
 			expectedPhase: BackupSessionFailed,
 		},
@@ -201,7 +194,6 @@ func TestBackupSessionPhaseBasedOnSnapshotPhase(t *testing.T) {
 				}
 
 				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, cond)
-				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, finalStep)
 			}),
 			expectedPhase: BackupSessionFailed,
 		},
@@ -227,7 +219,6 @@ func TestBackupSessionPhaseBasedOnSnapshotPhase(t *testing.T) {
 				}
 
 				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, cond)
-				b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, finalStep)
 			}),
 
 			expectedPhase: BackupSessionSucceeded,
