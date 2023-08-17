@@ -6,6 +6,7 @@ require (
 	github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2
 	github.com/google/gofuzz v1.2.0
 	github.com/stretchr/testify v1.8.0
+	gomodules.xyz/envsubst v0.2.0
 	gomodules.xyz/go-sh v0.1.0
 	gomodules.xyz/pointer v0.1.0
 	k8s.io/api v0.25.1

@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
@@ -30,23 +32,24 @@ func (_ RestoreSession) CustomResourceDefinition() *apiextensions.CustomResource
 }
 
 func (rs *RestoreSession) CalculatePhase() RestorePhase {
+	if cutil.IsConditionFalse(rs.Status.Conditions, TypeMetricsPushed) {
+		return RestoreFailed
+	}
+
 	if cutil.IsConditionFalse(rs.Status.Conditions, TypeValidationPassed) {
 		return RestoreInvalid
 	}
 
-	if cutil.IsConditionTrue(rs.Status.Conditions, TypeDeadlineExceeded) ||
-		cutil.IsConditionFalse(rs.Status.Conditions, TypePreRestoreHooksExecutionSucceeded) ||
-		cutil.IsConditionFalse(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded) ||
-		cutil.IsConditionFalse(rs.Status.Conditions, TypeRestoreExecutorEnsured) {
+	if cutil.IsConditionTrue(rs.Status.Conditions, TypeMetricsPushed) &&
+		(cutil.IsConditionTrue(rs.Status.Conditions, TypeDeadlineExceeded) ||
+			cutil.IsConditionFalse(rs.Status.Conditions, TypePreRestoreHooksExecutionSucceeded) ||
+			cutil.IsConditionFalse(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded) ||
+			cutil.IsConditionFalse(rs.Status.Conditions, TypeRestoreExecutorEnsured)) {
 		return RestoreFailed
 	}
 
 	componentsPhase := rs.getComponentsPhase()
-	if componentsPhase == RestorePending || componentsPhase == RestoreRunning {
-		return componentsPhase
-	}
-
-	if rs.postHooksExecutionCompleted() {
+	if componentsPhase == RestorePending || rs.FinalStepExecuted() {
 		return componentsPhase
 	}
 
@@ -58,12 +61,8 @@ func (rs *RestoreSession) AllComponentsCompleted() bool {
 	return phase == RestoreSucceeded || phase == RestoreFailed
 }
 
-func (rs *RestoreSession) postHooksExecutionCompleted() bool {
-	hooks := rs.Spec.Hooks
-	if hooks != nil && hooks.PostRestore != nil {
-		return cutil.HasCondition(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded)
-	}
-	return true
+func (rs *RestoreSession) FinalStepExecuted() bool {
+	return cutil.HasCondition(rs.Status.Conditions, TypeMetricsPushed)
 }
 
 func (rs *RestoreSession) getComponentsPhase() RestorePhase {
@@ -98,10 +97,69 @@ func (rs *RestoreSession) getComponentsPhase() RestorePhase {
 
 func (rs *RestoreSession) OffshootLabels() map[string]string {
 	newLabels := make(map[string]string)
-	newLabels[meta_util.ComponentLabelKey] = apis.KubeStashRestoreComponent
 	newLabels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
 	newLabels[apis.KubeStashInvokerName] = rs.Name
 	newLabels[apis.KubeStashInvokerNamespace] = rs.Namespace
 
 	return apis.UpsertLabels(rs.Labels, newLabels)
+}
+
+func (rs *RestoreSession) GetSummary(targetRef *kmapi.TypedObjectReference) *Summary {
+	errMsg := rs.getFailureMessage()
+	phase := RestoreSucceeded
+	if errMsg != "" {
+		phase = RestoreFailed
+	}
+
+	return &Summary{
+		Name:      rs.Name,
+		Namespace: rs.Namespace,
+
+		Invoker: &kmapi.TypedObjectReference{
+			APIGroup:  GroupVersion.Group,
+			Kind:      rs.Kind,
+			Name:      rs.Name,
+			Namespace: rs.Namespace,
+		},
+
+		Target: targetRef,
+
+		Status: TargetStatus{
+			Phase:    string(phase),
+			Duration: rs.Status.Duration,
+			Error:    errMsg,
+		},
+	}
+}
+
+func (rs *RestoreSession) getFailureMessage() string {
+	failureFound, reason := rs.checkFailureInConditions()
+	if failureFound {
+		return reason
+	}
+	failureFound, reason = rs.checkFailureInComponents()
+	if failureFound {
+		return reason
+	}
+	return ""
+}
+
+func (rs *RestoreSession) checkFailureInConditions() (bool, string) {
+	for _, condition := range rs.Status.Conditions {
+		if condition.Status == metav1.ConditionFalse {
+			return true, condition.Message
+		}
+	}
+
+	return false, ""
+}
+
+func (rs *RestoreSession) checkFailureInComponents() (bool, string) {
+	for _, comp := range rs.Status.Components {
+		if comp.Phase == RestoreFailed {
+			return true, comp.Error
+		}
+	}
+
+	return false, ""
 }

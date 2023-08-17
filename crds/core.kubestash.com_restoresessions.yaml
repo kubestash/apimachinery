@@ -11476,6 +11476,7 @@ spec:
                         hooks
                       properties:
                         executionPolicy:
+                          default: Always
                           description: 'ExecutionPolicy specifies when to execute
                             the hook. Valid values are: - "Always": Stash will execute
                             this hook no matter the backup/restore failed. This is
@@ -14197,8 +14198,7 @@ spec:
                             period, KubeStash will consider this hook execution as
                             failure. Then, it will be re-tried according to MaxRetry
                             policy.
-                          format: int32
-                          type: integer
+                          type: string
                         variables:
                           description: Variables specifies a list of variables and
                             their sources that will be used to resolve the HookTemplate.
@@ -14320,9 +14320,9 @@ spec:
                             type: object
                           type: array
                         volumeMounts:
-                          description: Volumes indicates the list of volumes of targeted
-                            application that should be mounted on the hook executor.
-                            Use this field only for `Function` type hook executor.
+                          description: VolumeMounts specifies the mount for the volumes
+                            specified in `Volumes` section Use this field only for
+                            `Function` type hook executor.
                           items:
                             description: VolumeMount describes a mounting of a Volume
                               within a container.
@@ -14363,9 +14363,9 @@ spec:
                             type: object
                           type: array
                         volumes:
-                          description: VolumeMounts specifies the mount for the volumes
-                            specified in `Volumes` section Use this field only for
-                            `Function` type hook executor.
+                          description: Volumes indicates the list of volumes of targeted
+                            application that should be mounted on the hook executor.
+                            Use this field only for `Function` type hook executor.
                           items:
                             description: Volume represents a named volume in a pod
                               that may be accessed by any container in the pod.
@@ -16165,6 +16165,7 @@ spec:
                         hooks
                       properties:
                         executionPolicy:
+                          default: Always
                           description: 'ExecutionPolicy specifies when to execute
                             the hook. Valid values are: - "Always": Stash will execute
                             this hook no matter the backup/restore failed. This is
@@ -18886,8 +18887,7 @@ spec:
                             period, KubeStash will consider this hook execution as
                             failure. Then, it will be re-tried according to MaxRetry
                             policy.
-                          format: int32
-                          type: integer
+                          type: string
                         variables:
                           description: Variables specifies a list of variables and
                             their sources that will be used to resolve the HookTemplate.
@@ -19009,9 +19009,9 @@ spec:
                             type: object
                           type: array
                         volumeMounts:
-                          description: Volumes indicates the list of volumes of targeted
-                            application that should be mounted on the hook executor.
-                            Use this field only for `Function` type hook executor.
+                          description: VolumeMounts specifies the mount for the volumes
+                            specified in `Volumes` section Use this field only for
+                            `Function` type hook executor.
                           items:
                             description: VolumeMount describes a mounting of a Volume
                               within a container.
@@ -19052,9 +19052,9 @@ spec:
                             type: object
                           type: array
                         volumes:
-                          description: VolumeMounts specifies the mount for the volumes
-                            specified in `Volumes` section Use this field only for
-                            `Function` type hook executor.
+                          description: Volumes indicates the list of volumes of targeted
+                            application that should be mounted on the hook executor.
+                            Use this field only for `Function` type hook executor.
                           items:
                             description: Volume represents a named volume in a pod
                               that may be accessed by any container in the pod.
@@ -23389,22 +23389,48 @@ spec:
                 type: string
               hooks:
                 description: Hooks represents the hook execution status
-                items:
-                  description: HookExecutionStatus represents the state of the hook
-                    execution
-                  properties:
-                    name:
-                      description: Name indicates the name of the hook whose status
-                        is being shown here.
-                      type: string
-                    phase:
-                      description: Phase represents the hook execution phase
-                      enum:
-                      - Succeeded
-                      - Failed
-                      type: string
-                  type: object
-                type: array
+                properties:
+                  postHooks:
+                    description: PostHooks represents the post-restore hook execution
+                      status
+                    items:
+                      description: HookExecutionStatus represents the state of the
+                        hook execution
+                      properties:
+                        name:
+                          description: Name indicates the name of the hook whose status
+                            is being shown here.
+                          type: string
+                        phase:
+                          description: Phase represents the hook execution phase
+                          enum:
+                          - Succeeded
+                          - Failed
+                          - Pending
+                          type: string
+                      type: object
+                    type: array
+                  preHooks:
+                    description: PreHooks represents the pre-restore hook execution
+                      status
+                    items:
+                      description: HookExecutionStatus represents the state of the
+                        hook execution
+                      properties:
+                        name:
+                          description: Name indicates the name of the hook whose status
+                            is being shown here.
+                          type: string
+                        phase:
+                          description: Phase represents the hook execution phase
+                          enum:
+                          - Succeeded
+                          - Failed
+                          - Pending
+                          type: string
+                      type: object
+                    type: array
+                type: object
               pausedBackups:
                 description: PausedBackups represents the list of backups that have
                   been paused before restore.

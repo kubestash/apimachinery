@@ -43,8 +43,6 @@ const (
 
 	SnapshotName = "snapshotName"
 
-	TaskName = "taskName"
-
 	Namespace      = "namespace"
 	BackupSession  = "backupSession"
 	RestoreSession = "restoreSession"

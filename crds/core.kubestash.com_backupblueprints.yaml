@@ -13506,6 +13506,7 @@ spec:
                                   the backup/restore hooks
                                 properties:
                                   executionPolicy:
+                                    default: Always
                                     description: 'ExecutionPolicy specifies when to
                                       execute the hook. Valid values are: - "Always":
                                       Stash will execute this hook no matter the backup/restore
@@ -16794,8 +16795,7 @@ spec:
                                       will consider this hook execution as failure.
                                       Then, it will be re-tried according to MaxRetry
                                       policy.
-                                    format: int32
-                                    type: integer
+                                    type: string
                                   variables:
                                     description: Variables specifies a list of variables
                                       and their sources that will be used to resolve
@@ -16927,10 +16927,10 @@ spec:
                                       type: object
                                     type: array
                                   volumeMounts:
-                                    description: Volumes indicates the list of volumes
-                                      of targeted application that should be mounted
-                                      on the hook executor. Use this field only for
-                                      `Function` type hook executor.
+                                    description: VolumeMounts specifies the mount
+                                      for the volumes specified in `Volumes` section
+                                      Use this field only for `Function` type hook
+                                      executor.
                                     items:
                                       description: VolumeMount describes a mounting
                                         of a Volume within a container.
@@ -16976,10 +16976,10 @@ spec:
                                       type: object
                                     type: array
                                   volumes:
-                                    description: VolumeMounts specifies the mount
-                                      for the volumes specified in `Volumes` section
-                                      Use this field only for `Function` type hook
-                                      executor.
+                                    description: Volumes indicates the list of volumes
+                                      of targeted application that should be mounted
+                                      on the hook executor. Use this field only for
+                                      `Function` type hook executor.
                                     items:
                                       description: Volume represents a named volume
                                         in a pod that may be accessed by any container
@@ -19066,6 +19066,7 @@ spec:
                                   the backup/restore hooks
                                 properties:
                                   executionPolicy:
+                                    default: Always
                                     description: 'ExecutionPolicy specifies when to
                                       execute the hook. Valid values are: - "Always":
                                       Stash will execute this hook no matter the backup/restore
@@ -22354,8 +22355,7 @@ spec:
                                       will consider this hook execution as failure.
                                       Then, it will be re-tried according to MaxRetry
                                       policy.
-                                    format: int32
-                                    type: integer
+                                    type: string
                                   variables:
                                     description: Variables specifies a list of variables
                                       and their sources that will be used to resolve
@@ -22487,10 +22487,10 @@ spec:
                                       type: object
                                     type: array
                                   volumeMounts:
-                                    description: Volumes indicates the list of volumes
-                                      of targeted application that should be mounted
-                                      on the hook executor. Use this field only for
-                                      `Function` type hook executor.
+                                    description: VolumeMounts specifies the mount
+                                      for the volumes specified in `Volumes` section
+                                      Use this field only for `Function` type hook
+                                      executor.
                                     items:
                                       description: VolumeMount describes a mounting
                                         of a Volume within a container.
@@ -22536,10 +22536,10 @@ spec:
                                       type: object
                                     type: array
                                   volumes:
-                                    description: VolumeMounts specifies the mount
-                                      for the volumes specified in `Volumes` section
-                                      Use this field only for `Function` type hook
-                                      executor.
+                                    description: Volumes indicates the list of volumes
+                                      of targeted application that should be mounted
+                                      on the hook executor. Use this field only for
+                                      `Function` type hook executor.
                                     items:
                                       description: Volume represents a named volume
                                         in a pod that may be accessed by any container
@@ -24685,6 +24685,7 @@ spec:
                                 retry immediately. Format: 30s, 2m, 1h etc.'
                               type: string
                             maxRetry:
+                              default: 1
                               description: MaxRetry specifies the maximum number of
                                 times Stash should retry the backup/restore process.
                                 By default, Stash will retry only 1 time.
@@ -32092,6 +32093,7 @@ spec:
                                       1h etc.'
                                     type: string
                                   maxRetry:
+                                    default: 1
                                     description: MaxRetry specifies the maximum number
                                       of times Stash should retry the backup/restore
                                       process. By default, Stash will retry only 1

@@ -92,7 +92,7 @@ type SnapshotSpec struct {
 	// The valid values are:
 	// - "Delete": This will delete just the Snapshot CR from the cluster but keep the backed up data in the remote backend. This is the default behavior.
 	// - "WipeOut": This will delete the Snapshot CR as well as the backed up data from the backend.
-	// +kubebuilder:validation:default=Delete
+	// +kubebuilder:default=Delete
 	// +optional
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 

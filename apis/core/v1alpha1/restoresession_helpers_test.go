@@ -26,6 +26,12 @@ import (
 )
 
 func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
+	cond := kmapi.Condition{
+		Type:   TypeMetricsPushed,
+		Status: metav1.ConditionTrue,
+		Reason: ReasonSuccessfullyPushedMetrics,
+	}
+
 	tests := []struct {
 		name           string
 		restoreSession *RestoreSession
@@ -102,6 +108,8 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 						Phase: RestoreSucceeded,
 					},
 				}
+
+				r.Status.Conditions = cutil.SetCondition(r.Status.Conditions, cond)
 			}),
 
 			expectedPhase: RestoreFailed,
@@ -125,6 +133,8 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 						Phase: RestoreFailed,
 					},
 				}
+
+				r.Status.Conditions = cutil.SetCondition(r.Status.Conditions, cond)
 			}),
 
 			expectedPhase: RestoreFailed,
@@ -148,6 +158,8 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 						Phase: RestoreSucceeded,
 					},
 				}
+
+				r.Status.Conditions = cutil.SetCondition(r.Status.Conditions, cond)
 			}),
 
 			expectedPhase: RestoreSucceeded,
@@ -163,11 +175,18 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 
 func TestRestoreSessionPhaseIsFailedIfPreRestoreHooksExecutionSucceededConditionIsFalse(t *testing.T) {
 	rs := sampleRestoreSession(func(r *RestoreSession) {
-		r.Status.Conditions = append(r.Status.Conditions, kmapi.Condition{
-			Type:   TypePreRestoreHooksExecutionSucceeded,
-			Status: metav1.ConditionFalse,
-			Reason: ReasonFailedToExecutePreRestoreHooks,
-		})
+		r.Status.Conditions = append(r.Status.Conditions,
+			kmapi.Condition{
+				Type:   TypePreRestoreHooksExecutionSucceeded,
+				Status: metav1.ConditionFalse,
+				Reason: ReasonFailedToExecutePreRestoreHooks,
+			},
+			kmapi.Condition{
+				Type:   TypeMetricsPushed,
+				Status: metav1.ConditionTrue,
+				Reason: ReasonSuccessfullyPushedMetrics,
+			},
+		)
 	})
 
 	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
@@ -175,11 +194,18 @@ func TestRestoreSessionPhaseIsFailedIfPreRestoreHooksExecutionSucceededCondition
 
 func TestRestoreSessionPhaseIsFailedIfPostRestoreHooksExecutionSucceededConditionIsFalse(t *testing.T) {
 	rs := sampleRestoreSession(func(r *RestoreSession) {
-		r.Status.Conditions = append(r.Status.Conditions, kmapi.Condition{
-			Type:   TypePostRestoreHooksExecutionSucceeded,
-			Status: metav1.ConditionFalse,
-			Reason: ReasonFailedToExecutePostRestoreHooks,
-		})
+		r.Status.Conditions = append(r.Status.Conditions,
+			kmapi.Condition{
+				Type:   TypePostRestoreHooksExecutionSucceeded,
+				Status: metav1.ConditionFalse,
+				Reason: ReasonFailedToExecutePostRestoreHooks,
+			},
+			kmapi.Condition{
+				Type:   TypeMetricsPushed,
+				Status: metav1.ConditionTrue,
+				Reason: ReasonSuccessfullyPushedMetrics,
+			},
+		)
 	})
 
 	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
@@ -187,11 +213,18 @@ func TestRestoreSessionPhaseIsFailedIfPostRestoreHooksExecutionSucceededConditio
 
 func TestRestoreSessionPhaseIsFailedIfRestoreExecutorEnsuredConditionIsFalse(t *testing.T) {
 	rs := sampleRestoreSession(func(r *RestoreSession) {
-		r.Status.Conditions = append(r.Status.Conditions, kmapi.Condition{
-			Type:   TypeRestoreExecutorEnsured,
-			Status: metav1.ConditionFalse,
-			Reason: ReasonFailedToEnsureRestoreExecutor,
-		})
+		r.Status.Conditions = append(r.Status.Conditions,
+			kmapi.Condition{
+				Type:   TypeRestoreExecutorEnsured,
+				Status: metav1.ConditionFalse,
+				Reason: ReasonFailedToEnsureRestoreExecutor,
+			},
+			kmapi.Condition{
+				Type:   TypeMetricsPushed,
+				Status: metav1.ConditionTrue,
+				Reason: ReasonSuccessfullyPushedMetrics,
+			},
+		)
 	})
 
 	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
@@ -199,11 +232,18 @@ func TestRestoreSessionPhaseIsFailedIfRestoreExecutorEnsuredConditionIsFalse(t *
 
 func TestRestoreSessionPhaseIsFailedIfDeadlineExceededConditionIsTrue(t *testing.T) {
 	rs := sampleRestoreSession(func(r *RestoreSession) {
-		r.Status.Conditions = append(r.Status.Conditions, kmapi.Condition{
-			Type:   TypeDeadlineExceeded,
-			Status: metav1.ConditionTrue,
-			Reason: ReasonFailedToCompleteWithinDeadline,
-		})
+		r.Status.Conditions = append(r.Status.Conditions,
+			kmapi.Condition{
+				Type:   TypeDeadlineExceeded,
+				Status: metav1.ConditionTrue,
+				Reason: ReasonFailedToCompleteWithinDeadline,
+			},
+			kmapi.Condition{
+				Type:   TypeMetricsPushed,
+				Status: metav1.ConditionTrue,
+				Reason: ReasonSuccessfullyPushedMetrics,
+			},
+		)
 	})
 
 	assert.Equal(t, RestoreFailed, rs.CalculatePhase())

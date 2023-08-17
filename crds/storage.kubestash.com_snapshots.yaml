@@ -91,6 +91,7 @@ spec:
                   which is responsible for this Snapshot.
                 type: string
               deletionPolicy:
+                default: Delete
                 description: 'DeletionPolicy specifies what to do when you delete
                   a Snapshot CR. The valid values are: - "Delete": This will delete
                   just the Snapshot CR from the cluster but keep the backed up data
