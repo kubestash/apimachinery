@@ -214,11 +214,12 @@ type RestoreSessionStatus struct {
 type RestorePhase string
 
 const (
-	RestorePending   RestorePhase = "Pending"
-	RestoreRunning   RestorePhase = "Running"
-	RestoreFailed    RestorePhase = "Failed"
-	RestoreSucceeded RestorePhase = "Succeeded"
-	RestoreInvalid   RestorePhase = "Invalid"
+	RestorePending      RestorePhase = "Pending"
+	RestoreRunning      RestorePhase = "Running"
+	RestoreFailed       RestorePhase = "Failed"
+	RestoreSucceeded    RestorePhase = "Succeeded"
+	RestoreInvalid      RestorePhase = "Invalid"
+	RestorePhaseUnknown RestorePhase = "Unknown"
 )
 
 // ComponentRestoreStatus represents the restore status of individual components
