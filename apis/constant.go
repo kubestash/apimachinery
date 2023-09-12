@@ -114,6 +114,12 @@ const (
 	PVCName       = "PVC_NAME"
 )
 
+// Kubedump related
+const (
+	TargetKindEmpty = ""
+	KindNamespace   = "Namespace"
+)
+
 // Local Network Volume Accessor related
 const (
 	KubeStashNetVolAccessor = "kubestash-netvol-accessor"
