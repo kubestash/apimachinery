@@ -409,12 +409,16 @@ func (w *ResticWrapper) setBackupStorageVariables() error {
 		return nil
 	}
 
-	ss, err := w.getSecret(&kmapi.ObjectReference{
-		Name:      secret,
-		Namespace: bs.Namespace,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to get storage Secret %s/%s: %w", bs.Namespace, secret, err)
+	ss := &core.Secret{}
+	if secret != "" {
+		var err error
+		ss, err = w.getSecret(&kmapi.ObjectReference{
+			Name:      secret,
+			Namespace: bs.Namespace,
+		})
+		if err != nil {
+			return fmt.Errorf("failed to get storage Secret %s/%s: %w", bs.Namespace, secret, err)
+		}
 	}
 
 	es, err := w.getSecret(w.config.EncryptionSecret)
