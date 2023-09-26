@@ -81,8 +81,8 @@ type BackupStorageSpec struct {
 	// +optional
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 
-	// Use the RuntimeSettings field to define configurations such as Resources, NodeSelector, Affinity,
-	// Toleration, and ReadinessProbe etc. for the storage initializer/cleaner job.
+	// RuntimeSettings allow to specify Resources, NodeSelector, Affinity, Toleration, ReadinessProbe etc.
+	// for the storage initializer/cleaner job.
 	// +optional
 	RuntimeSettings ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
 }

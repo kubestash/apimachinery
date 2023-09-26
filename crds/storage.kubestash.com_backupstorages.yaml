@@ -81,9 +81,9 @@ spec:
                 - WipeOut
                 type: string
               runtimeSettings:
-                description: Use the RuntimeSettings field to define configurations
-                  such as Resources, NodeSelector, Affinity, Toleration, and ReadinessProbe
-                  etc. for the storage initializer/cleaner job.
+                description: RuntimeSettings allow to specify Resources, NodeSelector,
+                  Affinity, Toleration, ReadinessProbe etc. for the storage initializer/cleaner
+                  job.
                 properties:
                   container:
                     properties:
