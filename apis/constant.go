@@ -94,7 +94,7 @@ const (
 	KindDeployment  = "Deployment"
 )
 
-// PersistentVolumeClaim  related constants
+// PersistentVolumeClaim related constants
 const (
 	KindPersistentVolumeClaim = "PersistentVolumeClaim"
 	KeyPodOrdinal             = "POD_ORDINAL"
@@ -108,4 +108,9 @@ const (
 	PrefixUpload          = "upload"
 	PrefixCleanup         = "cleanup"
 	PrefixRetentionPolicy = "retentionpolicy"
+)
+
+// InterimVolume related constants
+const (
+	InterimVolume = "interim-volume"
 )
