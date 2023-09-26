@@ -2429,6 +2429,10 @@ spec:
                         description: Secret specifies the name of the Secret that
                           contains the access credential for this storage.
                         type: string
+                      storageAccount:
+                        description: StorageAccount specifies the name of the Azure
+                          Storage Account
+                        type: string
                     type: object
                   b2:
                     description: B2 specifies the storage information for B2 bucket
