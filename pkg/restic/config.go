@@ -89,8 +89,8 @@ type backend struct {
 
 type SetupOptions struct {
 	backend
-	maxConnections   int64
 	storageSecret    *core.Secret
+	MaxConnections   int64
 	EncryptionSecret *kmapi.ObjectReference
 	Directory        string
 	Client           client.Client

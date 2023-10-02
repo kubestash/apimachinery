@@ -383,7 +383,7 @@ func (w *ResticWrapper) setBackupStorageVariables() error {
 		w.config.provider = v1alpha1.ProviderGCS
 		w.config.bucket = gcs.Bucket
 		w.config.path = gcs.Prefix
-		w.config.maxConnections = gcs.MaxConnections
+		w.config.MaxConnections = gcs.MaxConnections
 		secret = gcs.Secret
 	}
 
@@ -391,7 +391,7 @@ func (w *ResticWrapper) setBackupStorageVariables() error {
 		w.config.provider = v1alpha1.ProviderAzure
 		w.config.bucket = azure.Container
 		w.config.path = azure.Prefix
-		w.config.maxConnections = azure.MaxConnections
+		w.config.MaxConnections = azure.MaxConnections
 		secret = azure.Secret
 	}
 
