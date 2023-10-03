@@ -625,8 +625,8 @@ kmodules.xyz/crd-schema-fuzz v0.25.0 h1:c5ZxNRqJak1bkGhECmyrKpzKGThFMB4088Kynyvn
 kmodules.xyz/crd-schema-fuzz v0.25.0/go.mod h1:VigFz19GwCxMGhb3YjCtlSXmfXb0J/g9du1So6rvqsk=
 kmodules.xyz/objectstore-api v0.25.1 h1:lYQlxk+edgZYakhq+OoRBXTbHbZTGKhatGZWnKixgEQ=
 kmodules.xyz/objectstore-api v0.25.1/go.mod h1:6wBtktN7/EXyE429OTCB9nwEe+d0ADaoCtm6+IZnJso=
-kmodules.xyz/offshoot-api v0.25.2 h1:71x+MB0AwD9UhzlNGRPAFuB3HVMIAjtXi2yB0IIs+1Y=
-kmodules.xyz/offshoot-api v0.25.2/go.mod h1:PUk4EuJFhhyQykCflHj7EgXcljGIqs9vi0IN0RpxtY4=
+kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57 h1:4ld/ujZum5JX6cfYrW1yQErAl1AONEfJa8TDyRpnHuU=
+kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57/go.mod h1:PUk4EuJFhhyQykCflHj7EgXcljGIqs9vi0IN0RpxtY4=
 kmodules.xyz/prober v0.25.0 h1:R5uRLHJEvEtEoogj+vaTAob0Btph6+PX5IlS6hPh8PA=
 kmodules.xyz/prober v0.25.0/go.mod h1:z4RTnjaajNQa/vPltsiOnO3xI716I/ziD2ac2Exm+1M=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=

@@ -16,7 +16,7 @@ require (
 	kmodules.xyz/client-go v0.25.27
 	kmodules.xyz/crd-schema-fuzz v0.25.0
 	kmodules.xyz/objectstore-api v0.25.1
-	kmodules.xyz/offshoot-api v0.25.2
+	kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57
 	kmodules.xyz/prober v0.25.0
 	sigs.k8s.io/controller-runtime v0.13.1
 	sigs.k8s.io/yaml v1.3.0
