@@ -98,6 +98,7 @@ type SetupOptions struct {
 	BackupStorage    *kmapi.TypedObjectReference
 	CacertFile       string
 	ScratchDir       string
+	MountPath        string
 	EnableCache      bool
 	Nice             *ofst.NiceSettings
 	IONice           *ofst.IONiceSettings

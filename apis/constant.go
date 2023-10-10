@@ -121,7 +121,8 @@ const (
 // Local Network Volume Accessor related constants
 const (
 	KubeStashNetVolAccessor = "kubestash-netvol-accessor"
-	ScratchDirVolumeName    = "stash-scratch-dir"
+	ScratchDirVolumeName    = "kubestash-scratch-dir"
 	ScratchDirMountPath     = "/tmp"
 	SnapshotDownloadDir     = "snapshot"
+	AccessorContainerName   = "operator"
 )
