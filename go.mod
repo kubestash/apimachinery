@@ -1,6 +1,6 @@
 module kubestash.dev/apimachinery
 
-go 1.18
+go 1.20
 
 require (
 	github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2

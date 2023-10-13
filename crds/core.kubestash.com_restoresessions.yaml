@@ -23294,6 +23294,7 @@ spec:
                       - Failed
                       - Succeeded
                       - Invalid
+                      - Unknown
                       type: string
                   type: object
                 description: Components represents the individual component restore
@@ -23460,6 +23461,7 @@ spec:
                 - Failed
                 - Succeeded
                 - Invalid
+                - Unknown
                 type: string
               targetFound:
                 description: TargetFound specifies whether the restore target exist
