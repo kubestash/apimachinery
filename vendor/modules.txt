@@ -572,7 +572,7 @@ kmodules.xyz/crd-schema-fuzz
 # kmodules.xyz/objectstore-api v0.25.1
 ## explicit; go 1.18
 kmodules.xyz/objectstore-api/api/v1
-# kmodules.xyz/offshoot-api v0.25.2
+# kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57
 ## explicit; go 1.18
 kmodules.xyz/offshoot-api/api/v1
 # kmodules.xyz/prober v0.25.0
