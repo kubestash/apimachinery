@@ -121,5 +121,7 @@ const (
 // Local Network Volume Accessor related constants
 const (
 	KubeStashNetVolAccessor = "kubestash-netvol-accessor"
+	TempDirVolumeName       = "kubestash-temp-dir"
+	TempDirMountPath        = "/tmp"
 	OperatorContainer       = "operator"
 )
