@@ -408,6 +408,10 @@ func (w *ResticWrapper) setBackupStorageVariables() error {
 			return err
 		}
 
+		if w.config.MountPath != "" {
+			w.config.bucket = w.config.MountPath
+		}
+
 		return nil
 	}
 
