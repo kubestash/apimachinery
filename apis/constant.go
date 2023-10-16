@@ -35,6 +35,9 @@ const (
 	KindClusterRole           = "ClusterRole"
 	KindRole                  = "Role"
 	KindPersistentVolumeClaim = "PersistentVolumeClaim"
+	KindReplicaSet            = "ReplicaSet"
+	KindReplicationController = "ReplicationController"
+	KindJob                   = "Job"
 )
 
 const (
