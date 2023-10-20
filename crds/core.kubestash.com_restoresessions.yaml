@@ -23512,6 +23512,30 @@ spec:
                 - Invalid
                 - Unknown
                 type: string
+              storage:
+                description: Storage indicates the status of the respective BackupStorage
+                properties:
+                  phase:
+                    description: Phase indicates the current phase of the respective
+                      BackupStorage.
+                    type: string
+                  reason:
+                    description: Reason specifies the error messages found while checking
+                      the BackupStorage phase
+                    type: string
+                  ref:
+                    description: Ref indicates to the BackupStorage object.
+                    properties:
+                      name:
+                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                        type: string
+                      namespace:
+                        description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                        type: string
+                    required:
+                    - name
+                    type: object
+                type: object
               targetFound:
                 description: TargetFound specifies whether the restore target exist
                   or not

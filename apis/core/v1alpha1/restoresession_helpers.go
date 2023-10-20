@@ -20,6 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kubestash.dev/apimachinery/apis"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"kubestash.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -38,6 +39,10 @@ func (rs *RestoreSession) CalculatePhase() RestorePhase {
 
 	if cutil.IsConditionFalse(rs.Status.Conditions, TypeValidationPassed) {
 		return RestoreInvalid
+	}
+
+	if !rs.isStorageReady() {
+		return RestorePending
 	}
 
 	if cutil.IsConditionTrue(rs.Status.Conditions, TypeMetricsPushed) &&
@@ -173,4 +178,8 @@ func (rs *RestoreSession) checkFailureInComponents() (bool, string) {
 	}
 
 	return false, ""
+}
+
+func (rs *RestoreSession) isStorageReady() bool {
+	return rs.Status.Storage.Phase == storageapi.BackupStorageReady
 }

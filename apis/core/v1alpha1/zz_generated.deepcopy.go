@@ -1343,6 +1343,11 @@ func (in *RestoreSessionStatus) DeepCopyInto(out *RestoreSessionStatus) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.Storage != nil {
+		in, out := &in.Storage, &out.Storage
+		*out = new(StorageStatus)
+		**out = **in
+	}
 	if in.Deadline != nil {
 		in, out := &in.Deadline, &out.Deadline
 		*out = (*in).DeepCopy()

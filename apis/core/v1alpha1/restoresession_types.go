@@ -180,6 +180,10 @@ type RestoreSessionStatus struct {
 	// +optional
 	TargetFound *bool `json:"targetFound,omitempty"`
 
+	// Storage indicates the status of the respective BackupStorage
+	// +optional
+	Storage *StorageStatus `json:"storage,omitempty"`
+
 	// Duration specifies the total time taken to complete the restore process
 	// +optional
 	Duration string `json:"duration,omitempty"`
