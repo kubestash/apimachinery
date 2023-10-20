@@ -397,7 +397,7 @@ type BackendStatus struct {
 
 type StorageStatus struct {
 	// Ref indicates to the BackupStorage object.
-	Ref kmapi.TypedObjectReference `json:"ref,omitempty"`
+	Ref kmapi.ObjectReference `json:"ref,omitempty"`
 
 	// Phase indicates the current phase of the respective BackupStorage.
 	// +optional
