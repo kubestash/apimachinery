@@ -31,6 +31,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/klog/v2"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	storage "kmodules.xyz/objectstore-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
