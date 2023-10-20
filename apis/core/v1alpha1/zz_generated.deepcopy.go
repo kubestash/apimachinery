@@ -1183,6 +1183,7 @@ func (in *RestoreDataSource) DeepCopyInto(out *RestoreDataSource) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	out.StorageRef = in.StorageRef
 	if in.EncryptionSecret != nil {
 		in, out := &in.EncryptionSecret, &out.EncryptionSecret
 		*out = new(v1.ObjectReference)

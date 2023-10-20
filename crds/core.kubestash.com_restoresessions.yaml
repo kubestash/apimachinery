@@ -11479,6 +11479,21 @@ spec:
                       restored. If you want to use Point-In-Time recovery option,
                       don't specify this field. Specify `pitr` field instead.
                     type: string
+                  storageRef:
+                    description: StorageRef refers to the CR that holds the information
+                      of a storage. You can refer to the BackupStorage CR of a different
+                      namespace as long as it is allowed by the `usagePolicy` of the
+                      BackupStorage.`
+                    properties:
+                      name:
+                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                        type: string
+                      namespace:
+                        description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                        type: string
+                    required:
+                    - name
+                    type: object
                 type: object
               hooks:
                 description: Hooks specifies the restore hooks that should be executed

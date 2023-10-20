@@ -23,6 +23,8 @@ import (
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	kmapi "kmodules.xyz/client-go/api/v1"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -54,11 +56,15 @@ func (r *RestoreSession) ValidateCreate() error {
 		return fmt.Errorf("failed to set Kubernetes client, Reason: %w", err)
 	}
 
-	if err := r.checkIfSnapshotIsEmpty(); err != nil {
+	if err = r.checkIfSnapshotIsEmpty(); err != nil {
 		return err
 	}
 
-	if err := r.checkIfRepoIsEmptyForLatestSnapshot(); err != nil {
+	if err = r.checkIfRepoIsEmptyForLatestSnapshot(); err != nil {
+		return err
+	}
+
+	if err = r.validateBackendAgainstUsagePolicy(context.Background(), c); err != nil {
 		return err
 	}
 
@@ -79,6 +85,10 @@ func (r *RestoreSession) ValidateUpdate(old runtime.Object) error {
 	}
 
 	if err := r.checkIfRepoIsEmptyForLatestSnapshot(); err != nil {
+		return err
+	}
+
+	if err = r.validateBackendAgainstUsagePolicy(context.Background(), c); err != nil {
 		return err
 	}
 
@@ -153,4 +163,42 @@ func (r *RestoreSession) getHookTemplatesFromHookInfo(hooks []HookInfo) []HookTe
 		}
 	}
 	return hookTemplates
+}
+
+func (r *RestoreSession) validateBackendAgainstUsagePolicy(ctx context.Context, c client.Client) error {
+	bs, err := r.getBackupStorage(ctx, c, r.Spec.DataSource.StorageRef)
+	if err != nil {
+		if kerr.IsNotFound(err) {
+			return nil
+		}
+		return err
+	}
+
+	ns := &core.Namespace{ObjectMeta: metav1.ObjectMeta{Name: r.Namespace}}
+	if err := c.Get(ctx, client.ObjectKeyFromObject(ns), ns); err != nil {
+		return err
+	}
+
+	if !bs.UsageAllowed(ns) {
+		return fmt.Errorf("namespace %q is not allowed to refer BackupStorage %s/%s. Please, check the `usagePolicy` of the BackupStorage", r.Namespace, bs.Name, bs.Namespace)
+	}
+	return nil
+}
+
+func (r *RestoreSession) getBackupStorage(ctx context.Context, c client.Client, ref kmapi.ObjectReference) (*storageapi.BackupStorage, error) {
+	bs := &storageapi.BackupStorage{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      ref.Name,
+			Namespace: ref.Namespace,
+		},
+	}
+
+	if bs.Namespace == "" {
+		bs.Namespace = r.Namespace
+	}
+
+	if err := c.Get(ctx, client.ObjectKeyFromObject(bs), bs); err != nil {
+		return nil, err
+	}
+	return bs, nil
 }

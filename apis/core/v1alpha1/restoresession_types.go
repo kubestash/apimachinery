@@ -135,6 +135,11 @@ type RestoreDataSource struct {
 	// +optional
 	Components []string `json:"components,omitempty"`
 
+	// StorageRef refers to the CR that holds the information of a storage.
+	// You can refer to the BackupStorage CR of a different namespace as long as it is allowed
+	// by the `usagePolicy` of the BackupStorage.`
+	StorageRef kmapi.ObjectReference `json:"storageRef,omitempty"`
+
 	// EncryptionSecret refers to the Secret containing the encryption key which will be used to encode/decode the backed up data.
 	// You can refer to a Secret of a different namespace.
 	// If you don't provide the namespace field, Stash will look for the Secret in the same namespace as the RestoreSession.
