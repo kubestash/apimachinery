@@ -1183,7 +1183,6 @@ func (in *RestoreDataSource) DeepCopyInto(out *RestoreDataSource) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	out.StorageRef = in.StorageRef
 	if in.EncryptionSecret != nil {
 		in, out := &in.EncryptionSecret, &out.EncryptionSecret
 		*out = new(v1.ObjectReference)
@@ -1341,11 +1340,6 @@ func (in *RestoreSessionStatus) DeepCopyInto(out *RestoreSessionStatus) {
 	if in.TargetFound != nil {
 		in, out := &in.TargetFound, &out.TargetFound
 		*out = new(bool)
-		**out = **in
-	}
-	if in.Storage != nil {
-		in, out := &in.Storage, &out.Storage
-		*out = new(StorageStatus)
 		**out = **in
 	}
 	if in.Deadline != nil {

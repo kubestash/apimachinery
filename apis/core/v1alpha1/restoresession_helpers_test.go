@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -42,9 +41,6 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			name: "RestoreSession should be Pending if no component is initialized",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				r.Status.TotalComponents = 4
-				r.Status.Storage = &StorageStatus{
-					Phase: storageapi.BackupStorageReady,
-				}
 			}),
 
 			expectedPhase: RestorePending,
@@ -53,9 +49,6 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			name: "RestoreSession should be Running if any component is Running",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				r.Status.TotalComponents = 4
-				r.Status.Storage = &StorageStatus{
-					Phase: storageapi.BackupStorageReady,
-				}
 				r.Status.Components = map[string]ComponentRestoreStatus{
 					"manifest": {
 						Phase: RestoreRunning,
@@ -78,9 +71,6 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			name: "RestoreSession should be Running if any component is not completed",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				r.Status.TotalComponents = 4
-				r.Status.Storage = &StorageStatus{
-					Phase: storageapi.BackupStorageReady,
-				}
 				r.Status.Components = map[string]ComponentRestoreStatus{
 					"manifest": {
 						Phase: RestoreSucceeded,
@@ -104,9 +94,6 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				setPostRestoreHooksExecutionSucceededConditionToTrue(r)
 				r.Status.TotalComponents = 4
-				r.Status.Storage = &StorageStatus{
-					Phase: storageapi.BackupStorageReady,
-				}
 				r.Status.Components = map[string]ComponentRestoreStatus{
 					"manifest": {
 						Phase: RestoreFailed,
@@ -132,9 +119,6 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				setPostRestoreHooksExecutionSucceededConditionToTrue(r)
 				r.Status.TotalComponents = 4
-				r.Status.Storage = &StorageStatus{
-					Phase: storageapi.BackupStorageReady,
-				}
 				r.Status.Components = map[string]ComponentRestoreStatus{
 					"manifest": {
 						Phase: RestoreFailed,
@@ -160,9 +144,6 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				setPostRestoreHooksExecutionSucceededConditionToTrue(r)
 				r.Status.TotalComponents = 4
-				r.Status.Storage = &StorageStatus{
-					Phase: storageapi.BackupStorageReady,
-				}
 				r.Status.Components = map[string]ComponentRestoreStatus{
 					"manifest": {
 						Phase: RestoreSucceeded,
@@ -206,9 +187,6 @@ func TestRestoreSessionPhaseIsFailedIfPreRestoreHooksExecutionSucceededCondition
 				Reason: ReasonSuccessfullyPushedMetrics,
 			},
 		)
-		r.Status.Storage = &StorageStatus{
-			Phase: storageapi.BackupStorageReady,
-		}
 	})
 
 	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
@@ -228,9 +206,6 @@ func TestRestoreSessionPhaseIsFailedIfPostRestoreHooksExecutionSucceededConditio
 				Reason: ReasonSuccessfullyPushedMetrics,
 			},
 		)
-		r.Status.Storage = &StorageStatus{
-			Phase: storageapi.BackupStorageReady,
-		}
 	})
 
 	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
@@ -250,9 +225,6 @@ func TestRestoreSessionPhaseIsFailedIfRestoreExecutorEnsuredConditionIsFalse(t *
 				Reason: ReasonSuccessfullyPushedMetrics,
 			},
 		)
-		r.Status.Storage = &StorageStatus{
-			Phase: storageapi.BackupStorageReady,
-		}
 	})
 
 	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
@@ -272,9 +244,6 @@ func TestRestoreSessionPhaseIsFailedIfDeadlineExceededConditionIsTrue(t *testing
 				Reason: ReasonSuccessfullyPushedMetrics,
 			},
 		)
-		r.Status.Storage = &StorageStatus{
-			Phase: storageapi.BackupStorageReady,
-		}
 	})
 
 	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
@@ -295,9 +264,6 @@ func TestRestoreSessionPhaseIsRunningIfPostRestoreHooksNotExecuted(test *testing
 			"shard-1": {
 				Phase: RestoreSucceeded,
 			},
-		}
-		r.Status.Storage = &StorageStatus{
-			Phase: storageapi.BackupStorageReady,
 		}
 	})
 	assert.Equal(test, RestoreRunning, rs.CalculatePhase())
