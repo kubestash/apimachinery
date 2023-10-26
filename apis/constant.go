@@ -85,10 +85,10 @@ const (
 	DoNotRequeue = false
 )
 
-// Workload related constants
+// Addon related constants
 const (
-	EnvComponentName = "COMPONENT_NAME"
-
+	EnvDBVersion        = "DB_VERSION"
+	EnvComponentName    = "COMPONENT_NAME"
 	ComponentPod        = "pod"
 	ComponentDeployment = "deployment"
 
@@ -111,11 +111,6 @@ const (
 	PrefixUpload          = "upload"
 	PrefixCleanup         = "cleanup"
 	PrefixRetentionPolicy = "retentionpolicy"
-)
-
-// InterimVolume related constants
-const (
-	InterimVolume = "interim-volume"
 )
 
 // Local Network Volume Accessor related constants
