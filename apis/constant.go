@@ -20,14 +20,29 @@ import "time"
 
 const (
 	RequeueTimeInterval = 10 * time.Second
+	OwnerKey            = ".metadata.controller"
 
-	KubeStashCleanupFinalizer = "kubestash.com/cleanup"
 	KubeStashKey              = "kubestash.com"
+	KubeStashApp              = "kubestash.com/app"
+	KubeStashCleanupFinalizer = "kubestash.com/cleanup"
 	KubeDBGroupName           = "kubedb.com"
 )
 
 const (
-	OwnerKey = ".metadata.controller"
+	KindStatefulSet           = "StatefulSet"
+	KindDaemonSet             = "DaemonSet"
+	KindDeployment            = "Deployment"
+	KindClusterRole           = "ClusterRole"
+	KindRole                  = "Role"
+	KindPersistentVolumeClaim = "PersistentVolumeClaim"
+)
+
+const (
+	PrefixTrigger         = "trigger"
+	PrefixInit            = "init"
+	PrefixUpload          = "upload"
+	PrefixCleanup         = "cleanup"
+	PrefixRetentionPolicy = "retentionpolicy"
 )
 
 const (
@@ -44,8 +59,6 @@ const (
 	KubeStashInvokerName      = "kubestash.com/invoker-name"
 	KubeStashInvokerNamespace = "kubestash.com/invoker-namespace"
 	KubeStashInvokerKind      = "kubestash.com/invoker-kind"
-
-	KubeStashApp = "kubestash.com/app"
 )
 
 // Keys for structure logging
@@ -67,11 +80,8 @@ const (
 	KeyBlueprintSessions  = BackupBlueprintKey + "/sessions"
 )
 
-// RBAC related constants
+// RBAC related
 const (
-	KindClusterRole = "ClusterRole"
-	KindRole        = "Role"
-
 	KubeStashBackupJobClusterRole       = "kubestash-backup-job"
 	KubeStashRestoreJobClusterRole      = "kubestash-restore-job"
 	KubeStashCronJobClusterRole         = "kubestash-cron-job"
@@ -79,48 +89,34 @@ const (
 	KubeStashBackendAccessorClusterRole = "kubestash-backend-accessor"
 )
 
-// Reconciliation related constants
+// Reconciliation related
 const (
 	Requeue      = true
 	DoNotRequeue = false
 )
 
-// Addon related constants
+// Addon related
 const (
-	EnvDBVersion        = "DB_VERSION"
-	EnvComponentName    = "COMPONENT_NAME"
+	EnvDBVersion     = "DB_VERSION"
+	EnvComponentName = "COMPONENT_NAME"
+
 	ComponentPod        = "pod"
 	ComponentDeployment = "deployment"
+	ComponentPVC        = "pvc"
 
-	KindStatefulSet = "StatefulSet"
-	KindDaemonSet   = "DaemonSet"
-	KindDeployment  = "Deployment"
+	DirRepository = "repository"
 )
 
-// PersistentVolumeClaim related constants
+// PersistentVolumeClaim related
 const (
-	KindPersistentVolumeClaim = "PersistentVolumeClaim"
-	KeyPodOrdinal             = "POD_ORDINAL"
-	ComponentPVC              = "pvc"
-	PVCName                   = "PVC_NAME"
+	KeyPodOrdinal = "POD_ORDINAL"
+	PVCName       = "PVC_NAME"
 )
 
-const (
-	PrefixTrigger         = "trigger"
-	PrefixInit            = "init"
-	PrefixUpload          = "upload"
-	PrefixCleanup         = "cleanup"
-	PrefixRetentionPolicy = "retentionpolicy"
-)
-
-// Local Network Volume Accessor related constants
+// Local Network Volume Accessor related
 const (
 	KubeStashNetVolAccessor = "kubestash-netvol-accessor"
 	TempDirVolumeName       = "kubestash-temp-dir"
 	TempDirMountPath        = "/tmp"
 	OperatorContainer       = "operator"
-)
-
-const (
-	DirRepository = "repository"
 )
