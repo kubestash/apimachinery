@@ -94,7 +94,7 @@ func setupTest(tempDir string) (*ResticWrapper, error) {
 		},
 		ScratchDir:  scratchDir,
 		EnableCache: false,
-		BackupStorage: &kmapi.TypedObjectReference{
+		BackupStorage: &kmapi.ObjectReference{
 			Name:      bs.Name,
 			Namespace: bs.Namespace,
 		},
