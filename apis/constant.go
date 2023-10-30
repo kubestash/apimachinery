@@ -59,6 +59,7 @@ const (
 	KubeStashInvokerName      = "kubestash.com/invoker-name"
 	KubeStashInvokerNamespace = "kubestash.com/invoker-namespace"
 	KubeStashInvokerKind      = "kubestash.com/invoker-kind"
+	KubeStashSessionName      = "kubestash.com/session-name"
 )
 
 // Keys for structure logging
