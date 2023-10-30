@@ -16,10 +16,15 @@ GO_PKG   := kubestash.dev
 REPO     := $(notdir $(shell pwd))
 BIN      := apimachinery
 
+# Where to push the docker image.
+REGISTRY ?= ghcr.io/kubestash
+
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.26.0
+
+version_strategy := commit_hash
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -228,3 +233,43 @@ check-license:
 		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
 		$(BUILD_IMAGE)                                   \
 		ltag -t "./hack/license" --excludes "vendor bin" --check -v
+
+.PHONY: push
+push: push-crd-installer
+
+.PHONY: push-crd-installer
+push-crd-installer: $(BUILD_DIRS) install-ko ## Build and push CRD installer image
+	@echo "Pushing CRD installer image....."
+	KO_DOCKER_REPO=$(REGISTRY) $(KO) publish ./cmd/kubestash-crd-installer --tags $(VERSION),latest  --base-import-paths  --platform=all
+
+
+KO := $(shell pwd)/bin/ko
+.PHONY: install-ko
+install-ko: ## Download ko locally if necessary.
+	$(call go-get-tool,$(KO),github.com/google/ko@latest)
+
+# go-get-tool will 'go get' any package $2 and install it to $1.
+PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
+define go-get-tool
+@[ -f $(1) ] || { \
+set -e ;\
+TMP_DIR=$$(mktemp -d) ;\
+cd $$TMP_DIR ;\
+go mod init tmp ;\
+echo "Installing $(2)" ;\
+GOBIN=$(PROJECT_DIR)/bin go install $(2) ;\
+rm -rf $$TMP_DIR ;\
+}
+endef
+
+.PHONY: release
+release: ## Release final production docker image and push into the DockerHub.
+	@if [ "$$APPSCODE_ENV" != "prod" ]; then      \
+		echo "'release' only works in PROD env."; \
+		exit 1;                                   \
+	fi
+	@if [ "$(version_strategy)" != "tag" ]; then                    \
+		echo "apply tag to release binaries and/or docker images."; \
+		exit 1;                                                     \
+	fi
+	@$(MAKE) push --no-print-directory

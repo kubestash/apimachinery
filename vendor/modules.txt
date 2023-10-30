@@ -1,9 +1,6 @@
-# github.com/PuerkitoBio/purell v1.1.1
-## explicit
+# github.com/PuerkitoBio/purell v1.2.0
+## explicit; go 1.19
 github.com/PuerkitoBio/purell
-# github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
-## explicit
-github.com/PuerkitoBio/urlesc
 # github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2
 ## explicit
 github.com/armon/circbuf
@@ -572,6 +569,13 @@ kmodules.xyz/client-go/meta
 # kmodules.xyz/crd-schema-fuzz v0.25.0
 ## explicit; go 1.18
 kmodules.xyz/crd-schema-fuzz
+# kmodules.xyz/custom-resources v0.25.2
+## explicit; go 1.18
+kmodules.xyz/custom-resources/apis/appcatalog
+kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
+kmodules.xyz/custom-resources/apis/metrics
+kmodules.xyz/custom-resources/apis/metrics/v1alpha1
+kmodules.xyz/custom-resources/crds
 # kmodules.xyz/objectstore-api v0.25.1
 ## explicit; go 1.18
 kmodules.xyz/objectstore-api/api/v1
