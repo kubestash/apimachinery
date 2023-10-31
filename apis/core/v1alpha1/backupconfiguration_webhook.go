@@ -117,7 +117,7 @@ func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, 
 				return err
 			}
 
-			if !targetMatched(&existingRepo.Spec.AppRef, b.Spec.Target) {
+			if !targetMatched(&existingRepo.Spec.AppRef, b.GetTargetRef()) {
 				return fmt.Errorf("repository '%q' already exists in the cluster with a different target reference. Please, choose a different repository name", repo.Name)
 			}
 
