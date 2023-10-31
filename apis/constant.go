@@ -35,6 +35,9 @@ const (
 	KindClusterRole           = "ClusterRole"
 	KindRole                  = "Role"
 	KindPersistentVolumeClaim = "PersistentVolumeClaim"
+	KindReplicaSet            = "ReplicaSet"
+	KindReplicationController = "ReplicationController"
+	KindJob                   = "Job"
 )
 
 const (
@@ -112,6 +115,12 @@ const (
 const (
 	KeyPodOrdinal = "POD_ORDINAL"
 	PVCName       = "PVC_NAME"
+)
+
+// Kubedump related
+const (
+	TargetKindEmpty = ""
+	KindNamespace   = "Namespace"
 )
 
 // Local Network Volume Accessor related
