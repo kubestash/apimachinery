@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -91,4 +92,15 @@ func (b *BackupConfiguration) GetStorageRef(backend string) *kmapi.ObjectReferen
 		}
 	}
 	return nil
+}
+
+func (b *BackupConfiguration) GetTargetRef() *kmapi.TypedObjectReference {
+	if b.Spec.Target == nil {
+		return &kmapi.TypedObjectReference{
+			APIGroup: "na",
+			Kind:     apis.TargetKindEmpty,
+			Name:     "na",
+		}
+	}
+	return b.Spec.Target
 }
