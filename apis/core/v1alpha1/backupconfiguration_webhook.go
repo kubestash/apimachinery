@@ -16,13 +16,10 @@ limitations under the License.
 
 package v1alpha1
 
+import "C"
 import (
 	"context"
 	"fmt"
-
-	"kubestash.dev/apimachinery/apis"
-	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
-
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -30,6 +27,8 @@ import (
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	restclient "k8s.io/client-go/rest"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"kubestash.dev/apimachinery/apis"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
@@ -46,6 +45,147 @@ func (b *BackupConfiguration) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
+// TODO(user): EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
+
+//+kubebuilder:webhook:path=/mutate-core-kubestash-com-v1alpha1-backupconfiguration,mutating=true,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupconfigurations,verbs=create;update,versions=v1alpha1,name=vbackupconfiguration.kb.io,admissionReviewVersions=v1
+
+var _ webhook.Defaulter = &BackupConfiguration{}
+
+// Default implements webhook.Defaulter so a webhook will be registered for the type
+func (b *BackupConfiguration) Default() {
+	backupconfigurationlog.Info("default", "name", b.Name)
+
+	c, err := getNewRuntimeClient()
+	if err != nil {
+		backupconfigurationlog.Error(err, "failed to set Kubernetes client")
+	}
+
+	if len(b.Spec.Backends) == 0 {
+		b.setDefaultBackend(context.Background(), c)
+	}
+
+	b.setDefaultRetentionPolicy(context.Background(), c)
+}
+
+func (b *BackupConfiguration) setDefaultBackend(ctx context.Context, c client.Client) {
+	bs := b.getDefaultStorage(ctx, c)
+	if bs == nil {
+		return
+	}
+
+	b.Spec.Backends = []BackendReference{
+		{
+			Name: "",
+			StorageRef: kmapi.ObjectReference{
+				Name:      bs.Name,
+				Namespace: bs.Namespace,
+			},
+		},
+	}
+}
+
+func (b *BackupConfiguration) setDefaultRetentionPolicy(ctx context.Context, c client.Client) {
+	for i, backend := range b.Spec.Backends {
+		if backend.RetentionPolicy == nil {
+			rp := b.getDefaultRetentionPolicy(ctx, c)
+			if rp == nil {
+				return
+			}
+
+			b.Spec.Backends[i].RetentionPolicy = &kmapi.ObjectReference{
+				Name:      rp.Name,
+				Namespace: rp.Namespace,
+			}
+		}
+	}
+}
+
+func (b *BackupConfiguration) getDefaultStorage(ctx context.Context, c client.Client) *storageapi.BackupStorage {
+	bsList := &storageapi.BackupStorageList{}
+	if err := c.List(ctx, bsList); err != nil {
+		backupconfigurationlog.Error(err, "failed to list backupStorage")
+		return nil
+	}
+
+	// Check if there is any same namespace level default BackupStorage
+	for _, bs := range bsList.Items {
+		if bs.Namespace == b.Namespace &&
+			bs.Spec.Default &&
+			*bs.Spec.UsagePolicy.AllowedNamespaces.From == apis.NamespacesFromSame {
+			return &bs
+		}
+	}
+
+	// Check if there is any selector level default BackupStorage
+	ns := &core.Namespace{ObjectMeta: v1.ObjectMeta{Name: b.Namespace}}
+	if err := c.Get(ctx, client.ObjectKeyFromObject(ns), ns); err != nil {
+		backupconfigurationlog.Error(err, "failed to get namespace")
+		return nil
+	}
+	for _, bs := range bsList.Items {
+		if bs.Spec.Default &&
+			*bs.Spec.UsagePolicy.AllowedNamespaces.From == apis.NamespacesFromSelector &&
+			selectorMatches(bs.Spec.UsagePolicy.AllowedNamespaces.Selector, ns.Labels) {
+			return &bs
+		}
+	}
+
+	// Check if there is any all namespace level default BackupStorage
+	for _, bs := range bsList.Items {
+		if bs.Namespace == b.Namespace &&
+			bs.Spec.Default &&
+			*bs.Spec.UsagePolicy.AllowedNamespaces.From == apis.NamespacesFromAll {
+			return &bs
+		}
+	}
+
+	backupconfigurationlog.Error(fmt.Errorf("no default backupStorage is found"), "no usable default backupStorage is found")
+	return nil
+}
+
+func (b *BackupConfiguration) getDefaultRetentionPolicy(ctx context.Context, c client.Client) *storageapi.RetentionPolicy {
+	rpList := &storageapi.RetentionPolicyList{}
+	if err := c.List(ctx, rpList); err != nil {
+		backupconfigurationlog.Error(err, "failed to list retentionPolicy")
+		return nil
+	}
+
+	// Check if there is any same namespace level default RetentionPolicy
+	for _, rp := range rpList.Items {
+		if rp.Namespace == b.Namespace &&
+			rp.Spec.Default &&
+			*rp.Spec.UsagePolicy.AllowedNamespaces.From == apis.NamespacesFromSame {
+			return &rp
+		}
+	}
+
+	// Check if there is any selector level default RetentionPolicy
+	ns := &core.Namespace{ObjectMeta: v1.ObjectMeta{Name: b.Namespace}}
+	if err := c.Get(ctx, client.ObjectKeyFromObject(ns), ns); err != nil {
+		backupconfigurationlog.Error(err, "failed to get namespace")
+		return nil
+	}
+	for _, rp := range rpList.Items {
+		if rp.Spec.Default &&
+			*rp.Spec.UsagePolicy.AllowedNamespaces.From == apis.NamespacesFromSelector &&
+			selectorMatches(rp.Spec.UsagePolicy.AllowedNamespaces.Selector, ns.Labels) {
+			return &rp
+		}
+	}
+
+	// Check if there is any all namespace level default RetentionPolicy
+	for _, rp := range rpList.Items {
+		if rp.Namespace == b.Namespace &&
+			rp.Spec.Default &&
+			*rp.Spec.UsagePolicy.AllowedNamespaces.From == apis.NamespacesFromAll {
+			return &rp
+		}
+	}
+
+	backupconfigurationlog.Error(fmt.Errorf("no default retentionPolicy is found"), "no usable default retentionPolicy is found")
+	return nil
+}
+
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-backupconfiguration,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupconfigurations,verbs=create;update,versions=v1alpha1,name=vbackupconfiguration.kb.io,admissionReviewVersions=v1
 
@@ -60,10 +200,23 @@ func (b *BackupConfiguration) ValidateCreate() error {
 		return fmt.Errorf("failed to set Kubernetes client, Reason: %w", err)
 	}
 
-	if err := b.validateRepositories(context.Background(), c); err != nil {
+	if len(b.Spec.Backends) == 0 {
+		return fmt.Errorf("backends can not be empty")
+	}
+
+	if err = b.validateBackends(context.Background(), c); err != nil {
 		return err
 	}
-	if err := b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
+
+	if len(b.Spec.Sessions) == 0 {
+		return fmt.Errorf("sessions can not be empty")
+	}
+
+	if err = b.validateRepositories(context.Background(), c); err != nil {
+		return err
+	}
+
+	if err = b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
 		return err
 	}
 
@@ -95,38 +248,107 @@ func getNewRuntimeClient() (client.Client, error) {
 	})
 }
 
+func (b *BackupConfiguration) validateBackends(ctx context.Context, c client.Client) error {
+	if err := b.validateBackendNameUnique(); err != nil {
+		return err
+	}
+
+	return b.validateBackendReferences()
+}
+
+func (b *BackupConfiguration) validateBackendNameUnique() error {
+	backendMap := make(map[string]struct{})
+
+	for _, backend := range b.Spec.Backends {
+		if _, ok := backendMap[backend.Name]; ok {
+			return fmt.Errorf("duplicate backend name found: %q. Please choose a different backend name", backend.Name)
+		}
+		backendMap[backend.Name] = struct{}{}
+	}
+	return nil
+}
+
+func (b *BackupConfiguration) validateBackendReferences() error {
+	for _, backend := range b.Spec.Backends {
+		if backend.RetentionPolicy == nil {
+			return fmt.Errorf("no retentionPolicy is found for backend: %q. Please add a retentionPolicy", backend.Name)
+		}
+
+		if backend.StorageRef.Name == "" || backend.StorageRef.Namespace == "" {
+			return fmt.Errorf("no storage reference is found for backend: %q. Please provide a storage reference", backend.Name)
+		}
+	}
+	return nil
+}
+
 func (b *BackupConfiguration) validateRepositories(ctx context.Context, c client.Client) error {
+	if err := b.validateSessionNameUnique(); err != nil {
+		return err
+	}
+
 	if err := b.validateRepositoryNameUnique(); err != nil {
 		return err
 	}
+
 	return b.validateRepositoryReferences(ctx, c)
 }
 
-func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, c client.Client) error {
+func (b *BackupConfiguration) validateSessionNameUnique() error {
+	sessionMap := make(map[string]struct{})
+
 	for _, session := range b.Spec.Sessions {
+		if session.Name == "" {
+			return fmt.Errorf("session name can not be empty")
+		}
+
+		if _, ok := sessionMap[session.Name]; ok {
+			return fmt.Errorf("duplicate session name found: %q. Please choose a different session name", session.Name)
+		}
+		sessionMap[session.Name] = struct{}{}
+	}
+	return nil
+}
+
+func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, c client.Client) error {
+	existingRepos, err := b.getRepositories(ctx, c)
+	if err != nil {
+		return err
+	}
+
+	for _, session := range b.Spec.Sessions {
+		if len(session.Repositories) == 0 {
+			return fmt.Errorf("repositories can not be empty for session: %q. Please provide repositories", session.Name)
+		}
+
 		for _, repo := range session.Repositories {
 			if !b.backendMatched(repo) {
 				return fmt.Errorf("backend %q for repository %q doesn't match with any of the given backends", repo.Backend, repo.Name)
 			}
 
-			existingRepo, err := b.getRepository(ctx, c, repo.Name)
-			if err != nil {
-				if kerr.IsNotFound(err) {
+			if repo.EncryptionSecret == nil {
+				return fmt.Errorf("encryptionSecret for repository %q is missing", repo.Name)
+			}
+
+			for _, existingRepo := range existingRepos {
+				if existingRepo.Name != repo.Name {
 					continue
 				}
-				return err
-			}
 
-			if !targetMatched(&existingRepo.Spec.AppRef, b.GetTargetRef()) {
-				return fmt.Errorf("repository '%q' already exists in the cluster with a different target reference. Please, choose a different repository name", repo.Name)
-			}
+				if existingRepo.Spec.Path != repo.Directory {
+					return fmt.Errorf("repository '%q' already exists in the cluster with a different directory. Please, choose a different repository name", repo.Name)
+				}
 
-			if !storageRefMatched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) {
-				return fmt.Errorf("repository '%q' already exists in the cluster with a different storage reference. Please, choose a different repository name", repo.Name)
-			}
+				if !targetMatched(&existingRepo.Spec.AppRef, b.GetTargetRef()) {
+					return fmt.Errorf("repository '%q' already exists in the cluster with a different target reference. Please, choose a different repository name", repo.Name)
+				}
 
+				if !storageRefMatched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) {
+					return fmt.Errorf("repository '%q' already exists in the cluster with a different storage reference. Please, choose a different repository name", repo.Name)
+				}
+			}
 		}
 	}
+
 	return nil
 }
 
@@ -142,9 +364,9 @@ func targetMatched(t1, t2 *kmapi.TypedObjectReference) bool {
 }
 
 func (b *BackupConfiguration) validateRepositoryNameUnique() error {
-	repoMap := make(map[string]struct{})
-
 	for _, session := range b.Spec.Sessions {
+		repoMap := make(map[string]struct{})
+
 		for _, repo := range session.Repositories {
 			if _, ok := repoMap[repo.Name]; ok {
 				return fmt.Errorf("duplicate repository name found: %q. Please choose a different repository name", repo.Name)
@@ -164,18 +386,13 @@ func (b *BackupConfiguration) backendMatched(repo RepositoryInfo) bool {
 	return false
 }
 
-func (b *BackupConfiguration) getRepository(ctx context.Context, c client.Client, name string) (*storageapi.Repository, error) {
-	repo := &storageapi.Repository{
-		ObjectMeta: v1.ObjectMeta{
-			Name:      name,
-			Namespace: b.Namespace,
-		},
-	}
+func (b *BackupConfiguration) getRepositories(ctx context.Context, c client.Client) ([]storageapi.Repository, error) {
+	repos := &storageapi.RepositoryList{}
 
-	if err := c.Get(ctx, client.ObjectKeyFromObject(repo), repo); err != nil {
+	if err := c.List(ctx, repos); err != nil {
 		return nil, err
 	}
-	return repo, nil
+	return repos.Items, nil
 }
 
 func (b *BackupConfiguration) validateBackendsAgainstUsagePolicy(ctx context.Context, c client.Client) error {
@@ -275,13 +492,75 @@ func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) error {
 		return fmt.Errorf("failed to set Kubernetes client. Reason: %w", err)
 	}
 
-	if err := b.validateRepositories(context.Background(), c); err != nil {
+	if len(b.Spec.Sessions) == 0 {
+		return fmt.Errorf("sessions can not be empty")
+	}
+
+	if len(b.Spec.Backends) == 0 {
+		return fmt.Errorf("backends can not be empty")
+	}
+
+	if err = b.validateBackends(context.Background(), c); err != nil {
 		return err
 	}
-	if err := b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
+
+	if err = b.validateRepositories(context.Background(), c); err != nil {
 		return err
 	}
+
+	if err = b.validatePreviousRepoDir(context.Background(), c, old.(*BackupConfiguration)); err != nil {
+		return err
+	}
+
+	if err = b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
+		return err
+	}
+
 	return b.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
+}
+
+// TODO: need to refactor
+func (b *BackupConfiguration) validatePreviousRepoDir(ctx context.Context, c client.Client, oldBC *BackupConfiguration) error {
+	for _, oldSession := range oldBC.Spec.Sessions {
+		for _, newSession := range b.Spec.Sessions {
+			if oldSession.Name == newSession.Name {
+				for _, oldRepo := range oldSession.Repositories {
+					for _, newRepo := range newSession.Repositories {
+						if oldRepo.Name == newRepo.Name &&
+							oldRepo.Directory != newRepo.Directory {
+							oRepo, err := getRepository(ctx, c, kmapi.ObjectReference{
+								Name:      oldRepo.Name,
+								Namespace: b.Namespace,
+							})
+							if err != nil {
+								return err
+							}
+
+							if oRepo.Status.Phase == storageapi.RepositoryReady {
+								return fmt.Errorf("path of repository %q can not be updated after it has been initialized", newRepo.Name)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func getRepository(ctx context.Context, c client.Client, objRef kmapi.ObjectReference) (*storageapi.Repository, error) {
+	repo := &storageapi.Repository{
+		ObjectMeta: v1.ObjectMeta{
+			Name:      objRef.Name,
+			Namespace: objRef.Namespace,
+		},
+	}
+
+	if err := c.Get(ctx, client.ObjectKeyFromObject(repo), repo); err != nil {
+		return nil, err
+	}
+
+	return repo, nil
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
