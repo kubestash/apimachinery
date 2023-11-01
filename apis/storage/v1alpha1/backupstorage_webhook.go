@@ -23,6 +23,7 @@ import (
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	restclient "k8s.io/client-go/rest"
 	"kubestash.dev/apimachinery/apis"
+	"reflect"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
@@ -149,7 +150,7 @@ func (r *BackupStorage) isSameBackupStorage(bs BackupStorage) bool {
 }
 
 func (r *BackupStorage) validateUpdateStorage(old *BackupStorage) error {
-	if old.Spec.Storage != r.Spec.Storage &&
+	if !reflect.DeepEqual(old.Spec.Storage, r.Spec.Storage) &&
 		len(r.Status.Repositories) != 0 {
 		return fmt.Errorf("BackupStorage is currently in use and cannot be modified")
 	}
