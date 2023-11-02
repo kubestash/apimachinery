@@ -76,7 +76,7 @@ func (b *BackupConfiguration) setDefaultBackend(ctx context.Context, c client.Cl
 	b.Spec.Backends = []BackendReference{
 		{
 			Name: "",
-			StorageRef: kmapi.ObjectReference{
+			StorageRef: &kmapi.ObjectReference{
 				Name:      bs.Name,
 				Namespace: bs.Namespace,
 			},
@@ -413,7 +413,7 @@ func (b *BackupConfiguration) validateBackendsAgainstUsagePolicy(ctx context.Con
 	return nil
 }
 
-func (b *BackupConfiguration) validateStorageUsagePolicy(ctx context.Context, c client.Client, ref kmapi.ObjectReference, ns *core.Namespace) error {
+func (b *BackupConfiguration) validateStorageUsagePolicy(ctx context.Context, c client.Client, ref *kmapi.ObjectReference, ns *core.Namespace) error {
 	bs, err := b.getBackupStorage(ctx, c, ref)
 	if err != nil {
 		if kerr.IsNotFound(err) {
@@ -428,7 +428,7 @@ func (b *BackupConfiguration) validateStorageUsagePolicy(ctx context.Context, c 
 	return nil
 }
 
-func (b *BackupConfiguration) getBackupStorage(ctx context.Context, c client.Client, ref kmapi.ObjectReference) (*storageapi.BackupStorage, error) {
+func (b *BackupConfiguration) getBackupStorage(ctx context.Context, c client.Client, ref *kmapi.ObjectReference) (*storageapi.BackupStorage, error) {
 	bs := &storageapi.BackupStorage{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      ref.Name,
