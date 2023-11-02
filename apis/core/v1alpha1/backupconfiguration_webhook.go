@@ -325,10 +325,6 @@ func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, 
 				return fmt.Errorf("backend %q for repository %q doesn't match with any of the given backends", repo.Backend, repo.Name)
 			}
 
-			if repo.EncryptionSecret == nil {
-				return fmt.Errorf("encryptionSecret for repository %q is missing", repo.Name)
-			}
-
 			for _, existingRepo := range existingRepos {
 				if existingRepo.Name != repo.Name {
 					continue
@@ -508,7 +504,7 @@ func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) error {
 		return err
 	}
 
-	if err = b.validatePreviousRepoDir(context.Background(), c, old.(*BackupConfiguration)); err != nil {
+	if err = b.validateInitializedRepoDir(context.Background(), c, old.(*BackupConfiguration)); err != nil {
 		return err
 	}
 
@@ -520,32 +516,46 @@ func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) error {
 }
 
 // TODO: need to refactor
-func (b *BackupConfiguration) validatePreviousRepoDir(ctx context.Context, c client.Client, oldBC *BackupConfiguration) error {
-	for _, oldSession := range oldBC.Spec.Sessions {
-		for _, newSession := range b.Spec.Sessions {
-			if oldSession.Name == newSession.Name {
-				for _, oldRepo := range oldSession.Repositories {
-					for _, newRepo := range newSession.Repositories {
-						if oldRepo.Name == newRepo.Name &&
-							oldRepo.Directory != newRepo.Directory {
-							oRepo, err := getRepository(ctx, c, kmapi.ObjectReference{
-								Name:      oldRepo.Name,
-								Namespace: b.Namespace,
-							})
-							if err != nil {
-								return err
-							}
+func (b *BackupConfiguration) validateInitializedRepoDir(ctx context.Context, c client.Client, oldBC *BackupConfiguration) error {
+	oldRepoMap := getRepoMap(oldBC.Spec.Sessions)
+	newRepoMap := getRepoMap(b.Spec.Sessions)
 
-							if oRepo.Status.Phase == storageapi.RepositoryReady {
-								return fmt.Errorf("path of repository %q can not be updated after it has been initialized", newRepo.Name)
-							}
-						}
-					}
+	for sessionName, oldRepos := range oldRepoMap {
+		newRepos, exists := newRepoMap[sessionName]
+		if !exists {
+			continue
+		}
+
+		for repoName, oldDirectory := range oldRepos {
+			newDirectory, exists := newRepos[repoName]
+			if exists && oldDirectory != newDirectory {
+				repo, err := getRepository(ctx, c, kmapi.ObjectReference{
+					Name:      repoName,
+					Namespace: b.Namespace,
+				})
+				if err != nil {
+					return err
+				}
+
+				if repo.Status.Phase == storageapi.RepositoryReady {
+					return fmt.Errorf("path of repository %q can not be updated after it has been initialized", repoName)
 				}
 			}
 		}
 	}
+
 	return nil
+}
+
+func getRepoMap(sessions []Session) map[string]map[string]string {
+	repoMap := make(map[string]map[string]string)
+	for _, session := range sessions {
+		repoMap[session.Name] = make(map[string]string)
+		for _, repo := range session.Repositories {
+			repoMap[session.Name][repo.Name] = repo.Directory
+		}
+	}
+	return repoMap
 }
 
 func getRepository(ctx context.Context, c client.Client, objRef kmapi.ObjectReference) (*storageapi.Repository, error) {
