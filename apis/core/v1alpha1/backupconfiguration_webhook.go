@@ -393,22 +393,37 @@ func (b *BackupConfiguration) getRepositories(ctx context.Context, c client.Clie
 
 func (b *BackupConfiguration) validateBackendsAgainstUsagePolicy(ctx context.Context, c client.Client) error {
 	for _, backend := range b.Spec.Backends {
-		bs, err := b.getBackupStorage(ctx, c, backend.StorageRef)
-		if err != nil {
-			if kerr.IsNotFound(err) {
-				continue
-			}
-			return err
-		}
-
 		ns := &core.Namespace{ObjectMeta: v1.ObjectMeta{Name: b.Namespace}}
 		if err := c.Get(ctx, client.ObjectKeyFromObject(ns), ns); err != nil {
 			return err
 		}
 
-		if !bs.UsageAllowed(ns) {
-			return fmt.Errorf("namespace %q is not allowed to refer BackupStorage %s/%s. Please, check the `usagePolicy` of the BackupStorage", b.Namespace, bs.Name, bs.Namespace)
+		if err := b.validateStorageUsagePolicy(ctx, c, backend.StorageRef, ns); err != nil {
+			return err
 		}
+
+		if backend.RetentionPolicy == nil {
+			continue
+		}
+
+		if err := b.validateRetentionPolicyUsagePolicy(ctx, c, backend.RetentionPolicy, ns); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (b *BackupConfiguration) validateStorageUsagePolicy(ctx context.Context, c client.Client, ref kmapi.ObjectReference, ns *core.Namespace) error {
+	bs, err := b.getBackupStorage(ctx, c, ref)
+	if err != nil {
+		if kerr.IsNotFound(err) {
+			return nil
+		}
+		return err
+	}
+
+	if !bs.UsageAllowed(ns) {
+		return fmt.Errorf("namespace %q is not allowed to refer BackupStorage %s/%s. Please, check the `usagePolicy` of the BackupStorage", b.Namespace, bs.Name, bs.Namespace)
 	}
 	return nil
 }
@@ -429,6 +444,39 @@ func (b *BackupConfiguration) getBackupStorage(ctx context.Context, c client.Cli
 		return nil, err
 	}
 	return bs, nil
+}
+
+func (b *BackupConfiguration) validateRetentionPolicyUsagePolicy(ctx context.Context, c client.Client, ref *kmapi.ObjectReference, ns *core.Namespace) error {
+	rp, err := b.getRetentionPolicy(ctx, c, ref)
+	if err != nil {
+		if kerr.IsNotFound(err) {
+			return nil
+		}
+		return err
+	}
+
+	if !rp.UsageAllowed(ns) {
+		return fmt.Errorf("namespace %q is not allowed to refer RetentionPolicy %s/%s. Please, check the `usagePolicy` of the RetentionPolicy", b.Namespace, rp.Name, rp.Namespace)
+	}
+	return nil
+}
+
+func (b *BackupConfiguration) getRetentionPolicy(ctx context.Context, c client.Client, ref *kmapi.ObjectReference) (*storageapi.RetentionPolicy, error) {
+	rp := &storageapi.RetentionPolicy{
+		ObjectMeta: v1.ObjectMeta{
+			Name:      ref.Name,
+			Namespace: ref.Namespace,
+		},
+	}
+
+	if rp.Namespace == "" {
+		rp.Namespace = b.Namespace
+	}
+
+	if err := c.Get(ctx, client.ObjectKeyFromObject(rp), rp); err != nil {
+		return nil, err
+	}
+	return rp, nil
 }
 
 func (b *BackupConfiguration) validateHookTemplatesAgainstUsagePolicy(ctx context.Context, c client.Client) error {
