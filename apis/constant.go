@@ -38,6 +38,7 @@ const (
 	KindReplicaSet            = "ReplicaSet"
 	KindReplicationController = "ReplicationController"
 	KindJob                   = "Job"
+	KindVolumeSnapshot        = "VolumeSnapshot"
 )
 
 const (
@@ -55,6 +56,7 @@ const (
 	KubeStashUploaderComponent    = "kubestash-uploader"
 	KubeStashCleanerComponent     = "kubestash-cleaner"
 	KubeStashHookComponent        = "kubestash-hook"
+	KubeStashPopulatorComponent   = "kubestash-populator"
 )
 
 // Keys for offshoot labels
@@ -91,6 +93,7 @@ const (
 	KubeStashCronJobClusterRole         = "kubestash-cron-job"
 	KubeStashBackendJobClusterRole      = "kubestash-backend-job"
 	KubeStashBackendAccessorClusterRole = "kubestash-backend-accessor"
+	KubeStashPopulatorJobRole           = "kubestash-populator-job"
 )
 
 // Reconciliation related
@@ -129,4 +132,12 @@ const (
 	TempDirVolumeName       = "kubestash-temp-dir"
 	TempDirMountPath        = "/tmp"
 	OperatorContainer       = "operator"
+)
+
+// Volume populator related constants
+const (
+	PopulatorKey                = "populator.kubestash.com"
+	KeyPopulatedFrom            = PopulatorKey + "/populated-from"
+	KeyAppName                  = PopulatorKey + "/app-name"
+	KubeStashPopulatorContainer = "kubestash-populator"
 )
