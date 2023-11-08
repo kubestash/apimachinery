@@ -47,6 +47,8 @@ const (
 	PrefixUpload          = "upload"
 	PrefixCleanup         = "cleanup"
 	PrefixRetentionPolicy = "retentionpolicy"
+	PrefixPopulate        = "populate"
+	PrefixPrime           = "prime"
 )
 
 const (
