@@ -72,6 +72,26 @@ webhooks:
     service:
       name: webhook-service
       namespace: system
+      path: /mutate-core-kubestash-com-v1alpha1-backupconfiguration
+  failurePolicy: Fail
+  name: mbackupconfiguration.kb.io
+  rules:
+  - apiGroups:
+    - core.kubestash.com
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - backupconfigurations
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
       path: /mutate-core-kubestash-com-v1alpha1-hooktemplate
   failurePolicy: Fail
   name: mhooktemplate.kb.io
@@ -85,26 +105,6 @@ webhooks:
     - UPDATE
     resources:
     - hooktemplates
-  sideEffects: None
-- admissionReviewVersions:
-  - v1
-  clientConfig:
-    service:
-      name: webhook-service
-      namespace: system
-      path: /mutate-core-kubestash-com-v1alpha1-backupconfiguration
-  failurePolicy: Fail
-  name: vbackupconfiguration.kb.io
-  rules:
-  - apiGroups:
-    - core.kubestash.com
-    apiVersions:
-    - v1alpha1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - backupconfigurations
   sideEffects: None
 
 ---
@@ -220,6 +220,26 @@ webhooks:
     service:
       name: webhook-service
       namespace: system
+      path: /validate-core-kubestash-com-v1alpha1-backupconfiguration
+  failurePolicy: Fail
+  name: vbackupconfiguration.kb.io
+  rules:
+  - apiGroups:
+    - core.kubestash.com
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - backupconfigurations
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
       path: /validate-core-kubestash-com-v1alpha1-backupsession
   failurePolicy: Fail
   name: vbackupsession.kb.io
@@ -273,24 +293,4 @@ webhooks:
     - UPDATE
     resources:
     - restoresessions
-  sideEffects: None
-- admissionReviewVersions:
-  - v1
-  clientConfig:
-    service:
-      name: webhook-service
-      namespace: system
-      path: /validate-core-kubestash-com-v1alpha1-backupconfiguration
-  failurePolicy: Fail
-  name: vbackupconfiguration.kb.io
-  rules:
-  - apiGroups:
-    - core.kubestash.com
-    apiVersions:
-    - v1alpha1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - backupconfigurations
   sideEffects: None
