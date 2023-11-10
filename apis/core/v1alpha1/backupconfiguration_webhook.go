@@ -197,7 +197,7 @@ func (b *BackupConfiguration) ValidateCreate() error {
 		return fmt.Errorf("failed to set Kubernetes client, Reason: %w", err)
 	}
 
-	if err = b.validateBackends(); err != nil {
+	if err = b.validateBackends(context.Background(), c); err != nil {
 		return err
 	}
 
@@ -237,16 +237,16 @@ func getNewRuntimeClient() (client.Client, error) {
 	})
 }
 
-func (b *BackupConfiguration) validateBackends() error {
+func (b *BackupConfiguration) validateBackends(ctx context.Context, c client.Client) error {
 	if len(b.Spec.Backends) == 0 {
-		return fmt.Errorf("backends can not be empty")
+		return fmt.Errorf("no valid backend is found for backupConfiguration: %q. Please provide a valid backend", b.Name)
 	}
 
 	if err := b.validateBackendNameUnique(); err != nil {
 		return err
 	}
 
-	return b.validateBackendReferences()
+	return b.validateBackendReferences(ctx, c)
 }
 
 func (b *BackupConfiguration) validateBackendNameUnique() error {
@@ -261,7 +261,7 @@ func (b *BackupConfiguration) validateBackendNameUnique() error {
 	return nil
 }
 
-func (b *BackupConfiguration) validateBackendReferences() error {
+func (b *BackupConfiguration) validateBackendReferences(ctx context.Context, c client.Client) error {
 	for _, backend := range b.Spec.Backends {
 		if backend.RetentionPolicy == nil {
 			return fmt.Errorf("no retentionPolicy is found for backend: %q. Please add a retentionPolicy", backend.Name)
@@ -301,7 +301,7 @@ func (b *BackupConfiguration) validateSessions(ctx context.Context, c client.Cli
 		}
 	}
 
-	if err := b.validateInitializedRepoDir(ctx, c); err != nil {
+	if err := b.validateUniqueRepoDir(ctx, c); err != nil {
 		return err
 	}
 
@@ -327,10 +327,6 @@ func (b *BackupConfiguration) validateSessionNameUnique() error {
 func (b *BackupConfiguration) validateSessionConfig(session Session) error {
 	if session.Scheduler == nil {
 		return fmt.Errorf("scheduler is empty for session: %q. Please provide scheduler", session.Name)
-	}
-
-	if session.Scheduler.Schedule == "" {
-		return fmt.Errorf("schedule is empty for session: %q. Please provide a valid schedule", session.Name)
 	}
 
 	return nil
@@ -363,19 +359,14 @@ func (b *BackupConfiguration) validateRepositories(ctx context.Context, c client
 		return fmt.Errorf("repositories are empty for session: %q. Please provide repositories", session.Name)
 	}
 
-	mapRepoDir := make(map[string]map[string]string)
-
 	for _, repo := range session.Repositories {
-		if !b.backendMatched(repo) {
+		if repo.Backend != "" &&
+			!b.backendMatched(repo) {
 			return fmt.Errorf("backend %q for repository %q doesn't match with any of the given backends", repo.Backend, repo.Name)
 		}
 
 		if repo.Directory == "" {
 			return fmt.Errorf("directory is not provided for repository: %q. Please provide a directory", repo.Name)
-		}
-
-		if repoInfo, ok := mapRepoDir[repo.Directory]; ok && repoInfo[repo.Backend] != repo.Name {
-			return fmt.Errorf("repository %q already using the directory %q. Please, choose a different directory for repository %q", repoInfo[repo.Backend], repo.Directory, repo.Name)
 		}
 
 		existingRepo, err := b.getRepository(ctx, c, repo.Name)
@@ -391,20 +382,39 @@ func (b *BackupConfiguration) validateRepositories(ctx context.Context, c client
 		}
 
 		if !storageRefMatched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) {
-			return fmt.Errorf("repository '%q' already exists in the cluster with a different storage reference. Please, choose a different repository name", repo.Name)
+			return fmt.Errorf("repository %q already exists in the cluster with a different storage reference. Please, choose a different repository name", repo.Name)
 		}
 	}
 
 	return nil
 }
 
-func (b *BackupConfiguration) validateInitializedRepoDir(ctx context.Context, c client.Client) error {
+func (b *BackupConfiguration) validateUniqueRepoDir(ctx context.Context, c client.Client) error {
+	if err := b.checkRequestedRepoDir(); err != nil {
+		return err
+	}
+
 	existingRepos, err := b.getRepositories(ctx, c)
 	if err != nil {
 		return err
 	}
 
 	return b.checkExistingRepoDir(existingRepos)
+}
+
+func (b *BackupConfiguration) checkRequestedRepoDir() error {
+	mapRepoDir := make(map[string]map[string]string)
+	for _, session := range b.Spec.Sessions {
+		for _, repo := range session.Repositories {
+			if repoInfo, ok := mapRepoDir[repo.Directory]; ok && repoInfo[repo.Backend] != repo.Name {
+				return fmt.Errorf("repository %q already using the directory %q. Please, choose a different directory for repository %q", repoInfo[repo.Backend], repo.Directory, repo.Name)
+			}
+			mapRepoDir[repo.Directory] = map[string]string{
+				repo.Backend: repo.Name,
+			}
+		}
+	}
+	return nil
 }
 
 func (b *BackupConfiguration) checkExistingRepoDir(existingRepos []storageapi.Repository) error {
@@ -427,7 +437,7 @@ func (b *BackupConfiguration) checkRepoDirExistence(repo RepositoryInfo, existin
 
 		if storageRefMatched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) &&
 			existingRepo.Spec.Path == repo.Directory {
-			return fmt.Errorf("repository '%q' already exists in the cluster with the same directory. Please, choose a different directory for repository %q", existingRepo.Name, repo.Name)
+			return fmt.Errorf("repository %q already exists in the cluster with the same directory. Please, choose a different directory for repository %q", existingRepo.Name, repo.Name)
 		}
 	}
 	return nil
@@ -635,7 +645,7 @@ func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) error {
 		return fmt.Errorf("failed to set Kubernetes client. Reason: %w", err)
 	}
 
-	if err = b.validateBackends(); err != nil {
+	if err = b.validateBackends(context.Background(), c); err != nil {
 		return err
 	}
 
