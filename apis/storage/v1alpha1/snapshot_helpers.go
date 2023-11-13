@@ -113,7 +113,7 @@ func (s *Snapshot) GetSize() string {
 			return ""
 		}
 
-		sizeInByte, err := convertSizeToByte(sizeWithUnit)
+		sizeInByte, err := ConvertSizeToByte(sizeWithUnit)
 		if err != nil {
 			return ""
 		}
@@ -122,7 +122,7 @@ func (s *Snapshot) GetSize() string {
 	return formatBytes(totalSizeInByte)
 }
 
-func convertSizeToByte(sizeWithUnit []string) (uint64, error) {
+func ConvertSizeToByte(sizeWithUnit []string) (uint64, error) {
 	numeral, err := strconv.ParseFloat(sizeWithUnit[0], 64)
 	if err != nil {
 		return 0, err
