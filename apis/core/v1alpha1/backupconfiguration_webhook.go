@@ -74,7 +74,6 @@ func (b *BackupConfiguration) setDefaultBackend(ctx context.Context, c client.Cl
 
 	b.Spec.Backends = []BackendReference{
 		{
-			Name: "",
 			StorageRef: &kmapi.ObjectReference{
 				Name:      bs.Name,
 				Namespace: bs.Namespace,
@@ -102,7 +101,7 @@ func (b *BackupConfiguration) setDefaultRetentionPolicy(ctx context.Context, c c
 func (b *BackupConfiguration) getDefaultStorage(ctx context.Context, c client.Client) *storageapi.BackupStorage {
 	bsList := &storageapi.BackupStorageList{}
 	if err := c.List(ctx, bsList); err != nil {
-		backupconfigurationlog.Error(err, "failed to list backupStorage")
+		backupconfigurationlog.Error(err, "failed to list BackupStorage")
 		return nil
 	}
 
@@ -137,14 +136,14 @@ func (b *BackupConfiguration) getDefaultStorage(ctx context.Context, c client.Cl
 		}
 	}
 
-	backupconfigurationlog.Error(fmt.Errorf("no default backupStorage is found"), "no usable default backupStorage is found")
+	backupconfigurationlog.Error(fmt.Errorf("no default BackupStorage is found"), "no usable default BackupStorage is found")
 	return nil
 }
 
 func (b *BackupConfiguration) getDefaultRetentionPolicy(ctx context.Context, c client.Client) *storageapi.RetentionPolicy {
 	rpList := &storageapi.RetentionPolicyList{}
 	if err := c.List(ctx, rpList); err != nil {
-		backupconfigurationlog.Error(err, "failed to list retentionPolicy")
+		backupconfigurationlog.Error(err, "failed to list RetentionPolicy")
 		return nil
 	}
 
@@ -179,7 +178,7 @@ func (b *BackupConfiguration) getDefaultRetentionPolicy(ctx context.Context, c c
 		}
 	}
 
-	backupconfigurationlog.Error(fmt.Errorf("no default retentionPolicy is found"), "no usable default retentionPolicy is found")
+	backupconfigurationlog.Error(fmt.Errorf("no default RetentionPolicy is found"), "no usable default RetentionPolicy is found")
 	return nil
 }
 
@@ -197,7 +196,7 @@ func (b *BackupConfiguration) ValidateCreate() error {
 		return fmt.Errorf("failed to set Kubernetes client, Reason: %w", err)
 	}
 
-	if err = b.validateBackends(context.Background(), c); err != nil {
+	if err = b.validateBackends(); err != nil {
 		return err
 	}
 
@@ -237,16 +236,16 @@ func getNewRuntimeClient() (client.Client, error) {
 	})
 }
 
-func (b *BackupConfiguration) validateBackends(ctx context.Context, c client.Client) error {
+func (b *BackupConfiguration) validateBackends() error {
 	if len(b.Spec.Backends) == 0 {
-		return fmt.Errorf("no valid backend is found for backupConfiguration: %q. Please provide a valid backend", b.Name)
+		return fmt.Errorf("backend can not be empty")
 	}
 
 	if err := b.validateBackendNameUnique(); err != nil {
 		return err
 	}
 
-	return b.validateBackendReferences(ctx, c)
+	return b.validateBackendReferences()
 }
 
 func (b *BackupConfiguration) validateBackendNameUnique() error {
@@ -261,10 +260,10 @@ func (b *BackupConfiguration) validateBackendNameUnique() error {
 	return nil
 }
 
-func (b *BackupConfiguration) validateBackendReferences(ctx context.Context, c client.Client) error {
+func (b *BackupConfiguration) validateBackendReferences() error {
 	for _, backend := range b.Spec.Backends {
 		if backend.RetentionPolicy == nil {
-			return fmt.Errorf("no retentionPolicy is found for backend: %q. Please add a retentionPolicy", backend.Name)
+			return fmt.Errorf("no RetentionPolicy is found for backend: %q. Please add a RetentionPolicy", backend.Name)
 		}
 
 		if backend.StorageRef == nil {
@@ -283,11 +282,11 @@ func (b *BackupConfiguration) validateSessions(ctx context.Context, c client.Cli
 		return err
 	}
 
-	if err := b.validateRepositoryNameUnique(); err != nil {
-		return err
-	}
-
 	for _, session := range b.Spec.Sessions {
+		if err := b.validateRepositoryNameUnique(session); err != nil {
+			return err
+		}
+
 		if err := b.validateSessionConfig(session); err != nil {
 			return err
 		}
@@ -356,7 +355,7 @@ func (b *BackupConfiguration) validateAddonInfo(session Session) error {
 
 func (b *BackupConfiguration) validateRepositories(ctx context.Context, c client.Client, session Session) error {
 	if len(session.Repositories) == 0 {
-		return fmt.Errorf("repositories are empty for session: %q. Please provide repositories", session.Name)
+		return fmt.Errorf("no repository found for session: %q. Please provide atleast one repository", session.Name)
 	}
 
 	for _, repo := range session.Repositories {
@@ -390,19 +389,14 @@ func (b *BackupConfiguration) validateRepositories(ctx context.Context, c client
 }
 
 func (b *BackupConfiguration) validateUniqueRepoDir(ctx context.Context, c client.Client) error {
-	if err := b.checkRequestedRepoDir(); err != nil {
+	if err := b.validateRepoDirectories(); err != nil {
 		return err
 	}
 
-	existingRepos, err := b.getRepositories(ctx, c)
-	if err != nil {
-		return err
-	}
-
-	return b.checkExistingRepoDir(existingRepos)
+	return b.validateExistingRepoDir(ctx, c)
 }
 
-func (b *BackupConfiguration) checkRequestedRepoDir() error {
+func (b *BackupConfiguration) validateRepoDirectories() error {
 	mapRepoDir := make(map[string]map[string]string)
 	for _, session := range b.Spec.Sessions {
 		for _, repo := range session.Repositories {
@@ -417,10 +411,10 @@ func (b *BackupConfiguration) checkRequestedRepoDir() error {
 	return nil
 }
 
-func (b *BackupConfiguration) checkExistingRepoDir(existingRepos []storageapi.Repository) error {
+func (b *BackupConfiguration) validateExistingRepoDir(ctx context.Context, c client.Client) error {
 	for _, session := range b.Spec.Sessions {
 		for _, repo := range session.Repositories {
-			if err := b.checkRepoDirExistence(repo, existingRepos); err != nil {
+			if err := b.validateRepoDirExistence(ctx, c, repo); err != nil {
 				return err
 			}
 		}
@@ -428,7 +422,12 @@ func (b *BackupConfiguration) checkExistingRepoDir(existingRepos []storageapi.Re
 	return nil
 }
 
-func (b *BackupConfiguration) checkRepoDirExistence(repo RepositoryInfo, existingRepos []storageapi.Repository) error {
+func (b *BackupConfiguration) validateRepoDirExistence(ctx context.Context, c client.Client, repo RepositoryInfo) error {
+	existingRepos, err := b.getRepositories(ctx, c)
+	if err != nil {
+		return err
+	}
+
 	for _, existingRepo := range existingRepos {
 		if existingRepo.Name == repo.Name &&
 			existingRepo.Namespace == b.Namespace {
@@ -454,16 +453,13 @@ func targetMatched(t1, t2 *kmapi.TypedObjectReference) bool {
 		t1.Name == t2.Name
 }
 
-func (b *BackupConfiguration) validateRepositoryNameUnique() error {
-	for _, session := range b.Spec.Sessions {
-		repoMap := make(map[string]struct{})
-
-		for _, repo := range session.Repositories {
-			if _, ok := repoMap[repo.Name]; ok {
-				return fmt.Errorf("duplicate repository name found: %q. Please choose a different repository name", repo.Name)
-			}
-			repoMap[repo.Name] = struct{}{}
+func (b *BackupConfiguration) validateRepositoryNameUnique(session Session) error {
+	repoMap := make(map[string]struct{})
+	for _, repo := range session.Repositories {
+		if _, ok := repoMap[repo.Name]; ok {
+			return fmt.Errorf("duplicate repository name found: %q. Please choose a different repository name", repo.Name)
 		}
+		repoMap[repo.Name] = struct{}{}
 	}
 	return nil
 }
@@ -509,10 +505,6 @@ func (b *BackupConfiguration) validateBackendsAgainstUsagePolicy(ctx context.Con
 
 		if err := b.validateStorageUsagePolicy(ctx, c, backend.StorageRef, ns); err != nil {
 			return err
-		}
-
-		if backend.RetentionPolicy == nil {
-			continue
 		}
 
 		if err := b.validateRetentionPolicyUsagePolicy(ctx, c, backend.RetentionPolicy, ns); err != nil {
@@ -645,7 +637,7 @@ func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) error {
 		return fmt.Errorf("failed to set Kubernetes client. Reason: %w", err)
 	}
 
-	if err = b.validateBackends(context.Background(), c); err != nil {
+	if err = b.validateBackends(); err != nil {
 		return err
 	}
 
