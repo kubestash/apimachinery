@@ -116,6 +116,12 @@ const (
 	DirRepository = "repository"
 )
 
+// Interim Volume Related Constant
+const (
+	KeyInterimVolume  = "INTERIM_VOLUME"
+	InterimVolumeName = "kubestash-interim-volume"
+)
+
 // PersistentVolumeClaim related
 const (
 	KeyPodOrdinal = "POD_ORDINAL"
