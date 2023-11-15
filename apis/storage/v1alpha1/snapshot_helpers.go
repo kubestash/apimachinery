@@ -99,19 +99,19 @@ func (s *Snapshot) GetIntegrity() *bool {
 
 func (s *Snapshot) GetResticStatsSizeInByte() (uint64, error) {
 	if s.Status.Components == nil {
-		return 0, fmt.Errorf("for snapshots %s/%s Status components is empty", s.Namespace, s.Name)
+		return 0, fmt.Errorf("no component found for snapshot %s/%s", s.Namespace, s.Name)
 	}
 
 	var totalSizeInByte uint64
 	for componentName, component := range s.Status.Components {
 		for _, stats := range component.ResticStats {
 			if stats.Size == "" {
-				return 0, fmt.Errorf("resticStats size of component %s of the snapshots %s/%s is empty", s.Namespace, s.Name, componentName)
+				return 0, fmt.Errorf("resticStats size of component %s is empty for the snapshot %s/%s", componentName, s.Namespace, s.Name)
 			}
 
 			sizeWithUnit := strings.Split(component.Size, " ")
 			if len(sizeWithUnit) < 2 {
-				return 0, fmt.Errorf("resticStats size unit of component %s of the snapshots %s/%s is invalid", s.Namespace, s.Name, componentName)
+				return 0, fmt.Errorf("resticStats size of component %s is invalid for the snapshot %s/%s", componentName, s.Namespace, s.Name)
 			}
 
 			sizeInByte, err := convertSizeToByte(sizeWithUnit)
