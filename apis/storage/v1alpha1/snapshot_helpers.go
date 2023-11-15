@@ -114,7 +114,7 @@ func (s *Snapshot) GetResticStatsSizeInByte() (uint64, error) {
 				return 0, fmt.Errorf("resticStats size unit of component %s of the snapshots %s/%s is invalid", s.Namespace, s.Name, componentName)
 			}
 
-			sizeInByte, err := ConvertSizeToByte(sizeWithUnit)
+			sizeInByte, err := convertSizeToByte(sizeWithUnit)
 			if err != nil {
 				return 0, err
 			}
@@ -140,7 +140,7 @@ func (s *Snapshot) GetSize() string {
 			return ""
 		}
 
-		sizeInByte, err := ConvertSizeToByte(sizeWithUnit)
+		sizeInByte, err := convertSizeToByte(sizeWithUnit)
 		if err != nil {
 			return ""
 		}
@@ -149,7 +149,7 @@ func (s *Snapshot) GetSize() string {
 	return formatBytes(totalSizeInByte)
 }
 
-func ConvertSizeToByte(sizeWithUnit []string) (uint64, error) {
+func convertSizeToByte(sizeWithUnit []string) (uint64, error) {
 	numeral, err := strconv.ParseFloat(sizeWithUnit[0], 64)
 	if err != nil {
 		return 0, err
