@@ -69,6 +69,15 @@ const (
 	KubeStashSessionName      = "kubestash.com/session-name"
 )
 
+// Keys for snapshots labels
+const (
+	KubeStashRepositoryName = "kubestash.com/repository-name"
+
+	KubeStashAppRefKind      = "kubestash.com/app-ref-kind"
+	KubeStashAppRefNamespace = "kubestash.com/app-ref-namespace"
+	KubeStashAppRefName      = "kubestash.com/app-ref-name"
+)
+
 // Keys for structure logging
 const (
 	KeyTargetKind      = "target_kind"
