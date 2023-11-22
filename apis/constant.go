@@ -100,8 +100,9 @@ const (
 
 // Reconciliation related
 const (
-	Requeue      = true
-	DoNotRequeue = false
+	Requeue               = true
+	DoNotRequeue          = false
+	PrefixReconcilingInfo = "Reconciling: "
 )
 
 // Addon related
