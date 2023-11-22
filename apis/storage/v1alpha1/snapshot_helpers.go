@@ -97,7 +97,7 @@ func (s *Snapshot) GetIntegrity() *bool {
 	return &result
 }
 
-func (s *Snapshot) GetResticStatsSizeInByte() (uint64, error) {
+func (s *Snapshot) GetTotalBackupSizeInBytes() (uint64, error) {
 	if s.Status.Components == nil {
 		return 0, fmt.Errorf("no component found for snapshot %s/%s", s.Namespace, s.Name)
 	}

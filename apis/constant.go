@@ -106,7 +106,6 @@ const (
 
 // Addon related
 const (
-	EnvDBVersion     = "DB_VERSION"
 	EnvComponentName = "COMPONENT_NAME"
 
 	ComponentPod        = "pod"
@@ -118,6 +117,8 @@ const (
 
 // Interim Volume Related Constant
 const (
+	KeyDBVersion = "DB_VERSION"
+
 	KeyInterimVolume  = "INTERIM_VOLUME"
 	InterimVolumeName = "kubestash-interim-volume"
 )
