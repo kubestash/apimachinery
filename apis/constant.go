@@ -122,7 +122,7 @@ const (
 	ComponentPVC             = "pvc"
 	ComponentDump            = "dump"
 	ComponentManifests       = "manifests"
-	ComponentVolumeSnapshots = "volumesnapshot"
+	ComponentVolumeSnapshots = "volumesnapshots"
 
 	DirRepository = "repository"
 )
