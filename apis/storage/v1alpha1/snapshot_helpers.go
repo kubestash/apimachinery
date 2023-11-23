@@ -202,6 +202,6 @@ func (s *Snapshot) OffshootLabels() map[string]string {
 	return apis.UpsertLabels(s.Labels, newLabels)
 }
 
-func (s *Snapshot) GetComponentPath(dataDir string) string {
-	return filepath.Join(apis.DirRepository, s.Spec.Version, s.Spec.Session, dataDir)
+func (s *Snapshot) GetComponentPath(componentName string) string {
+	return filepath.Join(apis.DirRepository, s.Spec.Version, s.Spec.Session, componentName)
 }
