@@ -71,7 +71,7 @@ const (
 
 // Keys for snapshots labels
 const (
-	KubeStashRepositoryName = "kubestash.com/repository-name"
+	KubeStashRepositoryName = "kubestash.com/repo-name"
 
 	KubeStashAppRefKind      = "kubestash.com/app-ref-kind"
 	KubeStashAppRefNamespace = "kubestash.com/app-ref-namespace"
@@ -117,12 +117,14 @@ const (
 const (
 	EnvComponentName = "COMPONENT_NAME"
 
-	ComponentPod        = "pod"
-	ComponentDeployment = "deployment"
-	ComponentPVC        = "pvc"
+	ComponentPod             = "pod"
+	ComponentDeployment      = "deployment"
+	ComponentPVC             = "pvc"
+	ComponentDump            = "dump"
+	ComponentManifests       = "manifests"
+	ComponentVolumeSnapshots = "volumesnapshot"
 
 	DirRepository = "repository"
-	DirDump       = "dump"
 )
 
 // Interim Volume Related Constant
