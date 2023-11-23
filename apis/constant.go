@@ -113,6 +113,7 @@ const (
 	ComponentPVC        = "pvc"
 
 	DirRepository = "repository"
+	DirDump       = "dump"
 )
 
 // Interim Volume Related Constant
@@ -150,4 +151,9 @@ const (
 	KeyPopulatedFrom            = PopulatorKey + "/populated-from"
 	KeyAppName                  = PopulatorKey + "/app-name"
 	KubeStashPopulatorContainer = "kubestash-populator"
+)
+
+// Snapshot version related constants
+const (
+	SnapshotVersionV1 = "v1"
 )
