@@ -337,7 +337,7 @@ func (b *BackupConfiguration) validateAddonInfo(session Session) error {
 	}
 
 	if session.Addon.Name == "" {
-		return fmt.Errorf("addon name is empty for session: %q. Please provide a valid addon name", session.Addon.Name)
+		return fmt.Errorf("addon name is empty for session: %q. Please provide a valid addon name", session.Addon)
 	}
 
 	if len(session.Addon.Tasks) == 0 {
