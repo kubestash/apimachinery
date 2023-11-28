@@ -136,7 +136,7 @@ func (b *BackupConfiguration) getDefaultStorage(ctx context.Context, c client.Cl
 		}
 	}
 
-	backupconfigurationlog.Error(fmt.Errorf("no default BackupStorage is found"), "no usable default BackupStorage is found")
+	backupconfigurationlog.Error(fmt.Errorf("no default BackupStorage found"), "")
 	return nil
 }
 
@@ -178,7 +178,7 @@ func (b *BackupConfiguration) getDefaultRetentionPolicy(ctx context.Context, c c
 		}
 	}
 
-	backupconfigurationlog.Error(fmt.Errorf("no default RetentionPolicy is found"), "no usable default RetentionPolicy is found")
+	backupconfigurationlog.Error(fmt.Errorf("no default RetentionPolicy found"), "")
 	return nil
 }
 
@@ -337,7 +337,7 @@ func (b *BackupConfiguration) validateAddonInfo(session Session) error {
 	}
 
 	if session.Addon.Name == "" {
-		return fmt.Errorf("addon name is empty for session: %q. Please provide a valid addon name", session.Addon)
+		return fmt.Errorf("addon name is empty for session: %q. Please provide a valid addon name", session.Name)
 	}
 
 	if len(session.Addon.Tasks) == 0 {
