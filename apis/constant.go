@@ -121,6 +121,7 @@ const (
 	ComponentDeployment      = "deployment"
 	ComponentPVC             = "pvc"
 	ComponentDump            = "dump"
+	ComponentWal             = "wal"
 	ComponentManifests       = "manifests"
 	ComponentVolumeSnapshots = "volumesnapshots"
 
