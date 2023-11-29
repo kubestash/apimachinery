@@ -92,7 +92,7 @@ type RepositoryStatus struct {
 
 	// LastBackupTime specifies the timestamp when the last successful backup has been taken
 	// +optional
-	LastBackupTime string `json:"lastBackupTime,omitempty"`
+	LastBackupTime *metav1.Time `json:"lastBackupTime,omitempty"`
 
 	// Integrity specifies whether the backed up data of this Repository has been corrupted or not
 	// +optional
