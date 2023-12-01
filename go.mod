@@ -15,10 +15,10 @@ require (
 	k8s.io/client-go v0.25.1
 	k8s.io/klog/v2 v2.80.1
 	k8s.io/utils v0.0.0-20220823124924-e9cbc92d1a73
-	kmodules.xyz/client-go v0.25.39
+	kmodules.xyz/client-go v0.25.43
 	kmodules.xyz/crd-schema-fuzz v0.25.0
 	kmodules.xyz/objectstore-api v0.25.1
-	kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57
+	kmodules.xyz/offshoot-api v0.25.5
 	kmodules.xyz/prober v0.25.0
 	sigs.k8s.io/controller-runtime v0.13.1
 	sigs.k8s.io/yaml v1.3.0
@@ -28,7 +28,7 @@ require (
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
