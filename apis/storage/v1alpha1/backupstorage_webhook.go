@@ -20,13 +20,10 @@ import (
 	"context"
 	"fmt"
 	"k8s.io/apimachinery/pkg/runtime"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	restclient "k8s.io/client-go/rest"
 	"kubestash.dev/apimachinery/apis"
 	"reflect"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
@@ -64,10 +61,7 @@ var _ webhook.Validator = &BackupStorage{}
 func (r *BackupStorage) ValidateCreate() error {
 	backupstoragelog.Info("validate create", "name", r.Name)
 
-	c, err := getNewRuntimeClient()
-	if err != nil {
-		return fmt.Errorf("failed to set Kubernetes client. Reason: %w", err)
-	}
+	c := apis.GetRuntimeClient()
 
 	if r.Spec.Default {
 		if err := r.validateSingleDefaultBackupStorageInSameNamespace(context.Background(), c); err != nil {
@@ -82,18 +76,15 @@ func (r *BackupStorage) ValidateCreate() error {
 func (r *BackupStorage) ValidateUpdate(old runtime.Object) error {
 	backupstoragelog.Info("validate update", "name", r.Name)
 
-	c, err := getNewRuntimeClient()
-	if err != nil {
-		return fmt.Errorf("failed to set Kubernetes client. Reason: %w", err)
-	}
+	c := apis.GetRuntimeClient()
 
 	if r.Spec.Default {
-		if err = r.validateSingleDefaultBackupStorageInSameNamespace(context.Background(), c); err != nil {
+		if err := r.validateSingleDefaultBackupStorageInSameNamespace(context.Background(), c); err != nil {
 			return err
 		}
 	}
 
-	if err = r.validateUpdateStorage(old.(*BackupStorage)); err != nil {
+	if err := r.validateUpdateStorage(old.(*BackupStorage)); err != nil {
 		return err
 	}
 
@@ -207,27 +198,4 @@ func (r *BackupStorage) isPointToSameDir(bs BackupStorage) bool {
 	default:
 		return false
 	}
-}
-
-func getNewRuntimeClient() (client.Client, error) {
-	config, err := restclient.InClusterConfig()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get Kubernetes config. Reason: %w", err)
-	}
-	scheme := runtime.NewScheme()
-	utilruntime.Must(AddToScheme(scheme))
-
-	mapper, err := apiutil.NewDynamicRESTMapper(config)
-	if err != nil {
-		return nil, err
-	}
-
-	return client.New(config, client.Options{
-		Scheme: scheme,
-		Mapper: mapper,
-		Opts: client.WarningHandlerOptions{
-			SuppressWarnings:   false,
-			AllowDuplicateLogs: false,
-		},
-	})
 }
