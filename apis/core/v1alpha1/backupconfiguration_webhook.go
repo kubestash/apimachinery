@@ -35,10 +35,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
 
-const (
-	sessionName = "session-name"
-)
-
 // log is for logging in this package.
 var backupconfigurationlog = logf.Log.WithName("backupconfiguration-resource")
 
@@ -397,15 +393,13 @@ func (b *BackupConfiguration) validateRepositories(ctx context.Context, c client
 }
 
 func (b *BackupConfiguration) validateUniqueRepo() error {
-	mapRepoToSession := make(map[string]map[string]string)
+	mapRepoToBackend := make(map[string]map[string]string)
 	for _, session := range b.Spec.Sessions {
 		for _, repo := range session.Repositories {
-			if repoInfo, ok := mapRepoToSession[repo.Name]; ok && repoInfo[repo.Backend] == repo.Name {
-
-				return fmt.Errorf("repository %q is already in use by another session at %q. Please choose a different repository for session %q", repoInfo[repo.Backend], repoInfo[sessionName], session.Name)
+			if repoInfo, ok := mapRepoToBackend[repo.Name]; ok && repoInfo[repo.Backend] == repo.Name {
+				return fmt.Errorf("repository %q can not be used from multiple sessions. Please choose a different repository", repo.Name)
 			}
-			mapRepoToSession[repo.Name] = map[string]string{
-				sessionName:  session.Name,
+			mapRepoToBackend[repo.Name] = map[string]string{
 				repo.Backend: repo.Name,
 			}
 		}
