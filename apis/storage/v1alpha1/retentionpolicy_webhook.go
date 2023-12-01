@@ -80,10 +80,7 @@ var _ webhook.Validator = &RetentionPolicy{}
 func (r *RetentionPolicy) ValidateCreate() error {
 	retentionpolicylog.Info("validate create", "name", r.Name)
 
-	c, err := getNewRuntimeClient()
-	if err != nil {
-		return fmt.Errorf("failed to set Kubernetes client. Reason: %w", err)
-	}
+	c := apis.GetRuntimeClient()
 
 	if err := r.validateMaxRetentionPeriodFormat(); err != nil {
 		return err
@@ -99,10 +96,7 @@ func (r *RetentionPolicy) ValidateCreate() error {
 func (r *RetentionPolicy) ValidateUpdate(old runtime.Object) error {
 	retentionpolicylog.Info("validate update", "name", r.Name)
 
-	c, err := getNewRuntimeClient()
-	if err != nil {
-		return fmt.Errorf("failed to set Kubernetes client. Reason: %w", err)
-	}
+	c := apis.GetRuntimeClient()
 
 	if err := r.validateMaxRetentionPeriodFormat(); err != nil {
 		return err

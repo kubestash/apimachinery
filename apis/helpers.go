@@ -18,8 +18,29 @@ package apis
 
 import (
 	"encoding/json"
+	"sync"
+
 	"gomodules.xyz/envsubst"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
+
+var (
+	once sync.Once
+	kc   client.Client
+)
+
+func GetRuntimeClient() client.Client {
+	if kc == nil {
+		panic("runtime client is not initialized!")
+	}
+	return kc
+}
+
+func SetRuntimeClient(client client.Client) {
+	once.Do(func() {
+		kc = client
+	})
+}
 
 func UpsertLabels(oldLabels, newLabels map[string]string) map[string]string {
 	if oldLabels == nil {
