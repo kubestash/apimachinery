@@ -29,7 +29,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func NewRuntimeClient() (client.Client, error) {
+func NewUncachedClient() (client.Client, error) {
 	cfg, err := ctrl.GetConfig()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get Kubernetes config. Reason: %w", err)
