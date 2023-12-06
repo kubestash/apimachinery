@@ -69,6 +69,10 @@ func (r *BackupStorage) ValidateCreate() error {
 		}
 	}
 
+	if err := r.validateUsagePolicy(); err != nil {
+		return err
+	}
+
 	return r.validateUniqueDirectory(context.Background(), c)
 }
 
@@ -82,6 +86,10 @@ func (r *BackupStorage) ValidateUpdate(old runtime.Object) error {
 		if err := r.validateSingleDefaultBackupStorageInSameNamespace(context.Background(), c); err != nil {
 			return err
 		}
+	}
+
+	if err := r.validateUsagePolicy(); err != nil {
+		return err
 	}
 
 	if err := r.validateUpdateStorage(old.(*BackupStorage)); err != nil {
@@ -121,6 +129,14 @@ func (r *BackupStorage) validateSingleDefaultBackupStorageInSameNamespace(ctx co
 		}
 	}
 
+	return nil
+}
+
+func (r *BackupStorage) validateUsagePolicy() error {
+	if *r.Spec.UsagePolicy.AllowedNamespaces.From == apis.NamespacesFromSelector &&
+		r.Spec.UsagePolicy.AllowedNamespaces.Selector == nil {
+		return fmt.Errorf("selectors are not provided for selector type usage policy")
+	}
 	return nil
 }
 

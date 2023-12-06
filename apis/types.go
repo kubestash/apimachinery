@@ -79,6 +79,7 @@ type AllowedNamespaces struct {
 	// * Same: Only current namespace can use the resource.
 	//
 	// +optional
+	// +kubebuilder:default=Same
 	From *FromNamespaces `json:"from,omitempty"`
 
 	// Selector must be specified when From is set to "Selector". In that case,
