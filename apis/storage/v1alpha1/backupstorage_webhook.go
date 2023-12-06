@@ -135,7 +135,7 @@ func (r *BackupStorage) validateSingleDefaultBackupStorageInSameNamespace(ctx co
 func (r *BackupStorage) validateUsagePolicy() error {
 	if *r.Spec.UsagePolicy.AllowedNamespaces.From == apis.NamespacesFromSelector &&
 		r.Spec.UsagePolicy.AllowedNamespaces.Selector == nil {
-		return fmt.Errorf("selectors are not provided for selector type usage policy")
+		return fmt.Errorf("selector cannot be empty for usage policy of type %q", apis.NamespacesFromSelector)
 	}
 	return nil
 }
