@@ -2228,7 +2228,6 @@ spec:
                       allowed to use the resource
                     properties:
                       from:
-                        default: Same
                         description: 'From indicates how to select the namespaces
                           that are allowed to use this resource. Possible values are:
                           * All: All namespaces can use this resource. * Selector:
