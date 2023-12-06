@@ -65,12 +65,20 @@ var _ webhook.Validator = &BackupBlueprint{}
 func (r *BackupBlueprint) ValidateCreate() error {
 	backupblueprintlog.Info("validate create", "name", r.Name)
 
+	if err := r.validateUsagePolicy(); err != nil {
+		return err
+	}
+
 	return r.validateBackendsAgainstUsagePolicy(context.Background(), apis.GetRuntimeClient())
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *BackupBlueprint) ValidateUpdate(old runtime.Object) error {
 	backupblueprintlog.Info("validate update", "name", r.Name)
+
+	if err := r.validateUsagePolicy(); err != nil {
+		return err
+	}
 
 	return r.validateBackendsAgainstUsagePolicy(context.Background(), apis.GetRuntimeClient())
 }
@@ -134,4 +142,12 @@ func (r *BackupBlueprint) getBackupStorage(ctx context.Context, c client.Client,
 		return nil, err
 	}
 	return bs, nil
+}
+
+func (r *BackupBlueprint) validateUsagePolicy() error {
+	if *r.Spec.UsagePolicy.AllowedNamespaces.From == apis.NamespacesFromSelector &&
+		r.Spec.UsagePolicy.AllowedNamespaces.Selector == nil {
+		return fmt.Errorf("selector cannot be empty for usage policy of type %q", apis.NamespacesFromSelector)
+	}
+	return nil
 }

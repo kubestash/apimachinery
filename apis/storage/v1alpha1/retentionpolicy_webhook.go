@@ -89,6 +89,11 @@ func (r *RetentionPolicy) ValidateCreate() error {
 	if err := r.validateProvidedPolicy(); err != nil {
 		return err
 	}
+
+	if err := r.validateUsagePolicy(); err != nil {
+		return err
+	}
+
 	return r.validateSingleDefaultRetentionPolicyInSameNamespace(context.Background(), c)
 }
 
@@ -105,6 +110,11 @@ func (r *RetentionPolicy) ValidateUpdate(old runtime.Object) error {
 	if err := r.validateProvidedPolicy(); err != nil {
 		return err
 	}
+
+	if err := r.validateUsagePolicy(); err != nil {
+		return err
+	}
+
 	return r.validateSingleDefaultRetentionPolicyInSameNamespace(context.Background(), c)
 }
 
@@ -148,6 +158,14 @@ func (r *RetentionPolicy) isSameRetentionPolicy(rp RetentionPolicy) bool {
 		return true
 	}
 	return false
+}
+
+func (r *RetentionPolicy) validateUsagePolicy() error {
+	if *r.Spec.UsagePolicy.AllowedNamespaces.From == apis.NamespacesFromSelector &&
+		r.Spec.UsagePolicy.AllowedNamespaces.Selector == nil {
+		return fmt.Errorf("selector cannot be empty for usage policy of type %q", apis.NamespacesFromSelector)
+	}
+	return nil
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
