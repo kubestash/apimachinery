@@ -17,11 +17,8 @@ limitations under the License.
 package apis
 
 import (
-	"encoding/json"
-	core "k8s.io/api/core/v1"
 	"sync"
 
-	"gomodules.xyz/envsubst"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -51,32 +48,4 @@ func UpsertLabels(oldLabels, newLabels map[string]string) map[string]string {
 		oldLabels[k] = v
 	}
 	return oldLabels
-}
-
-func ResolveWithInputs(obj interface{}, inputs map[string]string) error {
-	// convert to JSON, apply replacements and convert back to struct
-	jsonObj, err := json.Marshal(obj)
-	if err != nil {
-		return err
-	}
-	resolved, err := envsubst.EvalMap(string(jsonObj), inputs)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal([]byte(resolved), obj)
-}
-
-func GetTmpVolumeAndMount() (core.Volume, core.VolumeMount) {
-	vol := core.Volume{
-		Name: TempDirVolumeName,
-		VolumeSource: core.VolumeSource{
-			EmptyDir: &core.EmptyDirVolumeSource{},
-		},
-	}
-	mnt := core.VolumeMount{
-		Name:      TempDirVolumeName,
-		MountPath: TempDirMountPath,
-	}
-
-	return vol, mnt
 }
