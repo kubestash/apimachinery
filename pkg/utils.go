@@ -18,7 +18,11 @@ package pkg
 
 import (
 	"fmt"
+	"gomodules.xyz/envsubst"
+	core "k8s.io/api/core/v1"
+	"kubestash.dev/apimachinery/apis"
 
+	"encoding/json"
 	vsapi "github.com/kubernetes-csi/external-snapshotter/client/v4/apis/volumesnapshot/v1"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cu "kmodules.xyz/client-go/client"
@@ -43,4 +47,32 @@ func NewUncachedClient() (client.Client, error) {
 		addonapi.AddToScheme,
 		vsapi.AddToScheme,
 	)
+}
+
+func GetTmpVolumeAndMount() (core.Volume, core.VolumeMount) {
+	vol := core.Volume{
+		Name: apis.TempDirVolumeName,
+		VolumeSource: core.VolumeSource{
+			EmptyDir: &core.EmptyDirVolumeSource{},
+		},
+	}
+	mnt := core.VolumeMount{
+		Name:      apis.TempDirVolumeName,
+		MountPath: apis.TempDirMountPath,
+	}
+
+	return vol, mnt
+}
+
+func ResolveWithInputs(obj interface{}, inputs map[string]string) error {
+	// convert to JSON, apply replacements and convert back to struct
+	jsonObj, err := json.Marshal(obj)
+	if err != nil {
+		return err
+	}
+	resolved, err := envsubst.EvalMap(string(jsonObj), inputs)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal([]byte(resolved), obj)
 }
