@@ -174,3 +174,14 @@ func (rs *RestoreSession) checkFailureInComponents() (bool, string) {
 
 	return false, ""
 }
+
+func (rs *RestoreSession) GetTargetRef() *kmapi.TypedObjectReference {
+	if rs.Spec.Target == nil {
+		return &kmapi.TypedObjectReference{
+			APIGroup: "na",
+			Kind:     apis.KindEmpty,
+			Name:     "na",
+		}
+	}
+	return rs.Spec.Target
+}
