@@ -137,6 +137,10 @@ func (r *RetentionPolicy) validateProvidedPolicy() error {
 }
 
 func (r *RetentionPolicy) validateSingleDefaultRetentionPolicyInSameNamespace(ctx context.Context, c client.Client) error {
+	if !r.Spec.Default {
+		return nil
+	}
+
 	rpList := RetentionPolicyList{}
 	if err := c.List(ctx, &rpList, client.InNamespace(r.Namespace)); err != nil {
 		return err
