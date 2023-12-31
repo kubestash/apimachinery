@@ -507,8 +507,8 @@ k8s.io/utils v0.0.0-20230726121419-3b25d923346b h1:sgn3ZU783SCgtaSJjpcVVlRqd6GSn
 k8s.io/utils v0.0.0-20230726121419-3b25d923346b/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=
 kmodules.xyz/client-go v0.29.2 h1:jdyk5glfpSH1J9De9/H6j43/eT2q8xb+fDeAq0x/dpQ=
 kmodules.xyz/client-go v0.29.2/go.mod h1:xWlS/1zWkx1sIKCAkzULy9570mHZYi2exDECEoP1ek4=
-kmodules.xyz/crd-schema-fuzz v0.29.0 h1:s6ATG46aWyP+SoBQU00/kL/7AS2AEWwkSPwVjU512vM=
-kmodules.xyz/crd-schema-fuzz v0.29.0/go.mod h1:n708z9YQqLMP2KNLQVgBcRJw1QpSWLvpNCEi+KJDOYE=
+kmodules.xyz/crd-schema-fuzz v0.29.1 h1:zJTlWYOrT5dsVVHW8HGcnR/vaWfxQfNh11QwTtkYpcs=
+kmodules.xyz/crd-schema-fuzz v0.29.1/go.mod h1:n708z9YQqLMP2KNLQVgBcRJw1QpSWLvpNCEi+KJDOYE=
 kmodules.xyz/objectstore-api v0.29.0 h1:dK53fQXdoboyW/EyBBAMjykT8u7jstKrM1DS4RJvhEU=
 kmodules.xyz/objectstore-api v0.29.0/go.mod h1:Kxmv6F7Kd/7EoKX3X2xIzhHT++zlj2qdXLcp/8avUYI=
 kmodules.xyz/offshoot-api v0.29.0 h1:GHLhxxT9jU1N8+FvOCCeJNyU5g0duYS46UGrs6AHNLY=
