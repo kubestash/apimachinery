@@ -16,7 +16,7 @@ require (
 	k8s.io/client-go v0.29.0
 	k8s.io/klog/v2 v2.110.1
 	k8s.io/utils v0.0.0-20230726121419-3b25d923346b
-	kmodules.xyz/client-go v0.29.2
+	kmodules.xyz/client-go v0.29.6
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/objectstore-api v0.29.0
 	kmodules.xyz/offshoot-api v0.29.0
