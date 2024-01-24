@@ -102,7 +102,7 @@ const (
 	KubeStashCronJobClusterRole         = "kubestash-cron-job"
 	KubeStashBackendJobClusterRole      = "kubestash-backend-job"
 	KubeStashBackendAccessorClusterRole = "kubestash-backend-accessor"
-	KubeStashPopulatorJobRole           = "kubestash-populator-job"
+	KubeStashPopulatorJobClusterRole    = "kubestash-populator-job"
 )
 
 // Reconciliation related
