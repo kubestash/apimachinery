@@ -107,6 +107,11 @@ type S3Spec struct {
 	// SecretName specifies the name of the Secret that contains the access credential for this storage.
 	// +optional
 	SecretName string `json:"secretName,omitempty"`
+
+	// When InsecureSkipVerify is set to true in a TLS configuration,
+	// crypto/tls will accept any certificate without verifying its authenticity.
+	// +optional
+	InsecureTLS bool `json:"insecureTLS,omitempty"`
 }
 
 type GCSSpec struct {
