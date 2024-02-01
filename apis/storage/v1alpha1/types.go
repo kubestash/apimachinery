@@ -108,8 +108,11 @@ type S3Spec struct {
 	// +optional
 	SecretName string `json:"secretName,omitempty"`
 
-	// When InsecureSkipVerify is set to true in a TLS configuration,
-	// crypto/tls will accept any certificate without verifying its authenticity.
+	// InsecureTLS controls whether a client should skip TLS certificate verification.
+	// Setting this field to true disables verification, which might be necessary in cases
+	// where the server uses self-signed certificates or certificates from an untrusted CA.
+	// Use this option with caution, as it can expose the client to man-in-the-middle attacks
+	// and other security risks. Only use it when absolutely necessary.
 	// +optional
 	InsecureTLS bool `json:"insecureTLS,omitempty"`
 }
