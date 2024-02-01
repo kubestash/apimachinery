@@ -97,11 +97,12 @@ const (
 
 // RBAC related
 const (
-	KubeStashBackupJobClusterRole    = "kubestash-backup-job"
-	KubeStashRestoreJobClusterRole   = "kubestash-restore-job"
-	KubeStashCronJobClusterRole      = "kubestash-cron-job"
-	KubeStashBackendJobClusterRole   = "kubestash-backend-job"
-	KubeStashPopulatorJobClusterRole = "kubestash-populator-job"
+	KubeStashBackupJobClusterRole          = "kubestash-backup-job"
+	KubeStashRestoreJobClusterRole         = "kubestash-restore-job"
+	KubeStashCronJobClusterRole            = "kubestash-cron-job"
+	KubeStashBackendJobClusterRole         = "kubestash-backend-job"
+	KubeStashStorageInitializerClusterRole = "kubestash-storage-initializer-job"
+	KubeStashPopulatorJobClusterRole       = "kubestash-populator-job"
 )
 
 // Reconciliation related
