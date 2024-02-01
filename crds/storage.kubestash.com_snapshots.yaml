@@ -206,14 +206,14 @@ spec:
                             description: PVCName represents the backup PVC name for
                               which volumeSnapshot is created.
                             type: string
-                          snapshotTime:
-                            description: VolumeSnapshotTime indicates the timestamp
-                              at which the volumeSnapshot was created.
-                            format: date-time
-                            type: string
                           volumeSnapshotName:
                             description: VolumeSnapshotName represents the name of
                               created volumeSnapshot.
+                            type: string
+                          volumeSnapshotTime:
+                            description: VolumeSnapshotTime indicates the timestamp
+                              at which the volumeSnapshot was created.
+                            format: date-time
                             type: string
                         type: object
                       type: array
