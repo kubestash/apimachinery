@@ -127,8 +127,8 @@ type KubeDBManifestOptions struct {
 
 // RestoreDataSource specifies the information about the data that will be restored
 type RestoreDataSource struct {
-	// Namespace specifies the Namespace name where the DataSource i.e (Repository, Snapshots) exists.
-	Namespace string `json:"namespace,omitempty,omitempty"`
+	// Namespace specifies the namespace of the DataSource (i.e. Repository, Snapshot).
+	Namespace string `json:"namespace,omitempty"`
 
 	// Repository points to the Repository name from which the data will be restored
 	Repository string `json:"repository,omitempty"`
