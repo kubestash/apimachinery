@@ -78,10 +78,6 @@ func (r *RestoreSession) ValidateDelete() (admission.Warnings, error) {
 }
 
 func (r *RestoreSession) ValidateDataSource() error {
-	if err := r.checkIfDataSourceNamespaceIsEmpty(); err != nil {
-		return err
-	}
-
 	if r.Spec.DataSource.PITR != nil {
 		if err := r.checkIfTargetTimeIsNil(); err != nil {
 			return err
@@ -117,13 +113,6 @@ func (r *RestoreSession) checkIfRepoIsEmptyForTargetTime() error {
 func (r *RestoreSession) checkIfSnapshotIsEmpty() error {
 	if r.Spec.DataSource.Snapshot == "" {
 		return fmt.Errorf("snapshot can not be empty")
-	}
-	return nil
-}
-
-func (r *RestoreSession) checkIfDataSourceNamespaceIsEmpty() error {
-	if r.Spec.DataSource.Namespace == "" {
-		return fmt.Errorf("datasource namespace can not be empty")
 	}
 	return nil
 }

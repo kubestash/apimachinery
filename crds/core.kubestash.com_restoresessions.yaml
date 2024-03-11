@@ -12586,8 +12586,8 @@ spec:
                     - name
                     type: object
                   namespace:
-                    description: Namespace specifies the Namespace name where the
-                      DataSource i.e (Repository, Snapshots) exists.
+                    description: Namespace specifies the namespace of the DataSource
+                      (i.e. Repository, Snapshot).
                     type: string
                   pitr:
                     description: PITR stands for Point-In-Time Recovery. You can provide
