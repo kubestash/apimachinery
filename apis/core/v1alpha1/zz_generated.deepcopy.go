@@ -1535,13 +1535,6 @@ func (in *SessionConfig) DeepCopyInto(out *SessionConfig) {
 		*out = new(SchedulerSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.VerificationStrategies != nil {
-		in, out := &in.VerificationStrategies, &out.VerificationStrategies
-		*out = make([]VerificationStrategy, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
-		}
-	}
 	if in.Hooks != nil {
 		in, out := &in.Hooks, &out.Hooks
 		*out = new(BackupHooks)
