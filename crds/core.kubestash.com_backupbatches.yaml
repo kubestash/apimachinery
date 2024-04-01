@@ -11425,7 +11425,6 @@ spec:
                       description: Name specifies the name of the session
                       type: string
                     retryConfig:
-                      default: Fail
                       description: RetryConfig specifies the behavior of retry in
                         case of a backup failure.
                       properties:

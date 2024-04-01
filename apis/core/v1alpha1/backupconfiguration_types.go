@@ -125,7 +125,6 @@ type SessionConfig struct {
 	// Valid values are:
 	// - "Fail": KubeStash should mark the backup as failed if any component fail to complete its backup. This is the default behavior.
 	// - "Retry": KubeStash will retry to backup the failed component according to the `retryConfig`.
-	// +kubebuilder:default=Fail
 	// +optional
 	// FailurePolicy FailurePolicy `json:"failurePolicy,omitempty"`
 
