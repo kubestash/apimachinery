@@ -25182,7 +25182,6 @@ spec:
                         type: object
                       type: array
                     retryConfig:
-                      default: Fail
                       description: RetryConfig specifies the behavior of retry in
                         case of a backup failure.
                       properties:
