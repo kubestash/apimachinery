@@ -18,9 +18,11 @@ package pkg
 
 import (
 	"fmt"
+	"github.com/Masterminds/semver/v3"
 	"gomodules.xyz/envsubst"
 	core "k8s.io/api/core/v1"
 	"kubestash.dev/apimachinery/apis"
+	"sort"
 
 	"encoding/json"
 	vsapi "github.com/kubernetes-csi/external-snapshotter/client/v7/apis/volumesnapshot/v1"
@@ -75,4 +77,49 @@ func ResolveWithInputs(obj interface{}, inputs map[string]string) error {
 		return err
 	}
 	return json.Unmarshal([]byte(resolved), obj)
+}
+
+func FindAppropriateAddonVersion(addonVersions []string, dbVersion string) (string, error) {
+	if addonVersions == nil {
+		return "", fmt.Errorf("available list of addon-versions can't be empty")
+	}
+	semverDBVersion, err := semver.NewVersion(dbVersion)
+	if err != nil {
+		return "", err
+	}
+
+	type distance struct {
+		major, minor, patch int64
+		addon               string
+	}
+	abs := func(x, y uint64) int64 {
+		tmp := int64(x) - int64(y)
+		if tmp < 0 {
+			tmp = -tmp
+		}
+		return tmp
+	}
+	distances := make([]distance, 0)
+	for _, av := range addonVersions {
+		sav, err := semver.NewVersion(av)
+		if err != nil {
+			return "", err
+		}
+		distances = append(distances, distance{
+			major: abs(sav.Major(), semverDBVersion.Major()),
+			minor: abs(sav.Minor(), semverDBVersion.Minor()),
+			patch: abs(sav.Patch(), semverDBVersion.Patch()),
+			addon: av,
+		})
+	}
+	sort.Slice(distances, func(i, j int) bool {
+		if distances[i].major == distances[j].major {
+			if distances[i].minor == distances[j].minor {
+				return distances[i].patch < distances[j].patch
+			}
+			return distances[i].minor < distances[j].minor
+		}
+		return distances[i].major < distances[j].major
+	})
+	return distances[0].addon, nil
 }
