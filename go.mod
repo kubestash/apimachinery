@@ -21,16 +21,10 @@ require (
 	kmodules.xyz/client-go v0.29.13
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/objectstore-api v0.29.1
-	kmodules.xyz/offshoot-api v0.29.0
+	kmodules.xyz/offshoot-api v0.29.2
 	kmodules.xyz/prober v0.29.0
 	sigs.k8s.io/controller-runtime v0.17.2
 	sigs.k8s.io/yaml v1.4.0
-)
-
-require (
-	github.com/google/pprof v0.0.0-20221118152302-e6195bd50e26 // indirect
-	github.com/nxadm/tail v1.4.11 // indirect
-	github.com/rogpeppe/go-internal v1.11.0 // indirect
 )
 
 require (
@@ -90,6 +84,7 @@ require (
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
+	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/apiextensions-apiserver v0.29.2 // indirect
