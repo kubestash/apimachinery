@@ -5,6 +5,7 @@ go 1.22.0
 toolchain go1.22.2
 
 require (
+	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2
 	github.com/google/gofuzz v1.2.0
 	github.com/kubernetes-csi/external-snapshotter/client/v7 v7.0.0
