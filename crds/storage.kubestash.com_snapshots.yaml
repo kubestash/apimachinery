@@ -217,6 +217,29 @@ spec:
                             type: string
                         type: object
                       type: array
+                    walGStats:
+                      description: WalGStats specifies the "WalG" driver specific
+                        information
+                      properties:
+                        databases:
+                          description: Databases represents the list of target backup
+                            databases. This field is optional.
+                          items:
+                            type: string
+                          type: array
+                        id:
+                          description: Id represents the WalG snapshot ID.
+                          type: string
+                        timeStamp:
+                          description: TimeStamp represents the start time of the
+                            backup. This field is optional.
+                          format: date-time
+                          type: string
+                        uploaded:
+                          description: Duration represents the amount of time it took
+                            to complete the backup process. This field is optional.
+                          type: string
+                      type: object
                     walSegments:
                       description: WalSegments specifies a list of wall segment for
                         individual component
