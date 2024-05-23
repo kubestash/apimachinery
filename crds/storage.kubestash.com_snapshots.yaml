@@ -227,6 +227,10 @@ spec:
                           items:
                             type: string
                           type: array
+                        duration:
+                          description: Duration represents the amount of time it took
+                            to complete the backup process. This field is optional.
+                          type: string
                         id:
                           description: Id represents the WalG snapshot ID.
                           type: string
@@ -234,10 +238,6 @@ spec:
                           description: TimeStamp represents the start time of the
                             backup. This field is optional.
                           format: date-time
-                          type: string
-                        uploaded:
-                          description: Duration represents the amount of time it took
-                            to complete the backup process. This field is optional.
                           type: string
                       type: object
                     walSegments:
