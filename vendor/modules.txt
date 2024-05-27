@@ -230,6 +230,9 @@ golang.org/x/text/unicode/norm
 # golang.org/x/time v0.5.0
 ## explicit; go 1.18
 golang.org/x/time/rate
+# gomodules.xyz/clock v0.0.0-20230304031840-dba243babbfe
+## explicit; go 1.14
+gomodules.xyz/clock
 # gomodules.xyz/envsubst v0.2.0
 ## explicit; go 1.19
 gomodules.xyz/envsubst

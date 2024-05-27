@@ -10,6 +10,7 @@ require (
 	github.com/google/gofuzz v1.2.0
 	github.com/kubernetes-csi/external-snapshotter/client/v7 v7.0.0
 	github.com/stretchr/testify v1.9.0
+	gomodules.xyz/clock v0.0.0-20230304031840-dba243babbfe
 	gomodules.xyz/envsubst v0.2.0
 	gomodules.xyz/go-sh v0.1.0
 	gomodules.xyz/pointer v0.1.0
