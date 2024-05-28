@@ -243,7 +243,7 @@ type SolrStat struct {
 	Collection string `json:"collection,omitempty"`
 
 	// backupId represents the solr snapshot id
-	BackupId string `json:"backupId,omitempty"`
+	BackupId int `json:"backupId,omitempty"`
 
 	// Timestamp when the backup started
 	// +optional
@@ -259,15 +259,15 @@ type SolrStat struct {
 
 	// IndexFile represents the number of index files in solr backup.
 	// +optional
-	IndexFile string `json:"indexFile,omitempty"`
+	IndexFile int `json:"indexFile,omitempty"`
 
 	// IndexFileSize represents the solr index file size in MB
 	// +optional
-	IndexFileSize string `json:"indexFileSize,omitempty"`
+	IndexFileSize float64 `json:"indexFileSize,omitempty"`
 
 	// IndexFileSizeUploaded represents the uploaded solr index file size in MB
 	// +optional
-	IndexFileSizeUploaded string `json:"indexFileSizeUploaded,omitempty"`
+	IndexFileSizeUploaded float64 `json:"indexFileSizeUploaded,omitempty"`
 }
 
 // VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information

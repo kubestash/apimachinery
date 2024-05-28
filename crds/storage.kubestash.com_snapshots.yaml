@@ -198,7 +198,7 @@ spec:
                         properties:
                           backupId:
                             description: backupId represents the solr snapshot id
-                            type: string
+                            type: integer
                           collection:
                             description: name of the collection
                             type: string
@@ -212,15 +212,17 @@ spec:
                           indexFile:
                             description: IndexFile represents the number of index
                               files in solr backup.
-                            type: string
+                            type: integer
                           indexFileSize:
                             description: IndexFileSize represents the solr index file
                               size in MB
-                            type: string
+                            format: double
+                            type: number
                           indexFileSizeUploaded:
                             description: IndexFileSizeUploaded represents the uploaded
                               solr index file size in MB
-                            type: string
+                            format: double
+                            type: number
                           startTime:
                             description: Timestamp when the backup started
                             type: string
