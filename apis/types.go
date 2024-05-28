@@ -31,6 +31,7 @@ const (
 	DriverRestic            Driver = "Restic"
 	DriverWalG              Driver = "WalG"
 	DriverVolumeSnapshotter Driver = "VolumeSnapshotter"
+	DriverSolr              Driver = "Solr"
 )
 
 // VolumeSource specifies the source of volume to mount in the backup/restore executor

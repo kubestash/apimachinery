@@ -191,6 +191,41 @@ spec:
                       description: Size represents the size of the restic repository
                         for this component
                       type: string
+                    solrStats:
+                      description: SolrStats represents the solr specific information
+                      items:
+                        description: Solrstat specifies solr driver related information
+                        properties:
+                          backupId:
+                            description: backupId represents the solr snapshot id
+                            type: string
+                          collection:
+                            description: name of the collection
+                            type: string
+                          endTime:
+                            description: Timestamp when the backup came to an end
+                            type: string
+                          hostPath:
+                            description: HostPath represents the backup path where
+                              solr backup is taken.
+                            type: string
+                          indexFile:
+                            description: IndexFile represents the number of index
+                              files in solr backup.
+                            type: string
+                          indexFileSize:
+                            description: IndexFileSize represents the solr index file
+                              size in MB
+                            type: string
+                          indexFileSizeUploaded:
+                            description: IndexFileSizeUploaded represents the uploaded
+                              solr index file size in MB
+                            type: string
+                          startTime:
+                            description: Timestamp when the backup started
+                            type: string
+                        type: object
+                      type: array
                     volumeSnapshotterStats:
                       description: VolumeSnapshotterStats specifies the "VolumeSnapshotter"
                         driver specific information
