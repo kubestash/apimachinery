@@ -202,30 +202,23 @@ spec:
                           collection:
                             description: name of the collection
                             type: string
-                          endTime:
-                            description: Timestamp when the backup came to an end
-                            type: string
-                          hostPath:
-                            description: HostPath represents the backup path where
-                              solr backup is taken.
-                            type: string
-                          indexFile:
-                            description: IndexFile represents the number of index
+                          indexFileCount:
+                            description: IndexFileCount represents the number of index
                               files in solr backup.
                             type: integer
-                          indexFileSize:
-                            description: IndexFileSize represents the solr index file
+                          indexSizeMB:
+                            description: IndexSizeMB represents the solr index file
                               size in MB
-                            format: double
-                            type: number
-                          indexFileSizeUploaded:
-                            description: IndexFileSizeUploaded represents the uploaded
-                              solr index file size in MB
                             format: double
                             type: number
                           startTime:
                             description: Timestamp when the backup started
                             type: string
+                          uploadedIndexFileMB:
+                            description: IndexFileSizeUploaded represents the uploaded
+                              solr index file size in MB
+                            format: double
+                            type: number
                         type: object
                       type: array
                     volumeSnapshotterStats:
