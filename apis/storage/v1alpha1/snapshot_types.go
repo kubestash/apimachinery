@@ -249,25 +249,17 @@ type SolrStat struct {
 	// +optional
 	StartTime string `json:"startTime,omitempty"`
 
-	// Timestamp when the backup came to an end
+	// IndexFileCount represents the number of index files in solr backup.
 	// +optional
-	EndTime string `json:"endTime,omitempty"`
+	IndexFileCount int `json:"indexFileCount,omitempty"`
 
-	// HostPath represents the backup path where solr backup is taken.
+	// IndexSizeMB represents the solr index file size in MB
 	// +optional
-	HostPath string `json:"hostPath,omitempty"`
-
-	// IndexFile represents the number of index files in solr backup.
-	// +optional
-	IndexFile int `json:"indexFile,omitempty"`
-
-	// IndexFileSize represents the solr index file size in MB
-	// +optional
-	IndexFileSize float64 `json:"indexFileSize,omitempty"`
+	IndexSizeMB float64 `json:"indexSizeMB,omitempty"`
 
 	// IndexFileSizeUploaded represents the uploaded solr index file size in MB
 	// +optional
-	IndexFileSizeUploaded float64 `json:"indexFileSizeUploaded,omitempty"`
+	UploadedIndexFileMB float64 `json:"uploadedIndexFileMB,omitempty"`
 }
 
 // VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
