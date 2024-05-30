@@ -115,7 +115,7 @@ type SessionConfig struct {
 
 	// VerificationStrategies specifies a list of backup verification configurations
 	// +optional
-	// VerificationStrategies []VerificationStrategy `json:"verificationStrategies,omitempty"`
+	VerificationStrategies []VerificationStrategy `json:"verificationStrategies,omitempty"`
 
 	// Hooks specifies the backup hooks that should be executed before and/or after the backup.
 	// +optional
@@ -291,31 +291,51 @@ type RepositoryInfo struct {
 
 // VerificationStrategy specifies a strategy to verify the backed up data.
 type VerificationStrategy struct {
-	// Name indicate the name of this strategy
+	// Name indicates the name of this strategy.
 	Name string `json:"name,omitempty"`
 
-	// Repository specifies the name of the repository which data will be verified
+	// Namespace specifies where the verification resources should be created.
+	Namespace string `json:"namespace,omitempty"`
+
+	// Repository specifies the name of the repository which data will be verified.
 	Repository string `json:"repository,omitempty"`
 
-	// Verifier refers to the BackupVerification CR that defines how to verify this particular data
-	Verifier *kmapi.TypedObjectReference `json:"verifier,omitempty"`
+	// Verifier refers to the BackupVerification CR that defines how to verify this particular data.
+	Verifier *kmapi.ObjectReference `json:"verifier,omitempty"`
 
-	// Params specifies the parameters that will be used by the verifier
+	// Params specifies the parameters that will be used by the verifier.
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +optional
 	Params *runtime.RawExtension `json:"params,omitempty"`
 
-	// VerifyEvery specifies the frequency of backup verification
-	// +kubebuilder:validation:Minimum=1
-	VerifyEvery int32 `json:"verifyEvery,omitempty"`
+	// VerifySchedule specifies the schedule of backup verification in Cron format, see https://en.wikipedia.org/wiki/Cron.
+	VerifySchedule string `json:"verifySchedule,omitempty"`
+
+	// KeepAlive specifies the duration of keeping the instances created for backup verification.
+	// +optional
+	KeepAlive *metav1.Time `json:"keepAlive,omitempty"`
+
+	// Tasks specifies a list of restore tasks and their configuration parameters for backup verification.
+	Tasks []TaskReference `json:"tasks,omitempty"`
 
 	// OnFailure specifies what to do if the verification fail.
 	// +optional
-	OnFailure FailurePolicy `json:"onFailure,omitempty"`
+	// OnFailure FailurePolicy `json:"onFailure,omitempty"`
 
-	// RetryConfig specifies the behavior of the retry mechanism in case of a verification failure
+	// RetryConfig specifies the behavior of the retry mechanism in case of a verification failure.
 	// +optional
 	RetryConfig *RetryConfig `json:"retryConfig,omitempty"`
+
+	// SessionHistoryLimit specifies how many BackupVerificationSessions and associate resources KubeStash should keep for debugging purpose.
+	// The default value is 1.
+	// +kubebuilder:default=1
+	// +optional
+	SessionHistoryLimit int32 `json:"sessionHistoryLimit,omitempty"`
+
+	// RuntimeSettings allow to specify Resources, NodeSelector, Affinity, Toleration, ReadinessProbe etc.
+	// for the verification job.
+	// +optional
+	RuntimeSettings ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
 }
 
 // BackupHooks specifies the hooks that will be executed before and/or after backup
