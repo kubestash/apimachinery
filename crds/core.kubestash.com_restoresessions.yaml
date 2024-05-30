@@ -24,9 +24,6 @@ spec:
     - jsonPath: .spec.dataSource.repository
       name: Repository
       type: string
-    - jsonPath: .spec.failurePolicy
-      name: Failure-Policy
-      type: string
     - jsonPath: .status.phase
       name: Phase
       type: string
@@ -24654,8 +24651,7 @@ spec:
                 type: string
               target:
                 description: Target indicates the target application where the data
-                  will be restored. The target must be in the same namespace as the
-                  RestoreSession CR.
+                  will be restored.
                 properties:
                   apiGroup:
                     type: string

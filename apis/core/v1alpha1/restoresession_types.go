@@ -33,7 +33,6 @@ const (
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=restoresessions,singular=restoresession,shortName=restore,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Repository",type="string",JSONPath=".spec.dataSource.repository"
-// +kubebuilder:printcolumn:name="Failure-Policy",type="string",JSONPath=".spec.failurePolicy"
 // +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Duration",type="string",JSONPath=".status.duration"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
@@ -50,7 +49,6 @@ type RestoreSession struct {
 // RestoreSessionSpec specifies the necessary configurations for restoring data into a target
 type RestoreSessionSpec struct {
 	// Target indicates the target application where the data will be restored.
-	// The target must be in the same namespace as the RestoreSession CR.
 	// +optional
 	Target *kmapi.TypedObjectReference `json:"target,omitempty"`
 
