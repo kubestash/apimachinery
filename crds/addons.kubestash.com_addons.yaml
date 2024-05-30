@@ -60,6 +60,7 @@ spec:
                         - Restic
                         - WalG
                         - VolumeSnapshotter
+                        - Solr
                       - enum:
                         - Restic
                         - WalG
@@ -2638,6 +2639,7 @@ spec:
                         - Restic
                         - WalG
                         - VolumeSnapshotter
+                        - Solr
                       - enum:
                         - Restic
                         - WalG

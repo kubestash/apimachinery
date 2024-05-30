@@ -138,6 +138,7 @@ spec:
                       - Restic
                       - WalG
                       - VolumeSnapshotter
+                      - Solr
                       type: string
                     duration:
                       description: Duration specifies the total time taken to complete
