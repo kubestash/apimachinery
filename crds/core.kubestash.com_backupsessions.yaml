@@ -305,26 +305,6 @@ spec:
                   created for this backupSession.
                 format: int32
                 type: integer
-              verifications:
-                description: Verifications specifies the backup verification status
-                items:
-                  description: VerificationStatus specifies the status of a backup
-                    verification
-                  properties:
-                    name:
-                      description: Name indicates the name of the respective verification
-                        strategy
-                      type: string
-                    phase:
-                      description: Phase represents the state of the verification
-                        process
-                      enum:
-                      - Verified
-                      - NotVerified
-                      - VerificationFailed
-                      type: string
-                  type: object
-                type: array
             type: object
         type: object
     served: true

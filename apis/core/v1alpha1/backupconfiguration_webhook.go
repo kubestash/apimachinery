@@ -31,7 +31,6 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
-	"sync"
 )
 
 // log is for logging in this package.
@@ -197,17 +196,16 @@ func (b *BackupConfiguration) ValidateCreate() (admission.Warnings, error) {
 		return nil, err
 	}
 
+	if err := b.validateVerificationStrategies(); err != nil {
+		return nil, err
+	}
+
 	if err := b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
 		return nil, err
 	}
 
 	return nil, b.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
 }
-
-var (
-	rc   client.Client
-	once sync.Once
-)
 
 func (b *BackupConfiguration) validateBackends() error {
 	if len(b.Spec.Backends) == 0 {
@@ -260,10 +258,6 @@ func (b *BackupConfiguration) validateSessions(ctx context.Context, c client.Cli
 			return err
 		}
 
-		if err := b.validateVerificationStrategyNameUnique(session); err != nil {
-			return err
-		}
-
 		if err := b.validateSessionConfig(session); err != nil {
 			return err
 		}
@@ -273,10 +267,6 @@ func (b *BackupConfiguration) validateSessions(ctx context.Context, c client.Cli
 		}
 
 		if err := b.validateRepositories(ctx, c, session); err != nil {
-			return err
-		}
-
-		if err := b.validateVerificationStrategies(session); err != nil {
 			return err
 		}
 	}
@@ -349,6 +339,11 @@ func (b *BackupConfiguration) validateRepositories(ctx context.Context, c client
 			return fmt.Errorf("directory is not provided for repository: %q. Please provide a directory", repo.Name)
 		}
 
+		if repo.VerificationStrategy != "" &&
+			!b.verificationStrategyMatched(repo.VerificationStrategy) {
+			return fmt.Errorf("verification strategy %q for repository %q doesn't match with any of the given strategy", repo.VerificationStrategy, repo.Name)
+		}
+
 		existingRepo, err := b.getRepository(ctx, c, repo.Name)
 		if err != nil {
 			if kerr.IsNotFound(err) {
@@ -367,6 +362,15 @@ func (b *BackupConfiguration) validateRepositories(ctx context.Context, c client
 	}
 
 	return nil
+}
+
+func (b *BackupConfiguration) verificationStrategyMatched(strategy string) bool {
+	for _, vs := range b.Spec.VerificationStrategies {
+		if vs.Name == strategy {
+			return true
+		}
+	}
+	return false
 }
 
 func (b *BackupConfiguration) validateUniqueRepoDir(ctx context.Context, c client.Client) error {
@@ -437,14 +441,18 @@ func targetMatched(t1, t2 *kmapi.TypedObjectReference) bool {
 		t1.Name == t2.Name
 }
 
-func (b *BackupConfiguration) validateVerificationStrategies(session Session) error {
-	for _, vs := range session.VerificationStrategies {
+func (b *BackupConfiguration) validateVerificationStrategies() error {
+	if len(b.Spec.VerificationStrategies) == 0 {
+		return nil
+	}
+
+	if err := b.validateVerificationStrategyNameUnique(); err != nil {
+		return err
+	}
+
+	for _, vs := range b.Spec.VerificationStrategies {
 		if vs.Namespace == "" {
 			return fmt.Errorf("namespace for verification strategy %q cannot be empty", vs.Name)
-		}
-
-		if vs.Repository == "" {
-			return fmt.Errorf("repository for verification strategy %q cannot be empty", vs.Name)
 		}
 
 		if vs.Verifier == nil {
@@ -458,6 +466,21 @@ func (b *BackupConfiguration) validateVerificationStrategies(session Session) er
 	return nil
 }
 
+func (b *BackupConfiguration) validateVerificationStrategyNameUnique() error {
+	vsMap := make(map[string]struct{})
+	for _, vs := range b.Spec.VerificationStrategies {
+		if vs.Name == "" {
+			return fmt.Errorf("verification strategy name cannot be empty")
+		}
+
+		if _, ok := vsMap[vs.Name]; ok {
+			return fmt.Errorf("duplicate verification strategy name found: %q. Please choose a different verification strategy name", vs.Name)
+		}
+		vsMap[vs.Name] = struct{}{}
+	}
+	return nil
+}
+
 func (b *BackupConfiguration) validateRepositoryNameUnique(session Session) error {
 	repoMap := make(map[string]struct{})
 	for _, repo := range session.Repositories {
@@ -465,21 +488,6 @@ func (b *BackupConfiguration) validateRepositoryNameUnique(session Session) erro
 			return fmt.Errorf("duplicate repository name found: %q. Please choose a different repository name", repo.Name)
 		}
 		repoMap[repo.Name] = struct{}{}
-	}
-	return nil
-}
-
-func (b *BackupConfiguration) validateVerificationStrategyNameUnique(session Session) error {
-	vsMap := make(map[string]struct{})
-	for _, vs := range session.VerificationStrategies {
-		if vs.Name == "" {
-			return fmt.Errorf("verification strategy name for session %q cannot be empty", session.Name)
-		}
-
-		if _, ok := vsMap[vs.Name]; ok {
-			return fmt.Errorf("duplicate verification strategy name found: %q. Please choose a different verification strategy name", vs.Name)
-		}
-		vsMap[vs.Name] = struct{}{}
 	}
 	return nil
 }
@@ -658,6 +666,10 @@ func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) (admission.Warn
 	}
 
 	if err := b.validateSessions(context.Background(), c); err != nil {
+		return nil, err
+	}
+
+	if err := b.validateVerificationStrategies(); err != nil {
 		return nil, err
 	}
 
