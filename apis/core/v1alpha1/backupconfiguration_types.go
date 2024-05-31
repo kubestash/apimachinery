@@ -68,6 +68,10 @@ type BackupConfigurationSpec struct {
 	// Sessions defines a list of session configuration that specifies when and how to take backup.
 	Sessions []Session `json:"sessions,omitempty"`
 
+	// VerificationStrategies specifies a list of backup verification configurations
+	// +optional
+	VerificationStrategies []VerificationStrategy `json:"verificationStrategies,omitempty"`
+
 	// Paused indicates that the BackupConfiguration has been paused from taking backup. Default value is 'false'.
 	// If you set `paused` field to `true`, KubeStash will suspend the respective backup triggering CronJob and
 	// skip processing any further events for this BackupConfiguration.
@@ -112,10 +116,6 @@ type SessionConfig struct {
 
 	// Scheduler specifies the configuration for backup triggering CronJob
 	Scheduler *SchedulerSpec `json:"scheduler,omitempty"`
-
-	// VerificationStrategies specifies a list of backup verification configurations
-	// +optional
-	VerificationStrategies []VerificationStrategy `json:"verificationStrategies,omitempty"`
 
 	// Hooks specifies the backup hooks that should be executed before and/or after the backup.
 	// +optional
@@ -276,6 +276,10 @@ type RepositoryInfo struct {
 	// +optional
 	Backend string `json:"backend,omitempty"`
 
+	// VerificationStrategy specifies the name of the verification strategy which will be used to verify the backed up data in this repository.
+	// +optional
+	VerificationStrategy string `json:"verificationStrategy,omitempty"`
+
 	// Directory specifies the path inside the backend where the backed up data will be stored.
 	Directory string `json:"directory,omitempty"`
 
@@ -296,9 +300,6 @@ type VerificationStrategy struct {
 
 	// Namespace specifies where the verification resources should be created.
 	Namespace string `json:"namespace,omitempty"`
-
-	// Repository specifies the name of the repository which data will be verified.
-	Repository string `json:"repository,omitempty"`
 
 	// Verifier refers to the BackupVerification CR that defines how to verify this particular data.
 	Verifier *kmapi.ObjectReference `json:"verifier,omitempty"`
@@ -452,6 +453,10 @@ type RepoStatus struct {
 	// Reason specifies the error messages found while ensuring the respective Repository
 	// +optional
 	Reason string `json:"reason,omitempty"`
+
+	// VerificationConfigured indicates whether the verification for this repository is configured or not
+	// +optional
+	VerificationConfigured bool `json:"verificationConfigured,omitempty"`
 }
 
 // SessionStatus specifies the status of a session specific fields.
