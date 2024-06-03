@@ -164,8 +164,6 @@ func WriteSnapshotsToStSaleSnapshotsFile(snapshots []v1alpha1.Snapshot) error {
 	if err = os.WriteFile(staleSnapshotsFile, jsonData, fs.ModePerm); err != nil {
 		return fmt.Errorf("failed to write JSON file: %w", err)
 	}
-
-	klog.Info("JSON data successfully written to %s", staleSnapshotsFile)
 	return nil
 }
 
