@@ -470,3 +470,26 @@ func defaultTransport() *http.Transport {
 		ForceAttemptHTTP2:     true,
 	}
 }
+
+func (b *Blob) SetPathAsDir(ctx context.Context, path string) error {
+	bucket, err := b.openBucket(ctx, path)
+	if err != nil {
+		return err
+	}
+	if !strings.HasSuffix(path, "/") {
+		path = fmt.Sprintf("%s/", path)
+	}
+	w, err := bucket.NewWriter(ctx, path, nil)
+	if err != nil {
+		return err
+	}
+	_, writeErr := w.Write([]byte(""))
+	closeErr := w.Close()
+	if writeErr != nil {
+		return writeErr
+	}
+	if closeErr != nil {
+		return closeErr
+	}
+	return closeErr
+}
