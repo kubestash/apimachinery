@@ -20,6 +20,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 
 	"kubestash.dev/apimachinery/apis"
 )
@@ -72,10 +73,10 @@ type BackupVerificationSpec struct {
 	// +optional
 	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
 
-	// VolumeTemplate specifies a list of volume templates that is used by the respective backup verification
+	// VolumeClaimTemplate specifies a list of PersistentVolumeClaims that is used by the respective backup verification
 	// Job to execute its logic.
 	// +optional
-	VolumeTemplate []VolumeTemplate `json:"volumeTemplate,omitempty"`
+	VolumeClaimTemplate []ofst.PersistentVolumeClaim `json:"volumeTemplate,omitempty"`
 
 	// Type indicate the types of verifier that will verify the backup.
 	// Valid values are:

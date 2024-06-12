@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	core "k8s.io/api/core/v1"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -50,17 +49,19 @@ type BackupVerificationSession struct {
 
 // BackupVerificationSessionSpec specifies the information related to the respective backup verifier, session, repository and snapshot.
 type BackupVerificationSessionSpec struct {
+	// Invoker points to the respective BackupConfiguration or BackupBatch
+	// which is responsible for triggering this backup verification.
+	Invoker *core.TypedLocalObjectReference `json:"invoker,omitempty"`
+
 	// BackupVerifier points to the respective BackupVerification
 	// which is used for verification.
-	BackupVerifier *core.LocalObjectReference `json:"backupVerifier,omitempty"`
+	BackupVerifier *kmapi.ObjectReference `json:"backupVerifier,omitempty"`
 
 	// Session specifies the name of the session that triggered this backup verification
 	Session string `json:"session,omitempty"`
 
+	// Repository specifies the name of the repository whose backed-up data will be verified
 	Repository string `json:"repository,omitempty"`
-
-	// Snapshot specifies the name of the snapshot that has been verified in this backup verification
-	Snapshot string `json:"snapshot,omitempty"`
 
 	// RetryLeft specifies number of retry attempts left for the backup verification session.
 	// If this set to non-zero, KubeStash will create a new BackupVerificationSession if the current one fails.
@@ -77,6 +78,9 @@ type BackupVerificationSessionStatus struct {
 	// Duration specifies the time required to complete the backup verification process
 	// +optional
 	Duration string `json:"duration,omitempty"`
+
+	// VerifiedSnapshot specifies the name of the snapshot that has been verified in this backup verification
+	VerifiedSnapshot string `json:"verifiedSnapshot,omitempty"`
 
 	// Retried specifies whether this session was retried or not.
 	// This field will exist only if the `retryConfig` has been set in the respective backup verification strategy.

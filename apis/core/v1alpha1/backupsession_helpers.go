@@ -63,7 +63,6 @@ func (b *BackupSession) CalculatePhase() BackupSessionPhase {
 			b.failedToExecutePreBackupHooks() ||
 			b.failedToExecutePostBackupHooks() ||
 			b.failedToApplyRetentionPolicy() ||
-			b.verificationsFailed() ||
 			b.sessionHistoryCleanupFailed()) {
 		return BackupSessionFailed
 	}
@@ -103,16 +102,6 @@ func (b *BackupSession) failedToExecutePostBackupHooks() bool {
 func (b *BackupSession) failedToApplyRetentionPolicy() bool {
 	for _, status := range b.Status.RetentionPolicies {
 		if status.Phase == RetentionPolicyFailedToApply {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (b *BackupSession) verificationsFailed() bool {
-	for _, v := range b.Status.Verifications {
-		if v.Phase == VerificationFailed {
 			return true
 		}
 	}

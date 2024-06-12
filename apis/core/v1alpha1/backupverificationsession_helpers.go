@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"fmt"
+	cutil "kmodules.xyz/client-go/conditions"
 	"kmodules.xyz/client-go/meta"
 	"kubestash.dev/apimachinery/crds"
 	"time"
@@ -29,6 +30,31 @@ func (_ BackupVerificationSession) CustomResourceDefinition() *apiextensions.Cus
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralBackupVerificationSession))
 }
 
-func GenerateBackupVerificationSessionName(verificationName, sessionName string) string {
-	return meta.ValidNameWithPrefixNSuffix(verificationName, sessionName, fmt.Sprintf("%d", time.Now().Unix()))
+func (b *BackupVerificationSession) IsCompleted() bool {
+	phase := b.Status.Phase
+
+	return phase == BackupVerificationSessionSucceeded ||
+		phase == BackupVerificationSessionFailed
+}
+
+func (b *BackupVerificationSession) CalculatePhase() BackupVerificationSessionPhase {
+	if b.sessionHistoryCleanupFailed() {
+		return BackupVerificationSessionFailed
+	}
+	if b.sessionHistoryCleanupSucceeded() {
+		return BackupVerificationSessionSucceeded
+	}
+	return BackupVerificationSessionRunning
+}
+
+func (b *BackupVerificationSession) sessionHistoryCleanupFailed() bool {
+	return cutil.IsConditionFalse(b.Status.Conditions, TypeVerificationSessionHistoryCleaned)
+}
+
+func (b *BackupVerificationSession) sessionHistoryCleanupSucceeded() bool {
+	return cutil.IsConditionTrue(b.Status.Conditions, TypeVerificationSessionHistoryCleaned)
+}
+
+func GenerateBackupVerificationSessionName(repoName, sessionName string) string {
+	return meta.ValidNameWithPrefixNSuffix(repoName, sessionName, fmt.Sprintf("%d", time.Now().Unix()))
 }
