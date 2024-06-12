@@ -258,17 +258,13 @@ type WalGStats struct {
 	// Id represents the WalG snapshot ID.
 	Id string `json:"id,omitempty"`
 
-	// Duration represents the amount of time it took to complete the backup process.
-	// This field is optional.
-	Duration string `json:"duration,omitempty"`
-
 	// Databases represents the list of target backup databases.
-	// This field is optional.
+	// +optional
 	Databases []string `json:"databases,omitempty"`
 
-	// TimeStamp represents the start time of the backup.
-	// This field is optional.
-	TimeStamp *metav1.Time `json:"timeStamp,omitempty"`
+	// WalGTimeStamp represents the WalG backup start time.
+	// +optional
+	WalGTimeStamp *metav1.Time `json:"walGTimeStamp,omitempty"`
 }
 
 // WalSegment specifies the "WalG" driver specific information

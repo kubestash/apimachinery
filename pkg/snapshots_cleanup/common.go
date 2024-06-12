@@ -16,26 +16,9 @@ import (
 )
 
 const (
-	staleSnapshotsFile        = apis.TempDirMountPath + "/" + "stale_snapshots_by_repo.json"
-	retentionPolicyStatusFile = apis.TempDirMountPath + "/" + "retention_policy_status_by_repo.json"
+	staleSnapshotsFilePath        = apis.TempDirMountPath + "/stale_snapshots_by_repo.json"
+	retentionPolicyStatusFilePath = apis.TempDirMountPath + "/retention_policy_status_by_repo.json"
 )
-
-func ensureFileExists(filename string) error {
-	_, err := os.Stat(filename)
-	if os.IsNotExist(err) {
-		file, err := os.Create(filename)
-		if err != nil {
-			return err
-		}
-		defer func(file *os.File) {
-			err := file.Close()
-			if err != nil {
-				klog.Infoln("failed to close file:", err)
-			}
-		}(file)
-	}
-	return nil
-}
 
 func AppendError(currentError string, newError error) string {
 	if currentError != "" {
@@ -44,12 +27,36 @@ func AppendError(currentError string, newError error) string {
 	return newError.Error()
 }
 
-func getSnapshot(client client.Client, ref kmapi.ObjectReference) (*v1alpha1.Snapshot, error) {
-	snapshot := &v1alpha1.Snapshot{}
-	if err := client.Get(context.Background(), ref.ObjectKey(), snapshot); err != nil {
-		return nil, err
+func FetchStaleSnapshotsByRepo() (map[string][]kmapi.ObjectReference, error) {
+	byteData, err := os.ReadFile(staleSnapshotsFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read %s: %w", staleSnapshotsFilePath, err)
 	}
-	return snapshot, nil
+
+	data := map[string][]kmapi.ObjectReference{}
+	if len(byteData) > 0 {
+		if err := json.Unmarshal(byteData, &data); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal %s: %w", staleSnapshotsFilePath, err)
+		}
+	}
+
+	return data, nil
+}
+
+func FetchPruneStatusByRepo() (map[string]coreapi.RetentionPolicyApplyStatus, error) {
+	byteData, err := os.ReadFile(retentionPolicyStatusFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read %s file: %w", retentionPolicyStatusFilePath, err)
+	}
+
+	pruneStatus := map[string]coreapi.RetentionPolicyApplyStatus{}
+	if len(byteData) > 0 {
+		if err := json.Unmarshal(byteData, &pruneStatus); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal %s file: %w", retentionPolicyStatusFilePath, err)
+		}
+	}
+
+	return pruneStatus, nil
 }
 
 func GetSnapshotsFromRefs(client client.Client, refs []kmapi.ObjectReference) ([]v1alpha1.Snapshot, error) {
@@ -78,28 +85,12 @@ func SetSnapshotDeletionPolicyToWipeout(ctx context.Context, c client.Client, sn
 	return err
 }
 
-func LoadStaleSnapshotsByRepo() (map[string][]kmapi.ObjectReference, error) {
-	byteData, err := os.ReadFile(staleSnapshotsFile)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read %s: %w", staleSnapshotsFile, err)
-	}
-
-	data := map[string][]kmapi.ObjectReference{}
-	if len(byteData) > 0 {
-		if err := json.Unmarshal(byteData, &data); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal %s: %w", staleSnapshotsFile, err)
-		}
-	}
-
-	return data, nil
-}
-
 func UpdateRetentionPolicyStatus(repoName string, statusErr error) error {
-	if err := ensureFileExists(retentionPolicyStatusFile); err != nil {
-		return fmt.Errorf("failed to create %s: %w", retentionPolicyStatusFile, err)
+	if err := createFileIfNotExists(retentionPolicyStatusFilePath); err != nil {
+		return fmt.Errorf("failed to create %s: %w", retentionPolicyStatusFilePath, err)
 	}
 
-	pruneStatus, err := LoadPruneStatusByRepo()
+	pruneStatus, err := FetchPruneStatusByRepo()
 	if err != nil {
 		return err
 	}
@@ -120,31 +111,15 @@ func UpdateRetentionPolicyStatus(repoName string, statusErr error) error {
 		return fmt.Errorf("failed to marshal status data: %w", err)
 	}
 
-	if err = os.WriteFile(retentionPolicyStatusFile, jsonData, fs.ModePerm); err != nil {
+	if err = os.WriteFile(retentionPolicyStatusFilePath, jsonData, fs.ModePerm); err != nil {
 		return fmt.Errorf("failed to write to JSON file: %w", err)
 	}
 
 	return nil
 }
 
-func LoadPruneStatusByRepo() (map[string]coreapi.RetentionPolicyApplyStatus, error) {
-	byteData, err := os.ReadFile(retentionPolicyStatusFile)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read %s file: %w", retentionPolicyStatusFile, err)
-	}
-
-	pruneStatus := map[string]coreapi.RetentionPolicyApplyStatus{}
-	if len(byteData) > 0 {
-		if err := json.Unmarshal(byteData, &pruneStatus); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal %s file: %w", retentionPolicyStatusFile, err)
-		}
-	}
-
-	return pruneStatus, nil
-}
-
 func WriteSnapshotsToStSaleSnapshotsFile(snapshots []v1alpha1.Snapshot) error {
-	data, err := LoadStaleSnapshotsByRepo()
+	data, err := FetchStaleSnapshotsByRepo()
 	if err != nil {
 		return err
 	}
@@ -161,26 +136,26 @@ func WriteSnapshotsToStSaleSnapshotsFile(snapshots []v1alpha1.Snapshot) error {
 		return fmt.Errorf("failed to marshal snapshot data: %w", err)
 	}
 
-	if err = os.WriteFile(staleSnapshotsFile, jsonData, fs.ModePerm); err != nil {
+	if err = os.WriteFile(staleSnapshotsFilePath, jsonData, fs.ModePerm); err != nil {
 		return fmt.Errorf("failed to write JSON file: %w", err)
 	}
 	return nil
 }
 
 func InitStaleSnapshotsFile(repoName string) error {
-	if err := ensureFileExists(staleSnapshotsFile); err != nil {
-		return fmt.Errorf("failed to create %s: %w", staleSnapshotsFile, err)
+	if err := createFileIfNotExists(staleSnapshotsFilePath); err != nil {
+		return fmt.Errorf("failed to create %s: %w", staleSnapshotsFilePath, err)
 	}
 
-	byteData, err := os.ReadFile(staleSnapshotsFile)
+	byteData, err := os.ReadFile(staleSnapshotsFilePath)
 	if err != nil {
-		return fmt.Errorf("failed to read %s file: %w", staleSnapshotsFile, err)
+		return fmt.Errorf("failed to read %s file: %w", staleSnapshotsFilePath, err)
 	}
 
 	data := map[string][]kmapi.ObjectReference{}
 	if len(byteData) > 0 {
 		if err := json.Unmarshal(byteData, &data); err != nil {
-			return fmt.Errorf("failed to unmarshal %s file: %w", staleSnapshotsFile, err)
+			return fmt.Errorf("failed to unmarshal %s file: %w", staleSnapshotsFilePath, err)
 		}
 	}
 	data[repoName] = []kmapi.ObjectReference{}
@@ -190,8 +165,33 @@ func InitStaleSnapshotsFile(repoName string) error {
 		return fmt.Errorf("failed to marshal snapshot data: %w", err)
 	}
 
-	if err = os.WriteFile(staleSnapshotsFile, jsonData, fs.ModePerm); err != nil {
+	if err = os.WriteFile(staleSnapshotsFilePath, jsonData, fs.ModePerm); err != nil {
 		return fmt.Errorf("failed to write JSON file: %w", err)
 	}
 	return nil
+}
+
+func createFileIfNotExists(filename string) error {
+	_, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		file, err := os.Create(filename)
+		if err != nil {
+			return err
+		}
+		defer func(file *os.File) {
+			err := file.Close()
+			if err != nil {
+				klog.Infoln("failed to close file:", err)
+			}
+		}(file)
+	}
+	return err
+}
+
+func getSnapshot(client client.Client, ref kmapi.ObjectReference) (*v1alpha1.Snapshot, error) {
+	snapshot := &v1alpha1.Snapshot{}
+	if err := client.Get(context.Background(), ref.ObjectKey(), snapshot); err != nil {
+		return nil, err
+	}
+	return snapshot, nil
 }
