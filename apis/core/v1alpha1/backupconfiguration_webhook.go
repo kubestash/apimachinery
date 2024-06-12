@@ -448,7 +448,7 @@ func (b *BackupConfiguration) validateVerificationStrategies() error {
 	}
 
 	for _, vs := range b.Spec.VerificationStrategies {
-		if vs.Namespace == "" {
+		if vs.RestoreNamespace == "" {
 			return fmt.Errorf("namespace for verification strategy %q cannot be empty", vs.Name)
 		}
 

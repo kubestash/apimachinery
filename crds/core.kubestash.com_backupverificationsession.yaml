@@ -58,12 +58,38 @@ spec:
                   which is used for verification.
                 properties:
                   name:
-                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                     type: string
+                  namespace:
+                    description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                    type: string
+                required:
+                - name
+                type: object
+              invoker:
+                description: Invoker points to the respective BackupConfiguration
+                  or BackupBatch which is responsible for triggering this backup verification.
+                properties:
+                  apiGroup:
+                    description: APIGroup is the group for the resource being referenced.
+                      If APIGroup is not specified, the specified Kind must be in
+                      the core API group. For any other third-party types, APIGroup
+                      is required.
+                    type: string
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
+                  name:
+                    description: Name is the name of resource being referenced
+                    type: string
+                required:
+                - kind
+                - name
                 type: object
                 x-kubernetes-map-type: atomic
               repository:
+                description: Repository specifies the name of the repository whose
+                  backed-up data will be verified
                 type: string
               retryLeft:
                 description: RetryLeft specifies number of retry attempts left for
@@ -74,10 +100,6 @@ spec:
               session:
                 description: Session specifies the name of the session that triggered
                   this backup verification
-                type: string
-              snapshot:
-                description: Snapshot specifies the name of the snapshot that has
-                  been verified in this backup verification
                 type: string
             type: object
           status:
@@ -154,6 +176,10 @@ spec:
                   not. This field will exist only if the `retryConfig` has been set
                   in the respective backup verification strategy.
                 type: boolean
+              verifiedSnapshot:
+                description: VerifiedSnapshot specifies the name of the snapshot that
+                  has been verified in this backup verification
+                type: string
             type: object
         type: object
     served: true

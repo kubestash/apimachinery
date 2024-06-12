@@ -298,8 +298,7 @@ type VerificationStrategy struct {
 	// Name indicates the name of this strategy.
 	Name string `json:"name,omitempty"`
 
-	// Namespace specifies where the verification resources should be created.
-	Namespace string `json:"namespace,omitempty"`
+	RestoreOption *RestoreOption `json:"restoreOption,omitempty"`
 
 	// Verifier refers to the BackupVerification CR that defines how to verify this particular data.
 	Verifier *kmapi.ObjectReference `json:"verifier,omitempty"`
@@ -315,9 +314,6 @@ type VerificationStrategy struct {
 	// KeepAlive specifies the duration of keeping the instances created for backup verification.
 	// +optional
 	KeepAlive *metav1.Time `json:"keepAlive,omitempty"`
-
-	// Tasks specifies a list of restore tasks and their configuration parameters for backup verification.
-	Tasks []TaskReference `json:"tasks,omitempty"`
 
 	// OnFailure specifies what to do if the verification fail.
 	// +optional
@@ -337,6 +333,14 @@ type VerificationStrategy struct {
 	// for the verification job.
 	// +optional
 	RuntimeSettings ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
+}
+
+type RestoreOption struct {
+	// Target indicates the target application where the data will be restored
+	// +optional
+	Target          *kmapi.TypedObjectReference `json:"target,omitempty"`
+	ManifestOptions *ManifestRestoreOptions     `json:"manifestOptions,omitempty"`
+	AddonInfo       *AddonInfo                  `json:"addonInfo,omitempty"`
 }
 
 // BackupHooks specifies the hooks that will be executed before and/or after backup

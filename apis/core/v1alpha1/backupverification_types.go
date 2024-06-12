@@ -19,8 +19,6 @@ package v1alpha1
 import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kmapi "kmodules.xyz/client-go/api/v1"
-
 	"kubestash.dev/apimachinery/apis"
 )
 
@@ -62,17 +60,13 @@ type BackupVerificationSpec struct {
 	// +optional
 	Params []apis.ParameterDefinition `json:"params,omitempty"`
 
-	// Target indicates the target application where the data will be restored for backup verification.
-	// +optional
-	Target *kmapi.TypedObjectReference `json:"target,omitempty"`
-
 	// VolumeMounts specifies the mount path of the volumes specified in the VolumeTemplate section.
 	// These volumes will be mounted directly on the Job created by KubeStash operator.
 	// If the volume type is VolumeClaimTemplate, then KubeStash operator is responsible for creating the volume.
 	// +optional
 	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
 
-	// VolumeTemplate specifies a list of volume templates that is used by the respective backup verification
+	// VolumeClaimTemplate specifies a list of PersistentVolumeClaims that is used by the respective backup verification
 	// Job to execute its logic.
 	// +optional
 	VolumeTemplate []VolumeTemplate `json:"volumeTemplate,omitempty"`
