@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	core "k8s.io/api/core/v1"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -33,7 +32,6 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=backupverificationsession,singular=backupverificationsession,categories={kubestash,appscode,all}
-// +kubebuilder:printcolumn:name="Verifier",type="string",JSONPath=".spec.backupVerifier.name"
 // +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Duration",type="string",JSONPath=".status.duration"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
@@ -50,16 +48,17 @@ type BackupVerificationSession struct {
 
 // BackupVerificationSessionSpec specifies the information related to the respective backup verifier, session, repository and snapshot.
 type BackupVerificationSessionSpec struct {
-	// BackupVerifier points to the respective BackupVerification
-	// which is used for verification.
-	BackupVerifier *core.LocalObjectReference `json:"backupVerifier,omitempty"`
+	// Invoker points to the respective BackupConfiguration or BackupBatch
+	// which is responsible for triggering this backup verification.
+	Invoker *core.TypedLocalObjectReference `json:"invoker,omitempty"`
 
 	// Session specifies the name of the session that triggered this backup verification
 	Session string `json:"session,omitempty"`
 
+	// Repository specifies the name of the repository whose backed-up data will be verified
 	Repository string `json:"repository,omitempty"`
 
-	// Snapshot specifies the name of the snapshot that has been verified in this backup verification
+	// Snapshot specifies the name of the snapshot that will be verified
 	Snapshot string `json:"snapshot,omitempty"`
 
 	// RetryLeft specifies number of retry attempts left for the backup verification session.
@@ -89,19 +88,24 @@ type BackupVerificationSessionStatus struct {
 }
 
 // BackupVerificationSessionPhase specifies the current state of the backup verification process
-// +kubebuilder:validation:Enum=Pending;Running;Succeeded;Failed
+// +kubebuilder:validation:Enum=Running;Succeeded;Failed;Skipped
 type BackupVerificationSessionPhase string
 
 const (
-	BackupVerificationSessionPending   BackupVerificationSessionPhase = "Pending"
 	BackupVerificationSessionRunning   BackupVerificationSessionPhase = "Running"
 	BackupVerificationSessionSucceeded BackupVerificationSessionPhase = "Succeeded"
 	BackupVerificationSessionFailed    BackupVerificationSessionPhase = "Failed"
+	BackupVerificationSessionSkipped   BackupVerificationSessionPhase = "Skipped"
 )
 
 // ============================ Conditions ========================
 
 const (
+	// TypeBackupVerificationSkipped indicates that the current session was skipped
+	TypeBackupVerificationSkipped = "BackupVerificationSkipped"
+	// ReasonSkippedVerifyingNewBackup indicates that the backup verification was skipped because the snapshot has already been verified
+	ReasonSkippedVerifyingNewBackup = "SnapshotAlreadyVerified"
+
 	// TypeVerificationSessionHistoryCleaned indicates whether the backup history was cleaned or not according to sessionHistoryLimit
 	TypeVerificationSessionHistoryCleaned               = "VerificationSessionHistoryCleaned"
 	ReasonSuccessfullyCleanedVerificationSessionHistory = "SuccessfullyCleanedVerificationSessionHistory"

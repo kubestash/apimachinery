@@ -451,16 +451,22 @@ func (b *BackupConfiguration) validateVerificationStrategies() error {
 	}
 
 	for _, vs := range b.Spec.VerificationStrategies {
-		if vs.Namespace == "" {
-			return fmt.Errorf("namespace for verification strategy %q cannot be empty", vs.Name)
+		if vs.RestoreOption == nil {
+			return fmt.Errorf("restoreOption for verification strategy %q cannot be empty", vs.Name)
 		}
 
-		if vs.Verifier == nil {
-			return fmt.Errorf("verifier for verification strategy %q cannot be empty", vs.Name)
+		if vs.RestoreOption.AddonInfo == nil {
+			return fmt.Errorf("addonInfo in restoreOption for verification strategy %q cannot be empty", vs.Name)
 		}
 
 		if vs.VerifySchedule == "" {
 			return fmt.Errorf("verify schedule for verification strategy %q cannot be empty", vs.Name)
+		}
+
+		if vs.File != nil || vs.Query != nil || vs.Script != nil {
+			if vs.Function == "" {
+				return fmt.Errorf("function for verification strategy %q cannot be empty", vs.Name)
+			}
 		}
 	}
 	return nil
