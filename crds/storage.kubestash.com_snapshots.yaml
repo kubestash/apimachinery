@@ -223,20 +223,16 @@ spec:
                       properties:
                         databases:
                           description: Databases represents the list of target backup
-                            databases. This field is optional.
+                            databases.
                           items:
                             type: string
                           type: array
-                        duration:
-                          description: Duration represents the amount of time it took
-                            to complete the backup process. This field is optional.
-                          type: string
                         id:
                           description: Id represents the WalG snapshot ID.
                           type: string
-                        timeStamp:
-                          description: TimeStamp represents the start time of the
-                            backup. This field is optional.
+                        walGTimeStamp:
+                          description: WalGTimeStamp represents the WalG backup start
+                            time.
                           format: date-time
                           type: string
                       type: object

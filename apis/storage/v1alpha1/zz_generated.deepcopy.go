@@ -773,8 +773,8 @@ func (in *WalGStats) DeepCopyInto(out *WalGStats) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	if in.TimeStamp != nil {
-		in, out := &in.TimeStamp, &out.TimeStamp
+	if in.WalGTimeStamp != nil {
+		in, out := &in.WalGTimeStamp, &out.WalGTimeStamp
 		*out = (*in).DeepCopy()
 	}
 }
