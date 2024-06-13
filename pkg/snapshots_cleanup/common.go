@@ -184,6 +184,7 @@ func createFileIfNotExists(filename string) error {
 				klog.Infoln("failed to close file:", err)
 			}
 		}(file)
+		return nil
 	}
 	return err
 }
