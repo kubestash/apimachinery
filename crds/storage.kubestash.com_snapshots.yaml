@@ -230,9 +230,13 @@ spec:
                         id:
                           description: Id represents the WalG snapshot ID.
                           type: string
-                        walGTimeStamp:
-                          description: WalGTimeStamp represents the WalG backup start
+                        startTime:
+                          description: StartTime represents the WalG backup start
                             time.
+                          format: date-time
+                          type: string
+                        stopTime:
+                          description: StopTime represents the WalG backup stop time.
                           format: date-time
                           type: string
                       type: object

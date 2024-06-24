@@ -262,9 +262,13 @@ type WalGStats struct {
 	// +optional
 	Databases []string `json:"databases,omitempty"`
 
-	// WalGTimeStamp represents the WalG backup start time.
+	// StartTime represents the WalG backup start time.
 	// +optional
-	WalGTimeStamp *metav1.Time `json:"walGTimeStamp,omitempty"`
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+
+	// StopTime represents the WalG backup stop time.
+	// +optional
+	StopTime *metav1.Time `json:"stopTime,omitempty"`
 }
 
 // WalSegment specifies the "WalG" driver specific information
