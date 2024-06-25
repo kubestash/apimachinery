@@ -49,6 +49,7 @@ const (
 	PrefixRetentionPolicy = "retentionpolicy"
 	PrefixPopulate        = "populate"
 	PrefixPrime           = "prime"
+	PrefixVerify          = "verify"
 )
 
 const (
