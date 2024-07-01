@@ -259,7 +259,7 @@ func (b *Blob) Upload(ctx context.Context, filepath string, data []byte) error {
 		return err
 	}
 	defer closeBucket(ctx, bucket)
-	w, err := bucket.NewWriter(ctx, fileName, nil)
+	w, err := bucket.NewWriter(ctx, fileName, &blob.WriterOptions{DisableContentTypeDetection: true})
 	if err != nil {
 		return err
 	}
