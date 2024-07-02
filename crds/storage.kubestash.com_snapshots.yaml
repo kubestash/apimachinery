@@ -200,9 +200,6 @@ spec:
                           backupId:
                             description: backupId represents the solr snapshot id
                             type: integer
-                          backupName:
-                            description: backupName represents the solr snapshot id
-                            type: string
                           collection:
                             description: name of the collection
                             type: string
@@ -215,6 +212,9 @@ spec:
                               size in MB
                             format: double
                             type: number
+                          location:
+                            description: backupName represents the solr snapshot id
+                            type: string
                           startTime:
                             description: Timestamp when the backup started
                             type: string

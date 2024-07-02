@@ -245,8 +245,8 @@ type SolrStat struct {
 	// backupId represents the solr snapshot id
 	BackupId int `json:"backupId,omitempty"`
 
-	// backupName represents the solr snapshot id
-	Location string `json:"backupName,omitempty"`
+	// location represents the location of backup
+	Location string `json:"location,omitempty"`
 
 	// Timestamp when the backup started
 	// +optional
