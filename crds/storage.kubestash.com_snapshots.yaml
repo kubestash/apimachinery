@@ -138,6 +138,7 @@ spec:
                       - Restic
                       - WalG
                       - VolumeSnapshotter
+                      - Solr
                       type: string
                     duration:
                       description: Duration specifies the total time taken to complete
@@ -191,6 +192,39 @@ spec:
                       description: Size represents the size of the restic repository
                         for this component
                       type: string
+                    solrStats:
+                      description: SolrStats represents the solr specific information
+                      items:
+                        description: Solrstat specifies solr driver related information
+                        properties:
+                          backupId:
+                            description: backupId represents the solr snapshot id
+                            type: integer
+                          collection:
+                            description: name of the collection
+                            type: string
+                          indexFileCount:
+                            description: IndexFileCount represents the number of index
+                              files in solr backup.
+                            type: integer
+                          indexSizeMB:
+                            description: IndexSizeMB represents the solr index file
+                              size in MB
+                            format: double
+                            type: number
+                          location:
+                            description: backupName represents the solr snapshot id
+                            type: string
+                          startTime:
+                            description: Timestamp when the backup started
+                            type: string
+                          uploadedIndexFileMB:
+                            description: IndexFileSizeUploaded represents the uploaded
+                              solr index file size in MB
+                            format: double
+                            type: number
+                        type: object
+                      type: array
                     volumeSnapshotterStats:
                       description: VolumeSnapshotterStats specifies the "VolumeSnapshotter"
                         driver specific information
