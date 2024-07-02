@@ -200,6 +200,9 @@ spec:
                           backupId:
                             description: backupId represents the solr snapshot id
                             type: integer
+                          backupName:
+                            description: backupName represents the solr snapshot id
+                            type: string
                           collection:
                             description: name of the collection
                             type: string
