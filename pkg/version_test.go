@@ -62,6 +62,14 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			want: "6.0.5",
 		},
 		{
+			name: "mongo-7",
+			args: args{
+				addonVersions: []string{"4.2.3", "4.4.6", "5.0.3", "5.0.15", "6.0.5"},
+				dbVersion:     "7.0.8",
+			},
+			want: "6.0.5",
+		},
+		{
 			name: "mysql-5",
 			args: args{
 				addonVersions: []string{"5.7.25", "8.0.3", "8.0.21"},
@@ -106,14 +114,6 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{},
 				dbVersion:     "6.0.12",
-			},
-			wantErr: true,
-		},
-		{
-			name: "no-major-matched",
-			args: args{
-				addonVersions: []string{"4.2.3", "4.4.6", "6.0.5"},
-				dbVersion:     "5.0.15",
 			},
 			wantErr: true,
 		},

@@ -19,6 +19,7 @@ package pkg
 import (
 	"fmt"
 	"github.com/Masterminds/semver/v3"
+	"k8s.io/klog/v2"
 	"sort"
 	"strings"
 )
@@ -49,6 +50,7 @@ func FindAppropriateAddonVersion(addonVersions []string, dbVersion string) (stri
 	}
 
 	type distance struct {
+		//major        uint64
 		minor, patch uint64
 		isDB         int
 		actualAddon  string
@@ -60,10 +62,11 @@ func FindAppropriateAddonVersion(addonVersions []string, dbVersion string) (stri
 		if err != nil {
 			return "", err
 		}
-		if sav.Major() != semverDBVersion.Major() { // major has to be matched.
-			continue
-		}
+		//if sav.Major() != semverDBVersion.Major() { // major has to be matched.
+		//	continue
+		//}
 		distances = append(distances, distance{
+			//major:       sav.Major(),
 			minor:       sav.Minor(),
 			patch:       sav.Patch(),
 			actualAddon: av,
@@ -73,11 +76,15 @@ func FindAppropriateAddonVersion(addonVersions []string, dbVersion string) (stri
 		return "", fmt.Errorf("no addon version found with major=%v for db version %s", semverDBVersion.Major(), dbVersion)
 	}
 	distances = append(distances, distance{
+		//major: semverDBVersion.Major(),
 		minor: semverDBVersion.Minor(),
 		patch: semverDBVersion.Patch(),
 		isDB:  1,
 	})
 	sort.Slice(distances, func(i, j int) bool {
+		//if distances[i].major != distances[j].major {
+		//	return distances[i].major < distances[j].major
+		//}
 		if distances[i].minor != distances[j].minor {
 			return distances[i].minor < distances[j].minor
 		}
@@ -86,6 +93,10 @@ func FindAppropriateAddonVersion(addonVersions []string, dbVersion string) (stri
 		}
 		return distances[i].isDB < distances[j].isDB
 	})
+
+	for i, d := range distances {
+		klog.Infof("%d %+v \n", i, d)
+	}
 
 	for i, d := range distances {
 		if d.isDB == 1 {
