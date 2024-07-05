@@ -193,34 +193,37 @@ spec:
                         for this component
                       type: string
                     solrStats:
-                      description: SolrStats represents the solr specific information
+                      description: SolrStats represents the Solr specific information
                       items:
-                        description: Solrstat specifies solr driver related information
+                        description: SolrStat specifies Solr driver related information
                         properties:
                           backupId:
-                            description: backupId represents the solr snapshot id
+                            description: BackupId represents the Solr snapshot id.
                             type: integer
                           collection:
-                            description: name of the collection
+                            description: Collection represents the name of the Solr
+                              collection.
                             type: string
                           indexFileCount:
                             description: IndexFileCount represents the number of index
-                              files in solr backup.
+                              files in Solr backup.
                             type: integer
                           indexSizeMB:
-                            description: IndexSizeMB represents the solr index file
-                              size in MB
+                            description: IndexFileCount represents the size of index
+                              files in Solr backup.
                             format: double
                             type: number
                           location:
-                            description: location represents the location of backup
+                            description: Location represents the location where the
+                              backup exists.
                             type: string
                           startTime:
-                            description: Timestamp when the backup started
+                            description: StartTime represents the Solr backup start
+                              time.
                             type: string
                           uploadedIndexFileMB:
-                            description: IndexFileSizeUploaded represents the uploaded
-                              solr index file size in MB
+                            description: IndexFileSizeUploaded represents the size
+                              uploaded solr index file size in solr backup
                             format: double
                             type: number
                         type: object
