@@ -204,7 +204,7 @@ type Component struct {
 	// WalSegments specifies a list of wall segment for individual component
 	WalSegments []WalSegment `json:"walSegments,omitempty"`
 
-	// SolrStats represents the solr specific information
+	// SolrStats represents the Solr specific information
 	SolrStats []SolrStat `json:"solrStats,omitempty"`
 }
 
@@ -237,30 +237,30 @@ type ResticStats struct {
 	Size string `json:"size,omitempty"`
 }
 
-// Solrstat specifies solr driver related information
+// SolrStat specifies Solr driver related information
 type SolrStat struct {
-	// name of the collection
+	// Collection represents the name of the Solr collection.
 	Collection string `json:"collection,omitempty"`
 
-	// backupId represents the solr snapshot id
+	// BackupId represents the Solr snapshot id.
 	BackupId int `json:"backupId,omitempty"`
 
-	// location represents the location of backup
+	// Location represents the location where the backup exists.
 	Location string `json:"location,omitempty"`
 
-	// Timestamp when the backup started
+	// StartTime represents the Solr backup start time.
 	// +optional
 	StartTime string `json:"startTime,omitempty"`
 
-	// IndexFileCount represents the number of index files in solr backup.
+	// IndexFileCount represents the number of index files in Solr backup.
 	// +optional
 	IndexFileCount int `json:"indexFileCount,omitempty"`
 
-	// IndexSizeMB represents the solr index file size in MB
+	// IndexFileCount represents the size of index files in Solr backup.
 	// +optional
 	IndexSizeMB float64 `json:"indexSizeMB,omitempty"`
 
-	// IndexFileSizeUploaded represents the uploaded solr index file size in MB
+	// IndexFileSizeUploaded represents the size uploaded solr index file size in solr backup
 	// +optional
 	UploadedIndexFileMB float64 `json:"uploadedIndexFileMB,omitempty"`
 }

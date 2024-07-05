@@ -213,7 +213,7 @@ spec:
                             format: double
                             type: number
                           location:
-                            description: backupName represents the solr snapshot id
+                            description: location represents the location of backup
                             type: string
                           startTime:
                             description: Timestamp when the backup started
