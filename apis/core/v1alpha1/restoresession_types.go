@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	kubedbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 )
 
 const (
@@ -93,6 +94,36 @@ type ManifestRestoreOptions struct {
 	// MariaDB specifies the options for selecting particular MariaDB components to restore in manifest restore
 	// +optional
 	MariaDB *KubeDBManifestOptions `json:"mariaDB,omitempty"`
+
+	// MSSQLServer specifies the options for selecting particular MSSQLServer components to restore in manifest restore
+	// +optional
+	MSSQLServer *MSSQLServerManifestOptions `json:"msSQLServer,omitempty"`
+}
+
+type MSSQLServerManifestOptions struct {
+	// DB specifies whether to restore the DB manifest or not
+	// +optional
+	DB bool `json:"db,omitempty"`
+
+	// DBName specifies the new name of the DB yaml after restore
+	// +optional
+	DBName string `json:"dbName,omitempty"`
+
+	// AuthSecret specifies whether to restore the AuthSecret manifest or not
+	// +optional
+	AuthSecret bool `json:"authSecret,omitempty"`
+
+	// AuthSecretName specifies new name of the AuthSecret yaml after restore
+	// +optional
+	AuthSecretName string `json:"authSecretName,omitempty"`
+
+	// InternalAuth is used to authenticate endpoint
+	// +optional
+	// +nullable
+	InternalAuth *kubedbapi.InternalAuthentication `json:"internalAuth,omitempty"`
+
+	// TLS contains tls configurations for client and server.
+	TLS *kubedbapi.SQLServerTLSConfig `json:"tls,omitempty"`
 }
 
 type KubeDBManifestOptions struct {
