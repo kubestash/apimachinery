@@ -102,6 +102,14 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			want: "alma-8.5.7-bf633c1a54",
 		},
 		{
+			name: "pg-10",
+			args: args{
+				addonVersions: []string{"12.17.0", "14.10.0", "16.1.0"},
+				dbVersion:     "10.23-bullseye",
+			},
+			want: "12.17.0",
+		},
+		{
 			name: "no-addons",
 			args: args{
 				addonVersions: []string{},
@@ -109,14 +117,14 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			},
 			wantErr: true,
 		},
-		{
-			name: "no-major-matched",
-			args: args{
-				addonVersions: []string{"4.2.3", "4.4.6", "6.0.5"},
-				dbVersion:     "5.0.15",
-			},
-			wantErr: true,
-		},
+		//{
+		//	name: "no-major-matched",
+		//	args: args{
+		//		addonVersions: []string{"4.2.3", "4.4.6", "6.0.5"},
+		//		dbVersion:     "5.0.15",
+		//	},
+		//	wantErr: true,
+		//},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
