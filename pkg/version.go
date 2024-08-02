@@ -23,17 +23,6 @@ import (
 	"sort"
 )
 
-//	func trimPrefixAndSuffix(str string) string {
-//		index := strings.Index(str, "-")
-//		if index != -1 {
-//			str = str[index+1:]
-//		}
-//		index = strings.LastIndex(str, "-")
-//		if index != -1 {
-//			str = str[:index]
-//		}
-//		return str
-//	}
 func extractDBVersion(version string) string {
 	regex := `\b\d+\.\d+(\.\d+)?\b`
 	r := regexp.MustCompile(regex)
@@ -64,9 +53,7 @@ func FindAppropriateAddonVersion(addonVersions []string, dbVersion string) (stri
 		if err != nil {
 			return "", err
 		}
-		//if sav.Major() != semverDBVersion.Major() { // major has to be matched.
-		//	continue
-		//}
+
 		distances = append(distances, distance{
 			major:       sav.Major(),
 			minor:       sav.Minor(),
