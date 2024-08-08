@@ -83,6 +83,11 @@ func FindAppropriateAddonVersion(addonVersions []string, dbVersion string) (stri
 		return distances[i].isDB < distances[j].isDB
 	})
 
+	// Algorithm:
+	// - first sort the versions according to Ascending order of major,minor and patch version
+	// - iterate through the distances slide(hold the version information) and if the current version is our DB version,
+	//		- if, current.major==immediate_smaller.major, take immediate_smaller if possible or immediate_greater
+	//		- else, take immediate_greater if possible or immediate_smaller
 	for i, d := range distances {
 		if d.isDB == 1 {
 			if i > 0 {
