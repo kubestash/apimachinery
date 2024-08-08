@@ -142,6 +142,20 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			want: "16.1",
 		},
 		{
+			name: "pg-12b",
+			args: args{
+				addonVersions: []string{"12.17", "14.10", "16.1"},
+				dbVersion:     "12.18",
+			},
+			want: "12.17",
+		},
+		{
+			name: "pg-14",
+			args: args{
+				addonVersions: []string{"12.17", "14.10", "16.1"}, dbVersion: "14.11"},
+			want: "14.10",
+		},
+		{
 			name: "pg-16",
 			args: args{
 				addonVersions: []string{"12.17", "14.10", "16.1"},
