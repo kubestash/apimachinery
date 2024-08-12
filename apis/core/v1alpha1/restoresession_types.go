@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	kubedbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 )
 
 const (
@@ -120,10 +119,21 @@ type MSSQLServerManifestOptions struct {
 	// InternalAuth is used to authenticate endpoint
 	// +optional
 	// +nullable
-	InternalAuth *kubedbapi.InternalAuthentication `json:"internalAuth,omitempty"`
+	InternalAuth *InternalAuthentication `json:"internalAuth,omitempty"`
 
 	// TLS contains tls configurations for client and server.
-	TLS *kubedbapi.SQLServerTLSConfig `json:"tls,omitempty"`
+	TLS *SQLServerTLSConfig `json:"tls,omitempty"`
+}
+
+// InternalAuthentication provides different way of endpoint authentication
+type InternalAuthentication struct {
+	// EndpointCert is used for endpoint authentication of MSSql Server
+	EndpointCert *kmapi.TLSConfig `json:"endpointCert"`
+}
+
+type SQLServerTLSConfig struct {
+	kmapi.TLSConfig `json:",inline"`
+	ClientTLS       bool `json:"clientTLS"`
 }
 
 type KubeDBManifestOptions struct {
