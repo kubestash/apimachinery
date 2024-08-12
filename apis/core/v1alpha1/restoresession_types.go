@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -116,24 +117,13 @@ type MSSQLServerManifestOptions struct {
 	// +optional
 	AuthSecretName string `json:"authSecretName,omitempty"`
 
-	// InternalAuth is used to authenticate endpoint
+	// InternalAuthIssuerRef specifies the name of the IssuerRef used for endpoint authentication.
 	// +optional
-	// +nullable
-	InternalAuth *InternalAuthentication `json:"internalAuth,omitempty"`
+	InternalAuthIssuerRef *core.TypedLocalObjectReference `json:"internalAuthIssuerRef,omitempty"`
 
-	// TLS contains tls configurations for client and server.
-	TLS *SQLServerTLSConfig `json:"tls,omitempty"`
-}
-
-// InternalAuthentication provides different way of endpoint authentication
-type InternalAuthentication struct {
-	// EndpointCert is used for endpoint authentication of MSSql Server
-	EndpointCert *kmapi.TLSConfig `json:"endpointCert"`
-}
-
-type SQLServerTLSConfig struct {
-	kmapi.TLSConfig `json:",inline"`
-	ClientTLS       bool `json:"clientTLS"`
+	// TLSIssuerRef specifies the name of the IssuerRef used for TLS configurations for both client and server.
+	// +optional
+	TLSIssuerRef *core.TypedLocalObjectReference `json:"tlsIssuerRef,omitempty"`
 }
 
 type KubeDBManifestOptions struct {
@@ -161,9 +151,9 @@ type KubeDBManifestOptions struct {
 	// +optional
 	ConfigSecretName string `json:"configSecretName,omitempty"`
 
-	// IssuerRefName specifies new name of the IssuerRef after restore
+	// TLSIssuerRef specifies the name of the IssuerRef used for TLS configurations for both client and server
 	// +optional
-	IssuerRefName string `json:"issuerRefName,omitempty"`
+	TLSIssuerRef *core.TypedLocalObjectReference `json:"tlsIssuerRef,omitempty"`
 }
 
 // RestoreDataSource specifies the information about the data that will be restored
