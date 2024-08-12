@@ -98,6 +98,14 @@ type ManifestRestoreOptions struct {
 	// MSSQLServer specifies the options for selecting particular MSSQLServer components to restore in manifest restore
 	// +optional
 	MSSQLServer *MSSQLServerManifestOptions `json:"msSQLServer,omitempty"`
+
+	// Druid specifies the options for selecting particular Druid components to restore in manifest restore
+	// +optional
+	Druid *DruidManifestOptions `json:"druid,omitempty"`
+
+	// ZooKeeper specifies the options for selecting particular ZooKeeper components to restore in manifest restore
+	// +optional
+	ZooKeeper *KubeDBManifestOptions `json:"zooKeeper,omitempty"`
 }
 
 type MSSQLServerManifestOptions struct {
@@ -126,6 +134,50 @@ type MSSQLServerManifestOptions struct {
 	TLSIssuerRef *core.TypedLocalObjectReference `json:"tlsIssuerRef,omitempty"`
 }
 
+type DruidManifestOptions struct {
+	// DB specifies whether to restore the DB manifest or not
+	// +optional
+	DB bool `json:"db,omitempty"`
+
+	// DBName specifies the new name of the DB yaml after restore
+	// +optional
+	DBName string `json:"dbName,omitempty"`
+
+	// AuthSecret specifies whether to restore the AuthSecret manifest or not
+	// +optional
+	AuthSecret bool `json:"authSecret,omitempty"`
+
+	// AuthSecretName specifies new name of the AuthSecret yaml after restore
+	// +optional
+	AuthSecretName string `json:"authSecretName,omitempty"`
+
+	// ConfigSecret specifies whether to restore the ConfigSecret manifest or not
+	// +optional
+	ConfigSecret bool `json:"configSecret,omitempty"`
+
+	// ConfigSecretName specifies new name of the ConfigSecret yaml after restore
+	// +optional
+	ConfigSecretName string `json:"configSecretName,omitempty"`
+
+	// DeepStorageSecret specifies whether to restore the DeepStorageSecret manifest or not
+	// +optional
+	DeepStorageSecret bool `json:"deepStorageSecret,omitempty"`
+
+	// MetadataStorage specifies new configuration of the Metadata Storage after restore
+	// +optional
+	MetadataStorage bool `json:"metadataStorage,omitempty"`
+
+	// +optional
+	MetadataStorageRef *kmapi.ObjectReference `json:"metadataStorageRef,omitempty"`
+
+	// ZooKeeper specifies new configuration of the Metadata Storage after restore
+	// +optional
+	Zookeeper bool `json:"zookeeper,omitempty"`
+
+	// +optional
+	ZookeeperRef *kmapi.ObjectReference `json:"zookeeperRef,omitempty"`
+}
+
 type KubeDBManifestOptions struct {
 	// DB specifies whether to restore the DB manifest or not
 	// +optional
@@ -150,6 +202,10 @@ type KubeDBManifestOptions struct {
 	// ConfigSecretName specifies new name of the ConfigSecret yaml after restore
 	// +optional
 	ConfigSecretName string `json:"configSecretName,omitempty"`
+
+	// InitScript specifies whether to restore the InitScript manifest or not
+	// +optional
+	InitScript bool `json:"initScript,omitempty"`
 
 	// TLSIssuerRef specifies the name of the IssuerRef used for TLS configurations for both client and server
 	// +optional
