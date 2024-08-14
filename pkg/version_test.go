@@ -62,6 +62,14 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			want: "6.0.5",
 		},
 		{
+			name: "mongo-7",
+			args: args{
+				addonVersions: []string{"4.2.3", "4.4.6", "5.0.3", "5.0.15", "6.0.5"},
+				dbVersion:     "7.0.8",
+			},
+			want: "6.0.5",
+		},
+		{
 			name: "mysql-5",
 			args: args{
 				addonVersions: []string{"5.7.25", "8.0.3", "8.0.21"},
@@ -102,18 +110,64 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			want: "alma-8.5.7-bf633c1a54",
 		},
 		{
+			name: "pg-10",
+			args: args{
+				addonVersions: []string{"12.17", "14.10", "16.1"},
+				dbVersion:     "10.23",
+			},
+			want: "12.17",
+		},
+		{
+			name: "pg-12",
+			args: args{
+				addonVersions: []string{"12.17", "14.10", "16.1"},
+				dbVersion:     "12.17",
+			},
+			want: "12.17",
+		},
+		{
+			name: "pg-13",
+			args: args{
+				addonVersions: []string{"12.17", "14.10", "16.1"},
+				dbVersion:     "13.14",
+			},
+			want: "14.10",
+		},
+		{
+			name: "pg-15",
+			args: args{
+				addonVersions: []string{"12.17", "14.10", "16.1"},
+				dbVersion:     "15.6",
+			},
+			want: "16.1",
+		},
+		{
+			name: "pg-12b",
+			args: args{
+				addonVersions: []string{"12.17", "14.10", "16.1"},
+				dbVersion:     "12.18",
+			},
+			want: "12.17",
+		},
+		{
+			name: "pg-14",
+			args: args{
+				addonVersions: []string{"12.17", "14.10", "16.1"}, dbVersion: "14.11"},
+			want: "14.10",
+		},
+		{
+			name: "pg-16",
+			args: args{
+				addonVersions: []string{"12.17", "14.10", "16.1"},
+				dbVersion:     "16.2",
+			},
+			want: "16.1",
+		},
+		{
 			name: "no-addons",
 			args: args{
 				addonVersions: []string{},
 				dbVersion:     "6.0.12",
-			},
-			wantErr: true,
-		},
-		{
-			name: "no-major-matched",
-			args: args{
-				addonVersions: []string{"4.2.3", "4.4.6", "6.0.5"},
-				dbVersion:     "5.0.15",
 			},
 			wantErr: true,
 		},
