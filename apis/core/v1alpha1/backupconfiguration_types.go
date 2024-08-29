@@ -458,6 +458,11 @@ const (
 	TypeSchedulerEnsured      = "SchedulerEnsured"
 	ReasonSchedulerNotEnsured = "SchedulerNotEnsured"
 	ReasonSchedulerEnsured    = "SchedulerEnsured"
+
+	// TypeInitialBackupTriggered indicates whether the backup is triggered or not.
+	TypeInitialBackupTriggered      = "InitialBackupTriggered"
+	ReasonInitialBackupNotTriggered = "InitialBackupNotTriggered"
+	ReasonInitialBackupTriggered    = "ReasonInitialBackupTriggered"
 )
 
 //+kubebuilder:object:root=true
