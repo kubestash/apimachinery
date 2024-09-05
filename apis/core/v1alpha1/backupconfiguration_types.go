@@ -73,6 +73,10 @@ type BackupConfigurationSpec struct {
 	// skip processing any further events for this BackupConfiguration.
 	// +optional
 	Paused bool `json:"paused,omitempty"`
+
+	// TriggerImmediate is defaults to true. So, Backup will be triggered immediately unless set to false
+	// +kubebuilder:default=true
+	TriggerImmediate bool `json:"triggerImmediate,omitempty"`
 }
 
 // BackendReference specifies reference to a storage where the backed up data will be stored.

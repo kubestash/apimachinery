@@ -34398,6 +34398,11 @@ spec:
                 required:
                 - name
                 type: object
+              triggerImmediate:
+                default: true
+                description: TriggerImmediate is defaults to true. So, Backup will
+                  be triggered immediately unless set to false
+                type: boolean
             type: object
           status:
             description: BackupConfigurationStatus defines the observed state of BackupConfiguration
