@@ -153,3 +153,7 @@ const (
 	SnapshotVersionV1 = "v1"
 	DirRepository     = "repository"
 )
+
+const (
+	KeyRestoreSessionBeneficiary = "restoresession.kubestash.com/beneficiary"
+)

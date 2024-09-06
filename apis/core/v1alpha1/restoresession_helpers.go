@@ -41,8 +41,7 @@ func (rs *RestoreSession) CalculatePhase() RestorePhase {
 	}
 
 	if cutil.IsConditionTrue(rs.Status.Conditions, TypeMetricsPushed) &&
-		(cutil.IsConditionTrue(rs.Status.Conditions, TypeDeadlineExceeded) ||
-			cutil.IsConditionFalse(rs.Status.Conditions, TypePreRestoreHooksExecutionSucceeded) ||
+		(cutil.IsConditionFalse(rs.Status.Conditions, TypePreRestoreHooksExecutionSucceeded) ||
 			cutil.IsConditionFalse(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded) ||
 			cutil.IsConditionFalse(rs.Status.Conditions, TypeRestoreExecutorEnsured)) {
 		return RestoreFailed

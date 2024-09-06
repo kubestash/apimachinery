@@ -18,14 +18,6 @@ package restic
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
-	"testing"
-
-	addonapi "kubestash.dev/apimachinery/apis/addons/v1alpha1"
-	coreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
-	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
-
 	"github.com/stretchr/testify/assert"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
@@ -35,8 +27,14 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	storage "kmodules.xyz/objectstore-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
+	addonapi "kubestash.dev/apimachinery/apis/addons/v1alpha1"
+	coreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
+	"os"
+	"path/filepath"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
+	"testing"
 )
 
 var (

@@ -24469,9 +24469,9 @@ spec:
                 type: object
               timeout:
                 description: Timeout specifies a duration that KubeStash should wait
-                  for the session execution to be completed. If the session execution
-                  does not finish within this time period, KubeStash will consider
-                  this session as a failure.
+                  for the restore to be completed. If the restore does not finish
+                  within this time period, KubeStash will consider this restore as
+                  a failure.
                 type: string
             type: object
           status:
@@ -24557,12 +24557,6 @@ spec:
                   - type
                   type: object
                 type: array
-              deadline:
-                description: Deadline specifies a timestamp till this session is valid.
-                  If the session does not complete within this deadline, it will be
-                  considered as failed.
-                format: date-time
-                type: string
               dependencies:
                 description: Dependencies specifies whether the objects required by
                   this RestoreSession exist or not

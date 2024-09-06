@@ -63,6 +63,11 @@ type BackupSessionSpec struct {
 	// If this set to non-zero, KubeStash will create a new BackupSession if the current one fails.
 	// +optional
 	RetryLeft int32 `json:"retryLeft,omitempty"`
+
+	// Timeout specifies the maximum duration of backup. Backup will be considered Failed
+	// if backup does not complete within this time limit. By default, KubeStash don't set any timeout for backup.
+	// +optional
+	Timeout *metav1.Duration `json:"timeout,omitempty"`
 }
 
 // BackupSessionStatus defines the observed state of BackupSession
@@ -74,11 +79,6 @@ type BackupSessionStatus struct {
 	// Duration specifies the time required to complete the backup process
 	// +optional
 	Duration string `json:"duration,omitempty"`
-
-	// Deadline specifies the deadline of backup. BackupSession will be
-	// considered Failed if backup does not complete within this deadline
-	// +optional
-	Deadline *metav1.Time `json:"sessionDeadline,omitempty"`
 
 	// TotalSnapshots specifies the total number of snapshots created for this backupSession.
 	// +optional
