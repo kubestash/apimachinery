@@ -35,6 +35,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"testing"
+	"time"
 )
 
 var (
@@ -460,6 +461,38 @@ func TestBackupRestoreWithArgs(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestBackupWithTimeout(t *testing.T) {
+	tempDir, err := os.MkdirTemp("", "stash-unit-test-")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	w, err := setupTest(tempDir)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer cleanup(tempDir)
+
+	// Initialize Repository
+	err = w.InitializeRepository()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	duration := metav1.Duration{Duration: 10 * time.Millisecond}
+	w.config.Timeout = &duration
+
+	backupOpt := BackupOptions{
+		StdinPipeCommands: []Command{stdinPipeCommand},
+		StdinFileName:     fileName,
+	}
+	_, err = w.RunBackup(backupOpt)
+	assert.Error(t, err, "Timeout error")
 }
 
 func TestVerifyRepositoryIntegrity(t *testing.T) {

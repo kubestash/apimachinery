@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kubestash.dev/apimachinery/apis"
@@ -179,4 +180,15 @@ func (rs *RestoreSession) GetDataSourceNamespace() string {
 		return rs.Namespace
 	}
 	return rs.Spec.DataSource.Namespace
+}
+
+func (rs *RestoreSession) GetRemainingTimeoutDuration() (*metav1.Duration, error) {
+	if rs.Spec.Timeout == nil || rs.Status.Deadline == nil {
+		return nil, nil
+	}
+	currentTime := metav1.Now()
+	if rs.Status.Deadline.Before(&currentTime) {
+		return nil, fmt.Errorf("deadline exceeded")
+	}
+	return &metav1.Duration{Duration: rs.Status.Deadline.Sub(currentTime.Time)}, nil
 }

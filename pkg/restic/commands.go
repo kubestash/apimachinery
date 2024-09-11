@@ -424,6 +424,9 @@ func (w *ResticWrapper) run(commands ...Command) ([]byte, error) {
 func formatError(err error, stdErr string) error {
 	parts := strings.Split(strings.TrimSuffix(stdErr, "\n"), "\n")
 	if len(parts) > 1 {
+		if strings.Contains(parts[1], "signal terminated") {
+			return errors.New(strings.Join(append([]string{"deadline exceeded or signal terminated"}, parts[2:]...), " "))
+		}
 		return errors.New(strings.Join(parts[1:], " "))
 	}
 	return err

@@ -24469,7 +24469,7 @@ spec:
                 type: object
               timeout:
                 description: Timeout specifies a duration that KubeStash should wait
-                  for the restore to be completed. If the restore does not finish
+                  for the restore to be completed. If the restore tasks do not finish
                   within this time period, KubeStash will consider this restore as
                   a failure.
                 type: string
@@ -24660,6 +24660,11 @@ spec:
                 - Succeeded
                 - Invalid
                 - Unknown
+                type: string
+              restoreDeadline:
+                description: Deadline specifies the deadline of restore. Restore will
+                  be considered Failed if it does not complete within this deadline
+                format: date-time
                 type: string
               targetFound:
                 description: TargetFound specifies whether the restore target exist
