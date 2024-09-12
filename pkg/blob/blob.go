@@ -277,7 +277,7 @@ func (b *Blob) Upload(ctx context.Context, filepath string, data []byte, content
 
 func (b *Blob) Debug(ctx context.Context, filepath string, data []byte, contentType string) error {
 	dir, fileName := path.Split(filepath)
-	bucket, err := b.openBucketWithDebug(ctx, dir)
+	bucket, err := b.openBucketWithDebug(ctx, dir, true)
 	if err != nil {
 		return err
 	}
