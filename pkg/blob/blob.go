@@ -249,14 +249,18 @@ func (b *Blob) Get(ctx context.Context, filepath string) ([]byte, error) {
 	return io.ReadAll(r)
 }
 
-func (b *Blob) Upload(ctx context.Context, filepath string, data []byte) error {
+func (b *Blob) Upload(ctx context.Context, filepath string, data []byte, contentType string) error {
 	dir, fileName := path.Split(filepath)
 	bucket, err := b.openBucket(ctx, dir)
 	if err != nil {
 		return err
 	}
 	defer closeBucket(ctx, bucket)
-	w, err := bucket.NewWriter(ctx, fileName, &blob.WriterOptions{DisableContentTypeDetection: true})
+
+	w, err := bucket.NewWriter(ctx, fileName, &blob.WriterOptions{
+		ContentType:                 contentType,
+		DisableContentTypeDetection: true,
+	})
 	if err != nil {
 		return err
 	}
@@ -269,6 +273,36 @@ func (b *Blob) Upload(ctx context.Context, filepath string, data []byte) error {
 		return closeErr
 	}
 	return closeErr
+}
+
+func (b *Blob) Debug(ctx context.Context, filepath string, data []byte, contentType string) error {
+	dir, fileName := path.Split(filepath)
+	bucket, err := b.openBucketWithDebug(ctx, dir)
+	if err != nil {
+		return err
+	}
+
+	defer closeBucket(ctx, bucket)
+
+	klog.Infof("Uploading data to backend...")
+	w, err := bucket.NewWriter(ctx, fileName, &blob.WriterOptions{
+		ContentType:                 contentType,
+		DisableContentTypeDetection: true,
+	})
+	if err != nil {
+		return err
+	}
+	_, writeErr := w.Write(data)
+	closeErr := w.Close()
+	if writeErr != nil {
+		return writeErr
+	}
+	if closeErr != nil {
+		return closeErr
+	}
+
+	klog.Infof("Cleaning up data from backend...")
+	return bucket.Delete(ctx, fileName)
 }
 
 func (b *Blob) List(ctx context.Context, dir string) ([][]byte, error) {
@@ -346,12 +380,20 @@ func checkIfObjectFile(obj *blob.ListObject) bool {
 }
 
 func (b *Blob) openBucket(ctx context.Context, dir string) (*blob.Bucket, error) {
+	return b.openBucketWithDebug(ctx, dir, false)
+}
+
+func (b *Blob) openBucketWithDebug(ctx context.Context, dir string, debug bool) (*blob.Bucket, error) {
 	var bucket *blob.Bucket
 	var err error
 	if b.backupStorage.Spec.Storage.Provider == storageapi.ProviderS3 {
 		sess, err := b.getS3Session()
 		if err != nil {
 			return nil, err
+		}
+		if debug {
+			// Currently Only S3 has debugging support, because for the rest of providers we're using default blob.
+			sess.Config.WithLogLevel(aws.LogDebug)
 		}
 		bucket, err = s3blob.OpenBucket(ctx, sess, b.backupStorage.Spec.Storage.S3.Bucket, nil)
 		if err != nil {
