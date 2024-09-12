@@ -248,14 +248,23 @@ func (b *Blob) Get(ctx context.Context, filepath string) ([]byte, error) {
 	return io.ReadAll(r)
 }
 
-func (b *Blob) Upload(ctx context.Context, filepath string, data []byte) error {
+func (b *Blob) Upload(ctx context.Context, filepath string, data []byte, contentType string) error {
 	dir, fileName := path.Split(filepath)
 	bucket, err := b.openBucket(ctx, dir)
 	if err != nil {
 		return err
 	}
 	defer closeBucket(ctx, bucket)
-	w, err := bucket.NewWriter(ctx, fileName, &blob.WriterOptions{ContentType: "application/yaml"})
+
+	writerOptions := &blob.WriterOptions{
+		DisableContentTypeDetection: true,
+	}
+	if contentType != "" {
+		writerOptions.ContentType = contentType
+		writerOptions.DisableContentTypeDetection = false
+	}
+
+	w, err := bucket.NewWriter(ctx, fileName, writerOptions)
 	if err != nil {
 		return err
 	}
@@ -268,6 +277,40 @@ func (b *Blob) Upload(ctx context.Context, filepath string, data []byte) error {
 		return closeErr
 	}
 	return closeErr
+}
+
+func (b *Blob) Debug(ctx context.Context, filepath string, data []byte, contentType string) error {
+	dir, fileName := path.Split(filepath)
+	bucket, err := b.openBucketWithDebug(ctx, dir)
+	if err != nil {
+		return err
+	}
+
+	defer closeBucket(ctx, bucket)
+
+	writerOptions := &blob.WriterOptions{
+		DisableContentTypeDetection: true,
+	}
+	if contentType != "" {
+		writerOptions.ContentType = contentType
+		writerOptions.DisableContentTypeDetection = false
+	}
+
+	klog.Infof("Uploading data to backend...")
+	w, err := bucket.NewWriter(ctx, fileName, writerOptions)
+	if err != nil {
+		return err
+	}
+	_, writeErr := w.Write(data)
+	closeErr := w.Close()
+	if writeErr != nil {
+		return writeErr
+	}
+	if closeErr != nil {
+		return closeErr
+	}
+
+	return b.Delete(ctx, filepath, false)
 }
 
 func (b *Blob) List(ctx context.Context, dir string) ([][]byte, error) {
@@ -370,6 +413,34 @@ func (b *Blob) openBucket(ctx context.Context, dir string) (*blob.Bucket, error)
 	return blob.PrefixedBucket(bucket, suffix), nil
 }
 
+func (b *Blob) openBucketWithDebug(ctx context.Context, dir string) (*blob.Bucket, error) {
+	var bucket *blob.Bucket
+	var err error
+	if b.backupStorage.Spec.Storage.Provider == storageapi.ProviderS3 {
+		sess, err := b.getS3Session()
+		if err != nil {
+			return nil, err
+		}
+		// Currently Only S3 has debugging support, because for the rest of providers we're using default blob.
+		sess.Config.WithLogLevel(aws.LogDebug)
+		bucket, err = s3blob.OpenBucket(ctx, sess, b.backupStorage.Spec.Storage.S3.Bucket, nil)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		bucket, err = blob.OpenBucket(ctx, b.storageURL)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	suffix := strings.Trim(path.Join(b.prefix, dir), "/") + "/"
+	if suffix == string(os.PathSeparator) {
+		return bucket, nil
+	}
+	return blob.PrefixedBucket(bucket, suffix), nil
+}
+
 func closeBucket(ctx context.Context, bucket *blob.Bucket) {
 	closeErr := bucket.Close()
 	if closeErr != nil {
@@ -423,7 +494,7 @@ func (b *Blob) getS3Session() (*session.Session, error) {
 		WithCredentialsChainVerboseErrors(true).
 		WithEndpoint(b.backupStorage.Spec.Storage.S3.Endpoint).
 		WithS3ForcePathStyle(true).
-		WithCredentials(credentials.NewChainCredentials(providers)).WithLogLevel(aws.LogDebug)
+		WithCredentials(credentials.NewChainCredentials(providers))
 
 	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
 		if caCert := b.s3Secret.Data[caCertData]; len(caCert) > 0 || b.backupStorage.Spec.Storage.S3.InsecureTLS {

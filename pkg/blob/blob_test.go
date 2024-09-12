@@ -50,7 +50,7 @@ func TestExistsShouldReturnTrueIfObjectExists(t *testing.T) {
 	skipTestIfCredentialsNotFound(t)
 	storage, err := getSampleStorage()
 	assert.Nil(t, err)
-	err = storage.Upload(context.Background(), filepath.Join(testPath, sampleFile), []byte(sampleData))
+	err = storage.Upload(context.Background(), filepath.Join(testPath, sampleFile), []byte(sampleData), "")
 	assert.Nil(t, err)
 	exists, err := storage.Exists(context.Background(), filepath.Join(testPath, sampleFile))
 	assert.Nil(t, err)
@@ -71,7 +71,7 @@ func TestGetAfterUploadShouldReturnTheObject(t *testing.T) {
 	skipTestIfCredentialsNotFound(t)
 	storage, err := getSampleStorage()
 	assert.Nil(t, err)
-	err = storage.Upload(context.Background(), filepath.Join(testPath, sampleFile), []byte(sampleData))
+	err = storage.Upload(context.Background(), filepath.Join(testPath, sampleFile), []byte(sampleData), "")
 	assert.Nil(t, err)
 	d, err := storage.Get(context.Background(), filepath.Join(testPath, sampleFile))
 	assert.Nil(t, err)
@@ -93,7 +93,7 @@ func TestGetAfterDeleteShouldReturnNotFoundError(t *testing.T) {
 	skipTestIfCredentialsNotFound(t)
 	storage, err := getSampleStorage()
 	assert.Nil(t, err)
-	err = storage.Upload(context.Background(), filepath.Join(testPath, sampleFile), []byte(sampleData))
+	err = storage.Upload(context.Background(), filepath.Join(testPath, sampleFile), []byte(sampleData), "")
 	assert.Nil(t, err)
 	err = storage.Delete(context.Background(), filepath.Join(testPath, sampleFile), false)
 	assert.Nil(t, err)
@@ -109,7 +109,7 @@ func TestListAfterUploadShouldReturnTheObjectList(t *testing.T) {
 	paths := []string{"sample1.txt", "sample2.txt", "sample3.txt"}
 	data := []string{"sample data 1", "sample data 2", "sample data 3"}
 	for i := range paths {
-		err = storage.Upload(context.Background(), filepath.Join(testPath, paths[i]), []byte(data[i]))
+		err = storage.Upload(context.Background(), filepath.Join(testPath, paths[i]), []byte(data[i]), "")
 		assert.Nil(t, err)
 	}
 	receivedData, err := storage.List(context.Background(), testPath)
