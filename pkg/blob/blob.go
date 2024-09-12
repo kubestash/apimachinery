@@ -310,7 +310,8 @@ func (b *Blob) Debug(ctx context.Context, filepath string, data []byte, contentT
 		return closeErr
 	}
 
-	return b.Delete(ctx, filepath, false)
+	klog.Infof("Cleaning up data from backend...")
+	return bucket.Delete(ctx, fileName)
 }
 
 func (b *Blob) List(ctx context.Context, dir string) ([][]byte, error) {
