@@ -21,6 +21,12 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"path"
+	"strings"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
@@ -34,19 +40,14 @@ import (
 	_ "gocloud.dev/blob/gcsblob"
 	"gocloud.dev/blob/s3blob"
 	_ "gocloud.dev/blob/s3blob"
-	"io"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/klog/v2"
 	"kubestash.dev/apimachinery/apis"
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
-	"net/http"
-	"os"
-	"path"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-	"strings"
 )
 
 const (
