@@ -423,7 +423,7 @@ func (b *Blob) getS3Session() (*session.Session, error) {
 		WithCredentialsChainVerboseErrors(true).
 		WithEndpoint(b.backupStorage.Spec.Storage.S3.Endpoint).
 		WithS3ForcePathStyle(true).
-		WithCredentials(credentials.NewChainCredentials(providers))
+		WithCredentials(credentials.NewChainCredentials(providers)).WithLogLevel(aws.LogDebug)
 
 	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
 		if caCert := b.s3Secret.Data[caCertData]; len(caCert) > 0 || b.backupStorage.Spec.Storage.S3.InsecureTLS {
