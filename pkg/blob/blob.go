@@ -257,15 +257,10 @@ func (b *Blob) Upload(ctx context.Context, filepath string, data []byte, content
 	}
 	defer closeBucket(ctx, bucket)
 
-	writerOptions := &blob.WriterOptions{
+	w, err := bucket.NewWriter(ctx, fileName, &blob.WriterOptions{
+		ContentType:                 contentType,
 		DisableContentTypeDetection: true,
-	}
-	if contentType != "" {
-		writerOptions.ContentType = contentType
-		writerOptions.DisableContentTypeDetection = false
-	}
-
-	w, err := bucket.NewWriter(ctx, fileName, writerOptions)
+	})
 	if err != nil {
 		return err
 	}
@@ -289,16 +284,11 @@ func (b *Blob) Debug(ctx context.Context, filepath string, data []byte, contentT
 
 	defer closeBucket(ctx, bucket)
 
-	writerOptions := &blob.WriterOptions{
-		DisableContentTypeDetection: true,
-	}
-	if contentType != "" {
-		writerOptions.ContentType = contentType
-		writerOptions.DisableContentTypeDetection = false
-	}
-
 	klog.Infof("Uploading data to backend...")
-	w, err := bucket.NewWriter(ctx, fileName, writerOptions)
+	w, err := bucket.NewWriter(ctx, fileName, &blob.WriterOptions{
+		ContentType:                 contentType,
+		DisableContentTypeDetection: true,
+	})
 	if err != nil {
 		return err
 	}
@@ -390,32 +380,10 @@ func checkIfObjectFile(obj *blob.ListObject) bool {
 }
 
 func (b *Blob) openBucket(ctx context.Context, dir string) (*blob.Bucket, error) {
-	var bucket *blob.Bucket
-	var err error
-	if b.backupStorage.Spec.Storage.Provider == storageapi.ProviderS3 {
-		sess, err := b.getS3Session()
-		if err != nil {
-			return nil, err
-		}
-		bucket, err = s3blob.OpenBucket(ctx, sess, b.backupStorage.Spec.Storage.S3.Bucket, nil)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		bucket, err = blob.OpenBucket(ctx, b.storageURL)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	suffix := strings.Trim(path.Join(b.prefix, dir), "/") + "/"
-	if suffix == string(os.PathSeparator) {
-		return bucket, nil
-	}
-	return blob.PrefixedBucket(bucket, suffix), nil
+	return b.openBucketWithDebug(ctx, dir, false)
 }
 
-func (b *Blob) openBucketWithDebug(ctx context.Context, dir string) (*blob.Bucket, error) {
+func (b *Blob) openBucketWithDebug(ctx context.Context, dir string, debug bool) (*blob.Bucket, error) {
 	var bucket *blob.Bucket
 	var err error
 	if b.backupStorage.Spec.Storage.Provider == storageapi.ProviderS3 {
@@ -423,8 +391,10 @@ func (b *Blob) openBucketWithDebug(ctx context.Context, dir string) (*blob.Bucke
 		if err != nil {
 			return nil, err
 		}
-		// Currently Only S3 has debugging support, because for the rest of providers we're using default blob.
-		sess.Config.WithLogLevel(aws.LogDebug)
+		if debug {
+			// Currently Only S3 has debugging support, because for the rest of providers we're using default blob.
+			sess.Config.WithLogLevel(aws.LogDebug)
+		}
 		bucket, err = s3blob.OpenBucket(ctx, sess, b.backupStorage.Spec.Storage.S3.Bucket, nil)
 		if err != nil {
 			return nil, err
