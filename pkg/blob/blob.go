@@ -22,12 +22,10 @@ import (
 	"crypto/x509"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"os"
 	"path"
 	"strings"
-	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -46,7 +44,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/klog/v2"
-	"k8s.io/utils/ptr"
 	"kubestash.dev/apimachinery/apis"
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -252,14 +249,18 @@ func (b *Blob) Get(ctx context.Context, filepath string) ([]byte, error) {
 	return io.ReadAll(r)
 }
 
-func (b *Blob) Upload(ctx context.Context, filepath string, data []byte) error {
+func (b *Blob) Upload(ctx context.Context, filepath string, data []byte, contentType string) error {
 	dir, fileName := path.Split(filepath)
 	bucket, err := b.openBucket(ctx, dir)
 	if err != nil {
 		return err
 	}
 	defer closeBucket(ctx, bucket)
-	w, err := bucket.NewWriter(ctx, fileName, &blob.WriterOptions{DisableContentTypeDetection: true})
+
+	w, err := bucket.NewWriter(ctx, fileName, &blob.WriterOptions{
+		ContentType:                 contentType,
+		DisableContentTypeDetection: true,
+	})
 	if err != nil {
 		return err
 	}
@@ -272,6 +273,36 @@ func (b *Blob) Upload(ctx context.Context, filepath string, data []byte) error {
 		return closeErr
 	}
 	return closeErr
+}
+
+func (b *Blob) Debug(ctx context.Context, filepath string, data []byte, contentType string) error {
+	dir, fileName := path.Split(filepath)
+	bucket, err := b.openBucketWithDebug(ctx, dir, true)
+	if err != nil {
+		return err
+	}
+
+	defer closeBucket(ctx, bucket)
+
+	klog.Infof("Uploading data to backend...")
+	w, err := bucket.NewWriter(ctx, fileName, &blob.WriterOptions{
+		ContentType:                 contentType,
+		DisableContentTypeDetection: true,
+	})
+	if err != nil {
+		return err
+	}
+	_, writeErr := w.Write(data)
+	closeErr := w.Close()
+	if writeErr != nil {
+		return writeErr
+	}
+	if closeErr != nil {
+		return closeErr
+	}
+
+	klog.Infof("Cleaning up data from backend...")
+	return bucket.Delete(ctx, fileName)
 }
 
 func (b *Blob) List(ctx context.Context, dir string) ([][]byte, error) {
@@ -349,12 +380,20 @@ func checkIfObjectFile(obj *blob.ListObject) bool {
 }
 
 func (b *Blob) openBucket(ctx context.Context, dir string) (*blob.Bucket, error) {
+	return b.openBucketWithDebug(ctx, dir, false)
+}
+
+func (b *Blob) openBucketWithDebug(ctx context.Context, dir string, debug bool) (*blob.Bucket, error) {
 	var bucket *blob.Bucket
 	var err error
 	if b.backupStorage.Spec.Storage.Provider == storageapi.ProviderS3 {
 		sess, err := b.getS3Session()
 		if err != nil {
 			return nil, err
+		}
+		if debug {
+			// Currently Only S3 has debugging support, because for the rest of providers we're using default blob.
+			sess.Config.WithLogLevel(aws.LogDebug)
 		}
 		bucket, err = s3blob.OpenBucket(ctx, sess, b.backupStorage.Spec.Storage.S3.Bucket, nil)
 		if err != nil {
@@ -383,38 +422,60 @@ func closeBucket(ctx context.Context, bucket *blob.Bucket) {
 }
 
 func (b *Blob) getS3Session() (*session.Session, error) {
-	config := &aws.Config{
-		Region:                        aws.String(b.backupStorage.Spec.Storage.S3.Region),
-		CredentialsChainVerboseErrors: aws.Bool(true),
-		Endpoint:                      &b.backupStorage.Spec.Storage.S3.Endpoint,
-		S3ForcePathStyle:              ptr.To(true),
-	}
+	var providers []credentials.Provider
+
+	// if static credential is provided, use that
 	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
-		if caCert, ok := b.s3Secret.Data[caCertData]; ok || b.backupStorage.Spec.Storage.S3.InsecureTLS {
-			if err := configureTLS(config, caCert, b.backupStorage.Spec.Storage.S3.InsecureTLS); err != nil {
-				return nil, err
-			}
+		id, ok := b.s3Secret.Data[awsAccessKeyId]
+		if !ok {
+			return nil, fmt.Errorf("storage secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsAccessKeyId)
 		}
-		if err := b.setS3CredentialsToConfig(config); err != nil {
-			return nil, err
+		key, ok := b.s3Secret.Data[awsSecretAccessKey]
+		if !ok {
+			return nil, fmt.Errorf("storage Secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsSecretAccessKey)
 		}
+		providers = []credentials.Provider{&credentials.StaticProvider{Value: credentials.Value{
+			AccessKeyID:     string(id),
+			SecretAccessKey: string(key),
+			SessionToken:    "",
+		}}}
 	} else {
-		sess := session.Must(session.NewSession())
-		config.WithCredentials(credentials.NewChainCredentials([]credentials.Provider{
+		providers = []credentials.Provider{
 			&credentials.EnvProvider{},
-			&credentials.SharedCredentialsProvider{},
+			&credentials.SharedCredentialsProvider{
+				Filename: "",
+				Profile:  "",
+			},
 			// Required for IRSA
 			stscreds.NewWebIdentityRoleProviderWithOptions(
-				sts.New(sess),
+				sts.New(session.Must(session.NewSession(aws.NewConfig().
+					WithRegion("us-east-1")))),
 				os.Getenv(awsRoleArn),
 				"",
 				stscreds.FetchTokenPath(os.Getenv(awsWebIdentityTokenFile)),
 			),
 			&ec2rolecreds.EC2RoleProvider{
-				Client: ec2metadata.New(sess),
+				Client: ec2metadata.New(session.Must(session.NewSession(aws.NewConfig().
+					WithRegion("us-east-1")))),
 			},
-		}))
+		}
 	}
+
+	config := aws.NewConfig().
+		WithRegion(b.backupStorage.Spec.Storage.S3.Region).
+		WithCredentialsChainVerboseErrors(true).
+		WithEndpoint(b.backupStorage.Spec.Storage.S3.Endpoint).
+		WithS3ForcePathStyle(true).
+		WithCredentials(credentials.NewChainCredentials(providers))
+
+	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
+		if caCert := b.s3Secret.Data[caCertData]; len(caCert) > 0 || b.backupStorage.Spec.Storage.S3.InsecureTLS {
+			if err := configureTLS(config, caCert, b.backupStorage.Spec.Storage.S3.InsecureTLS); err != nil {
+				return nil, err
+			}
+		}
+	}
+
 	return session.NewSession(config)
 }
 
@@ -422,53 +483,20 @@ func configureTLS(config *aws.Config, caCert []byte, insecureTLS bool) error {
 	tlsConfig := &tls.Config{
 		InsecureSkipVerify: insecureTLS,
 	}
-	if caCert != nil {
+	if len(caCert) > 0 {
 		caCertPool := x509.NewCertPool()
 		if ok := caCertPool.AppendCertsFromPEM(caCert); !ok {
 			return fmt.Errorf("failed to parse CA certificate")
 		}
 		tlsConfig.RootCAs = caCertPool
 	}
-	defaultHTTPTransport := defaultTransport()
-	defaultHTTPTransport.TLSClientConfig = tlsConfig
+	rt := http.DefaultTransport.(*http.Transport).Clone()
+	rt.TLSClientConfig = tlsConfig
 
 	config.HTTPClient = &http.Client{
-		Transport: defaultHTTPTransport,
+		Transport: rt,
 	}
 	return nil
-}
-
-func (b *Blob) setS3CredentialsToConfig(config *aws.Config) error {
-	var key, id string
-	if val, ok := b.s3Secret.Data[awsAccessKeyId]; ok {
-		id = string(val)
-	} else {
-		return fmt.Errorf("storage secret missing %s key", awsAccessKeyId)
-	}
-
-	if val, ok := b.s3Secret.Data[awsSecretAccessKey]; ok {
-		key = string(val)
-	} else {
-		return fmt.Errorf("storage Secret missing %s key", awsSecretAccessKey)
-	}
-	config.Credentials = credentials.NewStaticCredentials(id, key, "")
-	return nil
-}
-
-func defaultTransport() *http.Transport {
-	return &http.Transport{
-		Proxy: http.ProxyFromEnvironment,
-		DialContext: (&net.Dialer{
-			Timeout:   30 * time.Second,
-			KeepAlive: 30 * time.Second,
-		}).DialContext,
-		MaxIdleConns:          100,
-		MaxIdleConnsPerHost:   10,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-		ForceAttemptHTTP2:     true,
-	}
 }
 
 func (b *Blob) SetPathAsDir(ctx context.Context, path string) error {
