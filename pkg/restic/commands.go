@@ -178,12 +178,7 @@ func (w *ResticWrapper) backup(params backupParams) ([]byte, error) {
 	args = w.appendMaxConnectionsFlag(args)
 
 	command := Command{Name: ResticCMD, Args: args}
-	if w.config.Timeout != nil {
-		timeoutArgs := []interface{}{fmt.Sprintf("%f", w.config.Timeout.Seconds())}
-		timeoutArgs = append(timeoutArgs, ResticCMD)
-		timeoutArgs = append(timeoutArgs, args...)
-		command = Command{Name: TimeoutCMD, Args: timeoutArgs}
-	}
+	command = w.wrapWithTimeoutIfConfigured(command)
 
 	return w.run(command)
 }
@@ -210,12 +205,7 @@ func (w *ResticWrapper) backupFromStdin(options BackupOptions) ([]byte, error) {
 	args = w.appendMaxConnectionsFlag(args)
 
 	command := Command{Name: ResticCMD, Args: args}
-	if w.config.Timeout != nil {
-		timeoutArgs := []interface{}{fmt.Sprintf("%f", w.config.Timeout.Seconds())}
-		timeoutArgs = append(timeoutArgs, ResticCMD)
-		timeoutArgs = append(timeoutArgs, args...)
-		command = Command{Name: TimeoutCMD, Args: timeoutArgs}
-	}
+	command = w.wrapWithTimeoutIfConfigured(command)
 
 	commands = append(commands, command)
 	return w.run(commands...)
@@ -264,12 +254,7 @@ func (w *ResticWrapper) restore(params restoreParams) ([]byte, error) {
 	args = w.appendMaxConnectionsFlag(args)
 
 	command := Command{Name: ResticCMD, Args: args}
-	if w.config.Timeout != nil {
-		timeoutArgs := []interface{}{fmt.Sprintf("%f", w.config.Timeout.Seconds())}
-		timeoutArgs = append(timeoutArgs, ResticCMD)
-		timeoutArgs = append(timeoutArgs, args...)
-		command = Command{Name: TimeoutCMD, Args: timeoutArgs}
-	}
+	command = w.wrapWithTimeoutIfConfigured(command)
 
 	return w.run(command)
 }
@@ -303,12 +288,7 @@ func (w *ResticWrapper) DumpOnce(dumpOptions DumpOptions) ([]byte, error) {
 	args = w.appendInsecureTLSFlag(args)
 
 	command := Command{Name: ResticCMD, Args: args}
-	if w.config.Timeout != nil {
-		timeoutArgs := []interface{}{fmt.Sprintf("%f", w.config.Timeout.Seconds())}
-		timeoutArgs = append(timeoutArgs, ResticCMD)
-		timeoutArgs = append(timeoutArgs, args...)
-		command = Command{Name: TimeoutCMD, Args: timeoutArgs}
-	}
+	command = w.wrapWithTimeoutIfConfigured(command)
 
 	// first add restic command, then add StdoutPipeCommands
 	commands := []Command{command}
@@ -548,4 +528,13 @@ func (w *ResticWrapper) removeKey(params keyParams) ([]byte, error) {
 	args = w.appendInsecureTLSFlag(args)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
+}
+
+func (w *ResticWrapper) wrapWithTimeoutIfConfigured(cmd Command) Command {
+	if w.config.Timeout != nil {
+		timeoutArgs := []interface{}{fmt.Sprintf("%f", w.config.Timeout.Seconds()), cmd.Name}
+		timeoutArgs = append(timeoutArgs, cmd.Args...)
+		return Command{Name: TimeoutCMD, Args: timeoutArgs}
+	}
+	return cmd
 }
