@@ -106,6 +106,10 @@ type ManifestRestoreOptions struct {
 	// ZooKeeper specifies the options for selecting particular ZooKeeper components to restore in manifest restore
 	// +optional
 	ZooKeeper *KubeDBManifestOptions `json:"zooKeeper,omitempty"`
+
+	// Redis specifies the options for selecting particular Redis components to restore in manifest restore
+	// +optional
+	Redis *KubeDBManifestOptions `json:"redis,omitempty"`
 }
 
 type MSSQLServerManifestOptions struct {
