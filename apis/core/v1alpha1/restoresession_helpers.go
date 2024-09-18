@@ -183,12 +183,12 @@ func (rs *RestoreSession) GetDataSourceNamespace() string {
 }
 
 func (rs *RestoreSession) GetRemainingTimeoutDuration() (*metav1.Duration, error) {
-	if rs.Spec.Timeout == nil || rs.Status.Deadline == nil {
+	if rs.Spec.RestoreTimeout == nil || rs.Status.RestoreDeadline == nil {
 		return nil, nil
 	}
 	currentTime := metav1.Now()
-	if rs.Status.Deadline.Before(&currentTime) {
+	if rs.Status.RestoreDeadline.Before(&currentTime) {
 		return nil, fmt.Errorf("deadline exceeded")
 	}
-	return &metav1.Duration{Duration: rs.Status.Deadline.Sub(currentTime.Time)}, nil
+	return &metav1.Duration{Duration: rs.Status.RestoreDeadline.Sub(currentTime.Time)}, nil
 }

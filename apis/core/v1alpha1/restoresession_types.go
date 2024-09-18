@@ -64,10 +64,10 @@ type RestoreSessionSpec struct {
 	// +optional
 	Hooks *RestoreHooks `json:"hooks,omitempty"`
 
-	// Timeout specifies a duration that KubeStash should wait for the restore to be completed.
+	// RestoreTimeout specifies a duration that KubeStash should wait for the restore to be completed.
 	// If the restore tasks do not finish within this time period, KubeStash will consider this restore as a failure.
 	// +optional
-	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	RestoreTimeout *metav1.Duration `json:"restoreTimeout,omitempty"`
 
 	// ManifestOptions provide options to select particular manifest object to restore
 	// +optional
@@ -282,10 +282,10 @@ type RestoreSessionStatus struct {
 	// +optional
 	Duration string `json:"duration,omitempty"`
 
-	// Deadline specifies the deadline of restore. Restore will be
+	// RestoreDeadline specifies the deadline of restore. Restore will be
 	// considered Failed if it does not complete within this deadline
 	// +optional
-	Deadline *metav1.Time `json:"restoreDeadline,omitempty"`
+	RestoreDeadline *metav1.Time `json:"restoreDeadline,omitempty"`
 
 	// TotalComponents represents the number of total components for this RestoreSession
 	// +optional
