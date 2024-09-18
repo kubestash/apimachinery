@@ -64,10 +64,10 @@ type RestoreSessionSpec struct {
 	// +optional
 	Hooks *RestoreHooks `json:"hooks,omitempty"`
 
-	// Timeout specifies a duration that KubeStash should wait for the session execution to be completed.
-	// If the session execution does not finish within this time period, KubeStash will consider this session as a failure.
+	// RestoreTimeout specifies a duration that KubeStash should wait for the restore to be completed.
+	// If the restore tasks do not finish within this time period, KubeStash will consider this restore as a failure.
 	// +optional
-	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	RestoreTimeout *metav1.Duration `json:"restoreTimeout,omitempty"`
 
 	// ManifestOptions provide options to select particular manifest object to restore
 	// +optional
@@ -106,6 +106,10 @@ type ManifestRestoreOptions struct {
 	// ZooKeeper specifies the options for selecting particular ZooKeeper components to restore in manifest restore
 	// +optional
 	ZooKeeper *KubeDBManifestOptions `json:"zooKeeper,omitempty"`
+
+	// Redis specifies the options for selecting particular Redis components to restore in manifest restore
+	// +optional
+	Redis *KubeDBManifestOptions `json:"redis,omitempty"`
 }
 
 type MSSQLServerManifestOptions struct {
@@ -278,10 +282,10 @@ type RestoreSessionStatus struct {
 	// +optional
 	Duration string `json:"duration,omitempty"`
 
-	// Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline,
-	// it will be considered as failed.
+	// RestoreDeadline specifies the deadline of restore. Restore will be
+	// considered Failed if it does not complete within this deadline
 	// +optional
-	Deadline *metav1.Time `json:"deadline,omitempty"`
+	RestoreDeadline *metav1.Time `json:"restoreDeadline,omitempty"`
 
 	// TotalComponents represents the number of total components for this RestoreSession
 	// +optional

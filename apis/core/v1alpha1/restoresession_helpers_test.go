@@ -230,25 +230,6 @@ func TestRestoreSessionPhaseIsFailedIfRestoreExecutorEnsuredConditionIsFalse(t *
 	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
 }
 
-func TestRestoreSessionPhaseIsFailedIfDeadlineExceededConditionIsTrue(t *testing.T) {
-	rs := sampleRestoreSession(func(r *RestoreSession) {
-		r.Status.Conditions = append(r.Status.Conditions,
-			kmapi.Condition{
-				Type:   TypeDeadlineExceeded,
-				Status: metav1.ConditionTrue,
-				Reason: ReasonFailedToCompleteWithinDeadline,
-			},
-			kmapi.Condition{
-				Type:   TypeMetricsPushed,
-				Status: metav1.ConditionTrue,
-				Reason: ReasonSuccessfullyPushedMetrics,
-			},
-		)
-	})
-
-	assert.Equal(t, RestoreFailed, rs.CalculatePhase())
-}
-
 func TestRestoreSessionPhaseIsRunningIfPostRestoreHooksNotExecuted(test *testing.T) {
 	rs := sampleRestoreSession(func(r *RestoreSession) {
 		r.Status.Components = map[string]ComponentRestoreStatus{
