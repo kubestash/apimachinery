@@ -20,12 +20,12 @@ import (
 	"fmt"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	"kubestash.dev/apimachinery/apis"
-	"kubestash.dev/apimachinery/crds"
-
 	"kmodules.xyz/client-go/apiextensions"
 	cutil "kmodules.xyz/client-go/conditions"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kubestash.dev/apimachinery/apis"
+	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
+	"kubestash.dev/apimachinery/crds"
 )
 
 func (_ RestoreSession) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -191,4 +191,48 @@ func (rs *RestoreSession) GetRemainingTimeoutDuration() (*metav1.Duration, error
 		return nil, fmt.Errorf("deadline exceeded")
 	}
 	return &metav1.Duration{Duration: rs.Status.RestoreDeadline.Sub(currentTime.Time)}, nil
+}
+
+func (rs *RestoreSession) GetTargetObjectRef(snap *v1alpha1.Snapshot) *kmapi.ObjectReference {
+	if rs.Spec.Target != nil {
+		return &kmapi.ObjectReference{
+			Namespace: rs.Spec.Target.Namespace,
+			Name:      rs.Spec.Target.Name,
+		}
+	}
+
+	var ref kmapi.ObjectReference
+	if rs.Spec.ManifestOptions != nil {
+		ref.Namespace = rs.Spec.ManifestOptions.RestoreNamespace
+		ref.Name = rs.getTargetName(snap)
+	}
+	if ref.Namespace == "" {
+		ref.Namespace = snap.Spec.AppRef.Namespace
+	}
+
+	return &ref
+}
+
+func (rs *RestoreSession) getTargetName(snap *v1alpha1.Snapshot) string {
+	opt, name := rs.Spec.ManifestOptions, snap.Spec.AppRef.Name
+	switch {
+	case opt.MySQL != nil:
+		name = opt.MySQL.DBName
+	case opt.Postgres != nil:
+		name = opt.Postgres.DBName
+	case opt.MongoDB != nil:
+		name = opt.MongoDB.DBName
+	case opt.MariaDB != nil:
+		name = opt.MariaDB.DBName
+	case opt.Redis != nil:
+		name = opt.Redis.DBName
+	case opt.MSSQLServer != nil:
+		name = opt.MSSQLServer.DBName
+	case opt.Druid != nil:
+		name = opt.Druid.DBName
+	case opt.ZooKeeper != nil:
+		name = opt.ZooKeeper.DBName
+	}
+
+	return name
 }
