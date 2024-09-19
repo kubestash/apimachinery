@@ -285,6 +285,9 @@ const (
 	TypeRecentSnapshotListUpdated               = "RecentSnapshotListUpdated"
 	ReasonFailedToUpdateRecentSnapshotList      = "FailedToUpdateRecentSnapshotList"
 	ReasonSuccessfullyUpdatedRecentSnapshotList = "SuccessfullyUpdatedRecentSnapshotList"
+
+	TypeBackupDisrupted                   = "BackupDisrupted"
+	ReasonFailedToCompleteDueToDisruption = "FailedToCompleteDueToDisruption"
 )
 
 //+kubebuilder:object:root=true

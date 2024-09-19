@@ -231,6 +231,10 @@ const (
 	TypeSnapshotsEnsured               = "SnapshotsEnsured"
 	ReasonSuccessfullyEnsuredSnapshots = "SuccessfullyEnsuredSnapshots"
 	ReasonFailedToEnsureSnapshots      = "FailedToEnsureSnapshots"
+
+	// TypeRetentionPolicyDisrupted indicates whether RetentionPolicy disrupted or not
+	TypeRetentionPolicyDisrupted                         = "RetentionPolicyDisrupted"
+	ReasonFailedToCompleteRetentionPolicyDueToDisruption = "FailedToCompleteRetentionPolicyDueToDisruption"
 )
 
 //+kubebuilder:object:root=true

@@ -370,6 +370,9 @@ const (
 
 	TypeRestoreTargetFound                = "RestoreTargetFound"
 	ReasonUnableToCheckTargetAvailability = "UnableToCheckTargetAvailability"
+
+	TypeRestoreDisrupted                  = "RestoreDisrupted"
+	ReasonFailedToCompleteDueToDisruption = "FailedToCompleteDueToDisruption"
 )
 
 //+kubebuilder:object:root=true
