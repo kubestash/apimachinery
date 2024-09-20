@@ -203,41 +203,59 @@ func (rs *RestoreSession) GetTargetObjectRef(snap *v1alpha1.Snapshot) *kmapi.Obj
 
 	var ref kmapi.ObjectReference
 	if rs.Spec.ManifestOptions != nil {
-		ref.Namespace = rs.Spec.ManifestOptions.RestoreNamespace
-		ref.Name = rs.getTargetName(snap)
+		opt := rs.Spec.ManifestOptions
+		switch {
+		case opt.MySQL != nil:
+			ref = kmapi.ObjectReference{
+				Namespace: opt.MySQL.RestoreNamespace,
+				Name:      opt.MySQL.DBName,
+			}
+		case opt.Postgres != nil:
+			ref = kmapi.ObjectReference{
+				Namespace: opt.Postgres.RestoreNamespace,
+				Name:      opt.Postgres.DBName,
+			}
+		case opt.MongoDB != nil:
+			ref = kmapi.ObjectReference{
+				Namespace: opt.MongoDB.RestoreNamespace,
+				Name:      opt.MongoDB.DBName,
+			}
+		case opt.MariaDB != nil:
+			ref = kmapi.ObjectReference{
+				Namespace: opt.MariaDB.RestoreNamespace,
+				Name:      opt.MariaDB.DBName,
+			}
+		case opt.Redis != nil:
+			ref = kmapi.ObjectReference{
+				Namespace: opt.Redis.RestoreNamespace,
+				Name:      opt.Redis.DBName,
+			}
+		case opt.MSSQLServer != nil:
+			ref = kmapi.ObjectReference{
+				Namespace: opt.MSSQLServer.RestoreNamespace,
+				Name:      opt.MSSQLServer.DBName,
+			}
+		case opt.Druid != nil:
+			ref = kmapi.ObjectReference{
+				Namespace: opt.Druid.RestoreNamespace,
+				Name:      opt.Druid.DBName,
+			}
+		case opt.ZooKeeper != nil:
+			ref = kmapi.ObjectReference{
+				Namespace: opt.ZooKeeper.RestoreNamespace,
+				Name:      opt.ZooKeeper.DBName,
+			}
+		}
+	}
+
+	if ref.Name == "" {
+		ref.Name = snap.Spec.AppRef.Name
 	}
 	if ref.Namespace == "" {
 		ref.Namespace = snap.Spec.AppRef.Namespace
 	}
 
 	return &ref
-}
-
-func (rs *RestoreSession) getTargetName(snap *v1alpha1.Snapshot) string {
-	var name string
-	opt := rs.Spec.ManifestOptions
-	switch {
-	case opt.MySQL != nil:
-		name = opt.MySQL.DBName
-	case opt.Postgres != nil:
-		name = opt.Postgres.DBName
-	case opt.MongoDB != nil:
-		name = opt.MongoDB.DBName
-	case opt.MariaDB != nil:
-		name = opt.MariaDB.DBName
-	case opt.Redis != nil:
-		name = opt.Redis.DBName
-	case opt.MSSQLServer != nil:
-		name = opt.MSSQLServer.DBName
-	case opt.Druid != nil:
-		name = opt.Druid.DBName
-	case opt.ZooKeeper != nil:
-		name = opt.ZooKeeper.DBName
-	}
-	if name == "" {
-		name = snap.Spec.AppRef.Name
-	}
-	return name
 }
 
 func (rs *RestoreSession) IsApplicationLevelRestore() bool {
