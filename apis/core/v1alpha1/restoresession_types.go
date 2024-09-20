@@ -75,6 +75,10 @@ type RestoreSessionSpec struct {
 }
 
 type ManifestRestoreOptions struct {
+	// Workload specifies the options for Workload components to restore in manifest restore
+	// +optional
+	Workload *WorkloadManifestOptions `json:"workload,omitempty"`
+
 	// MongoDB specifies the options for selecting particular MongoDB components to restore in manifest restore
 	// +optional
 	MongoDB *KubeDBManifestOptions `json:"mongoDB,omitempty"`
@@ -108,9 +112,15 @@ type ManifestRestoreOptions struct {
 	Redis *KubeDBManifestOptions `json:"redis,omitempty"`
 }
 
+type WorkloadManifestOptions struct {
+	// RestoreNamespace specifies the Namespace where the restored files will be applied
+	// +optional
+	RestoreNamespace string `json:"restoreNamespace,omitempty"`
+}
+
 type MSSQLServerManifestOptions struct {
 	// RestoreNamespace specifies the Namespace where the restored files will be applied
-	//+optional
+	// +optional
 	RestoreNamespace string `json:"restoreNamespace,omitempty"`
 
 	// DB specifies whether to restore the DB manifest or not
@@ -142,7 +152,7 @@ type MSSQLServerManifestOptions struct {
 
 type DruidManifestOptions struct {
 	// RestoreNamespace specifies the Namespace where the restored files will be applied
-	//+optional
+	// +optional
 	RestoreNamespace string `json:"restoreNamespace,omitempty"`
 
 	// DB specifies whether to restore the DB manifest or not
@@ -180,7 +190,7 @@ type DruidManifestOptions struct {
 
 type KubeDBManifestOptions struct {
 	// RestoreNamespace specifies the Namespace where the restored files will be applied
-	//+optional
+	// +optional
 	RestoreNamespace string `json:"restoreNamespace,omitempty"`
 
 	// DB specifies whether to restore the DB manifest or not

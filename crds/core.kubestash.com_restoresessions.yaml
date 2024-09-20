@@ -24464,6 +24464,15 @@ spec:
                         type: object
                         x-kubernetes-map-type: atomic
                     type: object
+                  workload:
+                    description: Workload specifies the options for Workload components
+                      to restore in manifest restore
+                    properties:
+                      restoreNamespace:
+                        description: RestoreNamespace specifies the Namespace where
+                          the restored files will be applied
+                        type: string
+                    type: object
                   zooKeeper:
                     description: ZooKeeper specifies the options for selecting particular
                       ZooKeeper components to restore in manifest restore
