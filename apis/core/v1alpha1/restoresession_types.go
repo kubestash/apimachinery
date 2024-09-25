@@ -107,6 +107,10 @@ type ManifestRestoreOptions struct {
 	// +optional
 	ZooKeeper *KubeDBManifestOptions `json:"zooKeeper,omitempty"`
 
+	// Singlestore specifies the options for selecting particular Singlestore components to restore in manifest restore
+	// +optional
+	Singlestore *KubeDBManifestOptions `json:"singlestore,omitempty"`
+
 	// Redis specifies the options for selecting particular Redis components to restore in manifest restore
 	// +optional
 	Redis *KubeDBManifestOptions `json:"redis,omitempty"`
