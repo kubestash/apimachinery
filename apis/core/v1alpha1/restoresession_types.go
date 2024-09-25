@@ -113,7 +113,53 @@ type ManifestRestoreOptions struct {
 
 	// Redis specifies the options for selecting particular Redis components to restore in manifest restore
 	// +optional
-	Redis *KubeDBManifestOptions `json:"redis,omitempty"`
+	Redis *RedisManifestOptions `json:"redis,omitempty"`
+}
+
+type RedisManifestOptions struct {
+	// RestoreNamespace specifies the Namespace where the restored files will be applied
+	// +optional
+	RestoreNamespace string `json:"restoreNamespace,omitempty"`
+
+	// DB specifies whether to restore the DB manifest or not
+	// +kubebuilder:default=true
+	// +optional
+	DB bool `json:"db,omitempty"`
+
+	// DBName specifies the new name of the DB yaml after restore
+	// +optional
+	DBName string `json:"dbName,omitempty"`
+
+	// AuthSecret specifies whether to restore the AuthSecret manifest or not
+	// +kubebuilder:default=true
+	// +optional
+	AuthSecret bool `json:"authSecret,omitempty"`
+
+	// AuthSecretName specifies new name of the AuthSecret yaml after restore
+	// +optional
+	AuthSecretName string `json:"authSecretName,omitempty"`
+
+	// ConfigSecret specifies whether to restore the ConfigSecret manifest or not
+	// +kubebuilder:default=true
+	// +optional
+	ConfigSecret bool `json:"configSecret,omitempty"`
+
+	// ConfigSecretName specifies new name of the ConfigSecret yaml after restore
+	// +optional
+	ConfigSecretName string `json:"configSecretName,omitempty"`
+
+	// SentinelRef specifies the reference of the RedisSentinel used for monitoring
+	// +optional
+	SentinelRef *kmapi.ObjectReference `json:"sentinelRef,omitempty"`
+
+	// InitScript specifies whether to restore the InitScript manifest or not
+	// +kubebuilder:default=true
+	// +optional
+	InitScript bool `json:"initScript,omitempty"`
+
+	// TLSIssuerRef specifies the name of the IssuerRef used for TLS configurations for both client and server
+	// +optional
+	TLSIssuerRef *core.TypedLocalObjectReference `json:"tlsIssuerRef,omitempty"`
 }
 
 type WorkloadManifestOptions struct {
