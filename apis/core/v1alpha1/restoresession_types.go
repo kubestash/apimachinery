@@ -375,8 +375,8 @@ const (
 	TypeRestoreTargetFound                = "RestoreTargetFound"
 	ReasonUnableToCheckTargetAvailability = "UnableToCheckTargetAvailability"
 
-	TypeRestoreDisrupted                  = "RestoreDisrupted"
-	ReasonFailedToCompleteDueToDisruption = "FailedToCompleteDueToDisruption"
+	TypeRestoreIncomplete                           = "RestoreIncomplete"
+	ReasonRestoreExecutorTerminatedBeforeCompletion = "RestoreExecutorTerminatedBeforeCompletion"
 )
 
 //+kubebuilder:object:root=true

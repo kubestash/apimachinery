@@ -232,9 +232,9 @@ const (
 	ReasonSuccessfullyEnsuredSnapshots = "SuccessfullyEnsuredSnapshots"
 	ReasonFailedToEnsureSnapshots      = "FailedToEnsureSnapshots"
 
-	// TypeRetentionPolicyDisrupted indicates whether RetentionPolicy disrupted or not
-	TypeRetentionPolicyDisrupted                         = "RetentionPolicyDisrupted"
-	ReasonFailedToCompleteRetentionPolicyDueToDisruption = "FailedToCompleteRetentionPolicyDueToDisruption"
+	// TypeSnapshotCleanupIncomplete indicates whether Snapshot cleanup incomplete or not
+	TypeSnapshotCleanupIncomplete                   = "SnapshotCleanupIncomplete"
+	ReasonSnapshotCleanupTerminatedBeforeCompletion = "SnapshotCleanupTerminatedBeforeCompletion"
 )
 
 //+kubebuilder:object:root=true

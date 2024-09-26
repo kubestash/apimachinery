@@ -1119,6 +1119,11 @@ func (in *ManifestRestoreOptions) DeepCopyInto(out *ManifestRestoreOptions) {
 		*out = new(KubeDBManifestOptions)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Singlestore != nil {
+		in, out := &in.Singlestore, &out.Singlestore
+		*out = new(KubeDBManifestOptions)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Redis != nil {
 		in, out := &in.Redis, &out.Redis
 		*out = new(KubeDBManifestOptions)

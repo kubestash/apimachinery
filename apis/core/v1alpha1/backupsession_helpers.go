@@ -65,7 +65,7 @@ func (b *BackupSession) CalculatePhase() BackupSessionPhase {
 			b.failedToApplyRetentionPolicy() ||
 			b.verificationsFailed() ||
 			b.sessionHistoryCleanupFailed() ||
-			b.retentionPolicyDisrupted()) {
+			b.snapshotCleanupIncomplete()) {
 		return BackupSessionFailed
 	}
 
@@ -77,8 +77,8 @@ func (b *BackupSession) CalculatePhase() BackupSessionPhase {
 	return BackupSessionRunning
 }
 
-func (b *BackupSession) retentionPolicyDisrupted() bool {
-	return cutil.IsConditionTrue(b.Status.Conditions, TypeRetentionPolicyDisrupted)
+func (b *BackupSession) snapshotCleanupIncomplete() bool {
+	return cutil.IsConditionTrue(b.Status.Conditions, TypeSnapshotCleanupIncomplete)
 }
 
 func (b *BackupSession) sessionHistoryCleanupFailed() bool {
