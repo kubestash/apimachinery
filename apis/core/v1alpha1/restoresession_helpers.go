@@ -224,9 +224,9 @@ func (rs *RestoreSession) getTargetRef(appRef kmapi.TypedObjectReference) *kmapi
 		return targetRef
 	}
 
-	overrideTargetRef := func(dbName, namespace string) {
-		if dbName != "" {
-			targetRef.Name = dbName
+	overrideTargetRef := func(name, namespace string) {
+		if name != "" {
+			targetRef.Name = name
 		}
 		if namespace != "" {
 			targetRef.Namespace = namespace
@@ -234,6 +234,11 @@ func (rs *RestoreSession) getTargetRef(appRef kmapi.TypedObjectReference) *kmapi
 	}
 
 	opt := rs.Spec.ManifestOptions
+
+	if opt.Workload != nil {
+		overrideTargetRef("", opt.Workload.RestoreNamespace)
+	}
+
 	switch appRef.Kind {
 	case apis.KindMySQL:
 		if opt.MySQL != nil {
