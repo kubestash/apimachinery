@@ -202,7 +202,12 @@ func (rs *RestoreSession) GetTargetObjectRef(snap *v1alpha1.Snapshot) *kmapi.Obj
 		}
 	}
 
-	return rs.getTargetRef(snap.Spec.AppRef)
+	appRef := kmapi.TypedObjectReference{}
+	if snap != nil {
+		appRef = snap.Spec.AppRef
+	}
+
+	return rs.getTargetRef(appRef)
 }
 
 func (rs *RestoreSession) IsApplicationLevelRestore() bool {
