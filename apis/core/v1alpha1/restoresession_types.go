@@ -124,7 +124,7 @@ type RedisManifestOptions struct {
 	// DB specifies whether to restore the DB manifest or not
 	// +kubebuilder:default=true
 	// +optional
-	DB bool `json:"db,omitempty"`
+	DB *bool `json:"db,omitempty"`
 
 	// DBName specifies the new name of the DB yaml after restore
 	// +optional
@@ -133,7 +133,7 @@ type RedisManifestOptions struct {
 	// AuthSecret specifies whether to restore the AuthSecret manifest or not
 	// +kubebuilder:default=true
 	// +optional
-	AuthSecret bool `json:"authSecret,omitempty"`
+	AuthSecret *bool `json:"authSecret,omitempty"`
 
 	// AuthSecretName specifies new name of the AuthSecret yaml after restore
 	// +optional
