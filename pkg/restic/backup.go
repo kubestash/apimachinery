@@ -38,6 +38,8 @@ func (w *ResticWrapper) RunBackup(backupOption BackupOptions) (*BackupOutput, er
 	} else {
 		hostStats.Phase = HostBackupSucceeded
 		hostStats.Duration = time.Since(startTime).String()
+		hostStats.StartTime = startTime.String()
+		hostStats.EndTime = time.Now().String()
 	}
 
 	return &BackupOutput{
