@@ -113,10 +113,14 @@ type ManifestRestoreOptions struct {
 
 	// Redis specifies the options for selecting particular Redis components to restore in manifest restore
 	// +optional
-	Redis *RedisManifestOptions `json:"redis,omitempty"`
+	Redis *KubeDBManifestOptions `json:"redis,omitempty"`
+
+	// RedisSentinel specifies the options for selecting particular RedisSentinel components to restore in manifest restore
+	// +optional
+	RedisSentinel *RedisSentinelManifestOptions `json:"redisSentinel,omitempty"`
 }
 
-type RedisManifestOptions struct {
+type RedisSentinelManifestOptions struct {
 	// RestoreNamespace specifies the Namespace where the restored files will be applied
 	// +optional
 	RestoreNamespace string `json:"restoreNamespace,omitempty"`
@@ -139,23 +143,10 @@ type RedisManifestOptions struct {
 	// +optional
 	AuthSecretName string `json:"authSecretName,omitempty"`
 
-	// ConfigSecret specifies whether to restore the ConfigSecret manifest or not
-	// +kubebuilder:default=true
-	// +optional
-	ConfigSecret bool `json:"configSecret,omitempty"`
-
-	// ConfigSecretName specifies new name of the ConfigSecret yaml after restore
-	// +optional
-	ConfigSecretName string `json:"configSecretName,omitempty"`
-
-	// SentinelRef specifies the reference of the RedisSentinel used for monitoring
-	// +optional
-	SentinelRef *kmapi.ObjectReference `json:"sentinelRef,omitempty"`
-
 	// InitScript specifies whether to restore the InitScript manifest or not
 	// +kubebuilder:default=true
 	// +optional
-	InitScript bool `json:"initScript,omitempty"`
+	InitScript *bool `json:"initScript,omitempty"`
 
 	// TLSIssuerRef specifies the name of the IssuerRef used for TLS configurations for both client and server
 	// +optional
