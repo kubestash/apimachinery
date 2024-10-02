@@ -140,6 +140,7 @@ const (
 	ComponentManifest       = "manifest"
 	ComponentVolumeSnapshot = "volumesnapshot"
 	ComponentDashboard      = "dashboard"
+	ComponentPhysical       = "physical"
 )
 
 const (

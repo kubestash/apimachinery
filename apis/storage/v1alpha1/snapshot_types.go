@@ -232,6 +232,14 @@ type ResticStats struct {
 	// Size represents the restic snapshot size
 	// +optional
 	Size string `json:"size,omitempty"`
+
+	// StartTime represents the timestamp at which the restic command was triggered
+	// +optional
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+
+	// EndTime represents the timestamp at which the restic command successfully executed
+	// +optional
+	EndTime *metav1.Time `json:"endTime,omitempty"`
 }
 
 // VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
