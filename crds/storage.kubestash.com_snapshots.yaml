@@ -171,6 +171,11 @@ spec:
                         description: ResticStats specifies the "Restic" driver specific
                           information
                         properties:
+                          endTime:
+                            description: EndTime represents the timestamp at which
+                              the restic command successfully executed
+                            format: date-time
+                            type: string
                           hostPath:
                             description: HostPath represents the backup path for which
                               restic snapshot is taken.
@@ -180,6 +185,11 @@ spec:
                             type: string
                           size:
                             description: Size represents the restic snapshot size
+                            type: string
+                          startTime:
+                            description: StartTime represents the timestamp at which
+                              the restic command was triggered
+                            format: date-time
                             type: string
                           uploaded:
                             description: Uploaded specifies the amount of data that

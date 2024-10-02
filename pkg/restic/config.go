@@ -19,14 +19,11 @@ package restic
 import (
 	"fmt"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"os"
 	"path/filepath"
 	"sort"
 
 	shell "gomodules.xyz/go-sh"
-	core "k8s.io/api/core/v1"
-	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -39,7 +36,7 @@ const (
 
 type ResticWrapper struct {
 	sh     *shell.Session
-	config SetupOptions
+	Config SetupOptions
 }
 
 type Command struct {
@@ -79,31 +76,15 @@ type DumpOptions struct {
 	StdoutPipeCommands []Command
 }
 
-type backend struct {
-	provider       v1alpha1.StorageProvider
-	bucket         string
-	endpoint       string
-	region         string
-	insecureTLS    bool
-	path           string
-	storageAccount string
-}
-
 type SetupOptions struct {
-	backend
-	storageSecret    *core.Secret
-	MaxConnections   int64
-	EncryptionSecret *kmapi.ObjectReference
-	Directory        string
-	Client           client.Client
-	BackupStorage    *kmapi.ObjectReference
-	CacertFile       string
-	ScratchDir       string
-	MountPath        string
-	EnableCache      bool
-	Nice             *ofst.NiceSettings
-	IONice           *ofst.IONiceSettings
-	Timeout          *metav1.Duration
+	Client      client.Client
+	Nice        *ofst.NiceSettings
+	IONice      *ofst.IONiceSettings
+	Timeout     *metav1.Duration
+	ScratchDir  string
+	EnableCache bool
+
+	Backends []*Backend
 }
 
 type KeyOptions struct {
@@ -116,7 +97,7 @@ type KeyOptions struct {
 func NewResticWrapper(options SetupOptions) (*ResticWrapper, error) {
 	wrapper := &ResticWrapper{
 		sh:     shell.NewSession(),
-		config: options,
+		Config: options,
 	}
 
 	err := wrapper.configure()
@@ -129,7 +110,7 @@ func NewResticWrapper(options SetupOptions) (*ResticWrapper, error) {
 func NewResticWrapperFromShell(options SetupOptions, sh *shell.Session) (*ResticWrapper, error) {
 	wrapper := &ResticWrapper{
 		sh:     sh,
-		config: options,
+		Config: options,
 	}
 	err := wrapper.configure()
 	if err != nil {
@@ -139,7 +120,7 @@ func NewResticWrapperFromShell(options SetupOptions, sh *shell.Session) (*Restic
 }
 
 func (w *ResticWrapper) configure() error {
-	w.sh.SetDir(w.config.ScratchDir)
+	w.sh.SetDir(w.Config.ScratchDir)
 	w.sh.ShowCMD = true
 	w.sh.PipeFail = true
 	w.sh.PipeStdErrors = true
@@ -159,10 +140,6 @@ func (w *ResticWrapper) GetEnv(key string) string {
 		return w.sh.Env[key]
 	}
 	return ""
-}
-
-func (w *ResticWrapper) GetCaPath() string {
-	return w.config.CacertFile
 }
 
 func (w *ResticWrapper) DumpEnv(path string, dumpedFile string) error {
@@ -224,13 +201,6 @@ func (w *ResticWrapper) Copy() *ResticWrapper {
 		out.sh.PipeStdErrors = w.sh.PipeStdErrors
 
 	}
-	out.config = w.config
+	out.Config = w.Config
 	return out
-}
-
-func (w *ResticWrapper) appendInsecureTLSFlag(args []interface{}) []interface{} {
-	if w.config.insecureTLS {
-		return append(args, "--insecure-tls")
-	}
-	return args
 }

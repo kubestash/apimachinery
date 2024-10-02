@@ -24,14 +24,12 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 	"time"
 
-	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
-
 	"github.com/armon/circbuf"
 	"k8s.io/klog/v2"
-	storage "kmodules.xyz/objectstore-api/api/v1"
 )
 
 const (
@@ -76,12 +74,12 @@ type keyParams struct {
 	file string
 }
 
-func (w *ResticWrapper) listSnapshots(snapshotIDs []string) ([]Snapshot, error) {
+func (w *ResticWrapper) listSnapshots(SBackend *Backend, snapshotIDs []string) ([]Snapshot, error) {
 	result := make([]Snapshot, 0)
 	args := w.appendCacheDirFlag([]interface{}{"snapshots", "--json", "--quiet", "--no-lock"})
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
+	args = SBackend.appendCaCertFlag(args)
+	args = SBackend.appendInsecureTLSFlag(args)
+	args = SBackend.appendMaxConnectionsFlag(args)
 	for _, id := range snapshotIDs {
 		args = append(args, id)
 	}
@@ -93,94 +91,103 @@ func (w *ResticWrapper) listSnapshots(snapshotIDs []string) ([]Snapshot, error) 
 	return result, err
 }
 
-func (w *ResticWrapper) tryDeleteSnapshots(snapshotIDs []string) ([]byte, error) {
+func (w *ResticWrapper) tryDeleteSnapshots(sBackend *Backend, snapshotIDs []string) ([]byte, error) {
 	args := w.appendCacheDirFlag([]interface{}{"forget", "--quiet", "--prune"})
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
+	args = sBackend.appendCaCertFlag(args)
+	args = sBackend.appendInsecureTLSFlag(args)
+	args = sBackend.appendMaxConnectionsFlag(args)
 	for _, id := range snapshotIDs {
 		args = append(args, id)
 	}
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) deleteSnapshots(snapshotIDs []string) ([]byte, error) {
-	out, err := w.tryDeleteSnapshots(snapshotIDs)
+func (w *ResticWrapper) deleteSnapshots(sBackend *Backend, snapshotIDs []string) ([]byte, error) {
+	out, err := w.tryDeleteSnapshots(sBackend, snapshotIDs)
 	if err == nil || !strings.Contains(err.Error(), "unlock") {
 		return out, err
 	}
 	// repo is locked, so unlock first
 	klog.Warningln("repo found locked, so unlocking before pruning, err:", err.Error())
-	if out, err = w.unlock(); err != nil {
+	if out, err = w.unlock(sBackend); err != nil {
 		return out, err
 	}
-	return w.tryDeleteSnapshots(snapshotIDs)
+	return w.tryDeleteSnapshots(sBackend, snapshotIDs)
 }
 
-func (w *ResticWrapper) repositoryExist() bool {
+func (w *ResticWrapper) repositoryExist(sBackend *Backend) bool {
 	klog.Infoln("Checking whether the backend repository exist or not....")
 	args := w.appendCacheDirFlag([]interface{}{"snapshots", "--json", "--no-lock"})
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
+	args = sBackend.appendCaCertFlag(args)
+	args = sBackend.appendInsecureTLSFlag(args)
+	args = sBackend.appendMaxConnectionsFlag(args)
+	args = append(args, sBackend.envs)
 	if _, err := w.run(Command{Name: ResticCMD, Args: args}); err == nil {
 		return true
 	}
 	return false
 }
 
-func (w *ResticWrapper) initRepository() error {
-	klog.Infoln("Initializing new restic repository in the backend....")
-	if err := w.createLocalDir(); err != nil {
+func (w *ResticWrapper) getMatchedBackend(repository string) *Backend {
+	for _, b := range w.Config.Backends {
+		if b.Repository == repository {
+			return b
+		}
+	}
+	return new(Backend)
+}
+
+func (w *ResticWrapper) initRepository(repository string) error {
+	b := w.getMatchedBackend(repository)
+	klog.Infoln("Initializing new restic repository for repository:", repository)
+	if err := b.createLocalDir(); err != nil {
 		return err
 	}
-
 	args := w.appendCacheDirFlag([]interface{}{"init"})
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
+	args = b.appendMaxConnectionsFlag(args)
+	args = append(args, b.envs)
 	_, err := w.run(Command{Name: ResticCMD, Args: args})
 	return err
 }
 
-func (w *ResticWrapper) createLocalDir() error {
-	if w.config.provider == v1alpha1.ProviderLocal {
-		return os.MkdirAll(w.config.bucket, 0o755)
-	}
-	return nil
-}
-
 func (w *ResticWrapper) backup(params backupParams) ([]byte, error) {
 	klog.Infoln("Backing up target data")
-	args := []interface{}{"backup", params.path, "--quiet", "--json"}
+	var commands []Command
+	commonArgs := []interface{}{"backup", params.path, "--quiet", "--json"}
 	if params.host != "" {
-		args = append(args, "--host")
-		args = append(args, params.host)
+		commonArgs = append(commonArgs, "--host")
+		commonArgs = append(commonArgs, params.host)
 	}
 	// add tags if any
 	for _, tag := range params.tags {
-		args = append(args, "--tag")
-		args = append(args, tag)
+		commonArgs = append(commonArgs, "--tag")
+		commonArgs = append(commonArgs, tag)
 	}
 	// add exclude patterns if there is any
 	for _, exclude := range params.excludes {
-		args = append(args, "--exclude")
-		args = append(args, exclude)
+		commonArgs = append(commonArgs, "--exclude")
+		commonArgs = append(commonArgs, exclude)
 	}
 	// add additional arguments passed by user to the backup process
 	for i := range params.args {
-		args = append(args, params.args[i])
+		commonArgs = append(commonArgs, params.args[i])
 	}
-	args = w.appendCacheDirFlag(args)
-	args = w.appendCleanupCacheFlag(args)
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
+	commonArgs = w.appendCacheDirFlag(commonArgs)
+	commonArgs = w.appendCleanupCacheFlag(commonArgs)
 
-	command := Command{Name: ResticCMD, Args: args}
-	command = w.wrapWithTimeoutIfConfigured(command)
-
-	return w.run(command)
+	for _, sBackend := range w.Config.Backends {
+		args := commonArgs
+		args = sBackend.appendCaCertFlag(args)
+		args = sBackend.appendInsecureTLSFlag(args)
+		args = sBackend.appendMaxConnectionsFlag(args)
+		args = append(args, sBackend.envs)
+		command := Command{Name: ResticCMD, Args: args}
+		command = w.wrapWithTimeoutIfConfigured(command)
+		commands = append(commands, command)
+	}
+	return w.run(commands...)
 }
 
 func (w *ResticWrapper) backupFromStdin(options BackupOptions) ([]byte, error) {
@@ -189,29 +196,26 @@ func (w *ResticWrapper) backupFromStdin(options BackupOptions) ([]byte, error) {
 	// first add StdinPipeCommands, then add restic command
 	commands := options.StdinPipeCommands
 
-	args := []interface{}{"backup", "--stdin", "--quiet", "--json"}
-	if options.StdinFileName != "" {
-		args = append(args, "--stdin-filename")
-		args = append(args, options.StdinFileName)
-	}
-	if options.Host != "" {
-		args = append(args, "--host")
-		args = append(args, options.Host)
-	}
-	args = w.appendCacheDirFlag(args)
-	args = w.appendCleanupCacheFlag(args)
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
+	commonArgs := []interface{}{"backup", "--stdin", "--quiet", "--json"}
+	commonArgs = options.appendHost(commonArgs)
+	commonArgs = options.appendStdinFileName(commonArgs)
+	commonArgs = w.appendCacheDirFlag(commonArgs)
+	commonArgs = w.appendCleanupCacheFlag(commonArgs)
 
-	command := Command{Name: ResticCMD, Args: args}
-	command = w.wrapWithTimeoutIfConfigured(command)
-
-	commands = append(commands, command)
+	for _, backend := range w.Config.Backends {
+		args := commonArgs
+		args = backend.appendCaCertFlag(args)
+		args = backend.appendInsecureTLSFlag(args)
+		args = backend.appendMaxConnectionsFlag(args)
+		args = append(args, backend.envs)
+		command := Command{Name: ResticCMD, Args: args}
+		command = w.wrapWithTimeoutIfConfigured(command)
+		commands = append(commands, command)
+	}
 	return w.run(commands...)
 }
 
-func (w *ResticWrapper) restore(params restoreParams) ([]byte, error) {
+func (w *ResticWrapper) restore(sBackend *Backend, params restoreParams) ([]byte, error) {
 	klog.Infoln("Restoring backed up data")
 
 	args := []interface{}{"restore"}
@@ -249,17 +253,17 @@ func (w *ResticWrapper) restore(params restoreParams) ([]byte, error) {
 		args = append(args, params.args[i])
 	}
 	args = w.appendCacheDirFlag(args)
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
-
+	args = sBackend.appendCaCertFlag(args)
+	args = sBackend.appendInsecureTLSFlag(args)
+	args = sBackend.appendMaxConnectionsFlag(args)
+	args = append(args, sBackend.envs)
 	command := Command{Name: ResticCMD, Args: args}
 	command = w.wrapWithTimeoutIfConfigured(command)
 
 	return w.run(command)
 }
 
-func (w *ResticWrapper) DumpOnce(dumpOptions DumpOptions) ([]byte, error) {
+func (w *ResticWrapper) DumpOnce(sBackend *Backend, dumpOptions DumpOptions) ([]byte, error) {
 	klog.Infoln("Dumping backed up data")
 
 	args := []interface{}{"dump", "--quiet"}
@@ -283,9 +287,10 @@ func (w *ResticWrapper) DumpOnce(dumpOptions DumpOptions) ([]byte, error) {
 	}
 
 	args = w.appendCacheDirFlag(args)
-	args = w.appendCaCertFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
-	args = w.appendInsecureTLSFlag(args)
+	args = sBackend.appendCaCertFlag(args)
+	args = sBackend.appendMaxConnectionsFlag(args)
+	args = sBackend.appendInsecureTLSFlag(args)
+	args = append(args, sBackend.envs)
 
 	command := Command{Name: ResticCMD, Args: args}
 	command = w.wrapWithTimeoutIfConfigured(command)
@@ -296,76 +301,68 @@ func (w *ResticWrapper) DumpOnce(dumpOptions DumpOptions) ([]byte, error) {
 	return w.run(commands...)
 }
 
-func (w *ResticWrapper) check() ([]byte, error) {
+func (w *ResticWrapper) check(sBackend *Backend) ([]byte, error) {
 	klog.Infoln("Checking integrity of repository")
 	args := w.appendCacheDirFlag([]interface{}{"check", "--no-lock"})
-	args = w.appendCaCertFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
-	args = w.appendInsecureTLSFlag(args)
-
+	args = sBackend.appendCaCertFlag(args)
+	args = sBackend.appendMaxConnectionsFlag(args)
+	args = sBackend.appendInsecureTLSFlag(args)
+	args = append(args, sBackend.envs)
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) stats(snapshotID string) ([]byte, error) {
+func (w *ResticWrapper) stats(sBackend *Backend, snapshotID string) ([]byte, error) {
 	klog.Infoln("Reading repository status")
 	args := w.appendCacheDirFlag([]interface{}{"stats"})
 	if snapshotID != "" {
 		args = append(args, snapshotID)
 	}
-	args = w.appendMaxConnectionsFlag(args)
+	args = sBackend.appendMaxConnectionsFlag(args)
 	args = append(args, "--quiet", "--json", "--mode", "raw-data", "--no-lock")
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
+	args = sBackend.appendCaCertFlag(args)
+	args = sBackend.appendInsecureTLSFlag(args)
+	args = append(args, sBackend.envs)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) unlock() ([]byte, error) {
+func (w *ResticWrapper) unlock(sBackend *Backend) ([]byte, error) {
 	klog.Infoln("Unlocking restic repository")
 	args := w.appendCacheDirFlag([]interface{}{"unlock", "--remove-all"})
-	args = w.appendMaxConnectionsFlag(args)
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
+	args = sBackend.appendMaxConnectionsFlag(args)
+	args = sBackend.appendCaCertFlag(args)
+	args = sBackend.appendInsecureTLSFlag(args)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
 func (w *ResticWrapper) appendCacheDirFlag(args []interface{}) []interface{} {
-	if w.config.EnableCache {
-		cacheDir := filepath.Join(w.config.ScratchDir, resticCacheDir)
+	if w.Config.EnableCache {
+		cacheDir := filepath.Join(w.Config.ScratchDir, resticCacheDir)
 		return append(args, "--cache-dir", cacheDir)
 	}
 	return append(args, "--no-cache")
 }
 
-func (w *ResticWrapper) appendMaxConnectionsFlag(args []interface{}) []interface{} {
-	var maxConOption string
-	if w.config.MaxConnections > 0 {
-		switch w.config.provider {
-		case storage.ProviderGCS:
-			maxConOption = fmt.Sprintf("gs.connections=%d", w.config.MaxConnections)
-		case storage.ProviderAzure:
-			maxConOption = fmt.Sprintf("azure.connections=%d", w.config.MaxConnections)
-		case storage.ProviderB2:
-			maxConOption = fmt.Sprintf("b2.connections=%d", w.config.MaxConnections)
-		}
+func (opt *BackupOptions) appendStdinFileName(args []interface{}) []interface{} {
+	if opt.StdinFileName != "" {
+		args = append(args, "--stdin-filename")
+		args = append(args, opt.StdinFileName)
 	}
-	if maxConOption != "" {
-		return append(args, "--option", maxConOption)
+	return args
+}
+
+func (opt *BackupOptions) appendHost(args []interface{}) []interface{} {
+	if opt.Host != "" {
+		args = append(args, "--host")
+		args = append(args, opt.Host)
 	}
 	return args
 }
 
 func (w *ResticWrapper) appendCleanupCacheFlag(args []interface{}) []interface{} {
-	if w.config.EnableCache {
+	if w.Config.EnableCache {
 		return append(args, "--cleanup-cache")
-	}
-	return args
-}
-
-func (w *ResticWrapper) appendCaCertFlag(args []interface{}) []interface{} {
-	if w.config.CacertFile != "" {
-		return append(args, "--cacert", w.config.CacertFile)
 	}
 	return args
 }
@@ -376,28 +373,49 @@ func (w *ResticWrapper) run(commands ...Command) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	w.sh.Stderr = io.MultiWriter(os.Stderr, errBuff)
 
-	for _, cmd := range commands {
-		if cmd.Name == ResticCMD || cmd.Name == TimeoutCMD {
-			// first apply NiceSettings, then apply IONiceSettings
-			cmd, err = w.applyNiceSettings(cmd)
-			if err != nil {
-				return nil, err
-			}
-			cmd, err = w.applyIONiceSettings(cmd)
-			if err != nil {
-				return nil, err
-			}
-		}
-		w.sh.Command(cmd.Name, cmd.Args...)
+	newSh := *w.sh // Create a new shell instance to avoid pollution from existing environment variables.
+	newSh.Stderr = io.MultiWriter(os.Stderr, errBuff)
+	if w.Config.Timeout != nil {
+		newSh.SetTimeout(w.Config.Timeout.Duration)
 	}
-	out, err := w.sh.Output()
+
+	isLeafCmdNecessary := isLeafCommandNecessary(commands...)
+	for _, cmd := range commands {
+		cmd, err = w.applyNiceSettingsIfCommandMatches(cmd, ResticCMD)
+		if err != nil {
+			return nil, err
+		}
+
+		if cmd.Name == ResticCMD && isLeafCmdNecessary {
+			newSh.LeafCommand(cmd.Name, cmd.Args...)
+		} else {
+			newSh.Command(cmd.Name, cmd.Args...)
+		}
+	}
+
+	out, err := newSh.Output()
 	if err != nil {
 		return nil, formatError(err, errBuff.String())
 	}
 	klog.Infoln("sh-output:", string(out))
 	return out, nil
+}
+
+func (w *ResticWrapper) applyNiceSettingsIfCommandMatches(command Command, matchingCommands ...string) (Command, error) {
+	var err error
+	if slices.Contains(matchingCommands, command.Name) {
+		// First apply standard settings, then apply I/O priority settings
+		command, err = w.applyNiceSettings(command)
+		if err != nil {
+			return Command{}, err
+		}
+		command, err = w.applyIONiceSettings(command)
+		if err != nil {
+			return Command{}, err
+		}
+	}
+	return command, nil
 }
 
 // return last line of std error as error reason
@@ -413,7 +431,7 @@ func formatError(err error, stdErr string) error {
 }
 
 func (w *ResticWrapper) applyIONiceSettings(oldCommand Command) (Command, error) {
-	if w.config.IONice == nil {
+	if w.Config.IONice == nil {
 		return oldCommand, nil
 	}
 
@@ -425,11 +443,11 @@ func (w *ResticWrapper) applyIONiceSettings(oldCommand Command) (Command, error)
 	newCommand := Command{
 		Name: IONiceCMD,
 	}
-	if w.config.IONice.Class != nil {
-		newCommand.Args = append(newCommand.Args, "-c", fmt.Sprint(*w.config.IONice.Class))
+	if w.Config.IONice.Class != nil {
+		newCommand.Args = append(newCommand.Args, "-c", fmt.Sprint(*w.Config.IONice.Class))
 	}
-	if w.config.IONice.ClassData != nil {
-		newCommand.Args = append(newCommand.Args, "-n", fmt.Sprint(*w.config.IONice.ClassData))
+	if w.Config.IONice.ClassData != nil {
+		newCommand.Args = append(newCommand.Args, "-n", fmt.Sprint(*w.Config.IONice.ClassData))
 	}
 	// TODO: should we use "-t" option with ionice ?
 	// newCommand.Args = append(newCommand.Args, "-t")
@@ -441,7 +459,7 @@ func (w *ResticWrapper) applyIONiceSettings(oldCommand Command) (Command, error)
 }
 
 func (w *ResticWrapper) applyNiceSettings(oldCommand Command) (Command, error) {
-	if w.config.Nice == nil {
+	if w.Config.Nice == nil {
 		return oldCommand, nil
 	}
 
@@ -453,8 +471,8 @@ func (w *ResticWrapper) applyNiceSettings(oldCommand Command) (Command, error) {
 	newCommand := Command{
 		Name: NiceCMD,
 	}
-	if w.config.Nice.Adjustment != nil {
-		newCommand.Args = append(newCommand.Args, "-n", fmt.Sprint(*w.config.Nice.Adjustment))
+	if w.Config.Nice.Adjustment != nil {
+		newCommand.Args = append(newCommand.Args, "-n", fmt.Sprint(*w.Config.Nice.Adjustment))
 	}
 
 	// append oldCommand as args of newCommand
@@ -463,7 +481,7 @@ func (w *ResticWrapper) applyNiceSettings(oldCommand Command) (Command, error) {
 	return newCommand, nil
 }
 
-func (w *ResticWrapper) addKey(params keyParams) ([]byte, error) {
+func (w *ResticWrapper) addKey(sBackend *Backend, params keyParams) ([]byte, error) {
 	klog.Infoln("Adding new key to restic repository")
 
 	args := []interface{}{"key", "add", "--no-lock"}
@@ -480,27 +498,27 @@ func (w *ResticWrapper) addKey(params keyParams) ([]byte, error) {
 	}
 
 	args = w.appendCacheDirFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
+	args = sBackend.appendMaxConnectionsFlag(args)
+	args = sBackend.appendCaCertFlag(args)
+	args = sBackend.appendInsecureTLSFlag(args)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) listKey() ([]byte, error) {
+func (w *ResticWrapper) listKey(sBackend *Backend) ([]byte, error) {
 	klog.Infoln("Listing restic keys")
 
 	args := []interface{}{"key", "list", "--no-lock"}
 
 	args = w.appendCacheDirFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
+	args = sBackend.appendMaxConnectionsFlag(args)
+	args = sBackend.appendCaCertFlag(args)
+	args = sBackend.appendInsecureTLSFlag(args)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) updateKey(params keyParams) ([]byte, error) {
+func (w *ResticWrapper) updateKey(sBackend *Backend, params keyParams) ([]byte, error) {
 	klog.Infoln("Updating restic key")
 
 	args := []interface{}{"key", "passwd", "--no-lock"}
@@ -510,31 +528,42 @@ func (w *ResticWrapper) updateKey(params keyParams) ([]byte, error) {
 	}
 
 	args = w.appendCacheDirFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
+	args = sBackend.appendMaxConnectionsFlag(args)
+	args = sBackend.appendCaCertFlag(args)
+	args = sBackend.appendInsecureTLSFlag(args)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) removeKey(params keyParams) ([]byte, error) {
+func (w *ResticWrapper) removeKey(sBackend *Backend, params keyParams) ([]byte, error) {
 	klog.Infoln("Removing restic key")
 
 	args := []interface{}{"key", "remove", params.id, "--no-lock"}
 
 	args = w.appendCacheDirFlag(args)
-	args = w.appendMaxConnectionsFlag(args)
-	args = w.appendCaCertFlag(args)
-	args = w.appendInsecureTLSFlag(args)
+	args = sBackend.appendMaxConnectionsFlag(args)
+	args = sBackend.appendCaCertFlag(args)
+	args = sBackend.appendInsecureTLSFlag(args)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
 func (w *ResticWrapper) wrapWithTimeoutIfConfigured(cmd Command) Command {
-	if w.config.Timeout != nil {
-		timeoutArgs := []interface{}{fmt.Sprintf("%f", w.config.Timeout.Seconds()), cmd.Name}
+	if w.Config.Timeout != nil {
+		timeoutArgs := []interface{}{fmt.Sprintf("%f", w.Config.Timeout.Seconds()), cmd.Name}
 		timeoutArgs = append(timeoutArgs, cmd.Args...)
 		return Command{Name: TimeoutCMD, Args: timeoutArgs}
 	}
 	return cmd
+}
+
+func isLeafCommandNecessary(commands ...Command) bool {
+	var resticCommandCount int
+	for _, command := range commands {
+		if command.Name == ResticCMD {
+			resticCommandCount++
+		}
+	}
+
+	return resticCommandCount > 1
 }

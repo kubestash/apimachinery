@@ -18,17 +18,17 @@ package restic
 
 import "encoding/json"
 
-func (w *ResticWrapper) ListSnapshots(snapshotIDs []string) ([]Snapshot, error) {
-	return w.listSnapshots(snapshotIDs)
+func (w *ResticWrapper) ListSnapshots(sBackend *Backend, snapshotIDs []string) ([]Snapshot, error) {
+	return w.listSnapshots(sBackend, snapshotIDs)
 }
 
-func (w *ResticWrapper) DeleteSnapshots(snapshotIDs []string) ([]byte, error) {
-	return w.deleteSnapshots(snapshotIDs)
+func (w *ResticWrapper) DeleteSnapshots(sBackend *Backend, snapshotIDs []string) ([]byte, error) {
+	return w.deleteSnapshots(sBackend, snapshotIDs)
 }
 
 // GetSnapshotSize returns size of a snapshot in bytes
-func (w *ResticWrapper) GetSnapshotSize(snapshotID string) (uint64, error) {
-	out, err := w.stats(snapshotID)
+func (w *ResticWrapper) GetSnapshotSize(sBackend *Backend, snapshotID string) (uint64, error) {
+	out, err := w.stats(sBackend, snapshotID)
 	if err != nil {
 		return 0, err
 	}
@@ -41,6 +41,6 @@ func (w *ResticWrapper) GetSnapshotSize(snapshotID string) (uint64, error) {
 	return stat.TotalSize, nil
 }
 
-func (w *ResticWrapper) DownloadSnapshot(options RestoreOptions) error {
-	return w.runRestore(options)
+func (w *ResticWrapper) DownloadSnapshot(sBackend *Backend, options RestoreOptions) error {
+	return w.runRestore(sBackend, options)
 }

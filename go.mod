@@ -14,7 +14,6 @@ require (
 	gocloud.dev v0.37.0
 	gomodules.xyz/envsubst v0.2.0
 	gomodules.xyz/go-sh v0.1.0
-	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/x v0.0.17
 	k8s.io/api v0.30.2
 	k8s.io/apimachinery v0.30.2
@@ -134,6 +133,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	gomodules.xyz/mergo v0.3.13 // indirect
+	gomodules.xyz/pointer v0.1.0 // indirect
 	google.golang.org/api v0.169.0 // indirect
 	google.golang.org/genproto v0.0.0-20240311173647-c811ad7063a7 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240311173647-c811ad7063a7 // indirect
@@ -149,3 +149,5 @@ require (
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 )
+
+replace gomodules.xyz/go-sh v0.1.0 => /home/anisur/go/src/github.com/anisurrahman75/go-sh

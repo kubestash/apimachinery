@@ -18,18 +18,18 @@ package restic
 
 import "os"
 
-func (w *ResticWrapper) AddKey(opt KeyOptions) error {
+func (w *ResticWrapper) AddKey(sBackend *Backend, opt KeyOptions) error {
 	params := keyParams{
 		user: opt.User,
 		host: opt.Host,
 		file: opt.File,
 	}
-	_, err := w.addKey(params)
+	_, err := w.addKey(sBackend, params)
 	return err
 }
 
-func (w *ResticWrapper) ListKey() error {
-	out, err := w.listKey()
+func (w *ResticWrapper) ListKey(sBackend *Backend) error {
+	out, err := w.listKey(sBackend)
 	if err != nil {
 		return err
 	}
@@ -39,18 +39,18 @@ func (w *ResticWrapper) ListKey() error {
 	return err
 }
 
-func (w *ResticWrapper) UpdateKey(opt KeyOptions) error {
+func (w *ResticWrapper) UpdateKey(sBackend *Backend, opt KeyOptions) error {
 	params := keyParams{
 		file: opt.File,
 	}
-	_, err := w.updateKey(params)
+	_, err := w.updateKey(sBackend, params)
 	return err
 }
 
-func (w *ResticWrapper) RemoveKey(opt KeyOptions) error {
+func (w *ResticWrapper) RemoveKey(sBackend *Backend, opt KeyOptions) error {
 	params := keyParams{
 		id: opt.ID,
 	}
-	_, err := w.removeKey(params)
+	_, err := w.removeKey(sBackend, params)
 	return err
 }

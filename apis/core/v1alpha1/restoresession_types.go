@@ -114,6 +114,38 @@ type ManifestRestoreOptions struct {
 	// Redis specifies the options for selecting particular Redis components to restore in manifest restore
 	// +optional
 	Redis *KubeDBManifestOptions `json:"redis,omitempty"`
+
+	// RedisSentinel specifies the options for selecting particular RedisSentinel components to restore in manifest restore
+	// +optional
+	RedisSentinel *RedisSentinelManifestOptions `json:"redisSentinel,omitempty"`
+}
+
+type RedisSentinelManifestOptions struct {
+	// RestoreNamespace specifies the Namespace where the restored files will be applied
+	// +optional
+	RestoreNamespace string `json:"restoreNamespace,omitempty"`
+
+	// Sentinel specifies whether to restore the Sentinel manifest or not
+	// +kubebuilder:default=true
+	// +optional
+	Sentinel *bool `json:"sentinel,omitempty"`
+
+	// SentinelName specifies the new name of the Sentinel yaml after restore
+	// +optional
+	SentinelName string `json:"SentinelName,omitempty"`
+
+	// AuthSecret specifies whether to restore the AuthSecret manifest or not
+	// +kubebuilder:default=true
+	// +optional
+	AuthSecret *bool `json:"authSecret,omitempty"`
+
+	// AuthSecretName specifies new name of the AuthSecret yaml after restore
+	// +optional
+	AuthSecretName string `json:"authSecretName,omitempty"`
+
+	// TLSIssuerRef specifies the name of the IssuerRef used for TLS configurations for both client and server
+	// +optional
+	TLSIssuerRef *core.TypedLocalObjectReference `json:"tlsIssuerRef,omitempty"`
 }
 
 type WorkloadManifestOptions struct {
