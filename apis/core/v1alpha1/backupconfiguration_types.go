@@ -415,6 +415,10 @@ type QueryVerifierSpec struct {
 	// Redis specifies queries option for Redis database
 	// +optional
 	Redis []RedisQueryOpt `json:"redis,omitempty"`
+
+	// Singlestore specifies queries option for Singlestore database
+	// +optional
+	Singlestore []SinglestoreQueryOpt `json:"singlestore,omitempty"`
 }
 
 // MySQLQueryOpt specifies queries option for MySQL database
@@ -491,6 +495,20 @@ type RedisQueryOpt struct {
 	// DbSize specifies the number of keys in the specified Database
 	// +optional
 	DbSize *MatchExpression `json:"dbSize,omitempty"`
+}
+
+// SinglestoreQueryOpt specifies queries option for Singlestore database
+type SinglestoreQueryOpt struct {
+	// Database refers to the database name being checked for existence
+	Database string `json:"database,omitempty"`
+
+	// Table refers to the table name being checked for existence in specified Database
+	// +optional
+	Table string `json:"table,omitempty"`
+
+	// RowCount represents the number of row to be checked in the specified Table
+	// +optional
+	RowCount *MatchExpression `json:"rowCount,omitempty"`
 }
 
 type MatchExpression struct {
