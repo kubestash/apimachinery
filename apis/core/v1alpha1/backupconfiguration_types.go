@@ -394,7 +394,7 @@ type FileVerifierSpec struct {
 type QueryVerifierSpec struct {
 	// MySQL specifies queries option for MySQL database
 	// +optional
-	MySQL []MySQLQueryOpt `json:"mysql,omitempty"`
+	MySQL []MySQLQueryOpt `json:"mySQL,omitempty"`
 
 	// MariaDB specifies queries option for MariaDB database
 	// +optional
@@ -406,7 +406,7 @@ type QueryVerifierSpec struct {
 
 	// MongoDB specifies queries option for MongoDB database
 	// +optional
-	MongoDB []MongoDBQueryOpt `json:"mongodb,omitempty"`
+	MongoDB []MongoDBQueryOpt `json:"mongoDB,omitempty"`
 
 	// Elasticsearch specifies queries option for Elasticsearch database
 	// +optional
@@ -419,6 +419,10 @@ type QueryVerifierSpec struct {
 	// Singlestore specifies queries option for Singlestore database
 	// +optional
 	Singlestore []SinglestoreQueryOpt `json:"singlestore,omitempty"`
+
+	// MSSQLServer specifies queries option for MSSQLServer database
+	// +optional
+	MSSQLServer []MSSQLServerQueryOpt `json:"msSQLServer,omitempty"`
 }
 
 // MySQLQueryOpt specifies queries option for MySQL database
@@ -501,6 +505,24 @@ type RedisQueryOpt struct {
 type SinglestoreQueryOpt struct {
 	// Database refers to the database name being checked for existence
 	Database string `json:"database,omitempty"`
+
+	// Table refers to the table name being checked for existence in specified Database
+	// +optional
+	Table string `json:"table,omitempty"`
+
+	// RowCount represents the number of row to be checked in the specified Table
+	// +optional
+	RowCount *MatchExpression `json:"rowCount,omitempty"`
+}
+
+// MSSQLServerQueryOpt specifies queries option for MSSQLServer database
+type MSSQLServerQueryOpt struct {
+	// Database refers to the database name being checked for existence
+	Database string `json:"database,omitempty"`
+
+	// Schema refers to the schema name being checked for existence in specified Database
+	// +optional
+	Schema string `json:"schema,omitempty"`
 
 	// Table refers to the table name being checked for existence in specified Database
 	// +optional
