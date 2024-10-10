@@ -28675,6 +28675,11 @@ spec:
                               name:
                                 description: Name specifies the name of the Repository
                                 type: string
+                              verificationStrategy:
+                                description: VerificationStrategy specifies the name
+                                  of the verification strategy which will be used
+                                  to verify the backed up data in this repository.
+                                type: string
                             type: object
                           type: array
                         retryConfig:

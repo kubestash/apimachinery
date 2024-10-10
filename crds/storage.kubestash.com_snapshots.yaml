@@ -352,6 +352,10 @@ spec:
                   for this Snapshot
                 format: int32
                 type: integer
+              verificationSession:
+                description: VerificationSession specifies which BackupVerificationSession
+                  verified this Snapshot
+                type: string
               verificationStatus:
                 description: VerificationStatus specifies whether this Snapshot has
                   been verified or not
