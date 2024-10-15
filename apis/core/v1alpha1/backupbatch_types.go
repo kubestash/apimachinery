@@ -61,6 +61,10 @@ type BackupBatchSpec struct {
 	// Session defines a list of session configurations that specifies when and how to take backup.
 	Sessions []BatchSession `json:"sessions,omitempty"`
 
+	// VerificationStrategies specifies a list of backup verification configurations
+	// +optional
+	VerificationStrategies []VerificationStrategy `json:"verificationStrategies,omitempty"`
+
 	// Paused indicates that the BackupBatch has been paused from taking backup. Default value is 'false'.
 	// If you set `paused` field to `true`, KubeStash will suspend the respective backup triggering CronJob and
 	// skip processing any further events for this BackupBatch.
