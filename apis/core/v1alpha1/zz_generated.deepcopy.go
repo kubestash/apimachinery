@@ -1788,11 +1788,6 @@ func (in *RestoreOption) DeepCopyInto(out *RestoreOption) {
 		*out = new(v1.TypedObjectReference)
 		**out = **in
 	}
-	if in.ManifestOptions != nil {
-		in, out := &in.ManifestOptions, &out.ManifestOptions
-		*out = new(ManifestRestoreOptions)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.AddonInfo != nil {
 		in, out := &in.AddonInfo, &out.AddonInfo
 		*out = new(AddonInfo)

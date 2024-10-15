@@ -364,10 +364,6 @@ type RestoreOption struct {
 	// +optional
 	Target *kmapi.TypedObjectReference `json:"target,omitempty"`
 
-	// ManifestOptions provide options to select particular manifest object to restore
-	// +optional
-	ManifestOptions *ManifestRestoreOptions `json:"manifestOptions,omitempty"`
-
 	// AddonInfo specifies addon configuration that will be used to restore this target.
 	AddonInfo *AddonInfo `json:"addonInfo,omitempty"`
 }
