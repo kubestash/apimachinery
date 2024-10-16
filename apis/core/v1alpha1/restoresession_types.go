@@ -125,14 +125,14 @@ type RedisSentinelManifestOptions struct {
 	// +optional
 	RestoreNamespace string `json:"restoreNamespace,omitempty"`
 
-	// DB specifies whether to restore the DB manifest or not
+	// Sentinel specifies whether to restore the Sentinel manifest or not
 	// +kubebuilder:default=true
 	// +optional
-	DB *bool `json:"db,omitempty"`
+	Sentinel *bool `json:"sentinel,omitempty"`
 
-	// DBName specifies the new name of the DB yaml after restore
+	// SentinelName specifies the new name of the Sentinel yaml after restore
 	// +optional
-	DBName string `json:"dbName,omitempty"`
+	SentinelName string `json:"SentinelName,omitempty"`
 
 	// AuthSecret specifies whether to restore the AuthSecret manifest or not
 	// +kubebuilder:default=true
@@ -142,11 +142,6 @@ type RedisSentinelManifestOptions struct {
 	// AuthSecretName specifies new name of the AuthSecret yaml after restore
 	// +optional
 	AuthSecretName string `json:"authSecretName,omitempty"`
-
-	// InitScript specifies whether to restore the InitScript manifest or not
-	// +kubebuilder:default=true
-	// +optional
-	InitScript *bool `json:"initScript,omitempty"`
 
 	// TLSIssuerRef specifies the name of the IssuerRef used for TLS configurations for both client and server
 	// +optional
