@@ -9345,6 +9345,15 @@ spec:
                             properties:
                               backend:
                                 type: string
+                              backupVerifier:
+                                properties:
+                                  name:
+                                    type: string
+                                  namespace:
+                                    type: string
+                                required:
+                                - name
+                                type: object
                               deletionPolicy:
                                 enum:
                                 - Delete
@@ -9362,8 +9371,6 @@ spec:
                                 - name
                                 type: object
                               name:
-                                type: string
-                              verificationStrategy:
                                 type: string
                             type: object
                           type: array

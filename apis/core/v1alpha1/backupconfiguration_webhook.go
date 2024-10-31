@@ -196,10 +196,6 @@ func (b *BackupConfiguration) ValidateCreate() (admission.Warnings, error) {
 		return nil, err
 	}
 
-	if err := b.validateVerificationStrategies(); err != nil {
-		return nil, err
-	}
-
 	if err := b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
 		return nil, err
 	}
@@ -339,11 +335,6 @@ func (b *BackupConfiguration) validateRepositories(ctx context.Context, c client
 			return fmt.Errorf("directory is not provided for repository: %q. Please provide a directory", repo.Name)
 		}
 
-		if repo.VerificationStrategy != "" &&
-			!b.verificationStrategyMatched(repo.VerificationStrategy) {
-			return fmt.Errorf("verification strategy %q for repository %q doesn't match with any of the given strategy", repo.VerificationStrategy, repo.Name)
-		}
-
 		existingRepo, err := b.getRepository(ctx, c, repo.Name)
 		if err != nil {
 			if kerr.IsNotFound(err) {
@@ -362,15 +353,6 @@ func (b *BackupConfiguration) validateRepositories(ctx context.Context, c client
 	}
 
 	return nil
-}
-
-func (b *BackupConfiguration) verificationStrategyMatched(strategy string) bool {
-	for _, vs := range b.Spec.VerificationStrategies {
-		if vs.Name == strategy {
-			return true
-		}
-	}
-	return false
 }
 
 func (b *BackupConfiguration) validateUniqueRepoDir(ctx context.Context, c client.Client) error {
@@ -439,52 +421,6 @@ func targetMatched(t1, t2 *kmapi.TypedObjectReference) bool {
 		t1.Kind == t2.Kind &&
 		t1.Namespace == t2.Namespace &&
 		t1.Name == t2.Name
-}
-
-func (b *BackupConfiguration) validateVerificationStrategies() error {
-	if len(b.Spec.VerificationStrategies) == 0 {
-		return nil
-	}
-
-	if err := b.validateVerificationStrategyNameUnique(); err != nil {
-		return err
-	}
-
-	for _, vs := range b.Spec.VerificationStrategies {
-		if vs.RestoreOption == nil {
-			return fmt.Errorf("restoreOption for verification strategy %q cannot be empty", vs.Name)
-		}
-
-		if vs.RestoreOption.AddonInfo == nil {
-			return fmt.Errorf("addonInfo in restoreOption for verification strategy %q cannot be empty", vs.Name)
-		}
-
-		if vs.VerifySchedule == "" {
-			return fmt.Errorf("verify schedule for verification strategy %q cannot be empty", vs.Name)
-		}
-
-		if vs.File != nil || vs.Query != nil || vs.Script != nil {
-			if vs.Function == "" {
-				return fmt.Errorf("function for verification strategy %q cannot be empty", vs.Name)
-			}
-		}
-	}
-	return nil
-}
-
-func (b *BackupConfiguration) validateVerificationStrategyNameUnique() error {
-	vsMap := make(map[string]struct{})
-	for _, vs := range b.Spec.VerificationStrategies {
-		if vs.Name == "" {
-			return fmt.Errorf("verification strategy name cannot be empty")
-		}
-
-		if _, ok := vsMap[vs.Name]; ok {
-			return fmt.Errorf("duplicate verification strategy name found: %q. Please choose a different verification strategy name", vs.Name)
-		}
-		vsMap[vs.Name] = struct{}{}
-	}
-	return nil
 }
 
 func (b *BackupConfiguration) validateRepositoryNameUnique(session Session) error {
@@ -672,10 +608,6 @@ func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) (admission.Warn
 	}
 
 	if err := b.validateSessions(context.Background(), c); err != nil {
-		return nil, err
-	}
-
-	if err := b.validateVerificationStrategies(); err != nil {
 		return nil, err
 	}
 

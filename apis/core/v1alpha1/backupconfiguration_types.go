@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	core "k8s.io/api/core/v1"
 	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
 
 	batchv1 "k8s.io/api/batch/v1"
@@ -67,10 +66,6 @@ type BackupConfigurationSpec struct {
 
 	// Sessions defines a list of session configuration that specifies when and how to take backup.
 	Sessions []Session `json:"sessions,omitempty"`
-
-	// VerificationStrategies specifies a list of backup verification configurations
-	// +optional
-	VerificationStrategies []VerificationStrategy `json:"verificationStrategies,omitempty"`
 
 	// Paused indicates that the BackupConfiguration has been paused from taking backup. Default value is 'false'.
 	// If you set `paused` field to `true`, KubeStash will suspend the respective backup triggering CronJob and
@@ -276,9 +271,9 @@ type RepositoryInfo struct {
 	// +optional
 	Backend string `json:"backend,omitempty"`
 
-	// VerificationStrategy specifies the name of the verification strategy which will be used to verify the backed up data in this repository.
+	// BackupVerifier specifies the name of the BackupVerifier which will be used to verify the backed up data in this repository.
 	// +optional
-	VerificationStrategy string `json:"verificationStrategy,omitempty"`
+	BackupVerifier *kmapi.ObjectReference `json:"backupVerifier,omitempty"`
 
 	// Directory specifies the path inside the backend where the backed up data will be stored.
 	Directory string `json:"directory,omitempty"`
@@ -291,272 +286,6 @@ type RepositoryInfo struct {
 	// DeletionPolicy specifies what to do when you delete a Repository CR.
 	// +optional
 	DeletionPolicy v1alpha1.DeletionPolicy `json:"deletionPolicy,omitempty"`
-}
-
-// VerificationStrategy specifies a strategy to verify the backed up data.
-type VerificationStrategy struct {
-	// Name indicates the name of this strategy.
-	Name string `json:"name,omitempty"`
-
-	// RestoreOption specifies the restore target, addonInfo and manifestOption for backup verification
-	// +optional
-	RestoreOption *RestoreOption `json:"restoreOption,omitempty"`
-
-	// VerifySchedule specifies the schedule of backup verification in Cron format, see https://en.wikipedia.org/wiki/Cron.
-	VerifySchedule string `json:"verifySchedule,omitempty"`
-
-	// KeepAlive specifies the duration of keeping the instances created for backup verification.
-	// +optional
-	// KeepAlive *metav1.Time `json:"keepAlive,omitempty"`
-
-	// Function specifies the name of a Function CR that defines a container definition
-	// which will execute the verification logic for a particular application.
-	Function string `json:"function,omitempty"`
-
-	// Volumes indicates the list of volumes that should be mounted on the verification job.
-	Volumes []ofst.Volume `json:"volumes,omitempty"`
-
-	// VolumeMounts specifies the mount for the volumes specified in `Volumes` section
-	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
-
-	// OnFailure specifies what to do if the verification fail.
-	// +optional
-	// OnFailure FailurePolicy `json:"onFailure,omitempty"`
-
-	// Type indicate the types of verifier that will verify the backup.
-	// Valid values are:
-	// - "RestoreOnly": KubeStash will create a RestoreSession with the tasks provided in BackupConfiguration's verificationStrategies section.
-	// - "File": KubeStash will restore the data and then create a job to check if the files exist or not. This type is recommended for workload backup verification.
-	// - "Query": KubeStash operator will restore data and then create a job to run the queries. This type is recommended for database backup verification.
-	// - "Script": KubeStash operator will restore data and then create a job to run the script. This type is recommended for database backup verification.
-	Type VerificationType `json:"type,omitempty"`
-
-	// File specifies the file paths information whose existence will be checked for backup verification.
-	// +optional
-	File *FileVerifierSpec `json:"file,omitempty"`
-
-	// Query specifies the queries to be run to verify backup.
-	// +optional
-	Query *QueryVerifierSpec `json:"query,omitempty"`
-
-	// Script specifies the script to be run to verify backup.
-	// +optional
-	Script *ScriptVerifierSpec `json:"script,omitempty"`
-
-	// RetryConfig specifies the behavior of the retry mechanism in case of a verification failure.
-	// +optional
-	RetryConfig *RetryConfig `json:"retryConfig,omitempty"`
-
-	// SessionHistoryLimit specifies how many BackupVerificationSessions and associate resources KubeStash should keep for debugging purpose.
-	// The default value is 1.
-	// +kubebuilder:default=1
-	// +optional
-	SessionHistoryLimit int32 `json:"sessionHistoryLimit,omitempty"`
-
-	// RuntimeSettings allow to specify Resources, NodeSelector, Affinity, Toleration, ReadinessProbe etc.
-	// for the verification job.
-	// +optional
-	RuntimeSettings ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
-}
-
-type RestoreOption struct {
-	// Target indicates the target application where the data will be restored
-	// +optional
-	Target *kmapi.TypedObjectReference `json:"target,omitempty"`
-
-	// AddonInfo specifies addon configuration that will be used to restore this target.
-	AddonInfo *AddonInfo `json:"addonInfo,omitempty"`
-}
-
-// VerificationType specifies the type of verifier that will verify the backup
-// +kubebuilder:validation:Enum=RestoreOnly;File;Query;Script
-type VerificationType string
-
-const (
-	RestoreOnlyVerificationType VerificationType = "RestoreOnly"
-	FileVerificationType        VerificationType = "File"
-	QueryVerificationType       VerificationType = "Query"
-	ScriptVerificationType      VerificationType = "Script"
-)
-
-// FileVerifierSpec defines the file paths information whose existence will be checked from verifier job.
-type FileVerifierSpec struct {
-	// Paths specifies the list of paths whose existence will be checked.
-	// These paths must be absolute paths.
-	Paths []string `json:"paths,omitempty"`
-}
-
-// QueryVerifierSpec defines the queries to be run from verifier job.
-type QueryVerifierSpec struct {
-	// MySQL specifies queries option for MySQL database
-	// +optional
-	MySQL []MySQLQueryOpt `json:"mySQL,omitempty"`
-
-	// MariaDB specifies queries option for MariaDB database
-	// +optional
-	MariaDB []MariaDBQueryOpt `json:"mariaDB,omitempty"`
-
-	// Postgres specifies queries option for Postgres database
-	// +optional
-	Postgres []PostgresQueryOpt `json:"postgres,omitempty"`
-
-	// MongoDB specifies queries option for MongoDB database
-	// +optional
-	MongoDB []MongoDBQueryOpt `json:"mongoDB,omitempty"`
-
-	// Elasticsearch specifies queries option for Elasticsearch database
-	// +optional
-	Elasticsearch []ElasticsearchQueryOpt `json:"elasticsearch,omitempty"`
-
-	// Redis specifies queries option for Redis database
-	// +optional
-	Redis []RedisQueryOpt `json:"redis,omitempty"`
-
-	// Singlestore specifies queries option for Singlestore database
-	// +optional
-	Singlestore []SinglestoreQueryOpt `json:"singlestore,omitempty"`
-
-	// MSSQLServer specifies queries option for MSSQLServer database
-	// +optional
-	MSSQLServer []MSSQLServerQueryOpt `json:"msSQLServer,omitempty"`
-}
-
-// MySQLQueryOpt specifies queries option for MySQL database
-type MySQLQueryOpt struct {
-	// Database refers to the database name being checked for existence
-	Database string `json:"database,omitempty"`
-
-	// Table refers to the table name being checked for existence in specified Database
-	// +optional
-	Table string `json:"table,omitempty"`
-
-	// RowCount represents the number of row to be checked in the specified Table
-	// +optional
-	RowCount *MatchExpression `json:"rowCount,omitempty"`
-}
-
-// MariaDBQueryOpt specifies queries option for MariaDB database
-type MariaDBQueryOpt struct {
-	// Database refers to the database name being checked for existence
-	Database string `json:"database,omitempty"`
-
-	// Table refers to the table name being checked for existence in specified Database
-	// +optional
-	Table string `json:"table,omitempty"`
-
-	// RowCount represents the number of row to be checked in the specified Table
-	// +optional
-	RowCount *MatchExpression `json:"rowCount,omitempty"`
-}
-
-// PostgresQueryOpt specifies queries option for Postgres database
-type PostgresQueryOpt struct {
-	// Database refers to the database name being checked for existence
-	Database string `json:"database,omitempty"`
-
-	// Schema refers to the schema name being checked for existence in specified Database
-	// +optional
-	Schema string `json:"schema,omitempty"`
-
-	// Table refers to the table name being checked for existence in specified Database
-	// +optional
-	Table string `json:"table,omitempty"`
-
-	// RowCount represents the number of row to be checked in the specified Table
-	// +optional
-	RowCount *MatchExpression `json:"rowCount,omitempty"`
-}
-
-// MongoDBQueryOpt specifies queries option for MongoDB database
-type MongoDBQueryOpt struct {
-	// Database refers to the database name being checked for existence
-	Database string `json:"database,omitempty"`
-
-	// Collection refers to the collection name being checked for existence in specified Database
-	// +optional
-	Collection string `json:"collection,omitempty"`
-
-	// RowCount represents the number of document to be checked in the specified Collection
-	// +optional
-	DocumentCount *MatchExpression `json:"documentCount,omitempty"`
-}
-
-// ElasticsearchQueryOpt specifies queries option for Elasticsearch database
-type ElasticsearchQueryOpt struct {
-	// Index refers to the index name being checked for existence
-	Index string `json:"index,omitempty"`
-}
-
-// RedisQueryOpt specifies queries option for Redis database
-type RedisQueryOpt struct {
-	// Index refers to the database index being checked for existence
-	Index int `json:"index,omitempty"`
-
-	// DbSize specifies the number of keys in the specified Database
-	// +optional
-	DbSize *MatchExpression `json:"dbSize,omitempty"`
-}
-
-// SinglestoreQueryOpt specifies queries option for Singlestore database
-type SinglestoreQueryOpt struct {
-	// Database refers to the database name being checked for existence
-	Database string `json:"database,omitempty"`
-
-	// Table refers to the table name being checked for existence in specified Database
-	// +optional
-	Table string `json:"table,omitempty"`
-
-	// RowCount represents the number of row to be checked in the specified Table
-	// +optional
-	RowCount *MatchExpression `json:"rowCount,omitempty"`
-}
-
-// MSSQLServerQueryOpt specifies queries option for MSSQLServer database
-type MSSQLServerQueryOpt struct {
-	// Database refers to the database name being checked for existence
-	Database string `json:"database,omitempty"`
-
-	// Schema refers to the schema name being checked for existence in specified Database
-	// +optional
-	Schema string `json:"schema,omitempty"`
-
-	// Table refers to the table name being checked for existence in specified Database
-	// +optional
-	Table string `json:"table,omitempty"`
-
-	// RowCount represents the number of row to be checked in the specified Table
-	// +optional
-	RowCount *MatchExpression `json:"rowCount,omitempty"`
-}
-
-type MatchExpression struct {
-	// Operator represents the operation that will be done on the given Value
-	Operator Operator `json:"operator,omitempty"`
-
-	// Value represents the numerical value of the desired output
-	Value *int64 `json:"value,omitempty"`
-}
-
-// Operator represents the operation that will be done
-// +kubebuilder:validation:Enum=Equal;NotEqual;LessThan;LessThanOrEqual;GreaterThan;GreaterThanOrEqual
-type Operator string
-
-const (
-	EqualOperator              Operator = "Equal"
-	NotEqualOperator           Operator = "NotEqual"
-	LessThanOperator           Operator = "LessThan"
-	LessThanOrEqualOperator    Operator = "LessThanOrEqual"
-	GreaterThanOperator        Operator = "GreaterThan"
-	GreaterThanOrEqualOperator Operator = "GreaterThanOrEqual"
-)
-
-// ScriptVerifierSpec defines the script location in verifier job and the args to be provided with the script.
-type ScriptVerifierSpec struct {
-	// Location specifies the absolute path of the script file's location.
-	Location string `json:"location,omitempty"`
-
-	// Args specifies the arguments to be provided with the script.
-	Args []string `json:"args,omitempty"`
 }
 
 // BackupHooks specifies the hooks that will be executed before and/or after backup
