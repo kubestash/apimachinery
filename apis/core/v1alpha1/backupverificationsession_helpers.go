@@ -108,7 +108,7 @@ func (b *BackupVerificationSession) SetBackupVerifiedConditionToTrue() {
 	newCond := kmapi.Condition{
 		Type:   TypeBackupVerified,
 		Status: metav1.ConditionTrue,
-		Reason: ReasonSuccessfullyVerifyBackup,
+		Reason: ReasonSuccessfullyVerifiedBackup,
 	}
 	b.Status.Conditions = cutil.SetCondition(b.Status.Conditions, newCond)
 }

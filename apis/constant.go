@@ -55,14 +55,14 @@ const (
 )
 
 const (
-	KubeStashBackupComponent             = "kubestash-backup"
-	KubeStashRestoreComponent            = "kubestash-restore"
-	KubeStashInitializerComponent        = "kubestash-initializer"
-	KubeStashUploaderComponent           = "kubestash-uploader"
-	KubeStashCleanerComponent            = "kubestash-cleaner"
-	KubeStashHookComponent               = "kubestash-hook"
-	KubeStashPopulatorComponent          = "kubestash-populator"
-	KubeStashBackupVerificationComponent = "kubestash-backup-verification"
+	KubeStashBackupComponent         = "kubestash-backup"
+	KubeStashRestoreComponent        = "kubestash-restore"
+	KubeStashInitializerComponent    = "kubestash-initializer"
+	KubeStashUploaderComponent       = "kubestash-uploader"
+	KubeStashCleanerComponent        = "kubestash-cleaner"
+	KubeStashHookComponent           = "kubestash-hook"
+	KubeStashPopulatorComponent      = "kubestash-populator"
+	KubeStashBackupVerifierComponent = "kubestash-backup-verifier"
 )
 
 // Keys for offshoot labels
@@ -102,14 +102,14 @@ const (
 
 // RBAC related
 const (
-	KubeStashBackupJobClusterRole             = "kubestash-backup-job"
-	KubeStashRestoreJobClusterRole            = "kubestash-restore-job"
-	KubeStashCronJobClusterRole               = "kubestash-cron-job"
-	KubeStashBackendJobClusterRole            = "kubestash-backend-job"
-	KubeStashStorageInitializerClusterRole    = "kubestash-storage-initializer-job"
-	KubeStashPopulatorJobClusterRole          = "kubestash-populator-job"
-	KubeStashRetentionPolicyJobClusterRole    = "kubestash-retention-policy-job"
-	KubeStashBackupVerificationJobClusterRole = "kubestash-backup-verification-job"
+	KubeStashBackupJobClusterRole          = "kubestash-backup-job"
+	KubeStashRestoreJobClusterRole         = "kubestash-restore-job"
+	KubeStashCronJobClusterRole            = "kubestash-cron-job"
+	KubeStashBackendJobClusterRole         = "kubestash-backend-job"
+	KubeStashStorageInitializerClusterRole = "kubestash-storage-initializer-job"
+	KubeStashPopulatorJobClusterRole       = "kubestash-populator-job"
+	KubeStashRetentionPolicyJobClusterRole = "kubestash-retention-policy-job"
+	KubeStashBackupVerifierJobClusterRole  = "kubestash-backup-verifier-job"
 )
 
 // Reconciliation related

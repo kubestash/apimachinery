@@ -118,13 +118,13 @@ const (
 
 	// TypeRestoreSucceeded indicates whether the restore is succeeded or not.
 	TypeRestoreSucceeded             = "RestoreSucceeded"
-	ReasonSuccessfullySucceedRestore = "SuccessfullySucceedRestore"
-	ReasonFailedToSucceedRestore     = "FailedToSucceedRestore"
+	ReasonSuccessfullyRestoredBackup = "SuccessfullyRestoredBackup"
+	ReasonFailedToRestoreBackup      = "FailedToRestoreBackup"
 
 	// TypeBackupVerified indicates whether backup is verified or not
-	TypeBackupVerified             = "BackupVerified"
-	ReasonSuccessfullyVerifyBackup = "SuccessfullyVerifyBackup"
-	ReasonFailedToVerifyBackup     = "FailedToVerifyBackup"
+	TypeBackupVerified               = "BackupVerified"
+	ReasonSuccessfullyVerifiedBackup = "SuccessfullyVerifiedBackup"
+	ReasonFailedToVerifyBackup       = "FailedToVerifyBackup"
 )
 
 //+kubebuilder:object:root=true
