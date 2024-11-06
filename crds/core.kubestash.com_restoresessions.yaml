@@ -24089,6 +24089,11 @@ spec:
                     description: MariaDB specifies the options for selecting particular
                       MariaDB components to restore in manifest restore
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24151,6 +24156,11 @@ spec:
                     description: MongoDB specifies the options for selecting particular
                       MongoDB components to restore in manifest restore
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24282,6 +24292,11 @@ spec:
                     description: MySQL specifies the options for selecting particular
                       MySQL components to restore in manifest restore
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24344,6 +24359,11 @@ spec:
                     description: Postgres specifies the options for selecting particular
                       Postgres components to restore in manifest restore
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24406,6 +24426,11 @@ spec:
                     description: Redis specifies the options for selecting particular
                       Redis components to restore in manifest restore
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24516,6 +24541,11 @@ spec:
                     description: Singlestore specifies the options for selecting particular
                       Singlestore components to restore in manifest restore
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24587,6 +24617,11 @@ spec:
                     description: ZooKeeper specifies the options for selecting particular
                       ZooKeeper components to restore in manifest restore
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
