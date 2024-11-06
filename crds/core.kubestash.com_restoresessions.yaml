@@ -9368,6 +9368,11 @@ spec:
                     type: object
                   mariaDB:
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         type: boolean
@@ -9404,6 +9409,11 @@ spec:
                     type: object
                   mongoDB:
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         type: boolean
@@ -9468,6 +9478,11 @@ spec:
                     type: object
                   mySQL:
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         type: boolean
@@ -9504,6 +9519,11 @@ spec:
                     type: object
                   postgres:
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         type: boolean
@@ -9540,6 +9560,11 @@ spec:
                     type: object
                   redis:
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         type: boolean
@@ -9604,6 +9629,11 @@ spec:
                     type: object
                   singlestore:
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         type: boolean
@@ -9645,6 +9675,11 @@ spec:
                     type: object
                   zooKeeper:
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
                       authSecret:
                         default: true
                         type: boolean

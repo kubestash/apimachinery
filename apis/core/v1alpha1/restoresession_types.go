@@ -237,6 +237,11 @@ type KubeDBManifestOptions struct {
 	// +optional
 	AuthSecret *bool `json:"authSecret,omitempty"`
 
+	// Archiver specifies whether to restore the Archiver manifest or not
+	// +kubebuilder:default=true
+	// +optional
+	Archiver *bool `json:"archiver,omitempty"`
+
 	// AuthSecretName specifies new name of the AuthSecret yaml after restore
 	// +optional
 	AuthSecretName string `json:"authSecretName,omitempty"`
