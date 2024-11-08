@@ -24094,6 +24094,18 @@ spec:
                         description: Archiver specifies whether to restore the Archiver
                           manifest or not
                         type: boolean
+                      archiverRef:
+                        description: ArchiverRef specifies the name of the ArchiverRef
+                        properties:
+                          name:
+                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                            type: string
+                          namespace:
+                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                            type: string
+                        required:
+                        - name
+                        type: object
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24161,6 +24173,18 @@ spec:
                         description: Archiver specifies whether to restore the Archiver
                           manifest or not
                         type: boolean
+                      archiverRef:
+                        description: ArchiverRef specifies the name of the ArchiverRef
+                        properties:
+                          name:
+                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                            type: string
+                          namespace:
+                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                            type: string
+                        required:
+                        - name
+                        type: object
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24223,6 +24247,23 @@ spec:
                     description: MSSQLServer specifies the options for selecting particular
                       MSSQLServer components to restore in manifest restore
                     properties:
+                      archiver:
+                        default: true
+                        description: Archiver specifies whether to restore the Archiver
+                          manifest or not
+                        type: boolean
+                      archiverRef:
+                        description: ArchiverRef specifies the name of the ArchiverRef
+                        properties:
+                          name:
+                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                            type: string
+                          namespace:
+                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                            type: string
+                        required:
+                        - name
+                        type: object
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24297,6 +24338,18 @@ spec:
                         description: Archiver specifies whether to restore the Archiver
                           manifest or not
                         type: boolean
+                      archiverRef:
+                        description: ArchiverRef specifies the name of the ArchiverRef
+                        properties:
+                          name:
+                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                            type: string
+                          namespace:
+                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                            type: string
+                        required:
+                        - name
+                        type: object
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24364,6 +24417,18 @@ spec:
                         description: Archiver specifies whether to restore the Archiver
                           manifest or not
                         type: boolean
+                      archiverRef:
+                        description: ArchiverRef specifies the name of the ArchiverRef
+                        properties:
+                          name:
+                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                            type: string
+                          namespace:
+                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                            type: string
+                        required:
+                        - name
+                        type: object
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24431,6 +24496,18 @@ spec:
                         description: Archiver specifies whether to restore the Archiver
                           manifest or not
                         type: boolean
+                      archiverRef:
+                        description: ArchiverRef specifies the name of the ArchiverRef
+                        properties:
+                          name:
+                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                            type: string
+                          namespace:
+                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                            type: string
+                        required:
+                        - name
+                        type: object
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24546,6 +24623,18 @@ spec:
                         description: Archiver specifies whether to restore the Archiver
                           manifest or not
                         type: boolean
+                      archiverRef:
+                        description: ArchiverRef specifies the name of the ArchiverRef
+                        properties:
+                          name:
+                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                            type: string
+                          namespace:
+                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                            type: string
+                        required:
+                        - name
+                        type: object
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
@@ -24622,6 +24711,18 @@ spec:
                         description: Archiver specifies whether to restore the Archiver
                           manifest or not
                         type: boolean
+                      archiverRef:
+                        description: ArchiverRef specifies the name of the ArchiverRef
+                        properties:
+                          name:
+                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                            type: string
+                          namespace:
+                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                            type: string
+                        required:
+                        - name
+                        type: object
                       authSecret:
                         default: true
                         description: AuthSecret specifies whether to restore the AuthSecret

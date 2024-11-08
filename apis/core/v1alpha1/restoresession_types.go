@@ -177,6 +177,15 @@ type MSSQLServerManifestOptions struct {
 	// +optional
 	AuthSecretName string `json:"authSecretName,omitempty"`
 
+	// Archiver specifies whether to restore the Archiver manifest or not
+	// +kubebuilder:default=true
+	// +optional
+	Archiver *bool `json:"archiver,omitempty"`
+
+	// ArchiverRef specifies the name of the ArchiverRef
+	// +optional
+	ArchiverRef *kmapi.ObjectReference `json:"archiverRef,omitempty"`
+
 	// InternalAuthIssuerRef specifies the name of the IssuerRef used for endpoint authentication.
 	// +optional
 	InternalAuthIssuerRef *core.TypedLocalObjectReference `json:"internalAuthIssuerRef,omitempty"`
@@ -243,14 +252,18 @@ type KubeDBManifestOptions struct {
 	// +optional
 	AuthSecret *bool `json:"authSecret,omitempty"`
 
+	// AuthSecretName specifies new name of the AuthSecret yaml after restore
+	// +optional
+	AuthSecretName string `json:"authSecretName,omitempty"`
+
 	// Archiver specifies whether to restore the Archiver manifest or not
 	// +kubebuilder:default=true
 	// +optional
 	Archiver *bool `json:"archiver,omitempty"`
 
-	// AuthSecretName specifies new name of the AuthSecret yaml after restore
+	// ArchiverRef specifies the name of the ArchiverRef
 	// +optional
-	AuthSecretName string `json:"authSecretName,omitempty"`
+	ArchiverRef *kmapi.ObjectReference `json:"archiverRef,omitempty"`
 
 	// ConfigSecret specifies whether to restore the ConfigSecret manifest or not
 	// +kubebuilder:default=true
