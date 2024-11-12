@@ -18,14 +18,14 @@ package restic
 
 import (
 	"fmt"
+	shell "gomodules.xyz/go-sh"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"os"
 	"path/filepath"
-	"sort"
-
-	shell "gomodules.xyz/go-sh"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sort"
+	"sync"
 )
 
 const (
@@ -36,7 +36,7 @@ const (
 
 type ResticWrapper struct {
 	sh     *shell.Session
-	Config SetupOptions
+	Config *SetupOptions
 }
 
 type Command struct {
@@ -77,6 +77,7 @@ type DumpOptions struct {
 }
 
 type SetupOptions struct {
+	sync.Mutex
 	Client      client.Client
 	Nice        *ofst.NiceSettings
 	IONice      *ofst.IONiceSettings
@@ -94,7 +95,7 @@ type KeyOptions struct {
 	File string
 }
 
-func NewResticWrapper(options SetupOptions) (*ResticWrapper, error) {
+func NewResticWrapper(options *SetupOptions) (*ResticWrapper, error) {
 	wrapper := &ResticWrapper{
 		sh:     shell.NewSession(),
 		Config: options,
@@ -107,7 +108,7 @@ func NewResticWrapper(options SetupOptions) (*ResticWrapper, error) {
 	return wrapper, nil
 }
 
-func NewResticWrapperFromShell(options SetupOptions, sh *shell.Session) (*ResticWrapper, error) {
+func NewResticWrapperFromShell(options *SetupOptions, sh *shell.Session) (*ResticWrapper, error) {
 	wrapper := &ResticWrapper{
 		sh:     sh,
 		Config: options,

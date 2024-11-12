@@ -35,6 +35,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"testing"
+	"time"
 )
 
 var (
@@ -81,7 +82,7 @@ func setupTest(tempDir string) (*ResticWrapper, error) {
 		},
 	}
 
-	setupOpt := SetupOptions{
+	setupOpt := &SetupOptions{
 		Backends: []*Backend{
 			{
 				EncryptionSecret: &kmapi.ObjectReference{
@@ -151,15 +152,13 @@ func TestRepositoryAlreadyExist_AfterInitialization(t *testing.T) {
 		return
 	}
 	defer cleanup(tempDir)
-	w.InitializeRepository()
-	for _, sBackend := range w.Config.Backends {
-		if sBackend.Error != nil {
+	for _, b := range w.Config.Backends {
+		if err = w.InitializeRepository(b.Repository); err != nil {
 			t.Error(err)
-			return
 		}
 	}
-	for _, sBackend := range w.Config.Backends {
-		repoExist := w.repositoryExist(sBackend)
+	for _, b := range w.Config.Backends {
+		repoExist := w.repositoryExist(b.Repository)
 		assert.Equal(t, true, repoExist)
 	}
 
@@ -178,8 +177,8 @@ func TestRepositoryAlreadyExist_WithoutInitialization(t *testing.T) {
 	}
 	defer cleanup(tempDir)
 
-	for _, sBackend := range w.Config.Backends {
-		repoExist := w.repositoryExist(sBackend)
+	for _, b := range w.Config.Backends {
+		repoExist := w.repositoryExist(b.Repository)
 		assert.Equal(t, false, repoExist)
 	}
 }
@@ -199,11 +198,9 @@ func TestBackupRestoreDirs(t *testing.T) {
 	defer cleanup(tempDir)
 
 	// Initialize Repository
-	w.InitializeRepository()
-	for _, sBackend := range w.Config.Backends {
-		if sBackend.Error != nil {
+	for _, b := range w.Config.Backends {
+		if err = w.InitializeRepository(b.Repository); err != nil {
 			t.Error(err)
-			return
 		}
 	}
 	backupOpt := BackupOptions{
@@ -224,9 +221,9 @@ func TestBackupRestoreDirs(t *testing.T) {
 	restoreOpt := RestoreOptions{
 		RestorePaths: []string{targetPath},
 	}
-	sBackend := w.Config.Backends[0]
 
-	restoreOut, err := w.RunRestore(sBackend, restoreOpt)
+	repository := w.Config.Backends[0].Repository
+	restoreOut, err := w.RunRestore(repository, restoreOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -257,11 +254,9 @@ func TestBackupRestoreStdin(t *testing.T) {
 	defer cleanup(tempDir)
 
 	// Initialize Repository
-	w.InitializeRepository()
-	for _, sBackend := range w.Config.Backends {
-		if sBackend.Error != nil {
+	for _, b := range w.Config.Backends {
+		if err = w.InitializeRepository(b.Repository); err != nil {
 			t.Error(err)
-			return
 		}
 	}
 
@@ -274,14 +269,18 @@ func TestBackupRestoreStdin(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	fmt.Println("backup output:", backupOut)
+	fmt.Println("backup output:")
+	for _, out := range backupOut {
+		fmt.Println(out)
+	}
 
-	sBackend := w.Config.Backends[0]
 	dumpOpt := DumpOptions{
 		FileName:           fileName,
 		StdoutPipeCommands: []Command{stdoutPipeCommand},
 	}
-	dumpOut, err := w.Dump(sBackend, dumpOpt)
+
+	repository := w.Config.Backends[0].Repository
+	dumpOut, err := w.Dump(repository, dumpOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -304,14 +303,11 @@ func TestBackupRestoreWithScheduling(t *testing.T) {
 	defer cleanup(tempDir)
 
 	// Initialize Repository
-	w.InitializeRepository()
-	for _, sBackend := range w.Config.Backends {
-		if sBackend.Error != nil {
+	for _, b := range w.Config.Backends {
+		if err = w.InitializeRepository(b.Repository); err != nil {
 			t.Error(err)
-			return
 		}
 	}
-
 	w.Config.IONice = &ofst.IONiceSettings{
 		Class:     pointer.Int32P(2),
 		ClassData: pointer.Int32P(3),
@@ -339,7 +335,7 @@ func TestBackupRestoreWithScheduling(t *testing.T) {
 		RestorePaths: []string{targetPath},
 	}
 
-	restoreOut, err := w.RunRestore(w.Config.Backends[0], restoreOpt)
+	restoreOut, err := w.RunRestore(w.Config.Backends[0].Repository, restoreOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -370,11 +366,9 @@ func TestBackupRestoreStdinWithScheduling(t *testing.T) {
 	defer cleanup(tempDir)
 
 	// Initialize Repository
-	w.InitializeRepository()
-	for _, sBackend := range w.Config.Backends {
-		if sBackend.Error != nil {
+	for _, b := range w.Config.Backends {
+		if err = w.InitializeRepository(b.Repository); err != nil {
 			t.Error(err)
-			return
 		}
 	}
 
@@ -401,7 +395,7 @@ func TestBackupRestoreStdinWithScheduling(t *testing.T) {
 		FileName:           fileName,
 		StdoutPipeCommands: []Command{stdoutPipeCommand},
 	}
-	dumpOut, err := w.Dump(w.Config.Backends[0], dumpOpt)
+	dumpOut, err := w.Dump(w.Config.Backends[0].Repository, dumpOpt)
 	if err != nil {
 		t.Error(err)
 		return
@@ -447,11 +441,9 @@ func TestBackupRestoreWithArgs(t *testing.T) {
 			defer cleanup(tempDir)
 
 			// Initialize Repository
-			w.InitializeRepository()
-			for _, sBackend := range w.Config.Backends {
-				if sBackend.Error != nil {
+			for _, b := range w.Config.Backends {
+				if err = w.InitializeRepository(b.Repository); err != nil {
 					t.Error(err)
-					return
 				}
 			}
 
@@ -476,7 +468,7 @@ func TestBackupRestoreWithArgs(t *testing.T) {
 			}
 			test.restoreOpt.RestorePaths = []string{targetPath}
 
-			_, err = w.RunRestore(w.Config.Backends[0], test.restoreOpt)
+			_, err = w.RunRestore(w.Config.Backends[0].Repository, test.restoreOpt)
 			if err != nil {
 				t.Error(err)
 				return
@@ -485,39 +477,37 @@ func TestBackupRestoreWithArgs(t *testing.T) {
 	}
 }
 
-//func TestBackupWithTimeout(t *testing.T) {
-//	tempDir, err := os.MkdirTemp("", "stash-unit-test-")
-//	if err != nil {
-//		t.Error(err)
-//		return
-//	}
-//
-//	w, err := setupTest(tempDir)
-//	if err != nil {
-//		t.Error(err)
-//		return
-//	}
-//	defer cleanup(tempDir)
-//
-//	// Initialize Repository
-//	w.InitializeRepository()
-//	for _, sBackend := range w.Config.Backends {
-//		if sBackend.Error != nil {
-//			t.Error(err)
-//			return
-//		}
-//	}
-//
-//	duration := metav1.Duration{Duration: 10 * time.Millisecond}
-//	w.Config.Timeout = &duration
-//
-//	backupOpt := BackupOptions{
-//		StdinPipeCommands: []Command{stdinPipeCommand},
-//		StdinFileName:     fileName,
-//	}
-//	_, err = w.RunBackup(backupOpt)
-//	assert.Error(t, err, "Timeout error")
-//}
+func TestBackupWithTimeout(t *testing.T) {
+	tempDir, err := os.MkdirTemp("", "stash-unit-test-")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	w, err := setupTest(tempDir)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer cleanup(tempDir)
+
+	// Initialize Repository
+	for _, b := range w.Config.Backends {
+		if err = w.InitializeRepository(b.Repository); err != nil {
+			t.Error(err)
+		}
+	}
+
+	duration := metav1.Duration{Duration: 10 * time.Millisecond}
+	w.Config.Timeout = &duration
+
+	backupOpt := BackupOptions{
+		StdinPipeCommands: []Command{stdinPipeCommand},
+		StdinFileName:     fileName,
+	}
+	_, err = w.RunBackup(backupOpt)
+	assert.Error(t, err, "Timeout error")
+}
 
 func TestVerifyRepositoryIntegrity(t *testing.T) {
 	tempDir, err := os.MkdirTemp("", "stash-unit-test-")
@@ -534,11 +524,9 @@ func TestVerifyRepositoryIntegrity(t *testing.T) {
 	defer cleanup(tempDir)
 
 	// Initialize Repository
-	w.InitializeRepository()
-	for _, sBackend := range w.Config.Backends {
-		if sBackend.Error != nil {
+	for _, b := range w.Config.Backends {
+		if err = w.InitializeRepository(b.Repository); err != nil {
 			t.Error(err)
-			return
 		}
 	}
 
@@ -557,12 +545,142 @@ func TestVerifyRepositoryIntegrity(t *testing.T) {
 		return
 	}
 	// apply retention policy
-	repoStats, err := w.VerifyRepositoryIntegrity(w.Config.Backends[0])
+	repoStats, err := w.VerifyRepositoryIntegrity(w.Config.Backends[0].Repository)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 	assert.Equal(t, true, *repoStats.Integrity)
+}
+
+func setupTestForMultipleBackends(tempDir string, backendsCount int) (*ResticWrapper, error) {
+	var setupOpt = &SetupOptions{
+		ScratchDir:  filepath.Join(tempDir, "scratch"),
+		EnableCache: false,
+	}
+	if err := os.MkdirAll(setupOpt.ScratchDir, 0o777); err != nil {
+		return nil, err
+	}
+
+	var initObjs []client.Object
+	for idx := range backendsCount {
+		localRepoDir = filepath.Join(tempDir, fmt.Sprintf("repo-%d", idx))
+		targetPath = filepath.Join(tempDir, fmt.Sprintf("target-%d", idx))
+		if err := os.MkdirAll(localRepoDir, 0o777); err != nil {
+			return nil, err
+		}
+		if err := os.MkdirAll(targetPath, 0o777); err != nil {
+			return nil, err
+		}
+
+		err := os.WriteFile(filepath.Join(targetPath, fileName), []byte(fileContent), os.ModePerm)
+		if err != nil {
+			return nil, err
+		}
+
+		bs := sampleBackupStorage(func(backupStorage *storageapi.BackupStorage) {
+			backupStorage.Name = fmt.Sprintf("sample-backup-storage-%d", idx)
+		})
+		// ss := sampleSecret(&kmapi.ObjectReference{Name: bs.Spec.Storage.GCS.Secret, Namespace: bs.Namespace})
+		es := &core.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      fmt.Sprintf("sample-encryptionsecret-%d", idx),
+				Namespace: bs.Namespace,
+			},
+			Data: map[string][]byte{
+				"RESTIC_PASSWORD": []byte(password),
+			},
+		}
+		initObjs = append(initObjs, bs, es)
+		setupOpt.Backends = append(setupOpt.Backends, &Backend{
+			Repository: fmt.Sprintf("%s-%s-repository-%d", es.Namespace, storage.ProviderLocal, idx),
+			EncryptionSecret: &kmapi.ObjectReference{
+				Name:      es.Name,
+				Namespace: es.Namespace,
+			},
+			BackupStorage: &kmapi.ObjectReference{
+				Name:      bs.Name,
+				Namespace: bs.Namespace,
+			},
+			backend: backend{
+				provider: storage.ProviderLocal,
+				bucket:   localRepoDir,
+				envs:     map[string]string{},
+			},
+		})
+	}
+
+	var err error
+	setupOpt.Client, err = getFakeClient(initObjs...)
+	if err != nil {
+		return nil, err
+	}
+
+	w, err := NewResticWrapper(setupOpt)
+	if err != nil {
+		return nil, err
+	}
+	return w, nil
+}
+
+func TestMultipleBackedBackupRestoreStdin(t *testing.T) {
+	tempDir, err := os.MkdirTemp("", "stash-unit-test-")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	w, err := setupTestForMultipleBackends(tempDir, 3)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer cleanup(tempDir)
+
+	// Initialize Repository
+	for _, b := range w.Config.Backends {
+		if err = w.InitializeRepository(b.Repository); err != nil {
+			t.Error(err)
+		}
+	}
+
+	w.Config.IONice = &ofst.IONiceSettings{
+		Class:     pointer.Int32P(2),
+		ClassData: pointer.Int32P(3),
+	}
+	w.Config.Nice = &ofst.NiceSettings{
+		Adjustment: pointer.Int32P(12),
+	}
+
+	backupOpt := BackupOptions{
+		StdinPipeCommands: []Command{stdinPipeCommand},
+		StdinFileName:     fileName,
+	}
+	backupOut, err := w.RunBackup(backupOpt)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	fmt.Println("backup output:")
+	for _, out := range backupOut {
+		fmt.Println(out)
+	}
+
+	dumpOpt := DumpOptions{
+		FileName:           fileName,
+		StdoutPipeCommands: []Command{stdoutPipeCommand},
+	}
+
+	for _, b := range w.Config.Backends {
+		klog.Infoln("Dumping backes up data from repository:", b.Repository)
+		dumpOut, err := w.Dump(b.Repository, dumpOpt)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		fmt.Println("dump output:", dumpOut)
+	}
 }
 
 func getFakeClient(initObjs ...client.Object) (client.WithWatch, error) {

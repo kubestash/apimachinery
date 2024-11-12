@@ -86,6 +86,7 @@ func (w *ResticWrapper) runBackup(backupOption BackupOptions) ([]HostBackupStats
 		}
 	}
 	for _, path := range backupOption.BackupPaths {
+		startTime := time.Now()
 		params := backupParams{
 			path:     path,
 			host:     backupOption.Host,
@@ -104,9 +105,20 @@ func (w *ResticWrapper) runBackup(backupOption BackupOptions) ([]HostBackupStats
 		for idx, stat := range stats {
 			hostStats[idx] = upsertSnapshotStats(hostStats[idx], stat)
 		}
+		w.updateElapsedTimeout(startTime)
 	}
 
 	return hostStats, nil
+}
+
+func (w *ResticWrapper) updateElapsedTimeout(startTime time.Time) {
+	if w.Config.Timeout != nil {
+		w.Config.Lock()
+		defer w.Config.Unlock()
+		w.Config.Timeout = &metav1.Duration{
+			Duration: time.Since(startTime),
+		}
+	}
 }
 
 // RunParallelBackup runs multiple backup in parallel.
@@ -205,24 +217,24 @@ func (backupOutput *BackupOutput) upsertHostBackupStats(hostStats HostBackupStat
 	backupOutput.Stats = append(backupOutput.Stats, hostStats)
 }
 
-func (w *ResticWrapper) RepositoryAlreadyExist(b *Backend) bool {
-	return w.repositoryExist(b)
+func (w *ResticWrapper) RepositoryAlreadyExist(repository string) bool {
+	return w.repositoryExist(repository)
 }
 
 func (w *ResticWrapper) InitializeRepository(repository string) error {
 	return w.initRepository(repository)
 }
 
-func (w *ResticWrapper) VerifyRepositoryIntegrity(sBackend *Backend) (*RepositoryStats, error) {
+func (w *ResticWrapper) VerifyRepositoryIntegrity(repository string) (*RepositoryStats, error) {
 	// Check repository integrity
-	out, err := w.check(sBackend)
+	out, err := w.check(repository)
 	if err != nil {
 		return nil, err
 	}
 	// Extract information from output of "check" command
 	integrity := extractCheckInfo(out)
 	// Read repository statics after cleanup
-	out, err = w.stats(sBackend, "")
+	out, err = w.stats(repository, "")
 	if err != nil {
 		return nil, err
 	}

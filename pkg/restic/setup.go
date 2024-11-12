@@ -120,6 +120,8 @@ func (w *ResticWrapper) setupEnvsForBackend(b *Backend) error {
 		return fmt.Errorf("missing storage Secret")
 	}
 
+	b.envs = map[string]string{}
+
 	if value, err := w.getSecretKey(b.storageSecret, RESTIC_PASSWORD, true); err != nil {
 		return err
 	} else {

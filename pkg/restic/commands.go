@@ -74,12 +74,13 @@ type keyParams struct {
 	file string
 }
 
-func (w *ResticWrapper) listSnapshots(SBackend *Backend, snapshotIDs []string) ([]Snapshot, error) {
+func (w *ResticWrapper) listSnapshots(repository string, snapshotIDs []string) ([]Snapshot, error) {
 	result := make([]Snapshot, 0)
 	args := w.appendCacheDirFlag([]interface{}{"snapshots", "--json", "--quiet", "--no-lock"})
-	args = SBackend.appendCaCertFlag(args)
-	args = SBackend.appendInsecureTLSFlag(args)
-	args = SBackend.appendMaxConnectionsFlag(args)
+	b := w.getMatchedBackend(repository)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
+	args = b.appendMaxConnectionsFlag(args)
 	for _, id := range snapshotIDs {
 		args = append(args, id)
 	}
@@ -91,37 +92,39 @@ func (w *ResticWrapper) listSnapshots(SBackend *Backend, snapshotIDs []string) (
 	return result, err
 }
 
-func (w *ResticWrapper) tryDeleteSnapshots(sBackend *Backend, snapshotIDs []string) ([]byte, error) {
+func (w *ResticWrapper) tryDeleteSnapshots(repository string, snapshotIDs []string) ([]byte, error) {
 	args := w.appendCacheDirFlag([]interface{}{"forget", "--quiet", "--prune"})
-	args = sBackend.appendCaCertFlag(args)
-	args = sBackend.appendInsecureTLSFlag(args)
-	args = sBackend.appendMaxConnectionsFlag(args)
+	b := w.getMatchedBackend(repository)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
+	args = b.appendMaxConnectionsFlag(args)
 	for _, id := range snapshotIDs {
 		args = append(args, id)
 	}
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) deleteSnapshots(sBackend *Backend, snapshotIDs []string) ([]byte, error) {
-	out, err := w.tryDeleteSnapshots(sBackend, snapshotIDs)
+func (w *ResticWrapper) deleteSnapshots(repository string, snapshotIDs []string) ([]byte, error) {
+	out, err := w.tryDeleteSnapshots(repository, snapshotIDs)
 	if err == nil || !strings.Contains(err.Error(), "unlock") {
 		return out, err
 	}
 	// repo is locked, so unlock first
 	klog.Warningln("repo found locked, so unlocking before pruning, err:", err.Error())
-	if out, err = w.unlock(sBackend); err != nil {
+	if out, err = w.unlock(repository); err != nil {
 		return out, err
 	}
-	return w.tryDeleteSnapshots(sBackend, snapshotIDs)
+	return w.tryDeleteSnapshots(repository, snapshotIDs)
 }
 
-func (w *ResticWrapper) repositoryExist(sBackend *Backend) bool {
+func (w *ResticWrapper) repositoryExist(repository string) bool {
 	klog.Infoln("Checking whether the backend repository exist or not....")
+	b := w.getMatchedBackend(repository)
 	args := w.appendCacheDirFlag([]interface{}{"snapshots", "--json", "--no-lock"})
-	args = sBackend.appendCaCertFlag(args)
-	args = sBackend.appendInsecureTLSFlag(args)
-	args = sBackend.appendMaxConnectionsFlag(args)
-	args = append(args, sBackend.envs)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
+	args = b.appendMaxConnectionsFlag(args)
+	args = append(args, b.envs)
 	if _, err := w.run(Command{Name: ResticCMD, Args: args}); err == nil {
 		return true
 	}
@@ -138,8 +141,8 @@ func (w *ResticWrapper) getMatchedBackend(repository string) *Backend {
 }
 
 func (w *ResticWrapper) initRepository(repository string) error {
-	b := w.getMatchedBackend(repository)
 	klog.Infoln("Initializing new restic repository for repository:", repository)
+	b := w.getMatchedBackend(repository)
 	if err := b.createLocalDir(); err != nil {
 		return err
 	}
@@ -177,14 +180,13 @@ func (w *ResticWrapper) backup(params backupParams) ([]byte, error) {
 	commonArgs = w.appendCacheDirFlag(commonArgs)
 	commonArgs = w.appendCleanupCacheFlag(commonArgs)
 
-	for _, sBackend := range w.Config.Backends {
+	for _, b := range w.Config.Backends {
 		args := commonArgs
-		args = sBackend.appendCaCertFlag(args)
-		args = sBackend.appendInsecureTLSFlag(args)
-		args = sBackend.appendMaxConnectionsFlag(args)
-		args = append(args, sBackend.envs)
+		args = b.appendCaCertFlag(args)
+		args = b.appendInsecureTLSFlag(args)
+		args = b.appendMaxConnectionsFlag(args)
+		args = append(args, b.envs)
 		command := Command{Name: ResticCMD, Args: args}
-		command = w.wrapWithTimeoutIfConfigured(command)
 		commands = append(commands, command)
 	}
 	return w.run(commands...)
@@ -202,20 +204,20 @@ func (w *ResticWrapper) backupFromStdin(options BackupOptions) ([]byte, error) {
 	commonArgs = w.appendCacheDirFlag(commonArgs)
 	commonArgs = w.appendCleanupCacheFlag(commonArgs)
 
-	for _, backend := range w.Config.Backends {
-		args := commonArgs
-		args = backend.appendCaCertFlag(args)
-		args = backend.appendInsecureTLSFlag(args)
-		args = backend.appendMaxConnectionsFlag(args)
-		args = append(args, backend.envs)
+	for _, b := range w.Config.Backends {
+		args := make([]interface{}, len(commonArgs))
+		copy(args, commonArgs)
+		args = b.appendCaCertFlag(args)
+		args = b.appendInsecureTLSFlag(args)
+		args = b.appendMaxConnectionsFlag(args)
+		args = append(args, b.envs)
 		command := Command{Name: ResticCMD, Args: args}
-		command = w.wrapWithTimeoutIfConfigured(command)
 		commands = append(commands, command)
 	}
 	return w.run(commands...)
 }
 
-func (w *ResticWrapper) restore(sBackend *Backend, params restoreParams) ([]byte, error) {
+func (w *ResticWrapper) restore(repository string, params restoreParams) ([]byte, error) {
 	klog.Infoln("Restoring backed up data")
 
 	args := []interface{}{"restore"}
@@ -252,18 +254,19 @@ func (w *ResticWrapper) restore(sBackend *Backend, params restoreParams) ([]byte
 	for i := range params.args {
 		args = append(args, params.args[i])
 	}
+	b := w.getMatchedBackend(repository)
 	args = w.appendCacheDirFlag(args)
-	args = sBackend.appendCaCertFlag(args)
-	args = sBackend.appendInsecureTLSFlag(args)
-	args = sBackend.appendMaxConnectionsFlag(args)
-	args = append(args, sBackend.envs)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
+	args = b.appendMaxConnectionsFlag(args)
+	args = append(args, b.envs)
 	command := Command{Name: ResticCMD, Args: args}
 	command = w.wrapWithTimeoutIfConfigured(command)
 
 	return w.run(command)
 }
 
-func (w *ResticWrapper) DumpOnce(sBackend *Backend, dumpOptions DumpOptions) ([]byte, error) {
+func (w *ResticWrapper) DumpOnce(repository string, dumpOptions DumpOptions) ([]byte, error) {
 	klog.Infoln("Dumping backed up data")
 
 	args := []interface{}{"dump", "--quiet"}
@@ -285,12 +288,12 @@ func (w *ResticWrapper) DumpOnce(sBackend *Backend, dumpOptions DumpOptions) ([]
 		args = append(args, "--path")
 		args = append(args, dumpOptions.Path)
 	}
-
+	b := w.getMatchedBackend(repository)
 	args = w.appendCacheDirFlag(args)
-	args = sBackend.appendCaCertFlag(args)
-	args = sBackend.appendMaxConnectionsFlag(args)
-	args = sBackend.appendInsecureTLSFlag(args)
-	args = append(args, sBackend.envs)
+	args = b.appendCaCertFlag(args)
+	args = b.appendMaxConnectionsFlag(args)
+	args = b.appendInsecureTLSFlag(args)
+	args = append(args, b.envs)
 
 	command := Command{Name: ResticCMD, Args: args}
 	command = w.wrapWithTimeoutIfConfigured(command)
@@ -301,37 +304,40 @@ func (w *ResticWrapper) DumpOnce(sBackend *Backend, dumpOptions DumpOptions) ([]
 	return w.run(commands...)
 }
 
-func (w *ResticWrapper) check(sBackend *Backend) ([]byte, error) {
+func (w *ResticWrapper) check(repository string) ([]byte, error) {
 	klog.Infoln("Checking integrity of repository")
 	args := w.appendCacheDirFlag([]interface{}{"check", "--no-lock"})
-	args = sBackend.appendCaCertFlag(args)
-	args = sBackend.appendMaxConnectionsFlag(args)
-	args = sBackend.appendInsecureTLSFlag(args)
-	args = append(args, sBackend.envs)
+	b := w.getMatchedBackend(repository)
+	args = b.appendCaCertFlag(args)
+	args = b.appendMaxConnectionsFlag(args)
+	args = b.appendInsecureTLSFlag(args)
+	args = append(args, b.envs)
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) stats(sBackend *Backend, snapshotID string) ([]byte, error) {
+func (w *ResticWrapper) stats(repository string, snapshotID string) ([]byte, error) {
 	klog.Infoln("Reading repository status")
 	args := w.appendCacheDirFlag([]interface{}{"stats"})
 	if snapshotID != "" {
 		args = append(args, snapshotID)
 	}
-	args = sBackend.appendMaxConnectionsFlag(args)
+	b := w.getMatchedBackend(repository)
+	args = b.appendMaxConnectionsFlag(args)
 	args = append(args, "--quiet", "--json", "--mode", "raw-data", "--no-lock")
-	args = sBackend.appendCaCertFlag(args)
-	args = sBackend.appendInsecureTLSFlag(args)
-	args = append(args, sBackend.envs)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
+	args = append(args, b.envs)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) unlock(sBackend *Backend) ([]byte, error) {
+func (w *ResticWrapper) unlock(repository string) ([]byte, error) {
 	klog.Infoln("Unlocking restic repository")
 	args := w.appendCacheDirFlag([]interface{}{"unlock", "--remove-all"})
-	args = sBackend.appendMaxConnectionsFlag(args)
-	args = sBackend.appendCaCertFlag(args)
-	args = sBackend.appendInsecureTLSFlag(args)
+	b := w.getMatchedBackend(repository)
+	args = b.appendMaxConnectionsFlag(args)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
@@ -380,14 +386,18 @@ func (w *ResticWrapper) run(commands ...Command) ([]byte, error) {
 		newSh.SetTimeout(w.Config.Timeout.Duration)
 	}
 
-	isLeafCmdNecessary := isLeafCommandNecessary(commands...)
+	isLeafCommandRequired := isLeafCommandNecessary(commands...)
 	for _, cmd := range commands {
+		var useLeafCommand bool
+		if isLeafCommandRequired && cmd.Name == ResticCMD {
+			useLeafCommand = true
+		}
+
 		cmd, err = w.applyNiceSettingsIfCommandMatches(cmd, ResticCMD)
 		if err != nil {
 			return nil, err
 		}
-
-		if cmd.Name == ResticCMD && isLeafCmdNecessary {
+		if useLeafCommand {
 			newSh.LeafCommand(cmd.Name, cmd.Args...)
 		} else {
 			newSh.Command(cmd.Name, cmd.Args...)
@@ -481,7 +491,7 @@ func (w *ResticWrapper) applyNiceSettings(oldCommand Command) (Command, error) {
 	return newCommand, nil
 }
 
-func (w *ResticWrapper) addKey(sBackend *Backend, params keyParams) ([]byte, error) {
+func (w *ResticWrapper) addKey(repository string, params keyParams) ([]byte, error) {
 	klog.Infoln("Adding new key to restic repository")
 
 	args := []interface{}{"key", "add", "--no-lock"}
@@ -497,28 +507,30 @@ func (w *ResticWrapper) addKey(sBackend *Backend, params keyParams) ([]byte, err
 		args = append(args, "--new-password-file", params.file)
 	}
 
+	b := w.getMatchedBackend(repository)
 	args = w.appendCacheDirFlag(args)
-	args = sBackend.appendMaxConnectionsFlag(args)
-	args = sBackend.appendCaCertFlag(args)
-	args = sBackend.appendInsecureTLSFlag(args)
+	args = b.appendMaxConnectionsFlag(args)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) listKey(sBackend *Backend) ([]byte, error) {
+func (w *ResticWrapper) listKey(repository string) ([]byte, error) {
 	klog.Infoln("Listing restic keys")
 
 	args := []interface{}{"key", "list", "--no-lock"}
 
+	b := w.getMatchedBackend(repository)
 	args = w.appendCacheDirFlag(args)
-	args = sBackend.appendMaxConnectionsFlag(args)
-	args = sBackend.appendCaCertFlag(args)
-	args = sBackend.appendInsecureTLSFlag(args)
+	args = b.appendMaxConnectionsFlag(args)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) updateKey(sBackend *Backend, params keyParams) ([]byte, error) {
+func (w *ResticWrapper) updateKey(repository string, params keyParams) ([]byte, error) {
 	klog.Infoln("Updating restic key")
 
 	args := []interface{}{"key", "passwd", "--no-lock"}
@@ -527,23 +539,25 @@ func (w *ResticWrapper) updateKey(sBackend *Backend, params keyParams) ([]byte, 
 		args = append(args, "--new-password-file", params.file)
 	}
 
+	b := w.getMatchedBackend(repository)
 	args = w.appendCacheDirFlag(args)
-	args = sBackend.appendMaxConnectionsFlag(args)
-	args = sBackend.appendCaCertFlag(args)
-	args = sBackend.appendInsecureTLSFlag(args)
+	args = b.appendMaxConnectionsFlag(args)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
-func (w *ResticWrapper) removeKey(sBackend *Backend, params keyParams) ([]byte, error) {
+func (w *ResticWrapper) removeKey(repository string, params keyParams) ([]byte, error) {
 	klog.Infoln("Removing restic key")
 
 	args := []interface{}{"key", "remove", params.id, "--no-lock"}
 
+	b := w.getMatchedBackend(repository)
 	args = w.appendCacheDirFlag(args)
-	args = sBackend.appendMaxConnectionsFlag(args)
-	args = sBackend.appendCaCertFlag(args)
-	args = sBackend.appendInsecureTLSFlag(args)
+	args = b.appendMaxConnectionsFlag(args)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
