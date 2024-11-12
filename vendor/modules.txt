@@ -762,7 +762,7 @@ golang.org/x/xerrors/internal
 gomodules.xyz/envsubst
 gomodules.xyz/envsubst/parse
 gomodules.xyz/envsubst/path
-# gomodules.xyz/go-sh v0.1.0
+# gomodules.xyz/go-sh v0.1.0 => /home/anisur/go/src/github.com/anisurrahman75/go-sh
 ## explicit; go 1.15
 gomodules.xyz/go-sh
 # gomodules.xyz/jsonpatch/v2 v2.4.0

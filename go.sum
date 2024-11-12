@@ -434,8 +434,6 @@ golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 h1:+cNy6SZtPcJQH3LJVLOSm
 golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028/go.mod h1:NDW/Ps6MPRej6fsCIbMTohpP40sJ/P/vI1MoTEGwX90=
 gomodules.xyz/envsubst v0.2.0 h1:piG4OcpUa/Mu7LxSo+2Ye8JH7pXXWM2XuCD8Ic7Hdwc=
 gomodules.xyz/envsubst v0.2.0/go.mod h1:eB1KRKtXx6RSpl+WYxE8gFE7DhNJCoorHzSij7X3AQo=
-gomodules.xyz/go-sh v0.1.0 h1:1BJAuGREh2RhePt7HRrpmjnkbgfpXlCzc42SiyZ5dkc=
-gomodules.xyz/go-sh v0.1.0/go.mod h1:N8IrjNiYppUI/rxENYrWD6FOrSxSyEZnIekPEWM7LP0=
 gomodules.xyz/jsonpatch/v2 v2.4.0 h1:Ci3iUJyx9UeRx7CeFN8ARgGbkESwJK+KB9lLcWxY/Zw=
 gomodules.xyz/jsonpatch/v2 v2.4.0/go.mod h1:AH3dM2RI6uoBZxn3LVrfvJ3E0/9dG4cSrbuBJT4moAY=
 gomodules.xyz/mergo v0.3.13 h1:q6cL/MMXZH/MrR2+yjSihFFq6UifXqjwaqI48B6cMEM=
