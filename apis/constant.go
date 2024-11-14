@@ -51,7 +51,7 @@ const (
 	PrefixRetentionPolicy = "retentionpolicy"
 	PrefixPopulate        = "populate"
 	PrefixPrime           = "prime"
-	PrefixVerify          = "verify"
+	PrefixTriggerVerifier = "trigger-verifier"
 )
 
 const (

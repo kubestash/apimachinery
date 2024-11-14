@@ -840,6 +840,11 @@ func (in *BackupVerifierSpec) DeepCopyInto(out *BackupVerifierSpec) {
 		*out = new(RestoreOption)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Scheduler != nil {
+		in, out := &in.Scheduler, &out.Scheduler
+		*out = new(SchedulerSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Volumes != nil {
 		in, out := &in.Volumes, &out.Volumes
 		*out = make([]apiv1.Volume, len(*in))

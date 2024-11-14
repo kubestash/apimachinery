@@ -49,8 +49,8 @@ type BackupVerifierSpec struct {
 	// +optional
 	RestoreOption *RestoreOption `json:"restoreOption,omitempty"`
 
-	// Schedule specifies the schedule of backup verification in Cron format, see https://en.wikipedia.org/wiki/Cron.
-	Schedule string `json:"schedule,omitempty"`
+	// Scheduler specifies the configuration for verification triggering CronJob
+	Scheduler *SchedulerSpec `json:"scheduler,omitempty"`
 
 	// Function specifies the name of a Function CR that defines a container definition
 	// which will execute the verification logic for a particular application.

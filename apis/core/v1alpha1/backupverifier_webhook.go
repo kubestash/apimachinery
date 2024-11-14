@@ -80,8 +80,8 @@ func (v *BackupVerifier) validateVerifier() error {
 		return fmt.Errorf("addonInfo in restoreOption for backupVerifier %s/%s cannot be empty", v.Namespace, v.Name)
 	}
 
-	if v.Spec.Schedule == "" {
-		return fmt.Errorf("schedule for backupVerifier %s/%s cannot be empty", v.Namespace, v.Name)
+	if v.Spec.Scheduler != nil {
+		return fmt.Errorf("scheduler for backupVerifier %s/%s cannot be empty", v.Namespace, v.Name)
 	}
 
 	if v.Spec.Query != nil || v.Spec.Script != nil {
