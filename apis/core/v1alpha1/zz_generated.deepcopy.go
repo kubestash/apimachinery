@@ -1333,11 +1333,6 @@ func (in *MSSQLServerManifestOptions) DeepCopyInto(out *MSSQLServerManifestOptio
 		*out = new(bool)
 		**out = **in
 	}
-	if in.InternalAuthIssuerRef != nil {
-		in, out := &in.InternalAuthIssuerRef, &out.InternalAuthIssuerRef
-		*out = new(corev1.TypedLocalObjectReference)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.TLSIssuerRef != nil {
 		in, out := &in.TLSIssuerRef, &out.TLSIssuerRef
 		*out = new(corev1.TypedLocalObjectReference)
