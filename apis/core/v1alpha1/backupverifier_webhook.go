@@ -84,9 +84,30 @@ func (v *BackupVerifier) validateVerifier() error {
 		return fmt.Errorf("scheduler for backupVerifier %s/%s cannot be empty", v.Namespace, v.Name)
 	}
 
-	if v.Spec.Query != nil || v.Spec.Script != nil {
+	if v.Spec.Type == "" {
+		return fmt.Errorf("type of backupVerifier %s/%s cannot be empty", v.Namespace, v.Name)
+	}
+
+	if v.Spec.Type == QueryVerificationType {
+		if v.Spec.Query == nil {
+			return fmt.Errorf("query in backupVerifier %s/%s cannot be empty", v.Namespace, v.Name)
+		}
 		if v.Spec.Function == "" {
-			return fmt.Errorf("function for backupVerifier %s/%s cannot be empty", v.Namespace, v.Name)
+			return fmt.Errorf("function in backupVerifier %s/%s cannot be empty", v.Namespace, v.Name)
+		}
+	}
+
+	if v.Spec.Type == ScriptVerificationType {
+		if v.Spec.Script == nil {
+			return fmt.Errorf("script in backupVerifier %s/%s cannot be empty", v.Namespace, v.Name)
+		}
+
+		if v.Spec.Script.Location == "" {
+			return fmt.Errorf("script location in backupVerifier %s/%s cannot be empty", v.Namespace, v.Name)
+		}
+
+		if v.Spec.Function == "" {
+			return fmt.Errorf("function in backupVerifier %s/%s cannot be empty", v.Namespace, v.Name)
 		}
 	}
 
