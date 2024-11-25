@@ -41,6 +41,10 @@ type AddonInfo struct {
 	// JobTemplate specifies runtime configurations for the backup/restore Job
 	// +optional
 	JobTemplate *ofst.PodTemplateSpec `json:"jobTemplate,omitempty"`
+
+	// TLS specifies the tls configurations for the backup/restore Pod
+	// +optional
+	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 }
 
 // TaskReference specifies a task and its configuration parameters
