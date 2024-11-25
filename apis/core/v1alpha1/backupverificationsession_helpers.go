@@ -90,6 +90,7 @@ func (b *BackupVerificationSession) OffshootLabels() map[string]string {
 	newLabels[apis.KubeStashInvokerName] = b.Name
 	newLabels[apis.KubeStashInvokerNamespace] = b.Namespace
 	newLabels[apis.KubeStashSessionName] = b.Spec.Session
+	newLabels[apis.KubeStashRepoName] = b.Spec.Repository
 
 	return apis.UpsertLabels(b.Labels, newLabels)
 }
