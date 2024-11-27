@@ -175,10 +175,6 @@ type MSSQLServerManifestOptions struct {
 	// +optional
 	AuthSecretName string `json:"authSecretName,omitempty"`
 
-	// InternalAuthIssuerRef specifies the name of the IssuerRef used for endpoint authentication.
-	// +optional
-	InternalAuthIssuerRef *core.TypedLocalObjectReference `json:"internalAuthIssuerRef,omitempty"`
-
 	// TLSIssuerRef specifies the name of the IssuerRef used for TLS configurations for both client and server.
 	// +optional
 	TLSIssuerRef *core.TypedLocalObjectReference `json:"tlsIssuerRef,omitempty"`
