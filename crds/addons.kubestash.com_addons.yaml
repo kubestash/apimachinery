@@ -48,14 +48,7 @@ spec:
                         - Restic
                         - WalG
                         - VolumeSnapshotter
-<<<<<<< HEAD
-=======
                         - Solr
-                      description: 'Driver specifies the underlying tool that will
-                        be used to upload the data to the backend storage. Valid values
-                        are: - "Restic": The underlying tool is [restic](https://restic.net/).
-                        - "WalG": The underlying tool is [wal-g](https://github.com/wal-g/wal-g).'
->>>>>>> 7c1f76d9 (Add solr sanpshot api)
                       type: string
                     executor:
                       enum:
@@ -1050,14 +1043,7 @@ spec:
                         - Restic
                         - WalG
                         - VolumeSnapshotter
-<<<<<<< HEAD
-=======
                         - Solr
-                      description: 'Driver specifies the underlying tool that will
-                        be used to upload the data to the backend storage. Valid values
-                        are: - "Restic": The underlying tool is [restic](https://restic.net/).
-                        - "WalG": The underlying tool is [wal-g](https://github.com/wal-g/wal-g).'
->>>>>>> 7c1f76d9 (Add solr sanpshot api)
                       type: string
                     executor:
                       enum:
