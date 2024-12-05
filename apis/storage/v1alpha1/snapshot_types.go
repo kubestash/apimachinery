@@ -207,6 +207,9 @@ type Component struct {
 	VolumeSnapshotterStats []VolumeSnapshotterStats `json:"volumeSnapshotterStats,omitempty"`
 	// WalSegments specifies a list of wall segment for individual component
 	WalSegments []WalSegment `json:"walSegments,omitempty"`
+
+	// SolrStats represents the Solr specific information
+	SolrStats []SolrStat `json:"solrStats,omitempty"`
 }
 
 // ComponentPhase represents the backup phase of the individual component.
@@ -244,6 +247,34 @@ type ResticStats struct {
 	// EndTime represents the timestamp at which the restic command successfully executed
 	// +optional
 	EndTime *metav1.Time `json:"endTime,omitempty"`
+}
+
+// SolrStat specifies Solr driver related information
+type SolrStat struct {
+	// Collection represents the name of the Solr collection.
+	Collection string `json:"collection,omitempty"`
+
+	// BackupId represents the Solr snapshot id.
+	BackupId int `json:"backupId,omitempty"`
+
+	// Location represents the location where the backup exists.
+	Location string `json:"location,omitempty"`
+
+	// StartTime represents the Solr backup start time.
+	// +optional
+	StartTime string `json:"startTime,omitempty"`
+
+	// IndexFileCount represents the number of index files in Solr backup.
+	// +optional
+	IndexFileCount int `json:"indexFileCount,omitempty"`
+
+	// IndexFileCount represents the size of index files in Solr backup.
+	// +optional
+	IndexSizeMB float64 `json:"indexSizeMB,omitempty"`
+
+	// IndexFileSizeUploaded represents the size uploaded solr index file size in solr backup
+	// +optional
+	UploadedIndexFileMB float64 `json:"uploadedIndexFileMB,omitempty"`
 }
 
 // VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
