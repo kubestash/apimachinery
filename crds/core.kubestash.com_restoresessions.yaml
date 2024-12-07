@@ -9450,19 +9450,6 @@ spec:
                         type: boolean
                       dbName:
                         type: string
-                      internalAuthIssuerRef:
-                        properties:
-                          apiGroup:
-                            type: string
-                          kind:
-                            type: string
-                          name:
-                            type: string
-                        required:
-                        - kind
-                        - name
-                        type: object
-                        x-kubernetes-map-type: atomic
                       restoreNamespace:
                         type: string
                       tlsIssuerRef:
