@@ -43,10 +43,12 @@ spec:
                         - Restic
                         - WalG
                         - VolumeSnapshotter
+                        - Solr
                       - enum:
                         - Restic
                         - WalG
                         - VolumeSnapshotter
+                        - Solr
                       type: string
                     executor:
                       enum:
@@ -1036,10 +1038,12 @@ spec:
                         - Restic
                         - WalG
                         - VolumeSnapshotter
+                        - Solr
                       - enum:
                         - Restic
                         - WalG
                         - VolumeSnapshotter
+                        - Solr
                       type: string
                     executor:
                       enum:
