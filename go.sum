@@ -27,6 +27,8 @@ github.com/AzureAD/microsoft-authentication-library-for-go v1.2.2/go.mod h1:wP83
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Masterminds/semver/v3 v3.2.1 h1:RN9w6+7QoMeJVGyfmbcgs28Br8cvmnucEXnY0rYXWg0=
 github.com/Masterminds/semver/v3 v3.2.1/go.mod h1:qvl/7zhW3nngYb5+80sSMF+FG2BjYrf8m9wsX0PNOMQ=
+github.com/anisurrahman75/go-sh v0.0.0-20241030063656-336ab30e016a h1:vds1Kj0c/3uTud2/W66GorqmFhPcqHteeSX+6uD3+gc=
+github.com/anisurrahman75/go-sh v0.0.0-20241030063656-336ab30e016a/go.mod h1:N8IrjNiYppUI/rxENYrWD6FOrSxSyEZnIekPEWM7LP0=
 github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2 h1:7Ip0wMmLHLRJdrloDxZfhMm0xrLXZS8+COSu2bXmEQs=
 github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2/go.mod h1:3U/XgcO3hCbHZ8TKRvWD2dDTCfh9M9ya+I9JpbB7O8o=
 github.com/aws/aws-sdk-go v1.50.36 h1:PjWXHwZPuTLMR1NIb8nEjLucZBMzmf84TLoLbD8BZqk=
@@ -398,8 +400,6 @@ golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 h1:+cNy6SZtPcJQH3LJVLOSm
 golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028/go.mod h1:NDW/Ps6MPRej6fsCIbMTohpP40sJ/P/vI1MoTEGwX90=
 gomodules.xyz/envsubst v0.2.0 h1:piG4OcpUa/Mu7LxSo+2Ye8JH7pXXWM2XuCD8Ic7Hdwc=
 gomodules.xyz/envsubst v0.2.0/go.mod h1:eB1KRKtXx6RSpl+WYxE8gFE7DhNJCoorHzSij7X3AQo=
-gomodules.xyz/go-sh v0.1.0 h1:1BJAuGREh2RhePt7HRrpmjnkbgfpXlCzc42SiyZ5dkc=
-gomodules.xyz/go-sh v0.1.0/go.mod h1:N8IrjNiYppUI/rxENYrWD6FOrSxSyEZnIekPEWM7LP0=
 gomodules.xyz/jsonpatch/v2 v2.4.0 h1:Ci3iUJyx9UeRx7CeFN8ARgGbkESwJK+KB9lLcWxY/Zw=
 gomodules.xyz/jsonpatch/v2 v2.4.0/go.mod h1:AH3dM2RI6uoBZxn3LVrfvJ3E0/9dG4cSrbuBJT4moAY=
 gomodules.xyz/mergo v0.3.13 h1:q6cL/MMXZH/MrR2+yjSihFFq6UifXqjwaqI48B6cMEM=
