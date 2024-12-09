@@ -811,11 +811,13 @@ func (in *WalSegment) DeepCopyInto(out *WalSegment) {
 	*out = *in
 	if in.Start != nil {
 		in, out := &in.Start, &out.Start
-		*out = (*in).DeepCopy()
+		*out = new(string)
+		**out = **in
 	}
 	if in.End != nil {
 		in, out := &in.End, &out.End
-		*out = (*in).DeepCopy()
+		*out = new(string)
+		**out = **in
 	}
 }
 

@@ -285,8 +285,8 @@ type WalGStats struct {
 
 // WalSegment specifies the "WalG" driver specific information
 type WalSegment struct {
-	Start *metav1.Time `json:"start,omitempty"`
-	End   *metav1.Time `json:"end,omitempty"`
+	Start *string `json:"start,omitempty"`
+	End   *string `json:"end,omitempty"`
 }
 
 const (
