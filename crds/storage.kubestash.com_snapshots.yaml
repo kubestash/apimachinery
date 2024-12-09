@@ -162,10 +162,8 @@ spec:
                       items:
                         properties:
                           end:
-                            format: date-time
                             type: string
                           start:
-                            format: date-time
                             type: string
                         type: object
                       type: array
