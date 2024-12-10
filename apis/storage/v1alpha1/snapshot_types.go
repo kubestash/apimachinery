@@ -287,6 +287,7 @@ type WalGStats struct {
 type WalSegment struct {
 	Start *string `json:"start,omitempty"`
 	End   *string `json:"end,omitempty"`
+	Lsn   *string `json:"lsn,omitempty"`
 }
 
 const (

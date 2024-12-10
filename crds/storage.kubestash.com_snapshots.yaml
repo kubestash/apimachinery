@@ -163,6 +163,8 @@ spec:
                         properties:
                           end:
                             type: string
+                          lsn:
+                            type: string
                           start:
                             type: string
                         type: object
