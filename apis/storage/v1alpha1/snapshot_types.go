@@ -205,8 +205,37 @@ type Component struct {
 	// VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
 	// +optional
 	VolumeSnapshotterStats []VolumeSnapshotterStats `json:"volumeSnapshotterStats,omitempty"`
+
 	// WalSegments specifies a list of wall segment for individual component
 	WalSegments []WalSegment `json:"walSegments,omitempty"`
+
+	WalStats *WalStats `json:"walStats,omitempty"`
+}
+
+// WalPhase represents the backup phase of the individual Wal.
+// +kubebuilder:validation:Enum=Succeeded;Failed
+type WalPhase string
+
+const (
+	WalPhaseSucceeded WalPhase = "Succeeded"
+	WalPhaseFailed    WalPhase = "Failed"
+)
+
+type WalStats struct {
+	LastFailedWalList  []Wal `json:"FailedWalStats,omitempty"`
+	LastSucceedWalList []Wal `json:"SuccessfulWalStats,omitempty"`
+}
+type Wal struct {
+	Start *string `json:"start,omitempty"`
+	End   *string `json:"end,omitempty"`
+
+	Phase    WalPhase
+	Error    string `json:"error,omitempty"`
+	Output   string `json:"output,omitempty"`
+	Duration string `json:"duration,omitempty"`
+
+	// Lsn for PostgreSQL only
+	Lsn string `json:"lsn,omitempty"`
 }
 
 // ComponentPhase represents the backup phase of the individual component.
