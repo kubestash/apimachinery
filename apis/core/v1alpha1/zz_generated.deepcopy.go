@@ -1297,6 +1297,11 @@ func (in *KubeDBManifestOptions) DeepCopyInto(out *KubeDBManifestOptions) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.ArchiverRef != nil {
+		in, out := &in.ArchiverRef, &out.ArchiverRef
+		*out = new(v1.ObjectReference)
+		**out = **in
+	}
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
 		*out = new(bool)
