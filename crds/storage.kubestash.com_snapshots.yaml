@@ -162,10 +162,10 @@ spec:
                       items:
                         properties:
                           end:
-                            format: date-time
+                            type: string
+                          lsn:
                             type: string
                           start:
-                            format: date-time
                             type: string
                         type: object
                       type: array
