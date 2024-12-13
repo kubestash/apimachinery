@@ -206,36 +206,31 @@ type Component struct {
 	// +optional
 	VolumeSnapshotterStats []VolumeSnapshotterStats `json:"volumeSnapshotterStats,omitempty"`
 
-	// WalSegments specifies a list of wall segment for individual component
-	WalSegments []WalSegment `json:"walSegments,omitempty"`
-
-	WalStats *WalStats `json:"walStats,omitempty"`
+	LogStats *LogStats `json:"logStats,omitempty"`
 }
 
-// WalPhase represents the backup phase of the individual Wal.
-// +kubebuilder:validation:Enum=Succeeded;Failed
-type WalPhase string
+type LogStats struct {
+	// Start represents the start time of the first log, that exists in the repository
+	// TODO: Need to update this start time, once the log-retention gets implemented
+	Start *string `json:"start,omitempty"`
+	// End represents the last end time of the log push
+	// Start & End together holds the full time-range. Not individual log.
+	End *string `json:"end,omitempty"`
+	// Lsn for PostgreSQL only
+	// +optional
+	Lsn *string `json:"lsn,omitempty"`
 
-const (
-	WalPhaseSucceeded WalPhase = "Succeeded"
-	WalPhaseFailed    WalPhase = "Failed"
-)
+	TotalFailedCount int64 `json:"totalFailedCount,omitempty"`
+	LastFailedStats  []Log `json:"lastFailedStats,omitempty"`
 
-type WalStats struct {
-	LastFailedWalList  []Wal `json:"FailedWalStats,omitempty"`
-	LastSucceedWalList []Wal `json:"SuccessfulWalStats,omitempty"`
+	TotalSucceededCount int64 `json:"totalSucceededCount,omitempty"`
+	LastSucceededStats  []Log `json:"lastSucceededStats,omitempty"`
 }
-type Wal struct {
+
+type Log struct {
 	Start *string `json:"start,omitempty"`
 	End   *string `json:"end,omitempty"`
-
-	Phase    WalPhase
-	Error    string `json:"error,omitempty"`
-	Output   string `json:"output,omitempty"`
-	Duration string `json:"duration,omitempty"`
-
-	// Lsn for PostgreSQL only
-	Lsn string `json:"lsn,omitempty"`
+	Error string  `json:"error,omitempty"`
 }
 
 // ComponentPhase represents the backup phase of the individual component.
@@ -310,13 +305,6 @@ type WalGStats struct {
 	// StopTime represents the WalG backup stop time.
 	// +optional
 	StopTime *metav1.Time `json:"stopTime,omitempty"`
-}
-
-// WalSegment specifies the "WalG" driver specific information
-type WalSegment struct {
-	Start *string `json:"start,omitempty"`
-	End   *string `json:"end,omitempty"`
-	Lsn   *string `json:"lsn,omitempty"`
 }
 
 const (
