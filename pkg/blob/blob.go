@@ -21,19 +21,16 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+	aws2 "github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	credentials2 "github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"io"
 	"net/http"
 	"os"
 	"path"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
-	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
-	"github.com/aws/aws-sdk-go/aws/ec2metadata"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/sts"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/azureblob"
 	_ "gocloud.dev/blob/fileblob"
@@ -387,15 +384,16 @@ func (b *Blob) openBucketWithDebug(ctx context.Context, dir string, debug bool) 
 	var bucket *blob.Bucket
 	var err error
 	if b.backupStorage.Spec.Storage.Provider == storageapi.ProviderS3 {
-		sess, err := b.getS3Session()
+		//sess, err := b.getS3Session()
+		cfg, err := b.getS3Config(ctx)
 		if err != nil {
 			return nil, err
 		}
-		if debug {
-			// Currently Only S3 has debugging support, because for the rest of providers we're using default blob.
-			sess.Config.WithLogLevel(aws.LogDebug)
-		}
-		bucket, err = s3blob.OpenBucket(ctx, sess, b.backupStorage.Spec.Storage.S3.Bucket, nil)
+		//if debug {
+		//	// Currently Only S3 has debugging support, because for the rest of providers we're using default blob.
+		//	sess.Config.WithLogLevel(aws.LogDebug)
+		//}
+		bucket, err = s3blob.OpenBucketV2(ctx, s3.NewFromConfig(cfg), b.backupStorage.Spec.Storage.S3.Bucket, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -421,65 +419,111 @@ func closeBucket(ctx context.Context, bucket *blob.Bucket) {
 	}
 }
 
-func (b *Blob) getS3Session() (*session.Session, error) {
-	var providers []credentials.Provider
+//func (b *Blob) getS3Session() (*session.Session, error) {
+//	var providers []credentials.Provider
+//
+//	// if static credential is provided, use that
+//	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
+//		id, ok := b.s3Secret.Data[awsAccessKeyId]
+//		if !ok {
+//			return nil, fmt.Errorf("storage secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsAccessKeyId)
+//		}
+//		key, ok := b.s3Secret.Data[awsSecretAccessKey]
+//		if !ok {
+//			return nil, fmt.Errorf("storage Secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsSecretAccessKey)
+//		}
+//		providers = []credentials.Provider{&credentials.StaticProvider{Value: credentials.Value{
+//			AccessKeyID:     string(id),
+//			SecretAccessKey: string(key),
+//			SessionToken:    "",
+//		}}}
+//	} else {
+//		providers = []credentials.Provider{
+//			&credentials.EnvProvider{},
+//			&credentials.SharedCredentialsProvider{
+//				Filename: "",
+//				Profile:  "",
+//			},
+//			// Required for IRSA
+//			stscreds.NewWebIdentityRoleProviderWithOptions(
+//				sts.New(session.Must(session.NewSession(aws.NewConfig().
+//					WithRegion("us-east-1")))),
+//				os.Getenv(awsRoleArn),
+//				"",
+//				stscreds.FetchTokenPath(os.Getenv(awsWebIdentityTokenFile)),
+//			),
+//			&ec2rolecreds.EC2RoleProvider{
+//				Client: ec2metadata.New(session.Must(session.NewSession(aws.NewConfig().
+//					WithRegion("us-east-1")))),
+//			},
+//		}
+//	}
+//
+//	cfg := aws.NewConfig().
+//		WithRegion(b.backupStorage.Spec.Storage.S3.Region).
+//		WithCredentialsChainVerboseErrors(true).
+//		WithEndpoint(b.backupStorage.Spec.Storage.S3.Endpoint).
+//		WithS3ForcePathStyle(true).
+//		WithCredentials(credentials.NewChainCredentials(providers))
+//
+//	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
+//		if caCert := b.s3Secret.Data[caCertData]; len(caCert) > 0 || b.backupStorage.Spec.Storage.S3.InsecureTLS {
+//			if err := configureTLS(cfg, caCert, b.backupStorage.Spec.Storage.S3.InsecureTLS); err != nil {
+//				return nil, err
+//			}
+//		}
+//	}
+//
+//	return session.NewSession(cfg)
+//}
 
-	// if static credential is provided, use that
+func (b *Blob) getS3Config(ctx context.Context) (aws2.Config, error) {
+	var cfg aws2.Config
+	var err error
+
 	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
 		id, ok := b.s3Secret.Data[awsAccessKeyId]
 		if !ok {
-			return nil, fmt.Errorf("storage secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsAccessKeyId)
+			return aws2.Config{}, fmt.Errorf("storage secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsAccessKeyId)
 		}
 		key, ok := b.s3Secret.Data[awsSecretAccessKey]
 		if !ok {
-			return nil, fmt.Errorf("storage Secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsSecretAccessKey)
+			return aws2.Config{}, fmt.Errorf("storage Secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsSecretAccessKey)
 		}
-		providers = []credentials.Provider{&credentials.StaticProvider{Value: credentials.Value{
-			AccessKeyID:     string(id),
-			SecretAccessKey: string(key),
-			SessionToken:    "",
-		}}}
-	} else {
-		providers = []credentials.Provider{
-			&credentials.EnvProvider{},
-			&credentials.SharedCredentialsProvider{
-				Filename: "",
-				Profile:  "",
-			},
-			// Required for IRSA
-			stscreds.NewWebIdentityRoleProviderWithOptions(
-				sts.New(session.Must(session.NewSession(aws.NewConfig().
-					WithRegion("us-east-1")))),
-				os.Getenv(awsRoleArn),
-				"",
-				stscreds.FetchTokenPath(os.Getenv(awsWebIdentityTokenFile)),
+
+		cfg, err = config.LoadDefaultConfig(ctx,
+			config.WithCredentialsProvider(
+				credentials2.NewStaticCredentialsProvider(
+					string(id),
+					string(key),
+					"",
+				),
 			),
-			&ec2rolecreds.EC2RoleProvider{
-				Client: ec2metadata.New(session.Must(session.NewSession(aws.NewConfig().
-					WithRegion("us-east-1")))),
-			},
-		}
+			config.WithRegion(b.backupStorage.Spec.Storage.S3.Region),
+			config.WithEndpointResolverWithOptions(aws2.EndpointResolverWithOptionsFunc(
+				func(service, region string, options ...interface{}) (aws2.Endpoint, error) {
+					return aws2.Endpoint{
+						URL: b.backupStorage.Spec.Storage.S3.Endpoint,
+					}, nil
+				},
+			)),
+		)
+	} else {
+		cfg, err = config.LoadDefaultConfig(ctx,
+			config.WithRegion(b.backupStorage.Spec.Storage.S3.Region),
+			config.WithEndpointResolverWithOptions(aws2.EndpointResolverWithOptionsFunc(
+				func(service, region string, options ...interface{}) (aws2.Endpoint, error) {
+					return aws2.Endpoint{
+						URL: b.backupStorage.Spec.Storage.S3.Endpoint,
+					}, nil
+				},
+			)),
+		)
 	}
-
-	config := aws.NewConfig().
-		WithRegion(b.backupStorage.Spec.Storage.S3.Region).
-		WithCredentialsChainVerboseErrors(true).
-		WithEndpoint(b.backupStorage.Spec.Storage.S3.Endpoint).
-		WithS3ForcePathStyle(true).
-		WithCredentials(credentials.NewChainCredentials(providers))
-
-	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
-		if caCert := b.s3Secret.Data[caCertData]; len(caCert) > 0 || b.backupStorage.Spec.Storage.S3.InsecureTLS {
-			if err := configureTLS(config, caCert, b.backupStorage.Spec.Storage.S3.InsecureTLS); err != nil {
-				return nil, err
-			}
-		}
-	}
-
-	return session.NewSession(config)
+	return cfg, err
 }
 
-func configureTLS(config *aws.Config, caCert []byte, insecureTLS bool) error {
+func configureTLS(config *aws2.Config, caCert []byte, insecureTLS bool) error {
 	tlsConfig := &tls.Config{
 		InsecureSkipVerify: insecureTLS,
 	}
