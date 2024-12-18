@@ -28,12 +28,7 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
-	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
-	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/sts"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/azureblob"
 	_ "gocloud.dev/blob/fileblob"
@@ -63,8 +58,6 @@ const (
 	caCertData                   = "CA_CERT_DATA"
 	awsAccessKeyId               = "AWS_ACCESS_KEY_ID"
 	awsSecretAccessKey           = "AWS_SECRET_ACCESS_KEY"
-	awsRoleArn                   = "AWS_ROLE_ARN"
-	awsWebIdentityTokenFile      = "AWS_WEB_IDENTITY_TOKEN_FILE"
 )
 
 type Blob struct {
@@ -197,6 +190,25 @@ func setAzureCredentialsToEnv(secret *v1.Secret) error {
 		return fmt.Errorf("storage secret missing %s key", azureAccountKey)
 	} else {
 		if err := os.Setenv(azureStorageKey, string(val)); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func setS3CredentialsToEnv(secret *v1.Secret) error {
+	if val, ok := secret.Data[awsAccessKeyId]; !ok {
+		return fmt.Errorf("storage secret missing %s key", awsAccessKeyId)
+	} else {
+		if err := os.Setenv(awsAccessKeyId, string(val)); err != nil {
+			return err
+		}
+	}
+
+	if val, ok := secret.Data[awsSecretAccessKey]; !ok {
+		return fmt.Errorf("storage secret missing %s key", awsSecretAccessKey)
+	} else {
+		if err := os.Setenv(awsSecretAccessKey, string(val)); err != nil {
 			return err
 		}
 	}
@@ -422,42 +434,10 @@ func closeBucket(ctx context.Context, bucket *blob.Bucket) {
 }
 
 func (b *Blob) getS3Session() (*session.Session, error) {
-	var providers []credentials.Provider
-
 	// if static credential is provided, use that
 	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
-		id, ok := b.s3Secret.Data[awsAccessKeyId]
-		if !ok {
-			return nil, fmt.Errorf("storage secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsAccessKeyId)
-		}
-		key, ok := b.s3Secret.Data[awsSecretAccessKey]
-		if !ok {
-			return nil, fmt.Errorf("storage Secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsSecretAccessKey)
-		}
-		providers = []credentials.Provider{&credentials.StaticProvider{Value: credentials.Value{
-			AccessKeyID:     string(id),
-			SecretAccessKey: string(key),
-			SessionToken:    "",
-		}}}
-	} else {
-		providers = []credentials.Provider{
-			&credentials.EnvProvider{},
-			&credentials.SharedCredentialsProvider{
-				Filename: "",
-				Profile:  "",
-			},
-			// Required for IRSA
-			stscreds.NewWebIdentityRoleProviderWithOptions(
-				sts.New(session.Must(session.NewSession(aws.NewConfig().
-					WithRegion("us-east-1")))),
-				os.Getenv(awsRoleArn),
-				"",
-				stscreds.FetchTokenPath(os.Getenv(awsWebIdentityTokenFile)),
-			),
-			&ec2rolecreds.EC2RoleProvider{
-				Client: ec2metadata.New(session.Must(session.NewSession(aws.NewConfig().
-					WithRegion("us-east-1")))),
-			},
+		if err := setS3CredentialsToEnv(b.s3Secret); err != nil {
+			return nil, err
 		}
 	}
 
@@ -465,8 +445,7 @@ func (b *Blob) getS3Session() (*session.Session, error) {
 		WithRegion(b.backupStorage.Spec.Storage.S3.Region).
 		WithCredentialsChainVerboseErrors(true).
 		WithEndpoint(b.backupStorage.Spec.Storage.S3.Endpoint).
-		WithS3ForcePathStyle(true).
-		WithCredentials(credentials.NewChainCredentials(providers))
+		WithS3ForcePathStyle(true)
 
 	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
 		if caCert := b.s3Secret.Data[caCertData]; len(caCert) > 0 || b.backupStorage.Spec.Storage.S3.InsecureTLS {
