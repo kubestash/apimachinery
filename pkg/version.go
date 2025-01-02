@@ -83,6 +83,8 @@ func FindAppropriateAddonVersion(addonVersions []string, dbVersion string) (stri
 		return distances[i].isDB < distances[j].isDB
 	})
 
+	//klog.Infof("distances: %v", distances)
+
 	// Algorithm:
 	// - first sort the versions according to Ascending order of major,minor and patch version
 	// - iterate through the distances slide(hold the version information) and if the current version is our DB version,
