@@ -27,8 +27,8 @@ github.com/AzureAD/microsoft-authentication-library-for-go v1.2.2/go.mod h1:wP83
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Masterminds/semver/v3 v3.2.1 h1:RN9w6+7QoMeJVGyfmbcgs28Br8cvmnucEXnY0rYXWg0=
 github.com/Masterminds/semver/v3 v3.2.1/go.mod h1:qvl/7zhW3nngYb5+80sSMF+FG2BjYrf8m9wsX0PNOMQ=
-github.com/anisurrahman75/go-sh v0.0.0-20241030063656-336ab30e016a h1:vds1Kj0c/3uTud2/W66GorqmFhPcqHteeSX+6uD3+gc=
-github.com/anisurrahman75/go-sh v0.0.0-20241030063656-336ab30e016a/go.mod h1:N8IrjNiYppUI/rxENYrWD6FOrSxSyEZnIekPEWM7LP0=
+github.com/anisurrahman75/go-sh v0.0.0-20241211122628-6eb3ef7ada86 h1:zkoXgC0iXvMXEwGyMPqVn36Hktyeb8q+nRtwTpA8EBU=
+github.com/anisurrahman75/go-sh v0.0.0-20241211122628-6eb3ef7ada86/go.mod h1:N8IrjNiYppUI/rxENYrWD6FOrSxSyEZnIekPEWM7LP0=
 github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2 h1:7Ip0wMmLHLRJdrloDxZfhMm0xrLXZS8+COSu2bXmEQs=
 github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2/go.mod h1:3U/XgcO3hCbHZ8TKRvWD2dDTCfh9M9ya+I9JpbB7O8o=
 github.com/aws/aws-sdk-go v1.50.36 h1:PjWXHwZPuTLMR1NIb8nEjLucZBMzmf84TLoLbD8BZqk=

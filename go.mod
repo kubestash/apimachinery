@@ -151,4 +151,4 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 )
 
-replace gomodules.xyz/go-sh v0.1.0 => github.com/anisurrahman75/go-sh v0.0.0-20241030063656-336ab30e016a
+replace gomodules.xyz/go-sh v0.1.0 => github.com/anisurrahman75/go-sh v0.0.0-20241211122628-6eb3ef7ada86
