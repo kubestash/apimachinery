@@ -26,10 +26,10 @@ import (
 
 // RunBackup takes backup, cleanup old snapshots, check repository integrity etc.
 // It extracts valuable information from respective restic command it runs and return them for further use.
-func (w *ResticWrapper) RunBackup(backupOption BackupOptions) ([]*BackupOutput, error) {
+func (w *ResticWrapper) RunBackup(backupOption BackupOptions) ([]BackupOutput, error) {
 	// Start clock to measure total session duration
 	startTime := time.Now()
-	var backupOutput []*BackupOutput
+	var backupOutput []BackupOutput
 
 	// Run backup
 	hostStats, err := w.runBackup(backupOption)
@@ -45,7 +45,7 @@ func (w *ResticWrapper) RunBackup(backupOption BackupOptions) ([]*BackupOutput, 
 			hostStat.StartTime = &st
 			hostStat.EndTime = &et
 		}
-		backupOutput = append(backupOutput, &BackupOutput{
+		backupOutput = append(backupOutput, BackupOutput{
 			Stats: []HostBackupStats{hostStat},
 		})
 	}
@@ -123,7 +123,7 @@ func (w *ResticWrapper) updateElapsedTimeout(startTime time.Time) {
 
 // RunParallelBackup runs multiple backup in parallel.
 // Host must be different for each backup.
-func (w *ResticWrapper) RunParallelBackup(backupOptions []BackupOptions, maxConcurrency int) ([]*[]*BackupOutput, error) {
+func (w *ResticWrapper) RunParallelBackup(backupOptions []BackupOptions, maxConcurrency int) ([][]BackupOutput, error) {
 	// WaitGroup to wait until all go routine finishes
 	wg := sync.WaitGroup{}
 	// concurrencyLimiter channel is used to limit maximum number simultaneous go routine
@@ -135,7 +135,7 @@ func (w *ResticWrapper) RunParallelBackup(backupOptions []BackupOptions, maxConc
 		mu         sync.Mutex // use lock to avoid racing condition
 	)
 
-	var multipleOutputs []*[]*BackupOutput
+	var multipleOutputs [][]BackupOutput
 	for i := range backupOptions {
 		// try to send message in concurrencyLimiter channel.
 		// if maximum allowed concurrent backup is already running, program control will get stuck here.
@@ -155,7 +155,7 @@ func (w *ResticWrapper) RunParallelBackup(backupOptions []BackupOptions, maxConc
 			// sh field in ResticWrapper is a pointer. we must not use same w in multiple go routine.
 			// otherwise they might enter in racing condition.
 			nw := w.Copy()
-			var backupOutputs []*BackupOutput
+			var backupOutputs []BackupOutput
 			hostStats, err := nw.runBackup(opt)
 			for _, hostStat := range hostStats {
 				if err != nil {
@@ -172,7 +172,7 @@ func (w *ResticWrapper) RunParallelBackup(backupOptions []BackupOptions, maxConc
 					hostStat.StartTime = &st
 					hostStat.EndTime = &et
 				}
-				backupOutput := &BackupOutput{
+				backupOutput := BackupOutput{
 					Stats: []HostBackupStats{hostStat},
 				}
 				mu.Lock()
@@ -181,7 +181,7 @@ func (w *ResticWrapper) RunParallelBackup(backupOptions []BackupOptions, maxConc
 				backupOutputs = append(backupOutputs, backupOutput)
 				mu.Unlock()
 			}
-			multipleOutputs = append(multipleOutputs, &backupOutputs)
+			multipleOutputs = append(multipleOutputs, backupOutputs)
 		}(backupOptions[i], time.Now())
 	}
 
