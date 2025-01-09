@@ -20,6 +20,7 @@ import (
 	"gomodules.xyz/pointer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/errors"
+	"math"
 	"sync"
 	"time"
 )
@@ -115,8 +116,12 @@ func (w *ResticWrapper) updateElapsedTimeout(startTime time.Time) {
 	if w.Config.Timeout != nil {
 		w.Config.Lock()
 		defer w.Config.Unlock()
+
+		// Calculate the new timeout by subtracting the elapsed duration
+		elapsed := time.Since(startTime)
+		newTimeout := time.Duration(math.Max(float64(w.Config.Timeout.Duration-elapsed), float64(0)))
 		w.Config.Timeout = &metav1.Duration{
-			Duration: time.Since(startTime),
+			Duration: newTimeout,
 		}
 	}
 }
