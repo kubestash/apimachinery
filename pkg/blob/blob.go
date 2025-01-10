@@ -387,7 +387,9 @@ func (b *Blob) openBucketWithDebug(ctx context.Context, dir string, debug bool) 
 		if err != nil {
 			return nil, err
 		}
-		bucket, err = s3blob.OpenBucketV2(ctx, s3.NewFromConfig(cfg), b.backupStorage.Spec.Storage.S3.Bucket, nil)
+		bucket, err = s3blob.OpenBucketV2(ctx, s3.NewFromConfig(cfg, func(options *s3.Options) {
+			options.UsePathStyle = true
+		}), b.backupStorage.Spec.Storage.S3.Bucket, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -414,7 +416,18 @@ func closeBucket(ctx context.Context, bucket *blob.Bucket) {
 }
 
 func (b *Blob) getS3Config(ctx context.Context, debug bool) (aws2.Config, error) {
-	var creds aws2.CredentialsProvider
+	loadOptions := []func(*config.LoadOptions) error{
+		config.WithBaseEndpoint(b.backupStorage.Spec.Storage.S3.Endpoint),
+	}
+
+	if b.backupStorage.Spec.Storage.S3.Region != "" {
+		loadOptions = append(loadOptions, config.WithRegion(b.backupStorage.Spec.Storage.S3.Region))
+	}
+
+	if debug {
+		loadOptions = append(loadOptions, config.WithClientLogMode(
+			aws2.LogRetries|aws2.LogRequestWithBody|aws2.LogResponseWithBody))
+	}
 
 	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
 		id, ok := b.s3Secret.Data[awsAccessKeyId]
@@ -426,39 +439,14 @@ func (b *Blob) getS3Config(ctx context.Context, debug bool) (aws2.Config, error)
 			return aws2.Config{}, fmt.Errorf("storage Secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsSecretAccessKey)
 		}
 
-		creds = credentials2.NewStaticCredentialsProvider(
-			string(id),
-			string(key),
-			"",
-		)
-	}
-
-	loadOptions := []func(*config.LoadOptions) error{
-		config.WithRegion(b.backupStorage.Spec.Storage.S3.Region),
-		config.WithCredentialsProvider(creds),
-	}
-
-	if debug {
-		loadOptions = append(loadOptions, config.WithClientLogMode(aws2.LogRetries|aws2.LogRequestWithBody|aws2.LogResponseWithBody))
-	}
-
-	if b.backupStorage.Spec.Storage.S3.Endpoint != "" {
-		loadOptions = append(loadOptions, config.WithEndpointResolverWithOptions(
-			aws2.EndpointResolverWithOptionsFunc(
-				func(service, region string, options ...interface{}) (aws2.Endpoint, error) {
-					return aws2.Endpoint{
-						PartitionID:   "aws",
-						URL:           b.backupStorage.Spec.Storage.S3.Endpoint,
-						SigningRegion: region,
-					}, nil
-				},
-			),
+		loadOptions = append(loadOptions, config.WithCredentialsProvider(
+			credentials2.NewStaticCredentialsProvider(string(id), string(key), ""),
 		))
-	}
 
-	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
-		if b.backupStorage.Spec.Storage.S3.InsecureTLS || len(b.s3Secret.Data[caCertData]) > 0 {
-			httpClient, err := configureTLS(b.s3Secret.Data[caCertData], b.backupStorage.Spec.Storage.S3.InsecureTLS)
+		needsTLS := b.backupStorage.Spec.Storage.S3.InsecureTLS || len(b.s3Secret.Data[caCertData]) > 0
+		if needsTLS {
+			httpClient, err := configureTLS(b.s3Secret.Data[caCertData],
+				b.backupStorage.Spec.Storage.S3.InsecureTLS)
 			if err != nil {
 				return aws2.Config{}, err
 			}
