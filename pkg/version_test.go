@@ -22,6 +22,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 	type args struct {
 		addonVersions []string
 		dbVersion     string
+		funcName      string
 	}
 	tests := []struct {
 		name    string
@@ -43,6 +44,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"4.2.3", "4.4.6", "5.0.3", "5.0.15", "6.0.5", "8.0.3"},
 				dbVersion:     "5.0.2",
+				funcName:      "mongodb-backup",
 			},
 			want: "5.0.3",
 		},
@@ -51,6 +53,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"4.2.3", "4.4.6", "5.0.3", "5.0.15", "6.0.5", "8.0.3"},
 				dbVersion:     "5.0.15",
+				funcName:      "mongodb-backup",
 			},
 			want: "5.0.15",
 		},
@@ -59,6 +62,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"4.2.3", "4.4.6", "5.0.3", "5.0.15", "6.0.5", "8.0.3"},
 				dbVersion:     "6.0.12",
+				funcName:      "mongodb-backup",
 			},
 			want: "6.0.5",
 		},
@@ -66,7 +70,8 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			name: "mongo-7",
 			args: args{
 				addonVersions: []string{"4.2.3", "4.4.6", "5.0.3", "5.0.15", "6.0.5", "8.0.3"},
-				dbVersion:     "7.0.8",
+				dbVersion:     "7.0.16",
+				funcName:      "mongodb-backup",
 			},
 			want: "6.0.5",
 		},
@@ -74,7 +79,8 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			name: "mongo-8",
 			args: args{
 				addonVersions: []string{"4.2.3", "4.4.6", "5.0.3", "5.0.15", "6.0.5", "8.0.3"},
-				dbVersion:     "8.0.3",
+				dbVersion:     "8.0.4",
+				funcName:      "mongodb-backup",
 			},
 			want: "8.0.3",
 		},
@@ -84,6 +90,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"5.7.25", "8.0.3", "8.0.21"},
 				dbVersion:     "5.7.42",
+				funcName:      "mysql-backup",
 			},
 			want: "5.7.25",
 		},
@@ -92,6 +99,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"5.7.25", "8.0.3", "8.0.21"},
 				dbVersion:     "8.0.5",
+				funcName:      "mysql-backup",
 			},
 			want: "8.0.3",
 		},
@@ -100,6 +108,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"5.7.25", "8.0.3", "8.0.21"},
 				dbVersion:     "8.1.0",
+				funcName:      "mysql-backup",
 			},
 			want: "8.0.21",
 		},
@@ -109,6 +118,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"2.4.29", "8.0.35", "8.1.0", "8.2.0", "8.4.0"},
 				dbVersion:     "5.7.25",
+				funcName:      "mysql-physical-backup",
 			},
 			want: "2.4.29",
 		},
@@ -117,6 +127,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"2.4.29", "8.0.35", "8.1.0", "8.2.0", "8.4.0"},
 				dbVersion:     "8.0.35",
+				funcName:      "mysql-physical-backup",
 			},
 			want: "8.0.35",
 		},
@@ -125,6 +136,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"2.4.29", "8.0.35", "8.1.0", "8.2.0", "8.4.0"},
 				dbVersion:     "8.1.0",
+				funcName:      "mysql-physical-backup",
 			},
 			want: "8.1.0",
 		},
@@ -133,6 +145,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"2.4.29", "8.0.35", "8.1.0", "8.2.0", "8.4.0"},
 				dbVersion:     "8.2.0",
+				funcName:      "mysql-physical-backup",
 			},
 			want: "8.2.0",
 		},
@@ -141,6 +154,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"2.4.29", "8.0.35", "8.1.0", "8.2.0", "8.4.0"},
 				dbVersion:     "8.4.0",
+				funcName:      "mysql-physical-backup",
 			},
 			want: "8.4.0",
 		},
@@ -150,6 +164,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"alma-8.1.32-e3d3cde6da", "alma-8.5.7-bf633c1a54"},
 				dbVersion:     "8.1.32",
+				funcName:      "singlestore-backup",
 			},
 			want: "alma-8.1.32-e3d3cde6da",
 		},
@@ -158,6 +173,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"alma-8.1.32-e3d3cde6da", "alma-8.5.7-bf633c1a54"},
 				dbVersion:     "8.5.72",
+				funcName:      "singlestore-backup",
 			},
 			want: "alma-8.5.7-bf633c1a54",
 		},
@@ -167,6 +183,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"12.17", "14.10", "16.1", "17.2"},
 				dbVersion:     "10.23",
+				funcName:      "postgres-backup",
 			},
 			want: "12.17",
 		},
@@ -175,6 +192,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"12.17", "14.10", "16.1", "17.2"},
 				dbVersion:     "12.17",
+				funcName:      "postgres-backup",
 			},
 			want: "12.17",
 		},
@@ -183,6 +201,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"12.17", "14.10", "16.1", "17.2"},
 				dbVersion:     "12.18",
+				funcName:      "postgres-backup",
 			},
 			want: "12.17",
 		},
@@ -191,13 +210,17 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"12.17", "14.10", "16.1", "17.2"},
 				dbVersion:     "13.14",
+				funcName:      "postgres-backup",
 			},
 			want: "14.10",
 		},
 		{
 			name: "pg-14",
 			args: args{
-				addonVersions: []string{"12.17", "14.10", "16.1", "17.2"}, dbVersion: "14.11"},
+				addonVersions: []string{"12.17", "14.10", "16.1", "17.2"},
+				dbVersion:     "14.11",
+				funcName:      "postgres-backup",
+			},
 			want: "14.10",
 		},
 		{
@@ -205,6 +228,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"12.17", "14.10", "16.1", "17.2"},
 				dbVersion:     "15.6",
+				funcName:      "postgres-backup",
 			},
 			want: "16.1",
 		},
@@ -213,6 +237,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"12.17", "14.10", "16.1", "17.2"},
 				dbVersion:     "16.2",
+				funcName:      "postgres-backup",
 			},
 			want: "16.1",
 		},
@@ -221,6 +246,7 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{"12.17", "14.10", "16.1", "17.2"},
 				dbVersion:     "17.2",
+				funcName:      "postgres-backup",
 			},
 			want: "17.2",
 		},
@@ -230,13 +256,14 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			args: args{
 				addonVersions: []string{},
 				dbVersion:     "6.0.12",
+				funcName:      "no-backup",
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := FindAppropriateAddonVersion(tt.args.addonVersions, tt.args.dbVersion)
+			got, err := FindAppropriateAddonVersion(tt.args.addonVersions, tt.args.dbVersion, tt.args.funcName)
 			if err != nil {
 				if !tt.wantErr {
 					t.Errorf("FindAppropriateAddonVersion() error = %v, wantErr %v", err, tt.wantErr)
