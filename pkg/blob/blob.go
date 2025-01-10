@@ -23,7 +23,7 @@ import (
 	"fmt"
 	aws2 "github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-	credentials2 "github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"io"
 	"net/http"
@@ -440,7 +440,7 @@ func (b *Blob) getS3Config(ctx context.Context, debug bool) (aws2.Config, error)
 		}
 
 		loadOptions = append(loadOptions, config.WithCredentialsProvider(
-			credentials2.NewStaticCredentialsProvider(string(id), string(key), ""),
+			credentials.NewStaticCredentialsProvider(string(id), string(key), ""),
 		))
 
 		needsTLS := b.backupStorage.Spec.Storage.S3.InsecureTLS || len(b.s3Secret.Data[caCertData]) > 0
