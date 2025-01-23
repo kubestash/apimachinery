@@ -174,3 +174,5 @@ require (
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 )
+
+replace gomodules.xyz/go-sh v0.1.0 => github.com/anisurrahman75/go-sh v0.0.0-20241030063656-336ab30e016a
