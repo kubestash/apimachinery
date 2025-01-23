@@ -416,8 +416,10 @@ func closeBucket(ctx context.Context, bucket *blob.Bucket) {
 }
 
 func (b *Blob) getS3Config(ctx context.Context, debug bool) (aws2.Config, error) {
-	loadOptions := []func(*config.LoadOptions) error{
-		config.WithBaseEndpoint(b.backupStorage.Spec.Storage.S3.Endpoint),
+	var loadOptions []func(*config.LoadOptions) error
+
+	if b.backupStorage.Spec.Storage.S3.Endpoint != "" {
+		config.WithBaseEndpoint(b.backupStorage.Spec.Storage.S3.Endpoint)
 	}
 
 	if b.backupStorage.Spec.Storage.S3.Region != "" {
