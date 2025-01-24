@@ -17,7 +17,7 @@ require (
 	go.bytebuilders.dev/license-verifier/kubernetes v0.14.4
 	gocloud.dev v0.40.0
 	gomodules.xyz/envsubst v0.2.0
-	gomodules.xyz/go-sh v0.1.0
+	gomodules.xyz/go-sh v0.1.1-0.20250117070215-e08594acad2a
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/x v0.0.17
 	k8s.io/api v0.30.3
@@ -174,5 +174,3 @@ require (
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 )
-
-replace gomodules.xyz/go-sh v0.1.0 => github.com/anisurrahman75/go-sh v0.0.0-20241030063656-336ab30e016a
