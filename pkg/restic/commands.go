@@ -182,7 +182,8 @@ func (w *ResticWrapper) backup(params backupParams) ([]byte, error) {
 	commonArgs = w.appendCleanupCacheFlag(commonArgs)
 
 	for _, b := range w.Config.Backends {
-		args := commonArgs
+		args := make([]interface{}, len(commonArgs))
+		copy(args, commonArgs)
 		args = b.appendCaCertFlag(args)
 		args = b.appendInsecureTLSFlag(args)
 		args = b.appendMaxConnectionsFlag(args)
