@@ -33,8 +33,7 @@ import (
 )
 
 const (
-	ResticCMD  = "restic"
-	TimeoutCMD = "timeout"
+	ResticCMD = "restic"
 )
 
 type Snapshot struct {
@@ -81,6 +80,7 @@ func (w *ResticWrapper) listSnapshots(repository string, snapshotIDs []string) (
 	args = b.appendCaCertFlag(args)
 	args = b.appendInsecureTLSFlag(args)
 	args = b.appendMaxConnectionsFlag(args)
+	args = append(args, b.envs)
 	for _, id := range snapshotIDs {
 		args = append(args, id)
 	}
@@ -98,6 +98,7 @@ func (w *ResticWrapper) tryDeleteSnapshots(repository string, snapshotIDs []stri
 	args = b.appendCaCertFlag(args)
 	args = b.appendInsecureTLSFlag(args)
 	args = b.appendMaxConnectionsFlag(args)
+	args = append(args, b.envs)
 	for _, id := range snapshotIDs {
 		args = append(args, id)
 	}
@@ -181,7 +182,8 @@ func (w *ResticWrapper) backup(params backupParams) ([]byte, error) {
 	commonArgs = w.appendCleanupCacheFlag(commonArgs)
 
 	for _, b := range w.Config.Backends {
-		args := commonArgs
+		args := make([]interface{}, len(commonArgs))
+		copy(args, commonArgs)
 		args = b.appendCaCertFlag(args)
 		args = b.appendInsecureTLSFlag(args)
 		args = b.appendMaxConnectionsFlag(args)
@@ -261,7 +263,6 @@ func (w *ResticWrapper) restore(repository string, params restoreParams) ([]byte
 	args = b.appendMaxConnectionsFlag(args)
 	args = append(args, b.envs)
 	command := Command{Name: ResticCMD, Args: args}
-	command = w.wrapWithTimeoutIfConfigured(command)
 
 	return w.run(command)
 }
@@ -296,7 +297,6 @@ func (w *ResticWrapper) DumpOnce(repository string, dumpOptions DumpOptions) ([]
 	args = append(args, b.envs)
 
 	command := Command{Name: ResticCMD, Args: args}
-	command = w.wrapWithTimeoutIfConfigured(command)
 
 	// first add restic command, then add StdoutPipeCommands
 	commands := []Command{command}
@@ -338,7 +338,7 @@ func (w *ResticWrapper) unlock(repository string) ([]byte, error) {
 	args = b.appendMaxConnectionsFlag(args)
 	args = b.appendCaCertFlag(args)
 	args = b.appendInsecureTLSFlag(args)
-
+	args = append(args, b.envs)
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
@@ -512,6 +512,7 @@ func (w *ResticWrapper) addKey(repository string, params keyParams) ([]byte, err
 	args = b.appendMaxConnectionsFlag(args)
 	args = b.appendCaCertFlag(args)
 	args = b.appendInsecureTLSFlag(args)
+	args = append(args, b.envs)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
@@ -526,6 +527,7 @@ func (w *ResticWrapper) listKey(repository string) ([]byte, error) {
 	args = b.appendMaxConnectionsFlag(args)
 	args = b.appendCaCertFlag(args)
 	args = b.appendInsecureTLSFlag(args)
+	args = append(args, b.envs)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
@@ -544,6 +546,7 @@ func (w *ResticWrapper) updateKey(repository string, params keyParams) ([]byte, 
 	args = b.appendMaxConnectionsFlag(args)
 	args = b.appendCaCertFlag(args)
 	args = b.appendInsecureTLSFlag(args)
+	args = append(args, b.envs)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
@@ -558,17 +561,9 @@ func (w *ResticWrapper) removeKey(repository string, params keyParams) ([]byte, 
 	args = b.appendMaxConnectionsFlag(args)
 	args = b.appendCaCertFlag(args)
 	args = b.appendInsecureTLSFlag(args)
+	args = append(args, b.envs)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
-}
-
-func (w *ResticWrapper) wrapWithTimeoutIfConfigured(cmd Command) Command {
-	if w.Config.Timeout != nil {
-		timeoutArgs := []interface{}{fmt.Sprintf("%f", w.Config.Timeout.Seconds()), cmd.Name}
-		timeoutArgs = append(timeoutArgs, cmd.Args...)
-		return Command{Name: TimeoutCMD, Args: timeoutArgs}
-	}
-	return cmd
 }
 
 func isLeafCommandNecessary(commands ...Command) bool {
