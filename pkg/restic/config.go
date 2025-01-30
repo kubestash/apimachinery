@@ -143,6 +143,11 @@ func (w *ResticWrapper) GetEnv(key string) string {
 	return ""
 }
 
+func (w *ResticWrapper) GetCaPath(repository string) string {
+	b := w.getMatchedBackend(repository)
+	return b.CaCertFile
+}
+
 func (w *ResticWrapper) DumpEnv(path string, dumpedFile string) error {
 	if err := os.MkdirAll(path, 0o755); err != nil {
 		return err
