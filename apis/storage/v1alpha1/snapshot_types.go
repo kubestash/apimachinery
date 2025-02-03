@@ -316,6 +316,10 @@ type MedusaStats struct {
 	// BackupName represents the name of the backup
 	BackupName string `json:"backupName,omitempty"`
 
+	// BackupNodes represents the list of target backup nodes.
+	// +optional
+	BackupNodes []string `json:"backupNodes,omitempty"`
+
 	// StatusType represents the status of Backup. This can be "IN_PROGRESS","SUCCESS","FAILED" or "UNKNOWN"
 	StatusType string `json:"status,omitempty"`
 
