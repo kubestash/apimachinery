@@ -17,5 +17,6 @@ limitations under the License.
 package hack
 
 import (
+	_ "go.bytebuilders.dev/audit/lib"
 	_ "go.bytebuilders.dev/license-verifier/kubernetes"
 )
