@@ -24,7 +24,7 @@ import (
 )
 
 // Driver specifies the name of underlying tool that is being used to upload the backed up data.
-// +kubebuilder:validation:Enum=Restic;WalG;Medusa,VolumeSnapshotter
+// +kubebuilder:validation:Enum=Restic;WalG;Medusa;VolumeSnapshotter;
 type Driver string
 
 const (
