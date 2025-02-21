@@ -650,6 +650,16 @@ func (d *Druid) GetDefaultPVC() *core.PersistentVolumeClaimSpec {
 }
 
 func (d *Druid) setDefaultContainerSecurityContext(druidVersion *catalog.DruidVersion, podTemplate *ofst.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
+	}
+	if podTemplate.Spec.SecurityContext == nil {
+		podTemplate.Spec.SecurityContext = &v1.PodSecurityContext{}
+	}
+	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+		podTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
+	}
+
 	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.DruidContainerName)
 	if container == nil {
 		container = &v1.Container{
@@ -802,4 +812,27 @@ func (d *Druid) CertSecretVolumeName(alias DruidCertificateAlias) string {
 // mountPath will be, "/var/druid/ssl/<alias>".
 func (d *Druid) CertSecretVolumeMountPath(configDir string, cert string) string {
 	return filepath.Join(configDir, cert)
+}
+
+type DruidBind struct {
+	*Druid
+}
+
+var _ DBBindInterface = &DruidBind{}
+
+func (d *DruidBind) ServiceNames() (string, string) {
+	return d.ServiceName(), d.ServiceName()
+}
+
+func (d *DruidBind) Ports() (int, int) {
+	p := int(d.DruidNodeContainerPort(DruidNodeRoleRouters))
+	return p, p
+}
+
+func (d *DruidBind) SecretName() string {
+	return d.GetAuthSecretName()
+}
+
+func (d *DruidBind) CertSecretName() string {
+	return d.GetCertSecretName(DruidClientCert)
 }
