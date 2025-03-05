@@ -22,6 +22,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/utils/pointer"
 	"kubestash.dev/apimachinery/apis"
+	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -32,9 +33,18 @@ import (
 // log is for logging in this package.
 var retentionpolicylog = logf.Log.WithName("retentionpolicy-resource")
 
-func (r *RetentionPolicy) SetupWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr).
-		For(r).
+type RetentionPolicyCustomDefaulter struct{}
+type RetentionPolicyCustomValidator struct{}
+
+type RetentionPolicy struct {
+	*v1alpha1.RetentionPolicy
+}
+
+// SetupRetentionPolicyWebhookWithManager registers the webhook for RetentionPolicy in the manager.
+func SetupRetentionPolicyWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.RetentionPolicy{}).
+		WithValidator(&RetentionPolicyCustomValidator{}).
+		WithDefaulter(&RetentionPolicyCustomDefaulter{}).
 		Complete()
 }
 
@@ -42,10 +52,16 @@ func (r *RetentionPolicy) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-storage-kubestash-com-v1alpha1-retentionpolicy,mutating=true,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=retentionpolicies,verbs=create;update,versions=v1alpha1,name=mretentionpolicy.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomDefaulter = &RetentionPolicy{}
+var _ webhook.CustomDefaulter = &RetentionPolicyCustomDefaulter{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *RetentionPolicy) Default(ctx context.Context, obj runtime.Object) error {
+func (_ *RetentionPolicyCustomDefaulter) Default(ctx context.Context, obj runtime.Object) error {
+	var ok bool
+	var r RetentionPolicy
+	r.RetentionPolicy, ok = obj.(*v1alpha1.RetentionPolicy)
+	if !ok {
+		return fmt.Errorf("expected RetentionPolicy but got %T", obj)
+	}
 	retentionpolicylog.Info("default", "name", r.Name)
 
 	if r.Spec.UsagePolicy == nil {
@@ -58,6 +74,84 @@ func (r *RetentionPolicy) Default(ctx context.Context, obj runtime.Object) error
 	return nil
 }
 
+// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
+//+kubebuilder:webhook:path=/validate-storage-kubestash-com-v1alpha1-retentionpolicy,mutating=false,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=retentionpolicies,verbs=create;update,versions=v1alpha1,name=vretentionpolicy.kb.io,admissionReviewVersions=v1
+
+var _ webhook.CustomValidator = &RetentionPolicyCustomValidator{}
+
+// ValidateCreate implements webhook.Validator so a webhook will be registered for the type
+func (_ *RetentionPolicyCustomValidator) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	var ok bool
+	var r RetentionPolicy
+	r.RetentionPolicy, ok = obj.(*v1alpha1.RetentionPolicy)
+	if !ok {
+		return nil, fmt.Errorf("expected RetentionPolicy but got %T", obj)
+	}
+	retentionpolicylog.Info("Validation for RetentionPolicy upon creation", "name", r.Name)
+
+	c := apis.GetRuntimeClient()
+
+	if err := r.validateMaxRetentionPeriodFormat(); err != nil {
+		return nil, err
+	}
+
+	if err := r.validateProvidedPolicy(); err != nil {
+		return nil, err
+	}
+
+	if err := r.validateUsagePolicy(); err != nil {
+		return nil, err
+	}
+
+	return nil, r.validateSingleDefaultRetentionPolicyInSameNamespace(ctx, c)
+}
+
+// ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
+func (_ *RetentionPolicyCustomValidator) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	var ok bool
+	var rNew, rOld RetentionPolicy
+	rNew.RetentionPolicy, ok = newObj.(*v1alpha1.RetentionPolicy)
+	if !ok {
+		return nil, fmt.Errorf("expected RetentionPolicy but got %T", newObj)
+	}
+	retentionpolicylog.Info("Validation for RetentionPolicy upon update", "name", rNew.Name)
+
+	rOld.RetentionPolicy, ok = oldObj.(*v1alpha1.RetentionPolicy)
+	if !ok {
+		return nil, fmt.Errorf("expected RetentionPolicy but got %T", oldObj)
+	}
+
+	c := apis.GetRuntimeClient()
+
+	if err := rNew.validateMaxRetentionPeriodFormat(); err != nil {
+		return nil, err
+	}
+
+	if err := rNew.validateProvidedPolicy(); err != nil {
+		return nil, err
+	}
+
+	if err := rNew.validateUsagePolicy(); err != nil {
+		return nil, err
+	}
+
+	return nil, rNew.validateSingleDefaultRetentionPolicyInSameNamespace(ctx, c)
+}
+
+// ValidateDelete implements webhook.Validator so a webhook will be registered for the type
+func (_ *RetentionPolicyCustomValidator) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	var ok bool
+	var r RetentionPolicy
+	r.RetentionPolicy, ok = obj.(*v1alpha1.RetentionPolicy)
+	if !ok {
+		return nil, fmt.Errorf("expected RetentionPolicy but got %T", obj)
+	}
+	retentionpolicylog.Info("Validation for RetentionPolicy upon delete", "name", r.Name)
+
+	// TODO(user): fill in your validation logic upon object deletion.
+	return nil, nil
+}
+
 func (r *RetentionPolicy) setDefaultUsagePolicy() {
 	fromSameNamespace := apis.NamespacesFromSame
 	r.Spec.UsagePolicy = &apis.UsagePolicy{
@@ -68,61 +162,14 @@ func (r *RetentionPolicy) setDefaultUsagePolicy() {
 }
 
 func (r *RetentionPolicy) setDefaultFailedSnapshots() {
-	r.Spec.FailedSnapshots = &FailedSnapshotsKeepPolicy{
+	r.Spec.FailedSnapshots = &v1alpha1.FailedSnapshotsKeepPolicy{
 		Last: pointer.Int32(1),
 	}
 }
 
-// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
-//+kubebuilder:webhook:path=/validate-storage-kubestash-com-v1alpha1-retentionpolicy,mutating=false,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=retentionpolicies,verbs=create;update,versions=v1alpha1,name=vretentionpolicy.kb.io,admissionReviewVersions=v1
-
-var _ webhook.CustomValidator = &RetentionPolicy{}
-
-// ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *RetentionPolicy) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	retentionpolicylog.Info("validate create", "name", r.Name)
-
-	c := apis.GetRuntimeClient()
-
-	if err := r.validateMaxRetentionPeriodFormat(); err != nil {
-		return nil, err
-	}
-
-	if err := r.validateProvidedPolicy(); err != nil {
-		return nil, err
-	}
-
-	if err := r.validateUsagePolicy(); err != nil {
-		return nil, err
-	}
-
-	return nil, r.validateSingleDefaultRetentionPolicyInSameNamespace(context.Background(), c)
-}
-
-// ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *RetentionPolicy) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	retentionpolicylog.Info("validate update", "name", r.Name)
-
-	c := apis.GetRuntimeClient()
-
-	if err := r.validateMaxRetentionPeriodFormat(); err != nil {
-		return nil, err
-	}
-
-	if err := r.validateProvidedPolicy(); err != nil {
-		return nil, err
-	}
-
-	if err := r.validateUsagePolicy(); err != nil {
-		return nil, err
-	}
-
-	return nil, r.validateSingleDefaultRetentionPolicyInSameNamespace(context.Background(), c)
-}
-
 func (r *RetentionPolicy) validateMaxRetentionPeriodFormat() error {
 	if r.Spec.MaxRetentionPeriod != "" {
-		_, err := ParseDuration(string(r.Spec.MaxRetentionPeriod))
+		_, err := v1alpha1.ParseDuration(string(r.Spec.MaxRetentionPeriod))
 		if err != nil {
 			return err
 		}
@@ -143,7 +190,7 @@ func (r *RetentionPolicy) validateSingleDefaultRetentionPolicyInSameNamespace(ct
 		return nil
 	}
 
-	rpList := RetentionPolicyList{}
+	rpList := v1alpha1.RetentionPolicyList{}
 	if err := c.List(ctx, &rpList, client.InNamespace(r.Namespace)); err != nil {
 		return err
 	}
@@ -158,7 +205,7 @@ func (r *RetentionPolicy) validateSingleDefaultRetentionPolicyInSameNamespace(ct
 	return nil
 }
 
-func (r *RetentionPolicy) isSameRetentionPolicy(rp RetentionPolicy) bool {
+func (r *RetentionPolicy) isSameRetentionPolicy(rp v1alpha1.RetentionPolicy) bool {
 	if r.Namespace == rp.Namespace &&
 		r.Name == rp.Name {
 		return true
@@ -172,12 +219,4 @@ func (r *RetentionPolicy) validateUsagePolicy() error {
 		return fmt.Errorf("selector cannot be empty for usage policy of type %q", apis.NamespacesFromSelector)
 	}
 	return nil
-}
-
-// ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *RetentionPolicy) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	retentionpolicylog.Info("validate delete", "name", r.Name)
-
-	// TODO(user): fill in your validation logic upon object deletion.
-	return nil, nil
 }

@@ -24,6 +24,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"kubestash.dev/apimachinery/apis"
+	"kubestash.dev/apimachinery/apis/core/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -34,9 +35,18 @@ import (
 // log is for logging in this package.
 var restoresessionlog = logf.Log.WithName("restoresession-resource")
 
-func (r *RestoreSession) SetupWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr).
-		For(r).
+type RestoreSessionCustomDefaulter struct{}
+type RestoreSessionCustomValidator struct{}
+
+type RestoreSession struct {
+	*v1alpha1.RestoreSession
+}
+
+// SetupRestoreSessionWebhookWithManager registers the webhook for RestoreSession in the manager.
+func SetupRestoreSessionWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.RestoreSession{}).
+		WithValidator(&RestoreSessionCustomValidator{}).
+		//WithDefaulter(&RestoreSessionCustomDefaulter{}).
 		Complete()
 }
 
@@ -45,11 +55,17 @@ func (r *RestoreSession) SetupWebhookWithManager(mgr ctrl.Manager) error {
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-restoresession,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=restoresessions,verbs=create;update,versions=v1alpha1,name=vrestoresession.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomValidator = &RestoreSession{}
+var _ webhook.CustomValidator = &RestoreSessionCustomValidator{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *RestoreSession) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	restoresessionlog.Info("validate create", "name", r.Name)
+func (_ *RestoreSessionCustomValidator) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	var ok bool
+	var r RestoreSession
+	r.RestoreSession, ok = obj.(*v1alpha1.RestoreSession)
+	if !ok {
+		return nil, fmt.Errorf("expected RestoreSession but got %T", obj)
+	}
+	restoresessionlog.Info("Validation for RestoreSession upon creation", "name", r.Name)
 
 	if err := r.ValidateDataSource(); err != nil {
 		return nil, err
@@ -59,19 +75,36 @@ func (r *RestoreSession) ValidateCreate(ctx context.Context, obj runtime.Object)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *RestoreSession) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	restoresessionlog.Info("validate update", "name", r.Name)
+func (_ *RestoreSessionCustomValidator) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	var ok bool
+	var rNew, rOld RestoreSession
+	rNew.RestoreSession, ok = newObj.(*v1alpha1.RestoreSession)
+	if !ok {
+		return nil, fmt.Errorf("expected RestoreSession but got %T", newObj)
+	}
+	restoresessionlog.Info("Validation for RestoreSession upon update", "name", rNew.Name)
 
-	if err := r.ValidateDataSource(); err != nil {
+	rOld.RestoreSession, ok = oldObj.(*v1alpha1.RestoreSession)
+	if !ok {
+		return nil, fmt.Errorf("expected RestoreSession but got %T", oldObj)
+	}
+
+	if err := rNew.ValidateDataSource(); err != nil {
 		return nil, err
 	}
 
-	return nil, r.validateHookTemplatesAgainstUsagePolicy(context.Background(), apis.GetRuntimeClient())
+	return nil, rNew.validateHookTemplatesAgainstUsagePolicy(context.Background(), apis.GetRuntimeClient())
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *RestoreSession) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	restoresessionlog.Info("validate delete", "name", r.Name)
+func (_ *RestoreSessionCustomValidator) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	var ok bool
+	var s RestoreSession
+	s.RestoreSession, ok = obj.(*v1alpha1.RestoreSession)
+	if !ok {
+		return nil, fmt.Errorf("expected RestoreSession but got %T", obj)
+	}
+	restoresessionlog.Info("Validation for RestoreSession upon delete", "name", s.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.
 	return nil, nil
@@ -148,8 +181,8 @@ func (r *RestoreSession) validateHookTemplatesAgainstUsagePolicy(ctx context.Con
 	return nil
 }
 
-func (r *RestoreSession) getHookTemplates() []HookTemplate {
-	var hookTemplates []HookTemplate
+func (r *RestoreSession) getHookTemplates() []v1alpha1.HookTemplate {
+	var hookTemplates []v1alpha1.HookTemplate
 	if r.Spec.Hooks != nil {
 		hookTemplates = append(hookTemplates, r.getHookTemplatesFromHookInfo(r.Spec.Hooks.PreRestore)...)
 		hookTemplates = append(hookTemplates, r.getHookTemplatesFromHookInfo(r.Spec.Hooks.PostRestore)...)
@@ -157,11 +190,11 @@ func (r *RestoreSession) getHookTemplates() []HookTemplate {
 	return hookTemplates
 }
 
-func (r *RestoreSession) getHookTemplatesFromHookInfo(hooks []HookInfo) []HookTemplate {
-	var hookTemplates []HookTemplate
+func (r *RestoreSession) getHookTemplatesFromHookInfo(hooks []v1alpha1.HookInfo) []v1alpha1.HookTemplate {
+	var hookTemplates []v1alpha1.HookTemplate
 	for _, hook := range hooks {
 		if hook.HookTemplate != nil {
-			hookTemplates = append(hookTemplates, HookTemplate{
+			hookTemplates = append(hookTemplates, v1alpha1.HookTemplate{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      hook.HookTemplate.Name,
 					Namespace: hook.HookTemplate.Namespace,
