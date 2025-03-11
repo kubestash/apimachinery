@@ -33,8 +33,7 @@ import (
 // log is for logging in this package.
 var retentionpolicylog = logf.Log.WithName("retentionpolicy-resource")
 
-type RetentionPolicyCustomDefaulter struct{}
-type RetentionPolicyCustomValidator struct{}
+type RetentionPolicyCustomWebhook struct{}
 
 type RetentionPolicy struct {
 	*v1alpha1.RetentionPolicy
@@ -43,8 +42,8 @@ type RetentionPolicy struct {
 // SetupRetentionPolicyWebhookWithManager registers the webhook for RetentionPolicy in the manager.
 func SetupRetentionPolicyWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.RetentionPolicy{}).
-		WithValidator(&RetentionPolicyCustomValidator{}).
-		WithDefaulter(&RetentionPolicyCustomDefaulter{}).
+		WithValidator(&RetentionPolicyCustomWebhook{}).
+		WithDefaulter(&RetentionPolicyCustomWebhook{}).
 		Complete()
 }
 
@@ -52,10 +51,10 @@ func SetupRetentionPolicyWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-storage-kubestash-com-v1alpha1-retentionpolicy,mutating=true,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=retentionpolicies,verbs=create;update,versions=v1alpha1,name=mretentionpolicy.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomDefaulter = &RetentionPolicyCustomDefaulter{}
+var _ webhook.CustomDefaulter = &RetentionPolicyCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (_ *RetentionPolicyCustomDefaulter) Default(ctx context.Context, obj runtime.Object) error {
+func (_ *RetentionPolicyCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	var ok bool
 	var r RetentionPolicy
 	r.RetentionPolicy, ok = obj.(*v1alpha1.RetentionPolicy)
@@ -77,10 +76,10 @@ func (_ *RetentionPolicyCustomDefaulter) Default(ctx context.Context, obj runtim
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-storage-kubestash-com-v1alpha1-retentionpolicy,mutating=false,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=retentionpolicies,verbs=create;update,versions=v1alpha1,name=vretentionpolicy.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomValidator = &RetentionPolicyCustomValidator{}
+var _ webhook.CustomValidator = &RetentionPolicyCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *RetentionPolicyCustomValidator) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *RetentionPolicyCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var r RetentionPolicy
 	r.RetentionPolicy, ok = obj.(*v1alpha1.RetentionPolicy)
@@ -107,7 +106,7 @@ func (_ *RetentionPolicyCustomValidator) ValidateCreate(ctx context.Context, obj
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *RetentionPolicyCustomValidator) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (_ *RetentionPolicyCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var rNew, rOld RetentionPolicy
 	rNew.RetentionPolicy, ok = newObj.(*v1alpha1.RetentionPolicy)
@@ -139,7 +138,7 @@ func (_ *RetentionPolicyCustomValidator) ValidateUpdate(ctx context.Context, old
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *RetentionPolicyCustomValidator) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *RetentionPolicyCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var r RetentionPolicy
 	r.RetentionPolicy, ok = obj.(*v1alpha1.RetentionPolicy)

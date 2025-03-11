@@ -31,8 +31,7 @@ import (
 // log is for logging in this package.
 var backupverificationsessionlog = logf.Log.WithName("backupverificationsession-resource")
 
-type BackupVerificationSessionCustomDefaulter struct{}
-type BackupVerificationSessionCustomValidator struct{}
+type BackupVerificationSessionCustomWebhook struct{}
 
 type BackupVerificationSession struct {
 	*v1alpha1.BackupVerificationSession
@@ -41,8 +40,8 @@ type BackupVerificationSession struct {
 // SetupBackupVerificationSessionWebhookWithManager registers the webhook for BackupVerificationSession in the manager.
 func SetupBackupVerificationSessionWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.BackupVerificationSession{}).
-		WithValidator(&BackupVerificationSessionCustomValidator{}).
-		//WithDefaulter(&BackupVerificationSessionCustomDefaulter{}).
+		WithValidator(&BackupVerificationSessionCustomWebhook{}).
+		//WithDefaulter(&BackupVerificationSessionCustomWebhook{}).
 		Complete()
 }
 
@@ -51,10 +50,10 @@ func SetupBackupVerificationSessionWebhookWithManager(mgr ctrl.Manager) error {
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-backupverificationsession,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupverificationsessions,verbs=create;update,versions=v1alpha1,name=vbackupverificationsession.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomValidator = &BackupVerificationSessionCustomValidator{}
+var _ webhook.CustomValidator = &BackupVerificationSessionCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupVerificationSessionCustomValidator) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupVerificationSessionCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupVerificationSession
 	b.BackupVerificationSession, ok = obj.(*v1alpha1.BackupVerificationSession)
@@ -68,7 +67,7 @@ func (_ *BackupVerificationSessionCustomValidator) ValidateCreate(ctx context.Co
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupVerificationSessionCustomValidator) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupVerificationSessionCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var bNew, bOld BackupVerificationSession
 	bNew.BackupVerificationSession, ok = newObj.(*v1alpha1.BackupVerificationSession)
@@ -90,7 +89,7 @@ func (_ *BackupVerificationSessionCustomValidator) ValidateUpdate(ctx context.Co
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupVerificationSessionCustomValidator) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupVerificationSessionCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupVerificationSession
 	b.BackupVerificationSession, ok = obj.(*v1alpha1.BackupVerificationSession)

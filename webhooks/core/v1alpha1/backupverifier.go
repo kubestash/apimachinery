@@ -30,8 +30,7 @@ import (
 // log is for logging in this package.
 var backupverifierlog = logf.Log.WithName("backupverifier-resource")
 
-type BackupVerifierCustomDefaulter struct{}
-type BackupVerifierCustomValidator struct{}
+type BackupVerifierCustomWebhook struct{}
 
 type BackupVerifier struct {
 	*v1alpha1.BackupVerifier
@@ -40,8 +39,8 @@ type BackupVerifier struct {
 // SetupBackupVerifierWebhookWithManager registers the webhook for BackupVerifier in the manager.
 func SetupBackupVerifierWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.BackupVerifier{}).
-		WithValidator(&BackupVerifierCustomValidator{}).
-		//WithDefaulter(&BackupVerifierCustomDefaulter{}).
+		WithValidator(&BackupVerifierCustomWebhook{}).
+		//WithDefaulter(&BackupVerifierCustomWebhook{}).
 		Complete()
 }
 
@@ -50,10 +49,10 @@ func SetupBackupVerifierWebhookWithManager(mgr ctrl.Manager) error {
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-backupverifier,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupverifiers,verbs=create;update,versions=v1alpha1,name=vbackupverifier.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomValidator = &BackupVerifierCustomValidator{}
+var _ webhook.CustomValidator = &BackupVerifierCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupVerifierCustomValidator) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupVerifierCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupVerifier
 	b.BackupVerifier, ok = obj.(*v1alpha1.BackupVerifier)
@@ -70,7 +69,7 @@ func (_ *BackupVerifierCustomValidator) ValidateCreate(ctx context.Context, obj 
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupVerifierCustomValidator) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupVerifierCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var bNew, bOld BackupVerifier
 	bNew.BackupVerifier, ok = newObj.(*v1alpha1.BackupVerifier)
@@ -92,7 +91,7 @@ func (_ *BackupVerifierCustomValidator) ValidateUpdate(ctx context.Context, oldO
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupVerifierCustomValidator) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupVerifierCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupVerifier
 	b.BackupVerifier, ok = obj.(*v1alpha1.BackupVerifier)

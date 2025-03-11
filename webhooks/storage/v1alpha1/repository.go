@@ -30,8 +30,7 @@ import (
 // log is for logging in this package.
 var repositorylog = logf.Log.WithName("repository-resource")
 
-type RepositoryCustomDefaulter struct{}
-type RepositoryCustomValidator struct{}
+type RepositoryCustomWebhook struct{}
 
 type Repository struct {
 	*v1alpha1.Repository
@@ -40,17 +39,17 @@ type Repository struct {
 // SetupRepositoryWebhookWithManager registers the webhook for Repository in the manager.
 func SetupRepositoryWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.Repository{}).
-		WithValidator(&RepositoryCustomValidator{}).
-		WithDefaulter(&RepositoryCustomDefaulter{}).
+		WithValidator(&RepositoryCustomWebhook{}).
+		WithDefaulter(&RepositoryCustomWebhook{}).
 		Complete()
 }
 
 //+kubebuilder:webhook:path=/validate-storage-kubestash-com-v1alpha1-repository,mutating=true,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=repositories,verbs=create;update,versions=v1alpha1,name=vrepository.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomDefaulter = &RepositoryCustomDefaulter{}
+var _ webhook.CustomDefaulter = &RepositoryCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (_ *RepositoryCustomDefaulter) Default(ctx context.Context, obj runtime.Object) error {
+func (_ *RepositoryCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	var ok bool
 	var r Repository
 	r.Repository, ok = obj.(*v1alpha1.Repository)
@@ -66,10 +65,10 @@ func (_ *RepositoryCustomDefaulter) Default(ctx context.Context, obj runtime.Obj
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-storage-kubestash-com-v1alpha1-repository,mutating=false,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=repositories,verbs=create;update,versions=v1alpha1,name=vrepository.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomValidator = &RepositoryCustomValidator{}
+var _ webhook.CustomValidator = &RepositoryCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *RepositoryCustomValidator) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *RepositoryCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var r Repository
 	r.Repository, ok = obj.(*v1alpha1.Repository)
@@ -83,7 +82,7 @@ func (_ *RepositoryCustomValidator) ValidateCreate(ctx context.Context, obj runt
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *RepositoryCustomValidator) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (_ *RepositoryCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var rNew, rOld Repository
 	rNew.Repository, ok = newObj.(*v1alpha1.Repository)
@@ -105,7 +104,7 @@ func (_ *RepositoryCustomValidator) ValidateUpdate(ctx context.Context, oldObj, 
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *RepositoryCustomValidator) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *RepositoryCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var r Repository
 	r.Repository, ok = obj.(*v1alpha1.Repository)

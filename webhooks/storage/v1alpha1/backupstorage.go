@@ -34,8 +34,7 @@ import (
 // log is for logging in this package.
 var backupstoragelog = logf.Log.WithName("backupstorage-resource")
 
-type BackupStorageCustomDefaulter struct{}
-type BackupStorageCustomValidator struct{}
+type BackupStorageCustomWebhook struct{}
 
 type BackupStorage struct {
 	*v1alpha1.BackupStorage
@@ -44,8 +43,8 @@ type BackupStorage struct {
 // SetupBackupStorageWebhookWithManager registers the webhook for BackupStorage in the manager.
 func SetupBackupStorageWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.BackupStorage{}).
-		WithValidator(&BackupStorageCustomValidator{}).
-		WithDefaulter(&BackupStorageCustomDefaulter{}).
+		WithValidator(&BackupStorageCustomWebhook{}).
+		WithDefaulter(&BackupStorageCustomWebhook{}).
 		Complete()
 }
 
@@ -53,10 +52,10 @@ func SetupBackupStorageWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-storage-kubestash-com-v1alpha1-backupstorage,mutating=true,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=backupstorages,verbs=create;update,versions=v1alpha1,name=mbackupstorage.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomDefaulter = &BackupStorageCustomDefaulter{}
+var _ webhook.CustomDefaulter = &BackupStorageCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (_ *BackupStorageCustomDefaulter) Default(_ context.Context, obj runtime.Object) error {
+func (_ *BackupStorageCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
 	var ok bool
 	var s BackupStorage
 	s.BackupStorage, ok = obj.(*v1alpha1.BackupStorage)
@@ -75,10 +74,10 @@ func (_ *BackupStorageCustomDefaulter) Default(_ context.Context, obj runtime.Ob
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-storage-kubestash-com-v1alpha1-backupstorage,mutating=false,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=backupstorages,verbs=create;update,versions=v1alpha1,name=vbackupstorage.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomValidator = &BackupStorageCustomValidator{}
+var _ webhook.CustomValidator = &BackupStorageCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupStorageCustomValidator) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupStorageCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupStorage
 	b.BackupStorage, ok = obj.(*v1alpha1.BackupStorage)
@@ -103,7 +102,7 @@ func (_ *BackupStorageCustomValidator) ValidateCreate(ctx context.Context, obj r
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupStorageCustomValidator) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupStorageCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var bNew, bOld BackupStorage
 	bNew.BackupStorage, ok = newObj.(*v1alpha1.BackupStorage)
@@ -136,7 +135,7 @@ func (_ *BackupStorageCustomValidator) ValidateUpdate(ctx context.Context, oldOb
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupStorageCustomValidator) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupStorageCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var s BackupStorage
 	s.BackupStorage, ok = obj.(*v1alpha1.BackupStorage)

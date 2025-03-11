@@ -32,8 +32,7 @@ import (
 // log is for logging in this package.
 var hooktemplatelog = logf.Log.WithName("hooktemplate-resource")
 
-type HookTemplateCustomDefaulter struct{}
-type HookTemplateCustomValidator struct{}
+type HookTemplateCustomWebhook struct{}
 
 type HookTemplate struct {
 	*v1alpha1.HookTemplate
@@ -42,8 +41,8 @@ type HookTemplate struct {
 // SetupHookTemplateWebhookWithManager registers the webhook for HookTemplate in the manager.
 func SetupHookTemplateWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.HookTemplate{}).
-		WithValidator(&HookTemplateCustomValidator{}).
-		WithDefaulter(&HookTemplateCustomDefaulter{}).
+		WithValidator(&HookTemplateCustomWebhook{}).
+		WithDefaulter(&HookTemplateCustomWebhook{}).
 		Complete()
 }
 
@@ -51,10 +50,10 @@ func SetupHookTemplateWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-core-kubestash-com-v1alpha1-hooktemplate,mutating=true,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=hooktemplates,verbs=create;update,versions=v1alpha1,name=mhooktemplate.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomDefaulter = &HookTemplateCustomDefaulter{}
+var _ webhook.CustomDefaulter = &HookTemplateCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (_ *HookTemplateCustomDefaulter) Default(ctx context.Context, obj runtime.Object) error {
+func (_ *HookTemplateCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	var ok bool
 	var h HookTemplate
 	h.HookTemplate, ok = obj.(*v1alpha1.HookTemplate)
@@ -72,10 +71,10 @@ func (_ *HookTemplateCustomDefaulter) Default(ctx context.Context, obj runtime.O
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-hooktemplate,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=hooktemplates,verbs=create;update,versions=v1alpha1,name=vhooktemplate.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomValidator = &HookTemplateCustomValidator{}
+var _ webhook.CustomValidator = &HookTemplateCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *HookTemplateCustomValidator) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *HookTemplateCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var h HookTemplate
 	h.HookTemplate, ok = obj.(*v1alpha1.HookTemplate)
@@ -100,7 +99,7 @@ func (_ *HookTemplateCustomValidator) ValidateCreate(ctx context.Context, obj ru
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *HookTemplateCustomValidator) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (_ *HookTemplateCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var hNew, hOld HookTemplate
 	hNew.HookTemplate, ok = newObj.(*v1alpha1.HookTemplate)
@@ -130,7 +129,7 @@ func (_ *HookTemplateCustomValidator) ValidateUpdate(ctx context.Context, oldObj
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *HookTemplateCustomValidator) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *HookTemplateCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var s HookTemplate
 	s.HookTemplate, ok = obj.(*v1alpha1.HookTemplate)

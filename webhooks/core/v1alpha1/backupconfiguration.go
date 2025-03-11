@@ -39,8 +39,7 @@ import (
 // log is for logging in this package.
 var backupconfigurationlog = logf.Log.WithName("backupconfiguration-resource")
 
-type BackupConfigurationCustomDefaulter struct{}
-type BackupConfigurationCustomValidator struct{}
+type BackupConfigurationCustomWebhook struct{}
 
 type BackupConfiguration struct {
 	*v1alpha1.BackupConfiguration
@@ -49,8 +48,8 @@ type BackupConfiguration struct {
 // SetupBackupConfigurationWebhookWithManager registers the webhook for BackupConfiguration in the manager.
 func SetupBackupConfigurationWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.BackupConfiguration{}).
-		WithValidator(&BackupConfigurationCustomValidator{}).
-		WithDefaulter(&BackupConfigurationCustomDefaulter{}).
+		WithValidator(&BackupConfigurationCustomWebhook{}).
+		WithDefaulter(&BackupConfigurationCustomWebhook{}).
 		Complete()
 }
 
@@ -58,10 +57,10 @@ func SetupBackupConfigurationWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-core-kubestash-com-v1alpha1-backupconfiguration,mutating=true,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupconfigurations,verbs=create;update,versions=v1alpha1,name=mbackupconfiguration.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomDefaulter = &BackupConfigurationCustomDefaulter{}
+var _ webhook.CustomDefaulter = &BackupConfigurationCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (_ *BackupConfigurationCustomDefaulter) Default(ctx context.Context, obj runtime.Object) error {
+func (_ *BackupConfigurationCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	var ok bool
 	var b BackupConfiguration
 	b.BackupConfiguration, ok = obj.(*v1alpha1.BackupConfiguration)
@@ -81,10 +80,10 @@ func (_ *BackupConfigurationCustomDefaulter) Default(ctx context.Context, obj ru
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-backupconfiguration,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupconfigurations,verbs=create;update,versions=v1alpha1,name=vbackupconfiguration.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomValidator = &BackupConfigurationCustomValidator{}
+var _ webhook.CustomValidator = &BackupConfigurationCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupConfigurationCustomValidator) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupConfigurationCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupConfiguration
 	b.BackupConfiguration, ok = obj.(*v1alpha1.BackupConfiguration)
@@ -110,7 +109,7 @@ func (_ *BackupConfigurationCustomValidator) ValidateCreate(ctx context.Context,
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupConfigurationCustomValidator) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupConfigurationCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 
 	var ok bool
 	var bNew, bOld BackupConfiguration
@@ -142,7 +141,7 @@ func (_ *BackupConfigurationCustomValidator) ValidateUpdate(ctx context.Context,
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupConfigurationCustomValidator) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *BackupConfigurationCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupConfiguration
 	b.BackupConfiguration, ok = obj.(*v1alpha1.BackupConfiguration)
