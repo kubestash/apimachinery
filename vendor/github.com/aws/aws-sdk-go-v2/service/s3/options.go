@@ -12,9 +12,7 @@ import (
 	s3cust "github.com/aws/aws-sdk-go-v2/service/s3/internal/customizations"
 	smithyauth "github.com/aws/smithy-go/auth"
 	"github.com/aws/smithy-go/logging"
-	"github.com/aws/smithy-go/metrics"
 	"github.com/aws/smithy-go/middleware"
-	"github.com/aws/smithy-go/tracing"
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 	"net/http"
 )
@@ -28,6 +26,9 @@ type Options struct {
 	// operations invoked for this client. Use functional options on operation call to
 	// modify this list for per operation behavior.
 	APIOptions []func(*middleware.Stack) error
+
+	// Indicates how aws account ID is applied in endpoint2.0 routing
+	AccountIDEndpointMode aws.AccountIDEndpointMode
 
 	// The optional application specific identifier appended to the User-Agent header.
 	AppID string
@@ -51,10 +52,6 @@ type Options struct {
 	// The configuration DefaultsMode that the SDK should use when constructing the
 	// clients initial default settings.
 	DefaultsMode aws.DefaultsMode
-
-	// Disables logging when the client skips output checksum validation due to lack
-	// of algorithm support.
-	DisableLogOutputChecksumValidationSkipped bool
 
 	// Allows you to disable S3 Multi-Region access points feature.
 	DisableMultiRegionAccessPoints bool
@@ -90,17 +87,8 @@ type Options struct {
 	// The logger writer interface to write logging messages to.
 	Logger logging.Logger
 
-	// The client meter provider.
-	MeterProvider metrics.MeterProvider
-
 	// The region to send requests to. (Required)
 	Region string
-
-	// Indicates how user opt-in/out request checksum calculation
-	RequestChecksumCalculation aws.RequestChecksumCalculation
-
-	// Indicates how user opt-in/out response checksum validation
-	ResponseChecksumValidation aws.ResponseChecksumValidation
 
 	// RetryMaxAttempts specifies the maximum number attempts an API client will call
 	// an operation that fails with a retryable error. A value of 0 is ignored, and
@@ -132,9 +120,6 @@ type Options struct {
 	// should not populate this structure programmatically, or rely on the values here
 	// within your applications.
 	RuntimeEnvironment aws.RuntimeEnvironment
-
-	// The client tracer provider.
-	TracerProvider tracing.TracerProvider
 
 	// Allows you to enable arn region support for the service.
 	UseARNRegion bool
