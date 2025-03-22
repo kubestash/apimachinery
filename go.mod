@@ -15,7 +15,7 @@ require (
 	github.com/kubernetes-csi/external-snapshotter/client/v7 v7.0.0
 	github.com/stretchr/testify v1.10.0
 	go.bytebuilders.dev/audit v0.0.42
-	go.bytebuilders.dev/license-verifier/kubernetes v0.14.6
+	go.bytebuilders.dev/license-verifier/kubernetes v0.14.8
 	gocloud.dev v0.40.0
 	gomodules.xyz/envsubst v0.2.0
 	gomodules.xyz/go-sh v0.2.0
@@ -158,7 +158,7 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
 	go.bytebuilders.dev/license-proxyserver v0.0.20 // indirect
-	go.bytebuilders.dev/license-verifier v0.14.6 // indirect
+	go.bytebuilders.dev/license-verifier v0.14.8 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.58.0 // indirect

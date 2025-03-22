@@ -360,10 +360,10 @@ go.bytebuilders.dev/audit v0.0.42 h1:3pWPyyWEcRY69/Yp4MNr/q+o6ctb93tWRvamy7MAuuc
 go.bytebuilders.dev/audit v0.0.42/go.mod h1:cvykJG+YaWDo43EOE8XfaIaAu1viZv5p/qu2M23atoY=
 go.bytebuilders.dev/license-proxyserver v0.0.20 h1:gzRSwUmX/LSwPVE6T9oy5RLIutU1EeI7hmS+QGsYBY4=
 go.bytebuilders.dev/license-proxyserver v0.0.20/go.mod h1:2PJmjMCXncVyeP3fIVQ+hwZnuhmWSTmbcuEMBrFKIac=
-go.bytebuilders.dev/license-verifier v0.14.6 h1:0iHYGURUbx8toiXvFKftn/qMpeHzqHbAgEnEzOCNLvo=
-go.bytebuilders.dev/license-verifier v0.14.6/go.mod h1:LqWXJKee5ofDcCYM6T5WilYlUc4NlKeZz58tHwO8GEs=
-go.bytebuilders.dev/license-verifier/kubernetes v0.14.6 h1:NxmASX0A3lu+ABd4zuT5Ib+I63y3j5uJxmlUFEGxqWg=
-go.bytebuilders.dev/license-verifier/kubernetes v0.14.6/go.mod h1:N5QxsJF4EGLduOsTsW9gGfRuuMvN33T8pg5Y9NfKzuo=
+go.bytebuilders.dev/license-verifier v0.14.8 h1:BgW/dTkYaKhG8ma347tp1FLnX7LX28IDzA2TBupkTJg=
+go.bytebuilders.dev/license-verifier v0.14.8/go.mod h1:BviSsSxXgXVXBSCXvYmftuTEtxchb04G0cV/AlD/Tu8=
+go.bytebuilders.dev/license-verifier/kubernetes v0.14.8 h1:DZPDdZX1RQ2OmZicLQZoLc326RZp2TKKq6gCD5CLAVA=
+go.bytebuilders.dev/license-verifier/kubernetes v0.14.8/go.mod h1:MJRaK9qShymBUk/NEN9/0j4YT+ztzeVMi6IwJOoX+4w=
 go.opencensus.io v0.24.0 h1:y73uSU6J157QMP2kn2r30vwW1A2W2WFwSCGnAVxeaD0=
 go.opencensus.io v0.24.0/go.mod h1:vNK8G9p7aAivkbmorf4v+7Hgx+Zs0yY+0fOtgBfjQKo=
 go.opentelemetry.io/auto/sdk v1.1.0 h1:cH53jehLUN6UFLY71z+NDOiNJqDdPRaXzTel0sJySYA=
