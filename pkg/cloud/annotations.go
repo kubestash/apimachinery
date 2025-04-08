@@ -26,31 +26,30 @@ import (
 )
 
 const (
-	AWSIRSARoleAnnotation = "eks.amazonaws.com/role-arn"
+	AWSIRSARoleAnnotation        = "eks.amazonaws.com/role-arn"
+	AKSManagedIdentityAnnotation = "azure.workload.identity/client-id"
 )
 
-func GetIRSARoleAnnotationFromOperator(ctx context.Context, kc client.Client) (map[string]string, error) {
-	val, err := GetIRSARoleAnnotationValue(ctx, kc)
-	if err != nil {
-		return nil, err
-	}
-	if val != "" {
-		return map[string]string{AWSIRSARoleAnnotation: val}, nil
-	}
-	return nil, nil
-}
-
-func GetIRSARoleAnnotationValue(ctx context.Context, kc client.Client) (string, error) {
+func GetCloudOIDCAnnotationFromOperator(ctx context.Context, kc client.Client) (map[string]string, error) {
 	sa, err := getServiceAccount(ctx, kc, kmapi.ObjectReference{
 		Name:      meta.PodServiceAccount(),
 		Namespace: meta.PodNamespace(),
 	})
 	if err != nil {
-		return "", fmt.Errorf("failed to retrieve service account: %w", err)
+		return nil, fmt.Errorf("failed to get service account: %w", err)
 	}
 
-	val, _ := sa.Annotations[AWSIRSARoleAnnotation]
-	return val, nil
+	annotations := make(map[string]string)
+	setValueIfPresent(sa, AWSIRSARoleAnnotation, annotations)
+	setValueIfPresent(sa, AKSManagedIdentityAnnotation, annotations)
+
+	return annotations, nil
+}
+
+func setValueIfPresent(sa *core.ServiceAccount, key string, out map[string]string) {
+	if val, ok := sa.Annotations[key]; ok && val != "" {
+		out[key] = val
+	}
 }
 
 func getServiceAccount(ctx context.Context, c client.Client, ref kmapi.ObjectReference) (*core.ServiceAccount, error) {
