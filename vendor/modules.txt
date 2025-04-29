@@ -852,7 +852,7 @@ golang.org/x/crypto/pkcs12
 golang.org/x/crypto/pkcs12/internal/rc2
 golang.org/x/crypto/salsa20/salsa
 golang.org/x/crypto/scrypt
-# golang.org/x/net v0.37.0
+# golang.org/x/net v0.38.0
 ## explicit; go 1.23.0
 golang.org/x/net/html
 golang.org/x/net/html/atom
@@ -1543,7 +1543,7 @@ k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset
 k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset/scheme
 k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset/typed/apiregistration/v1
 k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset/typed/apiregistration/v1beta1
-# k8s.io/kube-openapi v0.0.0-20250318172550-b98be4ee1595
+# k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff
 ## explicit; go 1.21
 k8s.io/kube-openapi/pkg/cached
 k8s.io/kube-openapi/pkg/common
@@ -1631,7 +1631,7 @@ kmodules.xyz/resource-metrics/kubedb.com/v1
 kmodules.xyz/resource-metrics/kubedb.com/v1alpha2
 kmodules.xyz/resource-metrics/kubevault.com/v1alpha2
 kmodules.xyz/resource-metrics/ops.kubedb.com/v1alpha1
-# kubedb.dev/apimachinery v0.53.0-rc.0
+# kubedb.dev/apimachinery v0.53.0
 ## explicit; go 1.23.0
 kubedb.dev/apimachinery/apis
 kubedb.dev/apimachinery/apis/catalog
@@ -1640,15 +1640,15 @@ kubedb.dev/apimachinery/apis/kubedb
 kubedb.dev/apimachinery/apis/kubedb/v1
 kubedb.dev/apimachinery/apis/kubedb/v1alpha2
 kubedb.dev/apimachinery/crds
-# kubeops.dev/petset v0.0.9
+# kubeops.dev/petset v0.0.10
 ## explicit; go 1.23.0
 kubeops.dev/petset/apis/apps/v1
 kubeops.dev/petset/client/clientset/versioned/scheme
 kubeops.dev/petset/client/clientset/versioned/typed/apps/v1
 kubeops.dev/petset/client/listers/apps/v1
 kubeops.dev/petset/crds
-# kubeops.dev/sidekick v0.0.10
-## explicit; go 1.22.1
+# kubeops.dev/sidekick v0.0.11
+## explicit; go 1.23.0
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
 kubeops.dev/sidekick/crds
