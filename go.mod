@@ -32,7 +32,7 @@ require (
 	kmodules.xyz/objectstore-api v0.32.0
 	kmodules.xyz/offshoot-api v0.32.0
 	kmodules.xyz/prober v0.32.0
-	kubedb.dev/apimachinery v0.54.0
+	kubedb.dev/apimachinery v0.55.0
 	sigs.k8s.io/controller-runtime v0.20.4
 	sigs.k8s.io/yaml v1.4.0
 )
@@ -201,7 +201,7 @@ require (
 	kmodules.xyz/go-containerregistry v0.0.14 // indirect
 	kmodules.xyz/monitoring-agent-api v0.32.0 // indirect
 	kmodules.xyz/resource-metadata v0.30.1 // indirect
-	kmodules.xyz/resource-metrics v0.30.6 // indirect
+	kmodules.xyz/resource-metrics v0.30.7 // indirect
 	kubeops.dev/petset v0.0.10 // indirect
 	kubeops.dev/sidekick v0.0.11 // indirect
 	moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 // indirect

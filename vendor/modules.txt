@@ -1619,7 +1619,7 @@ kmodules.xyz/resource-metadata/apis/core/v1alpha1
 kmodules.xyz/resource-metadata/apis/identity/v1alpha1
 kmodules.xyz/resource-metadata/apis/shared
 kmodules.xyz/resource-metadata/pkg/identity
-# kmodules.xyz/resource-metrics v0.30.6
+# kmodules.xyz/resource-metrics v0.30.7
 ## explicit; go 1.23.0
 kmodules.xyz/resource-metrics
 kmodules.xyz/resource-metrics/api
@@ -1632,7 +1632,7 @@ kmodules.xyz/resource-metrics/kubedb.com/v1
 kmodules.xyz/resource-metrics/kubedb.com/v1alpha2
 kmodules.xyz/resource-metrics/kubevault.com/v1alpha2
 kmodules.xyz/resource-metrics/ops.kubedb.com/v1alpha1
-# kubedb.dev/apimachinery v0.54.0
+# kubedb.dev/apimachinery v0.55.0
 ## explicit; go 1.23.0
 kubedb.dev/apimachinery/apis
 kubedb.dev/apimachinery/apis/catalog
