@@ -12,7 +12,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.59
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.58.3
 	github.com/google/gofuzz v1.2.0
-	github.com/kubernetes-csi/external-snapshotter/client/v7 v7.0.0
+	github.com/kubernetes-csi/external-snapshotter/client/v8 v8.2.0
 	github.com/stretchr/testify v1.10.0
 	go.bytebuilders.dev/audit v0.0.43
 	go.bytebuilders.dev/license-verifier/kubernetes v0.14.9
