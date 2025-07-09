@@ -91,9 +91,9 @@ spec:
                       enum:
                       - Restic
                       - WalG
-                      - Medusa
                       - VolumeSnapshotter
                       - Solr
+                      - Medusa
                       type: string
                     duration:
                       type: string
