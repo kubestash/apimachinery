@@ -50,6 +50,7 @@ spec:
                         - WalG
                         - Medusa
                         - VolumeSnapshotter
+                        - Solr
                       type: string
                     executor:
                       enum:
@@ -1054,6 +1055,7 @@ spec:
                         - WalG
                         - Medusa
                         - VolumeSnapshotter
+                        - Solr
                       type: string
                     executor:
                       enum:
