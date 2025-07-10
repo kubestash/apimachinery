@@ -42,8 +42,9 @@ spec:
                       - enum:
                         - Restic
                         - WalG
-                        - Medusa
                         - VolumeSnapshotter
+                        - Solr
+                        - Medusa
                       - enum:
                         - Restic
                         - WalG
@@ -1045,8 +1046,9 @@ spec:
                       - enum:
                         - Restic
                         - WalG
-                        - Medusa
                         - VolumeSnapshotter
+                        - Solr
+                        - Medusa
                       - enum:
                         - Restic
                         - WalG
