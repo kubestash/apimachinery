@@ -165,7 +165,7 @@ func (w *ResticWrapper) setupEnvsForBackend(b *Backend) error {
 		}
 
 	case storage.ProviderAzure:
-		b.envs[RESTIC_REPOSITORY] = fmt.Sprintf("azure:%s/%s", b.bucket, filepath.Join(b.path, b.Directory))
+		b.envs[RESTIC_REPOSITORY] = fmt.Sprintf("azure:%s:/%s", b.bucket, filepath.Join(b.path, b.Directory))
 		if b.storageAccount == "" {
 			return fmt.Errorf("missing storage account for Azure storage")
 		} else {
