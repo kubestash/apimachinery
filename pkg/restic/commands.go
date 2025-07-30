@@ -557,6 +557,7 @@ func (w *ResticWrapper) lockStats(repository, lockID string) ([]byte, error) {
 	args = b.appendMaxConnectionsFlag(args)
 	args = b.appendCaCertFlag(args)
 	args = b.appendInsecureTLSFlag(args)
+	args = append(args, b.envs)
 
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
