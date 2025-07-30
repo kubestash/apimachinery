@@ -22,11 +22,10 @@ import (
 	"fmt"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/client-go/kubernetes"
 	"k8s.io/klog/v2"
 	kutil "kmodules.xyz/client-go"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"time"
 )
 
@@ -76,7 +75,7 @@ func (w *ResticWrapper) getPodNameIfAnyExclusiveLock(repository string) (string,
 
 // EnsureNoExclusiveLock blocks until any exclusive lock is released.
 // If a lock is held by a Running Pod, it waits; otherwise it unlocks.
-func (w *ResticWrapper) EnsureNoExclusiveLock(k8sClient kubernetes.Interface, namespace string) error {
+func (w *ResticWrapper) EnsureNoExclusiveLock(rClient client.Client, namespace string) error {
 	klog.Infoln("Ensuring no exclusive lock is held on any repositories...")
 
 	for _, b := range w.Config.Backends {
@@ -99,7 +98,8 @@ func (w *ResticWrapper) EnsureNoExclusiveLock(k8sClient kubernetes.Interface, na
 			func(ctx context.Context) (bool, error) {
 				klog.Infof("Checking Pod status: %s...", podName)
 
-				pod, err := k8sClient.CoreV1().Pods(namespace).Get(ctx, podName, metav1.GetOptions{})
+				var pod corev1.Pod
+				err := rClient.Get(context.Background(), client.ObjectKey{Name: podName, Namespace: namespace}, &pod)
 				switch {
 				case errors.IsNotFound(err): // Pod gone → unlock
 					klog.Infof("Pod %s not found. Assuming it has terminated. Attempting to unlock repository: %s", podName, b.Repository)
