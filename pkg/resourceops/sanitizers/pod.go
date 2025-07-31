@@ -30,6 +30,11 @@ func newPodSanitizer() Sanitizer {
 }
 
 func (s podSanitizer) Sanitize(in map[string]interface{}) (map[string]interface{}, error) {
+	kind, _ := in["kind"].(string)
+	apiVersion, _ := in["apiVersion"].(string)
+	if kind != "Pod" || apiVersion != "v1" {
+		return in, nil
+	}
 	ms := newMetadataSanitizer()
 	in, err := ms.Sanitize(in)
 	if err != nil {
