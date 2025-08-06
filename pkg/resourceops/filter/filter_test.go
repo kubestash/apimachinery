@@ -68,7 +68,8 @@ func TestGetIncludeExcludeResources(t *testing.T) {
 }
 
 func TestGlobalIncludeExclude(t *testing.T) {
-	resFilter := NewIncludeExclude().Includes("pods", "nodes")
+	resFilter := NewIncludeExclude().Includes("pods", "nodes", "statefulset")
+	resFilter = NewIncludeExclude().Excludes("pods.metrics.k8s.io", "metrics.k8s.io", "endpointslices.discovery.k8s.io")
 	nsFilter := NewIncludeExclude().Excludes("kube-system")
 	gFalse := NewGlobalIncludeExclude(resFilter, nsFilter, false)
 	// cluster-scoped resources should be blocked when flag is false
@@ -78,6 +79,15 @@ func TestGlobalIncludeExclude(t *testing.T) {
 	// namespaced resource included if in resourceFilter
 	if !gFalse.ShouldIncludeResource("pods", true) {
 		t.Errorf("expected 'pods' included when namespaced = true and in filter")
+	}
+	if !gFalse.ShouldIncludeResource("statefulset.apps", true) {
+		t.Errorf("expected 'statefulset.apps' to be included when namespaced = true and in filter")
+	}
+	if gFalse.ShouldIncludeResource("pods.metrics.k8s.io", true) {
+		t.Errorf("expected 'pods.metrics.k8s.io' to be excluded when namespaced = true and in filter")
+	}
+	if gFalse.ShouldIncludeResource("endpointslices.discovery.k8s.io", true) {
+		t.Errorf("expected 'endpointslices.discovery.k8s.io' to be excluded when namespaced = true and in filter")
 	}
 	// namespace exclusion works
 	if gFalse.ShouldIncludeNamespace("kube-system") {
@@ -105,4 +115,5 @@ func TestGlobalIncludeExclude(t *testing.T) {
 	if !gTrue.ShouldIncludeResource("customresourcedefinitions", true) {
 		t.Errorf("expected 'customresourcedefinitions' included when flag=true")
 	}
+
 }
