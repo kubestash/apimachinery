@@ -19,6 +19,7 @@ package filter
 import (
 	"gomodules.xyz/pointer"
 	"k8s.io/utils/ptr"
+	"strings"
 )
 
 type IncludeExclude struct {
@@ -59,13 +60,32 @@ func GetIncludeExcludeResources(includes, excludes []string) *IncludeExclude {
 	return f
 }
 
-func (f *IncludeExclude) ShouldInclude(item string) bool {
+func (f *IncludeExclude) ShouldInclude(groupResource string) bool {
 	// Always excluded if in excludes.
-	if _, blocked := f.excludes[item]; blocked {
+
+	if _, blocked := f.excludes[groupResource]; blocked {
 		return false
 	}
 	// If no explicit includes or wildcard, include everything by default.
-	return len(f.includes) == 0 || hasWildcard(f.includes) || exists(f.includes, item)
+	if len(f.includes) == 0 || hasWildcard(f.includes) || exists(f.includes, groupResource) {
+		return true
+	}
+
+	resource := getResourceFromGroupResource(groupResource)
+	if _, blocked := f.excludes[resource]; blocked {
+		return false
+	}
+	// If no explicit includes or wildcard, include everything by default.
+	if len(f.includes) == 0 || hasWildcard(f.includes) || exists(f.includes, resource) {
+		return true
+	}
+
+	return false
+}
+
+func getResourceFromGroupResource(groupResource string) string {
+	parts := strings.Split(groupResource, ".")
+	return parts[0]
 }
 
 func hasWildcard(set map[string]struct{}) bool {
@@ -92,12 +112,12 @@ func NewGlobalIncludeExclude(resourceFilter, namespaceFilter *IncludeExclude, in
 	}
 }
 
-func (g *GlobalIncludeExclude) ShouldIncludeResource(resource string, namespaced bool) bool {
+func (g *GlobalIncludeExclude) ShouldIncludeResource(groupResource string, namespaced bool) bool {
 	// If cluster-scoped and cluster resources not allowed, exclude.
 	if !namespaced && !ptr.Deref(g.includeClusterResources, false) {
 		return false
 	}
-	return g.resourceFilter.ShouldInclude(resource)
+	return g.resourceFilter.ShouldInclude(groupResource)
 }
 
 func (g *GlobalIncludeExclude) ShouldIncludeNamespace(namespace string) bool {
