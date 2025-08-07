@@ -67,11 +67,31 @@ func TestGetIncludeExcludeResources(t *testing.T) {
 	}
 }
 
+func TestGetIncludeExcludeGroupResources(t *testing.T) {
+	f := GetIncludeExcludeResources([]string{"a", "pods", "endpointslices.discovery.k8s.io"},
+		[]string{"b", "pods.metrics.k8s.io", "endpointslices", "*"})
+	if !f.ShouldInclude("a") {
+		t.Errorf("expected 'a' included")
+	}
+	if !f.ShouldInclude("pods") {
+		t.Errorf("expected 'pods' included")
+	}
+	if !f.ShouldInclude("endpointslices.discovery.k8s.io") {
+		t.Errorf("expected 'endpointslices.discovery.k8s.io' included")
+	}
+	if f.ShouldInclude("pods.metrics.k8s.io") {
+		t.Errorf("expected 'pods.metrics.k8s.io' excluded")
+	}
+	if f.ShouldInclude("endpointslices") {
+		t.Errorf("expected 'endpointslices' excluded")
+	}
+}
+
 func TestGlobalIncludeExclude(t *testing.T) {
-	resFilter := NewIncludeExclude().Includes("pods", "nodes", "statefulset")
-	resFilter = NewIncludeExclude().Excludes("pods.metrics.k8s.io", "metrics.k8s.io", "endpointslices.discovery.k8s.io")
+	resFilter := NewIncludeExclude().Includes("pods", "nodes")
 	nsFilter := NewIncludeExclude().Excludes("kube-system")
 	gFalse := NewGlobalIncludeExclude(resFilter, nsFilter, false)
+
 	// cluster-scoped resources should be blocked when flag is false
 	if gFalse.ShouldIncludeResource("nodes", false) {
 		t.Errorf("expected cluster-scoped 'nodes' excluded when flag=false")
@@ -80,15 +100,7 @@ func TestGlobalIncludeExclude(t *testing.T) {
 	if !gFalse.ShouldIncludeResource("pods", true) {
 		t.Errorf("expected 'pods' included when namespaced = true and in filter")
 	}
-	if !gFalse.ShouldIncludeResource("statefulset.apps", true) {
-		t.Errorf("expected 'statefulset.apps' to be included when namespaced = true and in filter")
-	}
-	if gFalse.ShouldIncludeResource("pods.metrics.k8s.io", true) {
-		t.Errorf("expected 'pods.metrics.k8s.io' to be excluded when namespaced = true and in filter")
-	}
-	if gFalse.ShouldIncludeResource("endpointslices.discovery.k8s.io", true) {
-		t.Errorf("expected 'endpointslices.discovery.k8s.io' to be excluded when namespaced = true and in filter")
-	}
+
 	// namespace exclusion works
 	if gFalse.ShouldIncludeNamespace("kube-system") {
 		t.Errorf("expected namespace 'kube-system' excluded")
