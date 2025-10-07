@@ -78,6 +78,14 @@ func NewVolumeSnapshot(meta metav1.ObjectMeta, pvcName, vsClassName string) *vsa
 	}
 }
 
+func NewVolumeSnapshotDataSource(snapshotName string) *core.TypedLocalObjectReference {
+	return &core.TypedLocalObjectReference{
+		APIGroup: &vsapi.SchemeGroupVersion.Group,
+		Kind:     apis.KindVolumeSnapshot,
+		Name:     snapshotName,
+	}
+}
+
 func ResolveWithInputs(obj interface{}, inputs map[string]string) error {
 	// convert to JSON, apply replacements and convert back to struct
 	jsonObj, err := json.Marshal(obj)
