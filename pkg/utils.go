@@ -19,16 +19,18 @@ package pkg
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+
 	vsapi "github.com/kubernetes-csi/external-snapshotter/client/v8/apis/volumesnapshot/v1"
 	"gomodules.xyz/envsubst"
 	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cu "kmodules.xyz/client-go/client"
 	"kubestash.dev/apimachinery/apis"
 	addonapi "kubestash.dev/apimachinery/apis/addons/v1alpha1"
 	coreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
-	"os"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -62,6 +64,18 @@ func GetTmpVolumeAndMount() (core.Volume, core.VolumeMount) {
 	}
 
 	return vol, mnt
+}
+
+func NewVolumeSnapshot(meta metav1.ObjectMeta, pvcName, vsClassName string) *vsapi.VolumeSnapshot {
+	return &vsapi.VolumeSnapshot{
+		ObjectMeta: meta,
+		Spec: vsapi.VolumeSnapshotSpec{
+			Source: vsapi.VolumeSnapshotSource{
+				PersistentVolumeClaimName: &pvcName,
+			},
+			VolumeSnapshotClassName: &vsClassName,
+		},
+	}
 }
 
 func ResolveWithInputs(obj interface{}, inputs map[string]string) error {
