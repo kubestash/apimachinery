@@ -34,10 +34,6 @@ var DefaultExcludeResources = []string{
 	"nodes.metrics.k8s.io",
 	"pods.metrics.k8s.io",
 	"endpointslices.discovery.k8s.io",
-	"events",
-	"leases.coordination.k8s.io",
-	"volumeattachments.storage.k8s.io",
-	"csinodes.storage.k8s.io",
 }
 
 func NewIncludeExclude() *IncludeExclude {
