@@ -21,15 +21,16 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	aws2 "github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/credentials"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"io"
 	"net/http"
 	"os"
 	"path"
 	"strings"
+
+	aws2 "github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/azureblob"
@@ -328,8 +329,59 @@ func (b *Blob) List(ctx context.Context, dir string) ([][]byte, error) {
 	return objects, nil
 }
 
+// ListDirN depth = 0 → immediate children only.
+func (b *Blob) ListDirN(ctx context.Context, dir string, depth ...int) ([][]byte, error) {
+	bucket, err := b.openBucket(ctx, dir)
+	if err != nil {
+		return nil, err
+	}
+	defer closeBucket(ctx, bucket)
+
+	maxDepth := 0
+	if len(depth) > 0 {
+		maxDepth = depth[0]
+	}
+
+	relPrefix := strings.TrimSuffix(dir, "/")
+	if relPrefix != "" {
+		relPrefix += "/"
+	}
+
+	var dirs [][]byte
+
+	var walk func(prefix string, curDepth int) error
+	walk = func(prefix string, curDepth int) error {
+		iter := bucket.List(&blob.ListOptions{
+			Prefix:    prefix,
+			Delimiter: "/",
+		})
+		for {
+			obj, err := iter.Next(ctx)
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				return err
+			}
+			if obj.IsDir {
+				dirs = append(dirs, []byte(obj.Key))
+				if maxDepth < 0 || curDepth < maxDepth {
+					if err := walk(obj.Key, curDepth+1); err != nil {
+						return err
+					}
+				}
+			}
+		}
+		return nil
+	}
+
+	if err := walk(relPrefix, 0); err != nil {
+		return nil, err
+	}
+	return dirs, nil
+}
+
 func (b *Blob) Delete(ctx context.Context, filepath string, isDir bool) error {
-	klog.Infof("Cleaning up data from backend...")
 	if isDir {
 		return b.deleteDir(ctx, filepath)
 	}
