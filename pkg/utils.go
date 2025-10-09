@@ -67,15 +67,18 @@ func GetTmpVolumeAndMount() (core.Volume, core.VolumeMount) {
 }
 
 func NewVolumeSnapshot(meta metav1.ObjectMeta, pvcName, vsClassName string) *vsapi.VolumeSnapshot {
-	return &vsapi.VolumeSnapshot{
+	volSnapshot := &vsapi.VolumeSnapshot{
 		ObjectMeta: meta,
 		Spec: vsapi.VolumeSnapshotSpec{
 			Source: vsapi.VolumeSnapshotSource{
 				PersistentVolumeClaimName: &pvcName,
 			},
-			VolumeSnapshotClassName: &vsClassName,
 		},
 	}
+	if vsClassName != "" {
+		volSnapshot.Spec.VolumeSnapshotClassName = &vsClassName
+	}
+	return volSnapshot
 }
 
 func NewVolumeSnapshotDataSource(snapshotName string) *core.TypedLocalObjectReference {
