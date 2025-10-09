@@ -23,7 +23,9 @@ import (
 
 	vsapi "github.com/kubernetes-csi/external-snapshotter/client/v8/apis/volumesnapshot/v1"
 	"gomodules.xyz/envsubst"
+	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cu "kmodules.xyz/client-go/client"
@@ -48,6 +50,9 @@ func NewUncachedClient() (client.Client, error) {
 		coreapi.AddToScheme,
 		addonapi.AddToScheme,
 		vsapi.AddToScheme,
+		core.AddToScheme,
+		apps.AddToScheme,
+		storagev1.AddToScheme,
 	)
 }
 
