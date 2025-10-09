@@ -27,6 +27,19 @@ type IncludeExclude struct {
 	excludes map[string]struct{}
 }
 
+// DefaultExcludeResources defines cluster-scoped or ephemeral resources
+// that should be excluded by default during backup or restore operations.
+var DefaultExcludeResources = []string{
+	"nodes",
+	"nodes.metrics.k8s.io",
+	"pods.metrics.k8s.io",
+	"endpointslices.discovery.k8s.io",
+	"events",
+	"leases.coordination.k8s.io",
+	"volumeattachments.storage.k8s.io",
+	"csinodes.storage.k8s.io",
+}
+
 func NewIncludeExclude() *IncludeExclude {
 	return &IncludeExclude{
 		includes: make(map[string]struct{}),
@@ -117,6 +130,15 @@ func (g *GlobalIncludeExclude) ShouldIncludeResource(groupResource string, names
 	if !namespaced && !ptr.Deref(g.includeClusterResources, false) {
 		return false
 	}
+
+	// Exclude default cluster-managed or ephemeral resources.
+	for _, excluded := range DefaultExcludeResources {
+		if groupResource == excluded {
+			return false
+		}
+	}
+
+	// User-defined includes/excludes.
 	return g.resourceFilter.ShouldInclude(groupResource)
 }
 
