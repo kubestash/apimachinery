@@ -335,7 +335,6 @@ func (b *Blob) List(ctx context.Context, dir string) ([][]byte, error) {
 }
 
 func (b *Blob) Delete(ctx context.Context, filepath string, isDir bool) error {
-	klog.Infof("Cleaning up data from backend...")
 	if isDir {
 		return b.deleteDir(ctx, filepath)
 	}
@@ -356,7 +355,7 @@ func (b *Blob) deleteDir(ctx context.Context, dir string) error {
 	defer closeBucket(ctx, bucket)
 	iter := bucket.List(nil)
 
-	workerCount := min(b.maxConnections, 10) // Default workers for deleteDir is 10.
+	workerCount := max(b.maxConnections, 10) // Default workers for deleteDir is 10.
 	wp := workerpool.NewWorkerPool(ctx, workerCount)
 	for {
 		obj, err := iter.Next(ctx)
@@ -378,6 +377,7 @@ func (b *Blob) deleteDir(ctx context.Context, dir string) error {
 	if err = wp.Wait(); err != nil {
 		return fmt.Errorf("failed to delete directory %s. Err: %w", dir, err)
 	}
+	fmt.Println("Successfully deleted directory: ", dir)
 	return nil
 }
 
