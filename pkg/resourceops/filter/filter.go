@@ -31,8 +31,6 @@ type IncludeExclude struct {
 // that should be excluded by default during backup or restore operations.
 var DefaultExcludeResources = []string{
 	"nodes",
-	"nodes.metrics.k8s.io",
-	"pods.metrics.k8s.io",
 	"endpointslices.discovery.k8s.io",
 }
 
