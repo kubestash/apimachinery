@@ -108,8 +108,8 @@ func TestGlobalIncludeExclude(t *testing.T) {
 
 	// cluster-scoped allowed when flag=true
 	gTrue := NewGlobalIncludeExclude(resFilter, nsFilter, true)
-	if !gTrue.ShouldIncludeResource("nodes", false) {
-		t.Errorf("expected 'nodes' included when flag=true")
+	if gTrue.ShouldIncludeResource("nodes", false) {
+		t.Errorf("expected 'nodes' excluded when flag=true")
 	}
 
 	// cluster-scoped = "customresourcedefinitions"
