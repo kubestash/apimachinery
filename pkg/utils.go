@@ -27,7 +27,9 @@ import (
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/cli-runtime/pkg/genericclioptions"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/rest"
 	cu "kmodules.xyz/client-go/client"
 	"kubestash.dev/apimachinery/apis"
 	addonapi "kubestash.dev/apimachinery/apis/addons/v1alpha1"
@@ -37,10 +39,19 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func NewUncachedClient() (client.Client, error) {
-	cfg, err := ctrl.GetConfig()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get Kubernetes config. Reason: %w", err)
+func NewUncachedClient(clientGetter ...genericclioptions.RESTClientGetter) (client.Client, error) {
+	var cfg *rest.Config
+	var err error
+	if len(clientGetter) > 0 {
+		cfg, err = clientGetter[0].ToRESTConfig()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get Kubernetes config. Reason: %w", err)
+		}
+	} else {
+		cfg, err = ctrl.GetConfig()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get Kubernetes config. Reason: %w", err)
+		}
 	}
 
 	return cu.NewUncachedClient(
