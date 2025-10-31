@@ -19,9 +19,10 @@ package restic
 import (
 	"context"
 	"fmt"
-	"k8s.io/apimachinery/pkg/util/errors"
 	"os"
 	"path/filepath"
+
+	"k8s.io/apimachinery/pkg/util/errors"
 
 	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
 
@@ -253,6 +254,7 @@ func (w *ResticWrapper) setBackupStorageVariables(b *Backend) error {
 		b.endpoint = s3.Endpoint
 		b.path = s3.Prefix
 		b.insecureTLS = s3.InsecureTLS
+		b.MaxConnections = s3.MaxConnections
 		secret = s3.SecretName
 	}
 
@@ -277,6 +279,7 @@ func (w *ResticWrapper) setBackupStorageVariables(b *Backend) error {
 		b.provider = v1alpha1.ProviderLocal
 		b.bucket = local.MountPath
 		b.path = local.SubPath
+		b.MaxConnections = local.MaxConnections
 
 		var err error
 		b.storageSecret, err = w.getSecret(b.EncryptionSecret)
