@@ -214,46 +214,9 @@ type Component struct {
 	// +optional
 	VolumeSnapshotterStats []VolumeSnapshotterStats `json:"volumeSnapshotterStats,omitempty"`
 
-	LogStats *LogStats `json:"logStats,omitempty"`
-}
-
-type LogStats struct {
-	// Start represents the start time of the first log, that exists in the repository
-	// TODO: Need to update this start time, once the log-retention gets implemented
-	Start *string `json:"start,omitempty"`
-	// End represents the last end time of the log push
-	// Start & End together holds the full time-range. Not individual log.
-	End *string `json:"end,omitempty"`
-	// Lsn for PostgreSQL only
+	// ClickHouseStats specifies the ClickHouse Backup specific information
 	// +optional
-	Lsn *string `json:"lsn,omitempty"`
-
-	TotalFailedCount int64 `json:"totalFailedCount,omitempty"`
-	LastFailedStats  []Log `json:"lastFailedStats,omitempty"`
-
-	TotalSucceededCount int64 `json:"totalSucceededCount,omitempty"`
-	LastSucceededStats  []Log `json:"lastSucceededStats,omitempty"`
-
-	LastLogRetentionStats []LogRetentionStatus `json:"lastLogRetentionStats,omitempty"`
-}
-
-type LogRetentionStatus struct {
-	// LastExecutionTime is when the retention cleanup process last ran
-	// (RFC3339 format string).
-	// +optional
-	LastExecutionTime *string `json:"lastExecutionTime,omitempty"`
-
-	// RetentionPeriodApplied is the actual retention period used for this cleanup.
-	// +optional
-	RetentionPeriodApplied string `json:"retentionPeriodApplied,omitempty"`
-
-	// DeletedLogCount indicates how many logs were successfully deleted
-	// +optional
-	DeletedLogCount int64 `json:"deletedLogCount,omitempty"`
-
-	// Error message if this cleanup event failed, empty if succeeded.
-	// +optional
-	Error string `json:"error,omitempty"`
+	ClickHouseStats *ClickHouseStats `json:"clickHouseStats,omitempty"`
 }
 
 type Log struct {
@@ -376,6 +339,9 @@ type SolrStats struct {
 
 	// Finishing time of the backup
 	UploadedIndexFileMB float64 `json:"uploadedIndexFileMB,omitempty"`
+}
+
+type ClickHouseStats struct {
 }
 
 const (
