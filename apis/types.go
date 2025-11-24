@@ -33,6 +33,7 @@ const (
 	DriverMedusa            Driver = "Medusa"
 	DriverVolumeSnapshotter Driver = "VolumeSnapshotter"
 	DriverSolr              Driver = "Solr"
+	DriverClickHouseBackup  Driver = "ClickHouseBackup"
 )
 
 // VolumeSource specifies the source of volume to mount in the backup/restore executor
