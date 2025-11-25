@@ -342,6 +342,17 @@ type SolrStats struct {
 }
 
 type ClickHouseStats struct {
+	// BackupName represents the name of the backup
+	BackupName string `json:"backupName,omitempty"`
+
+	// StatusType represents the status of Backup. This can be "IN_PROGRESS","SUCCESS","FAILED" or "UNKNOWN"
+	StatusType string `json:"status,omitempty"`
+
+	// Starting time of the backup
+	StartTime string `json:"startTime,omitempty"`
+
+	// Finishing time of the backup
+	FinishTime string `json:"finishTime,omitempty"`
 }
 
 const (
