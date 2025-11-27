@@ -71,7 +71,7 @@ type TaskReference struct {
 // be mounted in backup/restore Job/container.
 type TargetVolumeInfo struct {
 	// Volumes indicates the list of volumes of targeted application that should be mounted on the backup/restore job.
-	Volumes []ofst.Volume `json:"volumes,omitempty"`
+	Volumes []core.Volume `json:"volumes,omitempty"`
 
 	// VolumeMounts specifies the mount for the volumes specified in `Volumes` section
 	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
