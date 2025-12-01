@@ -54,7 +54,6 @@ func (w *ResticWrapper) getLockStats(repository, lockID string) (*LockStats, err
 
 // hasExclusiveLock checks if any exclusive lock exists in the repository.
 // This should be called AFTER unlockStale() - any remaining exclusive locks are active.
-// Returns: (hasLock, podName, error)
 func (w *ResticWrapper) hasExclusiveLock(repository string) (bool, string, error) {
 	ids, err := w.getLockIDs(repository)
 	if err != nil {
@@ -66,8 +65,6 @@ func (w *ResticWrapper) hasExclusiveLock(repository string) (bool, string, error
 	}
 
 	// Check each lock to find exclusive locks
-	// Note: We don't check pod status here - if the lock exists after unlockStale(),
-	// restic already determined it's active (not stale)
 	for _, id := range ids {
 		st, err := w.getLockStats(repository, id)
 		if err != nil {
