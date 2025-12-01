@@ -180,6 +180,8 @@ func (w *ResticWrapper) EnsureNoExclusiveLock(rClient client.Client, namespace s
 }
 
 /*
+Link: https://restic.readthedocs.io/en/v0.4.0/Design/#locks
+
 Exclusive Locks
 - Only one exclusive lock can run at a time.
 - It blocks all non-exclusive locks.
