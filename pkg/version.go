@@ -18,9 +18,10 @@ package pkg
 
 import (
 	"fmt"
-	"github.com/Masterminds/semver/v3"
 	"regexp"
 	"sort"
+
+	"github.com/Masterminds/semver/v3"
 )
 
 func extractDBVersion(version string) string {
@@ -34,6 +35,13 @@ var (
 	hardCodedMap = map[struct{ dbVersionRegex, funcNameRegex string }]string{
 		{"7.0.*", "mongodb-(backup|restore)"}:        "6.0.5",
 		{"5.7.*", "mysql-physical-(backup|restore)"}: "2.4.29",
+		// MariaDB Physical Backup|Restore
+		{"10.4.*", "mariadb-physical-(backup|restore)"}:  "10.4.32-focal",
+		{"10.5.*", "mariadb-physical-(backup|restore)"}:  "10.6.16-focal",
+		{"10.6.*", "mariadb-physical-(backup|restore)"}:  "10.6.16-focal",
+		{"10.10.*", "mariadb-physical-(backup|restore)"}: "10.11.6-jammy",
+		{"10.11.*", "mariadb-physical-(backup|restore)"}: "10.11.6-jammy",
+		{"11.*.*", "mariadb-physical-(backup|restore)"}:  "11.1.3-jammy",
 	}
 )
 
