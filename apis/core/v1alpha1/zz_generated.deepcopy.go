@@ -2341,7 +2341,7 @@ func (in *TargetVolumeInfo) DeepCopyInto(out *TargetVolumeInfo) {
 	*out = *in
 	if in.Volumes != nil {
 		in, out := &in.Volumes, &out.Volumes
-		*out = make([]apiv1.Volume, len(*in))
+		*out = make([]corev1.Volume, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
