@@ -342,6 +342,17 @@ func (w *ResticWrapper) unlock(repository string) ([]byte, error) {
 	return w.run(Command{Name: ResticCMD, Args: args})
 }
 
+func (w *ResticWrapper) unlockStale(repository string) ([]byte, error) {
+	klog.Infoln("Removing stale locks from restic repository")
+	args := w.appendCacheDirFlag([]interface{}{"unlock"})
+	b := w.getMatchedBackend(repository)
+	args = b.appendMaxConnectionsFlag(args)
+	args = b.appendCaCertFlag(args)
+	args = b.appendInsecureTLSFlag(args)
+	args = append(args, b.envs)
+	return w.run(Command{Name: ResticCMD, Args: args})
+}
+
 func (w *ResticWrapper) appendCacheDirFlag(args []interface{}) []interface{} {
 	if w.Config.EnableCache {
 		cacheDir := filepath.Join(w.Config.ScratchDir, resticCacheDir)
