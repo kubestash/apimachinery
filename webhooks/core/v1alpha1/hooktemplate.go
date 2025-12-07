@@ -19,14 +19,16 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
-	"k8s.io/apimachinery/pkg/runtime"
+	"strings"
+
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/apis/core/v1alpha1"
+
+	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
-	"strings"
 )
 
 // log is for logging in this package.
@@ -53,7 +55,7 @@ func SetupHookTemplateWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.CustomDefaulter = &HookTemplateCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (_ *HookTemplateCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (*HookTemplateCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	var ok bool
 	var h HookTemplate
 	h.HookTemplate, ok = obj.(*v1alpha1.HookTemplate)
@@ -74,7 +76,7 @@ func (_ *HookTemplateCustomWebhook) Default(ctx context.Context, obj runtime.Obj
 var _ webhook.CustomValidator = &HookTemplateCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *HookTemplateCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*HookTemplateCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var h HookTemplate
 	h.HookTemplate, ok = obj.(*v1alpha1.HookTemplate)
@@ -99,7 +101,7 @@ func (_ *HookTemplateCustomWebhook) ValidateCreate(ctx context.Context, obj runt
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *HookTemplateCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (*HookTemplateCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var hNew, hOld HookTemplate
 	hNew.HookTemplate, ok = newObj.(*v1alpha1.HookTemplate)

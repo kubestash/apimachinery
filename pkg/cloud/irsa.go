@@ -19,6 +19,7 @@ package cloud
 import (
 	"context"
 	"fmt"
+
 	core "k8s.io/api/core/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/meta"
@@ -49,7 +50,7 @@ func GetIRSARoleAnnotationValue(ctx context.Context, kc client.Client) (string, 
 		return "", fmt.Errorf("failed to retrieve service account: %w", err)
 	}
 
-	val, _ := sa.Annotations[AWSIRSARoleAnnotation]
+	val := sa.Annotations[AWSIRSARoleAnnotation]
 	return val, nil
 }
 

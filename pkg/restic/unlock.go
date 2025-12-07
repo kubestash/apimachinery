@@ -148,7 +148,6 @@ func (w *ResticWrapper) EnsureNoExclusiveLock(rClient client.Client, namespace s
 				return false, nil
 			},
 		)
-
 		if err != nil {
 			return fmt.Errorf("timeout waiting for exclusive lock to be released in repository %s: %w", b.Repository, err)
 		}

@@ -19,8 +19,10 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
-	"k8s.io/apimachinery/pkg/runtime"
+
 	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
+
+	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -49,7 +51,7 @@ func SetupRepositoryWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.CustomDefaulter = &RepositoryCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (_ *RepositoryCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (*RepositoryCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	var ok bool
 	var r Repository
 	r.Repository, ok = obj.(*v1alpha1.Repository)
@@ -68,7 +70,7 @@ func (_ *RepositoryCustomWebhook) Default(ctx context.Context, obj runtime.Objec
 var _ webhook.CustomValidator = &RepositoryCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *RepositoryCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*RepositoryCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var r Repository
 	r.Repository, ok = obj.(*v1alpha1.Repository)
@@ -82,7 +84,7 @@ func (_ *RepositoryCustomWebhook) ValidateCreate(ctx context.Context, obj runtim
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *RepositoryCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (*RepositoryCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var rNew, rOld Repository
 	rNew.Repository, ok = newObj.(*v1alpha1.Repository)
@@ -104,7 +106,7 @@ func (_ *RepositoryCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, ne
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *RepositoryCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*RepositoryCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var r Repository
 	r.Repository, ok = obj.(*v1alpha1.Repository)

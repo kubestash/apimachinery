@@ -22,12 +22,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"k8s.io/apimachinery/pkg/util/errors"
-
 	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
 
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/errors"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	storage "kmodules.xyz/objectstore-api/api/v1"
@@ -192,6 +191,7 @@ func (w *ResticWrapper) setupEnvsForBackend(b *Backend) error {
 	return nil
 }
 
+// nolint: unused
 func (w *ResticWrapper) exportSecretKey(secret *core.Secret, key string, required bool) error {
 	if v, ok := secret.Data[key]; !ok {
 		if required {
