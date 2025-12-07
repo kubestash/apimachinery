@@ -19,10 +19,12 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/utils/pointer"
+
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
+
+	"github.com/aws/smithy-go/ptr"
+	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -54,7 +56,7 @@ func SetupRetentionPolicyWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.CustomDefaulter = &RetentionPolicyCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (_ *RetentionPolicyCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (*RetentionPolicyCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	var ok bool
 	var r RetentionPolicy
 	r.RetentionPolicy, ok = obj.(*v1alpha1.RetentionPolicy)
@@ -79,7 +81,7 @@ func (_ *RetentionPolicyCustomWebhook) Default(ctx context.Context, obj runtime.
 var _ webhook.CustomValidator = &RetentionPolicyCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *RetentionPolicyCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*RetentionPolicyCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var r RetentionPolicy
 	r.RetentionPolicy, ok = obj.(*v1alpha1.RetentionPolicy)
@@ -106,7 +108,7 @@ func (_ *RetentionPolicyCustomWebhook) ValidateCreate(ctx context.Context, obj r
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *RetentionPolicyCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (*RetentionPolicyCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var rNew, rOld RetentionPolicy
 	rNew.RetentionPolicy, ok = newObj.(*v1alpha1.RetentionPolicy)
@@ -138,7 +140,7 @@ func (_ *RetentionPolicyCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *RetentionPolicyCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*RetentionPolicyCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var r RetentionPolicy
 	r.RetentionPolicy, ok = obj.(*v1alpha1.RetentionPolicy)
@@ -162,7 +164,7 @@ func (r *RetentionPolicy) setDefaultUsagePolicy() {
 
 func (r *RetentionPolicy) setDefaultFailedSnapshots() {
 	r.Spec.FailedSnapshots = &v1alpha1.FailedSnapshotsKeepPolicy{
-		Last: pointer.Int32(1),
+		Last: ptr.Int32(1),
 	}
 }
 

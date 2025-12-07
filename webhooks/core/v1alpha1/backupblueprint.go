@@ -19,14 +19,16 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+
+	"kubestash.dev/apimachinery/apis"
+	"kubestash.dev/apimachinery/apis/core/v1alpha1"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
+
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	"kubestash.dev/apimachinery/apis"
-	"kubestash.dev/apimachinery/apis/core/v1alpha1"
-	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -58,7 +60,7 @@ func SetupBackupBlueprintWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.CustomDefaulter = &BackupBlueprintCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (_ *BackupBlueprintCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (*BackupBlueprintCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	var ok bool
 	var r BackupBlueprint
 	r.BackupBlueprint, ok = obj.(*v1alpha1.BackupBlueprint)
@@ -80,7 +82,7 @@ func (_ *BackupBlueprintCustomWebhook) Default(ctx context.Context, obj runtime.
 var _ webhook.CustomValidator = &BackupBlueprintCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupBlueprintCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*BackupBlueprintCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupBlueprint
 	b.BackupBlueprint, ok = obj.(*v1alpha1.BackupBlueprint)
@@ -97,7 +99,7 @@ func (_ *BackupBlueprintCustomWebhook) ValidateCreate(ctx context.Context, obj r
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupBlueprintCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (*BackupBlueprintCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var bNew, bold BackupBlueprint
 	bNew.BackupBlueprint, ok = newObj.(*v1alpha1.BackupBlueprint)
@@ -119,7 +121,7 @@ func (_ *BackupBlueprintCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupBlueprintCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*BackupBlueprintCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupBlueprint
 	b.BackupBlueprint, ok = obj.(*v1alpha1.BackupBlueprint)
