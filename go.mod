@@ -13,8 +13,8 @@ require (
 	github.com/google/gofuzz v1.2.0
 	github.com/kubernetes-csi/external-snapshotter/client/v8 v8.2.0
 	github.com/stretchr/testify v1.10.0
-	go.bytebuilders.dev/audit v0.0.43
-	go.bytebuilders.dev/license-verifier/kubernetes v0.14.9
+	go.bytebuilders.dev/audit v0.0.45
+	go.bytebuilders.dev/license-verifier/kubernetes v0.14.10
 	gocloud.dev v0.41.0
 	gomodules.xyz/envsubst v0.2.0
 	gomodules.xyz/go-sh v0.2.0
@@ -26,7 +26,7 @@ require (
 	k8s.io/component-base v0.32.3
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
-	kmodules.xyz/client-go v0.32.9
+	kmodules.xyz/client-go v0.32.10
 	kmodules.xyz/crd-schema-fuzz v0.32.0
 	kmodules.xyz/objectstore-api v0.32.2
 	kmodules.xyz/offshoot-api v0.32.0
@@ -84,7 +84,7 @@ require (
 	github.com/cncf/xds/go v0.0.0-20250326154945-ae57f3c0d45f // indirect
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/containerd/stargz-snapshotter/estargz v0.16.3 // indirect
-	github.com/cyphar/filepath-securejoin v0.3.4 // indirect
+	github.com/cyphar/filepath-securejoin v0.3.6 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/docker/cli v27.5.0+incompatible // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
@@ -174,8 +174,8 @@ require (
 	github.com/yudai/gojsondiff v1.0.0 // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
-	go.bytebuilders.dev/license-proxyserver v0.0.20 // indirect
-	go.bytebuilders.dev/license-verifier v0.14.9 // indirect
+	go.bytebuilders.dev/license-proxyserver v0.0.24 // indirect
+	go.bytebuilders.dev/license-verifier v0.14.10 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/contrib/detectors/gcp v1.35.0 // indirect
@@ -222,7 +222,7 @@ require (
 	kmodules.xyz/go-containerregistry v0.0.14 // indirect
 	kmodules.xyz/monitoring-agent-api v0.32.4 // indirect
 	kmodules.xyz/resource-metadata v0.32.1 // indirect
-	kmodules.xyz/resource-metrics v0.30.9 // indirect
+	kmodules.xyz/resource-metrics v0.30.10 // indirect
 	kubeops.dev/petset v0.0.12 // indirect
 	kubeops.dev/sidekick v0.0.11 // indirect
 	moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 // indirect
