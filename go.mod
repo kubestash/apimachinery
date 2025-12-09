@@ -19,11 +19,11 @@ require (
 	gomodules.xyz/envsubst v0.2.0
 	gomodules.xyz/go-sh v0.2.0
 	gomodules.xyz/x v0.0.17
-	k8s.io/api v0.32.3
-	k8s.io/apimachinery v0.32.3
+	k8s.io/api v0.32.8
+	k8s.io/apimachinery v0.32.8
 	k8s.io/cli-runtime v0.32.2
-	k8s.io/client-go v0.32.3
-	k8s.io/component-base v0.32.3
+	k8s.io/client-go v0.32.8
+	k8s.io/component-base v0.32.8
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
 	kmodules.xyz/client-go v0.32.10
@@ -213,8 +213,8 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/apiextensions-apiserver v0.32.3 // indirect
-	k8s.io/apiserver v0.32.3 // indirect
+	k8s.io/apiextensions-apiserver v0.32.8 // indirect
+	k8s.io/apiserver v0.32.8 // indirect
 	k8s.io/kube-aggregator v0.32.3 // indirect
 	k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff // indirect
 	kmodules.xyz/apiversion v0.2.0 // indirect
@@ -223,8 +223,8 @@ require (
 	kmodules.xyz/monitoring-agent-api v0.32.4 // indirect
 	kmodules.xyz/resource-metadata v0.32.1 // indirect
 	kmodules.xyz/resource-metrics v0.30.10 // indirect
-	kubeops.dev/petset v0.0.12 // indirect
-	kubeops.dev/sidekick v0.0.11 // indirect
+	kubeops.dev/petset v0.0.15 // indirect
+	kubeops.dev/sidekick v0.0.12 // indirect
 	moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 // indirect
 	open-cluster-management.io/api v1.0.0 // indirect
 	sigs.k8s.io/cli-utils v0.37.2 // indirect
