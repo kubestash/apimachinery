@@ -109,7 +109,7 @@ func (w *ResticWrapper) setupEnv() error {
 }
 
 func (w *ResticWrapper) setupEnvsForBackend(b *Backend) error {
-	if b.BackupStorage == nil {
+	if b.BackupStorage == nil && b.BackupStorageConfig == nil {
 		return fmt.Errorf("missing BackupStorage reference")
 	}
 
@@ -234,15 +234,19 @@ func (w *ResticWrapper) writeSecretKeyToFile(tmpDir string, secret *core.Secret,
 }
 
 func (w *ResticWrapper) setBackupStorageVariables(b *Backend) error {
-	bs := &v1alpha1.BackupStorage{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      b.BackupStorage.Name,
-			Namespace: b.BackupStorage.Namespace,
-		},
-	}
-
-	if err := w.Config.Client.Get(context.Background(), client.ObjectKeyFromObject(bs), bs); err != nil {
-		return err
+	bs := &v1alpha1.BackupStorage{}
+	if b.BackupStorageConfig != nil {
+		bs = b.BackupStorageConfig
+	} else {
+		bs = &v1alpha1.BackupStorage{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      b.BackupStorage.Name,
+				Namespace: b.BackupStorage.Namespace,
+			},
+		}
+		if err := w.Config.Client.Get(context.Background(), client.ObjectKeyFromObject(bs), bs); err != nil {
+			return err
+		}
 	}
 
 	var secret string
