@@ -19,8 +19,10 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
-	"k8s.io/apimachinery/pkg/runtime"
+
 	"kubestash.dev/apimachinery/apis/core/v1alpha1"
+
+	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -40,7 +42,7 @@ type BackupVerifier struct {
 func SetupBackupVerifierWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.BackupVerifier{}).
 		WithValidator(&BackupVerifierCustomWebhook{}).
-		//WithDefaulter(&BackupVerifierCustomWebhook{}).
+		// WithDefaulter(&BackupVerifierCustomWebhook{}).
 		Complete()
 }
 
@@ -52,7 +54,7 @@ func SetupBackupVerifierWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.CustomValidator = &BackupVerifierCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupVerifierCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*BackupVerifierCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupVerifier
 	b.BackupVerifier, ok = obj.(*v1alpha1.BackupVerifier)
@@ -69,7 +71,7 @@ func (_ *BackupVerifierCustomWebhook) ValidateCreate(ctx context.Context, obj ru
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupVerifierCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (*BackupVerifierCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var bNew, bOld BackupVerifier
 	bNew.BackupVerifier, ok = newObj.(*v1alpha1.BackupVerifier)
@@ -91,7 +93,7 @@ func (_ *BackupVerifierCustomWebhook) ValidateUpdate(ctx context.Context, oldObj
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupVerifierCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*BackupVerifierCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupVerifier
 	b.BackupVerifier, ok = obj.(*v1alpha1.BackupVerifier)

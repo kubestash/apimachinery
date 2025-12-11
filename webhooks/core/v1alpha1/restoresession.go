@@ -19,12 +19,14 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+
+	"kubestash.dev/apimachinery/apis"
+	"kubestash.dev/apimachinery/apis/core/v1alpha1"
+
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"kubestash.dev/apimachinery/apis"
-	"kubestash.dev/apimachinery/apis/core/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -45,7 +47,7 @@ type RestoreSession struct {
 func SetupRestoreSessionWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.RestoreSession{}).
 		WithValidator(&RestoreSessionCustomWebhook{}).
-		//WithDefaulter(&RestoreSessionCustomWebhook{}).
+		// WithDefaulter(&RestoreSessionCustomWebhook{}).
 		Complete()
 }
 
@@ -57,7 +59,7 @@ func SetupRestoreSessionWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.CustomValidator = &RestoreSessionCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *RestoreSessionCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*RestoreSessionCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var r RestoreSession
 	r.RestoreSession, ok = obj.(*v1alpha1.RestoreSession)
@@ -74,7 +76,7 @@ func (_ *RestoreSessionCustomWebhook) ValidateCreate(ctx context.Context, obj ru
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *RestoreSessionCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (*RestoreSessionCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var rNew, rOld RestoreSession
 	rNew.RestoreSession, ok = newObj.(*v1alpha1.RestoreSession)
@@ -96,7 +98,7 @@ func (_ *RestoreSessionCustomWebhook) ValidateUpdate(ctx context.Context, oldObj
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *RestoreSessionCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*RestoreSessionCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var s RestoreSession
 	s.RestoreSession, ok = obj.(*v1alpha1.RestoreSession)

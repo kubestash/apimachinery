@@ -127,5 +127,4 @@ func TestGlobalIncludeExclude(t *testing.T) {
 	if !gTrue.ShouldIncludeResource("customresourcedefinitions", true) {
 		t.Errorf("expected 'customresourcedefinitions' included when flag=true")
 	}
-
 }

@@ -19,9 +19,11 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
-	"k8s.io/apimachinery/pkg/runtime"
-	"kubestash.dev/apimachinery/apis/core/v1alpha1"
 	"reflect"
+
+	"kubestash.dev/apimachinery/apis/core/v1alpha1"
+
+	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -41,7 +43,7 @@ type BackupSession struct {
 func SetupBackupSessionWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha1.BackupSession{}).
 		WithValidator(&BackupSessionCustomWebhook{}).
-		//WithDefaulter(&BackupSessionCustomWebhook{}).
+		// WithDefaulter(&BackupSessionCustomWebhook{}).
 		Complete()
 }
 
@@ -53,7 +55,7 @@ func SetupBackupSessionWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.CustomValidator = &BackupSessionCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupSessionCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*BackupSessionCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupSession
 	b.BackupSession, ok = obj.(*v1alpha1.BackupSession)
@@ -67,7 +69,7 @@ func (_ *BackupSessionCustomWebhook) ValidateCreate(ctx context.Context, obj run
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupSessionCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (*BackupSessionCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var bNew, bOld BackupSession
 	bNew.BackupSession, ok = newObj.(*v1alpha1.BackupSession)
@@ -89,7 +91,7 @@ func (_ *BackupSessionCustomWebhook) ValidateUpdate(ctx context.Context, oldObj,
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupSessionCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*BackupSessionCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var s BackupSession
 	s.BackupSession, ok = obj.(*v1alpha1.BackupSession)

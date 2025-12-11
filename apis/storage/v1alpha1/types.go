@@ -45,9 +45,9 @@ const (
 	ProviderS3    StorageProvider = "s3"
 	ProviderGCS   StorageProvider = "gcs"
 	ProviderAzure StorageProvider = "azure"
-	//ProviderSwift StorageProvider = "swift"
-	//ProviderB2    StorageProvider = "b2"
-	//ProviderRest  StorageProvider = "rest"
+	// ProviderSwift StorageProvider = "swift"
+	// ProviderB2    StorageProvider = "b2"
+	// ProviderRest  StorageProvider = "rest"
 )
 
 type Backend struct {

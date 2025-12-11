@@ -18,24 +18,26 @@ package restic
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"testing"
+	"time"
+
+	addonapi "kubestash.dev/apimachinery/apis/addons/v1alpha1"
+	coreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
+
 	"github.com/stretchr/testify/assert"
-	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/klog/v2"
+	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	storage "kmodules.xyz/objectstore-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
-	addonapi "kubestash.dev/apimachinery/apis/addons/v1alpha1"
-	coreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
-	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
-	"os"
-	"path/filepath"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
-	"testing"
-	"time"
 )
 
 var (
@@ -46,7 +48,7 @@ var (
 
 	fileName          = "some-file"
 	fileContent       = "hello stash"
-	stdinPipeCommand  = Command{Name: "echo", Args: []interface{}{"hello"}}
+	stdinPipeCommand  = Command{Name: "echo", Args: []any{"hello"}}
 	stdoutPipeCommand = Command{Name: "cat"}
 )
 
@@ -161,7 +163,6 @@ func TestRepositoryAlreadyExist_AfterInitialization(t *testing.T) {
 		repoExist := w.repositoryExist(b.Repository)
 		assert.Equal(t, true, repoExist)
 	}
-
 }
 
 func TestRepositoryAlreadyExist_WithoutInitialization(t *testing.T) {
@@ -309,11 +310,11 @@ func TestBackupRestoreWithScheduling(t *testing.T) {
 		}
 	}
 	w.Config.IONice = &ofst.IONiceSettings{
-		Class:     pointer.Int32P(2),
-		ClassData: pointer.Int32P(3),
+		Class:     ptr.To(int32(2)),
+		ClassData: ptr.To(int32(3)),
 	}
 	w.Config.Nice = &ofst.NiceSettings{
-		Adjustment: pointer.Int32P(12),
+		Adjustment: ptr.To(int32(12)),
 	}
 
 	backupOpt := BackupOptions{
@@ -373,11 +374,11 @@ func TestBackupRestoreStdinWithScheduling(t *testing.T) {
 	}
 
 	w.Config.IONice = &ofst.IONiceSettings{
-		Class:     pointer.Int32P(2),
-		ClassData: pointer.Int32P(3),
+		Class:     ptr.To(int32(2)),
+		ClassData: ptr.To(int32(3)),
 	}
 	w.Config.Nice = &ofst.NiceSettings{
-		Adjustment: pointer.Int32P(12),
+		Adjustment: ptr.To(int32(12)),
 	}
 
 	backupOpt := BackupOptions{
@@ -554,7 +555,7 @@ func TestVerifyRepositoryIntegrity(t *testing.T) {
 }
 
 func setupTestForMultipleBackends(tempDir string, backendsCount int) (*ResticWrapper, error) {
-	var setupOpt = &SetupOptions{
+	setupOpt := &SetupOptions{
 		ScratchDir:  filepath.Join(tempDir, "scratch"),
 		EnableCache: false,
 	}
@@ -645,11 +646,11 @@ func TestMultipleBackedBackupRestoreStdin(t *testing.T) {
 	}
 
 	w.Config.IONice = &ofst.IONiceSettings{
-		Class:     pointer.Int32P(2),
-		ClassData: pointer.Int32P(3),
+		Class:     ptr.To(int32(2)),
+		ClassData: ptr.To(int32(3)),
 	}
 	w.Config.Nice = &ofst.NiceSettings{
-		Adjustment: pointer.Int32P(12),
+		Adjustment: ptr.To(int32(12)),
 	}
 
 	backupOpt := BackupOptions{

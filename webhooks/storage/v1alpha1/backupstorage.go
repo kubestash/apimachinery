@@ -19,16 +19,18 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
-	"k8s.io/apimachinery/pkg/runtime"
+	"reflect"
+	"strings"
+
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
-	"reflect"
+
+	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
-	"strings"
 )
 
 // log is for logging in this package.
@@ -55,7 +57,7 @@ func SetupBackupStorageWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.CustomDefaulter = &BackupStorageCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (_ *BackupStorageCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+func (*BackupStorageCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
 	var ok bool
 	var s BackupStorage
 	s.BackupStorage, ok = obj.(*v1alpha1.BackupStorage)
@@ -77,7 +79,7 @@ func (_ *BackupStorageCustomWebhook) Default(_ context.Context, obj runtime.Obje
 var _ webhook.CustomValidator = &BackupStorageCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupStorageCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*BackupStorageCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var b BackupStorage
 	b.BackupStorage, ok = obj.(*v1alpha1.BackupStorage)
@@ -102,7 +104,7 @@ func (_ *BackupStorageCustomWebhook) ValidateCreate(ctx context.Context, obj run
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupStorageCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (*BackupStorageCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var bNew, bOld BackupStorage
 	bNew.BackupStorage, ok = newObj.(*v1alpha1.BackupStorage)
@@ -135,7 +137,7 @@ func (_ *BackupStorageCustomWebhook) ValidateUpdate(ctx context.Context, oldObj,
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (_ *BackupStorageCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (*BackupStorageCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	var ok bool
 	var s BackupStorage
 	s.BackupStorage, ok = obj.(*v1alpha1.BackupStorage)

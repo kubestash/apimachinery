@@ -16,6 +16,9 @@ GO_PKG   := kubestash.dev
 REPO     := $(notdir $(shell pwd))
 BIN      := apimachinery
 
+SRC_PKGS := apis crds pkg webhooks # directories which hold app source (not vendored)
+SRC_DIRS := $(SRC_PKGS) hack
+
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
@@ -74,8 +77,23 @@ generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and
 	$(CONTROLLER_GEN) object:headerFile="hack/license/go.txt" paths="./..."
 
 .PHONY: fmt
-fmt: ## Run go fmt against code.
-	go fmt ./...
+fmt: $(BUILD_DIRS) ## Run go fmt against code.
+	@docker run                                                 \
+	    -i                                                      \
+	    --rm                                                    \
+	    -u $$(id -u):$$(id -g)                                  \
+	    -v $$(pwd):/src                                         \
+	    -w /src                                                 \
+	    -v $$(pwd)/.go/bin/$(OS)_$(ARCH):/go/bin                \
+	    -v $$(pwd)/.go/bin/$(OS)_$(ARCH):/go/bin/$(OS)_$(ARCH)  \
+	    -v $$(pwd)/.go/cache:/.cache                            \
+	    --env HTTP_PROXY=$(HTTP_PROXY)                          \
+	    --env HTTPS_PROXY=$(HTTPS_PROXY)                        \
+	    $(BUILD_IMAGE)                                          \
+	    /bin/bash -c "                                          \
+	        REPO_PKG=$(GO_PKG)                                  \
+	        ./hack/fmt.sh $(SRC_DIRS)                           \
+	    "
 
 .PHONY: vet
 vet: ## Run go vet against code.
@@ -198,6 +216,15 @@ rm -rf $$TMP_DIR ;\
 }
 endef
 
+# Used internally.  Users should pass GOOS and/or GOARCH.
+OS   := $(if $(GOOS),$(GOOS),$(shell go env GOOS))
+ARCH := $(if $(GOARCH),$(GOARCH),$(shell go env GOARCH))
+
+# Directories that we need created to build/test.
+BUILD_DIRS  := bin         \
+               .go/bin     \
+               .go/cache
+
 GO_VERSION       ?= 1.25
 BUILD_IMAGE      ?= ghcr.io/appscode/golang-dev:$(GO_VERSION)
 
@@ -228,3 +255,29 @@ check-license:
 		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
 		$(BUILD_IMAGE)                                   \
 		ltag -t "./hack/license" --excludes "vendor bin" --check -v
+
+.PHONY: lint
+lint: $(BUILD_DIRS)
+	@echo "running linter"
+	@docker run                                                 \
+	    -i                                                      \
+	    --rm                                                    \
+	    -u $$(id -u):$$(id -g)                                  \
+	    -v $$(pwd):/src                                         \
+	    -w /src                                                 \
+	    -v $$(pwd)/.go/bin/$(OS)_$(ARCH):/go/bin                \
+	    -v $$(pwd)/.go/bin/$(OS)_$(ARCH):/go/bin/$(OS)_$(ARCH)  \
+	    -v $$(pwd)/.go/cache:/.cache                            \
+	    --env HTTP_PROXY=$(HTTP_PROXY)                          \
+	    --env HTTPS_PROXY=$(HTTPS_PROXY)                        \
+	    --env GO111MODULE=on                                    \
+	    --env GOFLAGS="-mod=vendor"                             \
+	    $(BUILD_IMAGE)                                          \
+	    golangci-lint run
+
+$(BUILD_DIRS):
+	@mkdir -p $@
+
+.PHONY: clean
+clean:
+	rm -rf .go bin
