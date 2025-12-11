@@ -333,6 +333,20 @@ func (b *Blob) List(ctx context.Context, dir string) ([][]byte, error) {
 	return objects, nil
 }
 
+func (b *Blob) ListIterator(ctx context.Context, dir string) (*blob.ListIterator, func(), error) {
+	bucket, err := b.openBucket(ctx, dir)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	cleanup := func() {
+		closeBucket(ctx, bucket)
+	}
+
+	iter := bucket.List(nil) // this is *blob.ListIterator
+	return iter, cleanup, nil
+}
+
 func (b *Blob) Delete(ctx context.Context, filepath string, isDir bool) error {
 	if isDir {
 		return b.deleteDir(ctx, filepath)
