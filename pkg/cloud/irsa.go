@@ -30,6 +30,7 @@ const (
 	AWSIRSARoleAnnotationKey              = "eks.amazonaws.com/role-arn"
 	PodIdentityAssociationIDAnnotationKey = "klusters.dev/pod-identity-association-id"
 	GCPWorkloadIdentityAnnotationKey      = "klusters.dev/iam.gke.io/workloadIdentity"
+	CloudBucketAnnotationKey              = "klusters.dev/backup-bucket-name"
 )
 
 func GetCloudAnnotationsFromOperator(ctx context.Context, kc client.Client) (map[string]string, error) {
@@ -52,6 +53,7 @@ func GetCloudAnnotationsFromServiceAccount(ctx context.Context, kc client.Client
 	annotations[AWSIRSARoleAnnotationKey] = sa.Annotations[AWSIRSARoleAnnotationKey]
 	annotations[PodIdentityAssociationIDAnnotationKey] = sa.Annotations[PodIdentityAssociationIDAnnotationKey]
 	annotations[GCPWorkloadIdentityAnnotationKey] = sa.Annotations[GCPWorkloadIdentityAnnotationKey]
+	annotations[CloudBucketAnnotationKey] = sa.Annotations[CloudBucketAnnotationKey]
 	return annotations, nil
 }
 
