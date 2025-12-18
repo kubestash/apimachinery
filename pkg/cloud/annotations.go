@@ -50,10 +50,18 @@ func GetCloudAnnotationsFromServiceAccount(ctx context.Context, kc client.Client
 		return nil, fmt.Errorf("failed to retrieve service account: %w", err)
 	}
 	annotations := map[string]string{}
-	annotations[AWSIRSARoleAnnotationKey] = sa.Annotations[AWSIRSARoleAnnotationKey]
-	annotations[PodIdentityAssociationIDAnnotationKey] = sa.Annotations[PodIdentityAssociationIDAnnotationKey]
-	annotations[GCPWorkloadIdentityAnnotationKey] = sa.Annotations[GCPWorkloadIdentityAnnotationKey]
-	annotations[CloudBucketAnnotationKey] = sa.Annotations[CloudBucketAnnotationKey]
+	if val, ok := sa.Annotations[AWSIRSARoleAnnotationKey]; ok {
+		annotations[AWSIRSARoleAnnotationKey] = val
+	}
+	if val, ok := sa.Annotations[PodIdentityAssociationIDAnnotationKey]; ok {
+		annotations[PodIdentityAssociationIDAnnotationKey] = val
+	}
+	if val, ok := sa.Annotations[GCPWorkloadIdentityAnnotationKey]; ok {
+		annotations[GCPWorkloadIdentityAnnotationKey] = val
+	}
+	if val, ok := sa.Annotations[CloudBucketAnnotationKey]; ok {
+		annotations[CloudBucketAnnotationKey] = val
+	}
 	return annotations, nil
 }
 
