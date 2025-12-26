@@ -28,9 +28,9 @@ import (
 
 const (
 	AWSIRSARoleAnnotationKey              = "eks.amazonaws.com/role-arn"
-	PodIdentityAssociationIDAnnotationKey = "klusters.dev/pod-identity-association-id"
-	GCPWorkloadIdentityAnnotationKey      = "klusters.dev/iam.gke.io/workloadIdentity"
-	CloudBucketAnnotationKey              = "klusters.dev/backup-bucket-name"
+	PodIdentityAssociationIDAnnotationKey = "go.klusters.dev/pod-identity-association-id"
+	GCPWorkloadIdentityAnnotationKey      = "go.klusters.dev/iam.gke.io/workloadIdentity"
+	CloudBucketAnnotationKey              = "go.klusters.dev/backup-bucket-name"
 )
 
 func GetCloudAnnotationsFromOperator(ctx context.Context, kc client.Client) (map[string]string, error) {
