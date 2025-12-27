@@ -12,7 +12,7 @@ require (
 	github.com/aws/smithy-go v1.23.2
 	github.com/kubernetes-csi/external-snapshotter/client/v8 v8.4.0
 	github.com/stretchr/testify v1.11.1
-	go.bytebuilders.dev/audit v0.0.45
+	go.bytebuilders.dev/audit v0.0.46
 	go.bytebuilders.dev/license-verifier/kubernetes v0.14.10
 	gocloud.dev v0.41.0
 	gomodules.xyz/envsubst v0.2.0
@@ -185,7 +185,7 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/errs v1.4.0 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
-	go.bytebuilders.dev/license-proxyserver v0.0.20 // indirect
+	go.bytebuilders.dev/license-proxyserver v0.0.24 // indirect
 	go.bytebuilders.dev/license-verifier v0.14.10 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
@@ -231,7 +231,7 @@ require (
 	k8s.io/kube-aggregator v0.34.3 // indirect
 	k8s.io/kube-openapi v0.0.0-20250910181357-589584f1c912 // indirect
 	kmodules.xyz/apiversion v0.2.0 // indirect
-	kmodules.xyz/custom-resources v0.32.3-0.20251226151909-e0c7e447f3de // indirect
+	kmodules.xyz/custom-resources v0.34.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.15 // indirect
 	kmodules.xyz/monitoring-agent-api v0.34.0 // indirect
 	kmodules.xyz/resource-metadata v0.40.2 // indirect
