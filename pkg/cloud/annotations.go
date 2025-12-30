@@ -29,7 +29,7 @@ import (
 const (
 	AWSIRSARoleAnnotationKey              = "eks.amazonaws.com/role-arn"
 	PodIdentityAssociationIDAnnotationKey = "go.klusters.dev/pod-identity-association-id"
-	GCPWorkloadIdentityAnnotationKey      = "go.klusters.dev/iam.gke.io/workloadIdentity"
+	GCPWorkloadIdentityAnnotationKey      = "go.klusters.dev/iam-gke-io-workloadIdentity"
 	CloudBucketAnnotationKey              = "go.klusters.dev/backup-bucket-name"
 )
 
