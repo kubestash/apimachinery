@@ -88,6 +88,17 @@ spec:
                 additionalProperties:
                   properties:
                     clickHouseStats:
+                      additionalProperties:
+                        properties:
+                          finishTime:
+                            type: string
+                          id:
+                            type: string
+                          startTime:
+                            type: string
+                          status:
+                            type: string
+                        type: object
                       type: object
                     driver:
                       enum:
@@ -96,6 +107,7 @@ spec:
                       - VolumeSnapshotter
                       - Solr
                       - Medusa
+                      - ClickHouseBackup
                       type: string
                     duration:
                       type: string
