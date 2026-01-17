@@ -241,8 +241,19 @@ func (in *Component) DeepCopyInto(out *Component) {
 	}
 	if in.ClickHouseStats != nil {
 		in, out := &in.ClickHouseStats, &out.ClickHouseStats
-		*out = new(ClickHouseStats)
-		**out = **in
+		*out = make(map[string]*ClickHouseStats, len(*in))
+		for key, val := range *in {
+			var outVal *ClickHouseStats
+			if val == nil {
+				(*out)[key] = nil
+			} else {
+				inVal := (*in)[key]
+				in, out := &inVal, &outVal
+				*out = new(ClickHouseStats)
+				**out = **in
+			}
+			(*out)[key] = outVal
+		}
 	}
 }
 
