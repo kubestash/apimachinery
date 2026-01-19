@@ -27,10 +27,8 @@ import (
 )
 
 const (
-	AWSIRSARoleAnnotationKey              = "eks.amazonaws.com/role-arn"
-	PodIdentityAssociationIDAnnotationKey = "go.klusters.dev/pod-identity-association-id"
-	GCPWorkloadIdentityAnnotationKey      = "go.klusters.dev/iam-gke-io-workloadIdentity"
-	CloudBucketAnnotationKey              = "go.klusters.dev/backup-bucket-name"
+	AWSIRSARoleAnnotationKey         = "eks.amazonaws.com/role-arn"
+	GCPWorkloadIdentityAnnotationKey = "go.klusters.dev/iam-gke-io-workloadIdentity"
 )
 
 func GetCloudAnnotationsFromOperator(ctx context.Context, kc client.Client) (map[string]string, error) {
@@ -53,14 +51,8 @@ func GetCloudAnnotationsFromServiceAccount(ctx context.Context, kc client.Client
 	if val, ok := sa.Annotations[AWSIRSARoleAnnotationKey]; ok {
 		annotations[AWSIRSARoleAnnotationKey] = val
 	}
-	if val, ok := sa.Annotations[PodIdentityAssociationIDAnnotationKey]; ok {
-		annotations[PodIdentityAssociationIDAnnotationKey] = val
-	}
 	if val, ok := sa.Annotations[GCPWorkloadIdentityAnnotationKey]; ok {
 		annotations[GCPWorkloadIdentityAnnotationKey] = val
-	}
-	if val, ok := sa.Annotations[CloudBucketAnnotationKey]; ok {
-		annotations[CloudBucketAnnotationKey] = val
 	}
 	return annotations, nil
 }
