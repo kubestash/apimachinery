@@ -26,7 +26,6 @@ import (
 	shell "gomodules.xyz/go-sh"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const (
@@ -79,7 +78,6 @@ type DumpOptions struct {
 
 type SetupOptions struct {
 	sync.Mutex
-	Client      client.Client
 	Nice        *ofst.NiceSettings
 	IONice      *ofst.IONiceSettings
 	Timeout     *metav1.Duration
@@ -149,14 +147,14 @@ func (w *ResticWrapper) GetCaPath(repository string) string {
 	return b.CaCertFile
 }
 
-func (w *ResticWrapper) DumpEnv(repostiroy, path string, dumpedFile string) error {
+func (w *ResticWrapper) DumpEnv(repository, path string, dumpedFile string) error {
 	if err := os.MkdirAll(path, 0o755); err != nil {
 		return err
 	}
 
 	var envs string
-	b := w.getMatchedBackend(repostiroy)
-	for key, val := range b.envs {
+	b := w.getMatchedBackend(repository)
+	for key, val := range b.Envs {
 		envs = envs + fmt.Sprintln(key+"="+val)
 	}
 

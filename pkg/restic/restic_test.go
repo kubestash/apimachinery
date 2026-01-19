@@ -33,7 +33,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/klog/v2"
 	"k8s.io/utils/ptr"
-	kmapi "kmodules.xyz/client-go/api/v1"
 	storage "kmodules.xyz/objectstore-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -84,32 +83,21 @@ func setupTest(tempDir string) (*ResticWrapper, error) {
 		},
 	}
 
+	kbClient, err := getFakeClient(bs, es)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get fake client: %v", err)
+	}
+
 	setupOpt := &SetupOptions{
 		Backends: []*Backend{
 			{
-				EncryptionSecret: &kmapi.ObjectReference{
-					Name:      es.Name,
-					Namespace: es.Namespace,
-				},
-				BackupStorage: &kmapi.ObjectReference{
-					Name:      bs.Name,
-					Namespace: bs.Namespace,
-				},
-				backend: backend{
-					provider: storage.ProviderLocal,
-					bucket:   localRepoDir,
-				},
+				EncryptionSecret: es,
+				ConfigResolver:   NewBackupStorageResolver(kbClient, bs.ObjectMeta),
 			},
 		},
 		ScratchDir:  scratchDir,
 		EnableCache: false,
 	}
-
-	setupOpt.Client, err = getFakeClient(bs, es)
-	if err != nil {
-		return nil, err
-	}
-
 	w, err := NewResticWrapper(setupOpt)
 	if err != nil {
 		return nil, err
@@ -562,8 +550,6 @@ func setupTestForMultipleBackends(tempDir string, backendsCount int) (*ResticWra
 	if err := os.MkdirAll(setupOpt.ScratchDir, 0o777); err != nil {
 		return nil, err
 	}
-
-	var initObjs []client.Object
 	for idx := range backendsCount {
 		localRepoDir = filepath.Join(tempDir, fmt.Sprintf("repo-%d", idx))
 		targetPath = filepath.Join(tempDir, fmt.Sprintf("target-%d", idx))
@@ -592,31 +578,16 @@ func setupTestForMultipleBackends(tempDir string, backendsCount int) (*ResticWra
 				"RESTIC_PASSWORD": []byte(password),
 			},
 		}
-		initObjs = append(initObjs, bs, es)
+		kbClient, err := getFakeClient([]client.Object{bs, es}...)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get fake client: %v", err)
+		}
 		setupOpt.Backends = append(setupOpt.Backends, &Backend{
-			Repository: fmt.Sprintf("%s-%s-repository-%d", es.Namespace, storage.ProviderLocal, idx),
-			EncryptionSecret: &kmapi.ObjectReference{
-				Name:      es.Name,
-				Namespace: es.Namespace,
-			},
-			BackupStorage: &kmapi.ObjectReference{
-				Name:      bs.Name,
-				Namespace: bs.Namespace,
-			},
-			backend: backend{
-				provider: storage.ProviderLocal,
-				bucket:   localRepoDir,
-				envs:     map[string]string{},
-			},
+			Repository:       fmt.Sprintf("%s-%s-repository-%d", es.Namespace, storage.ProviderLocal, idx),
+			EncryptionSecret: es,
+			ConfigResolver:   NewBackupStorageResolver(kbClient, bs.ObjectMeta),
 		})
 	}
-
-	var err error
-	setupOpt.Client, err = getFakeClient(initObjs...)
-	if err != nil {
-		return nil, err
-	}
-
 	w, err := NewResticWrapper(setupOpt)
 	if err != nil {
 		return nil, err
