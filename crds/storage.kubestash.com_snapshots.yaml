@@ -87,6 +87,8 @@ spec:
               components:
                 additionalProperties:
                   properties:
+                    clickHouseStats:
+                      type: object
                     driver:
                       enum:
                       - Restic
@@ -101,43 +103,6 @@ spec:
                       type: string
                     integrity:
                       type: boolean
-                    logStats:
-                      properties:
-                        end:
-                          type: string
-                        lastFailedStats:
-                          items:
-                            properties:
-                              end:
-                                type: string
-                              error:
-                                type: string
-                              start:
-                                type: string
-                            type: object
-                          type: array
-                        lastSucceededStats:
-                          items:
-                            properties:
-                              end:
-                                type: string
-                              error:
-                                type: string
-                              start:
-                                type: string
-                            type: object
-                          type: array
-                        lsn:
-                          type: string
-                        start:
-                          type: string
-                        totalFailedCount:
-                          format: int64
-                          type: integer
-                        totalSucceededCount:
-                          format: int64
-                          type: integer
-                      type: object
                     medusaStats:
                       properties:
                         backupName:
