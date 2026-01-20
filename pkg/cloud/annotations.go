@@ -19,22 +19,28 @@ package cloud
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	core "k8s.io/api/core/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/meta"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const (
 	AWSIRSARoleAnnotationKey         = "eks.amazonaws.com/role-arn"
 	GCPWorkloadIdentityAnnotationKey = "go.klusters.dev/iam-gke-io-workloadIdentity"
+	S3orGCSBucketAnnotationKey       = "go.klusters.dev/bucket-names"
 )
 
-func GetCloudAnnotationsFromOperator(ctx context.Context, kc client.Client) (map[string]string, error) {
+func GetCloudAnnotations(ctx context.Context, kc client.Client, storages ...storageapi.BackupStorage) (map[string]string, error) {
 	annotations, err := GetCloudAnnotationsFromServiceAccount(ctx, kc)
 	if err != nil {
 		return nil, err
+	}
+	if storages != nil && (meta.HasKey(annotations, AWSIRSARoleAnnotationKey) || meta.HasKey(annotations, GCPWorkloadIdentityAnnotationKey)) {
+		annotations[S3orGCSBucketAnnotationKey] = getBucketAnnotationValueFromS3orGCSBackupStorage(storages...)
 	}
 	return annotations, nil
 }
@@ -63,4 +69,24 @@ func getServiceAccount(ctx context.Context, c client.Client, ref kmapi.ObjectRef
 		return nil, err
 	}
 	return sa, nil
+}
+
+func getBucketAnnotationValueFromS3orGCSBackupStorage(storages ...storageapi.BackupStorage) string {
+	var bucketNames []string
+	for _, backupStorage := range storages {
+		switch backupStorage.Spec.Storage.Provider {
+		case storageapi.ProviderS3:
+			bucketNames = append(bucketNames, backupStorage.Spec.Storage.S3.Bucket)
+		case storageapi.ProviderGCS:
+			bucketNames = append(bucketNames, backupStorage.Spec.Storage.GCS.Bucket)
+		}
+	}
+	bucketAnnotationValue := ""
+	if bucketNames != nil {
+		for _, bucketName := range bucketNames {
+			bucketAnnotationValue += bucketName + ","
+		}
+		bucketAnnotationValue = strings.TrimSuffix(bucketAnnotationValue, ",")
+	}
+	return bucketAnnotationValue
 }
