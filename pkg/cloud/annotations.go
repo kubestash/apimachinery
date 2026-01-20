@@ -19,7 +19,6 @@ package cloud
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	core "k8s.io/api/core/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -31,7 +30,7 @@ import (
 const (
 	AWSIRSARoleAnnotationKey         = "eks.amazonaws.com/role-arn"
 	GCPWorkloadIdentityAnnotationKey = "go.klusters.dev/iam-gke-io-workloadIdentity"
-	S3orGCSBucketAnnotationKey       = "go.klusters.dev/bucket-names"
+	BucketAnnotationKey              = "go.klusters.dev/bucket-names"
 )
 
 func GetCloudAnnotations(ctx context.Context, kc client.Client, storages ...storageapi.BackupStorage) (map[string]string, error) {
@@ -39,8 +38,8 @@ func GetCloudAnnotations(ctx context.Context, kc client.Client, storages ...stor
 	if err != nil {
 		return nil, err
 	}
-	if storages != nil && (meta.HasKey(annotations, AWSIRSARoleAnnotationKey) || meta.HasKey(annotations, GCPWorkloadIdentityAnnotationKey)) {
-		annotations[S3orGCSBucketAnnotationKey] = getBucketAnnotationValueFromS3orGCSBackupStorage(storages...)
+	if storages != nil {
+		setBucketAnnotations(annotations, storages...)
 	}
 	return annotations, nil
 }
@@ -71,22 +70,21 @@ func getServiceAccount(ctx context.Context, c client.Client, ref kmapi.ObjectRef
 	return sa, nil
 }
 
-func getBucketAnnotationValueFromS3orGCSBackupStorage(storages ...storageapi.BackupStorage) string {
-	var bucketNames []string
+func setBucketAnnotations(annotations map[string]string, storages ...storageapi.BackupStorage) {
+	if !(meta.HasKey(annotations, AWSIRSARoleAnnotationKey) || meta.HasKey(annotations, GCPWorkloadIdentityAnnotationKey)) {
+		return
+	}
+
+	bucketNames := ""
 	for _, backupStorage := range storages {
 		switch backupStorage.Spec.Storage.Provider {
 		case storageapi.ProviderS3:
-			bucketNames = append(bucketNames, backupStorage.Spec.Storage.S3.Bucket)
+			bucketNames = fmt.Sprintf("%s,%s", bucketNames, backupStorage.Spec.Storage.S3.Bucket)
 		case storageapi.ProviderGCS:
-			bucketNames = append(bucketNames, backupStorage.Spec.Storage.GCS.Bucket)
+			bucketNames = fmt.Sprintf("%s,%s", bucketNames, backupStorage.Spec.Storage.GCS.Bucket)
 		}
 	}
-	bucketAnnotationValue := ""
-	if bucketNames != nil {
-		for _, bucketName := range bucketNames {
-			bucketAnnotationValue += bucketName + ","
-		}
-		bucketAnnotationValue = strings.TrimSuffix(bucketAnnotationValue, ",")
+	if bucketNames != "" {
+		annotations[BucketAnnotationKey] = bucketNames[1:]
 	}
-	return bucketAnnotationValue
 }
