@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 	"kubestash.dev/apimachinery/pkg/restic"
@@ -100,8 +101,9 @@ func (b *BackupStorage) LocalNetworkVolume() bool {
 
 // NewBackupStorageResolver creates a StorageConfigResolver that resolves storage configuration
 // from a BackupStorage custom resource. This is the default resolver for the kubestash project.
-func (b *BackupStorage) NewBackupStorageResolver(kbClient client.Client, bsRef metav1.ObjectMeta) restic.StorageConfigResolver {
+func NewBackupStorageResolver(kbClient client.Client, bsRef *kmapi.ObjectReference) restic.StorageConfigResolver {
 	return func(backend *restic.Backend) error {
+		bsRef.ObjectKey()
 		bs := &BackupStorage{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      bsRef.Name,
@@ -139,11 +141,11 @@ func (b *BackupStorage) NewBackupStorageResolver(kbClient client.Client, bsRef m
 			azure := bs.Spec.Storage.Azure
 			storageSecretName = azure.SecretName
 			backend.StorageConfig = &restic.StorageConfig{
-				Provider:       string(ProviderAzure),
-				Bucket:         azure.Container,
-				Prefix:         azure.Prefix,
-				StorageAccount: azure.StorageAccount,
-				MaxConnections: azure.MaxConnections,
+				Provider:            string(ProviderAzure),
+				Bucket:              azure.Container,
+				Prefix:              azure.Prefix,
+				AzureStorageAccount: azure.StorageAccount,
+				MaxConnections:      azure.MaxConnections,
 			}
 		case bs.Spec.Storage.Local != nil:
 			local := bs.Spec.Storage.Local

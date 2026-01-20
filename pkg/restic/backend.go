@@ -27,17 +27,14 @@ import (
 // StorageConfig contains provider-agnostic storage configuration.
 // This struct decouples the restic package from specific storage CRD types.
 type StorageConfig struct {
-	Provider       string
-	Bucket         string
-	Endpoint       string
-	Region         string
-	Prefix         string
-	StorageAccount string
-	InsecureTLS    bool
-	MaxConnections int64
-
-	//// Secret is the combined secret containing both storage credentials and encryption key
-	//Secret *core.Secret
+	Provider            string
+	Bucket              string
+	Endpoint            string
+	Region              string
+	Prefix              string
+	InsecureTLS         bool
+	MaxConnections      int64
+	AzureStorageAccount string
 }
 
 // StorageConfigResolver is a function type that resolves storage configuration.

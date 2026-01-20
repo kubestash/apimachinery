@@ -64,17 +64,7 @@ func setupTest(tempDir string) (*ResticWrapper, error) {
 		return nil, err
 	}
 	setupOpt := &SetupOptions{
-		Backends: []*Backend{
-			{
-				EncryptionSecret: sampleEncryptionSecret(),
-				ConfigResolver: newBackendResolver(&storage.Backend{
-					Local: &storage.LocalSpec{
-						MountPath: localRepoDir,
-						SubPath:   "",
-					},
-				}),
-			},
-		},
+		Backends:    []*Backend{newSampleBackend()},
 		ScratchDir:  scratchDir,
 		EnableCache: false,
 	}
@@ -544,16 +534,10 @@ func setupTestForMultipleBackends(tempDir string, backendsCount int) (*ResticWra
 		if err != nil {
 			return nil, err
 		}
-		setupOpt.Backends = append(setupOpt.Backends, &Backend{
-			Repository:       fmt.Sprintf("%s-%s-repository-%d", "demo", storage.ProviderLocal, idx),
-			EncryptionSecret: sampleEncryptionSecret(),
-			ConfigResolver: newBackendResolver(&storage.Backend{
-				Local: &storage.LocalSpec{
-					MountPath: localRepoDir,
-					SubPath:   "",
-				},
-			}),
-		})
+
+		setupOpt.Backends = append(setupOpt.Backends, newSampleBackend(func(backend *Backend) {
+			backend.Repository = fmt.Sprintf("%s-%s-repository-%d", "demo", storage.ProviderLocal, idx)
+		}))
 	}
 	w, err := NewResticWrapper(setupOpt)
 	if err != nil {
@@ -622,20 +606,29 @@ func TestMultipleBackedBackupRestoreStdin(t *testing.T) {
 	}
 }
 
-func sampleEncryptionSecret(transformFuncs ...func(*core.Secret)) *core.Secret {
-	secret := &core.Secret{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "sample-encryptionsecret",
-			Namespace: "demo",
+func newSampleBackend(transformFuncs ...func(backend *Backend)) *Backend {
+	b := &Backend{
+		Repository: fmt.Sprintf("%s-%s-repository", "demo", storage.ProviderLocal),
+		EncryptionSecret: &core.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "sample-encryptionsecret",
+				Namespace: "demo",
+			},
+			Data: map[string][]byte{
+				"RESTIC_PASSWORD": []byte(password),
+			},
 		},
-		Data: map[string][]byte{
-			"RESTIC_PASSWORD": []byte(password),
-		},
+		ConfigResolver: newBackendResolver(&storage.Backend{
+			Local: &storage.LocalSpec{
+				MountPath: localRepoDir,
+				SubPath:   "",
+			},
+		}),
 	}
 	for _, fn := range transformFuncs {
-		fn(secret)
+		fn(b)
 	}
-	return secret
+	return b
 }
 
 func newBackendResolver(b *storage.Backend) StorageConfigResolver {
