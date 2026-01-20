@@ -37,14 +37,15 @@ func (w *ResticWrapper) setupEnv() error {
 			return err
 		}
 	}
-
+	var errs []error
 	for _, b := range w.Config.Backends {
 		err := w.setupEnvsForBackend(b)
 		if err != nil {
 			b.Error = errors.NewAggregate([]error{b.Error, err})
+			errs = append(errs, err)
 		}
 	}
-	return nil
+	return errors.NewAggregate(errs)
 }
 
 func (w *ResticWrapper) setupEnvsForBackend(b *Backend) error {
@@ -56,12 +57,14 @@ func (w *ResticWrapper) setupEnvsForBackend(b *Backend) error {
 		return fmt.Errorf("failed to resolve storage config: %w", err)
 	}
 
-	b.Envs = make(map[string]string)
+	if b.Envs == nil {
+		b.Envs = make(map[string]string)
+	}
 	if err := w.setEnvFromSecretIfExists(b.Envs, b.EncryptionSecret, RESTIC_PASSWORD, true); err != nil {
 		return fmt.Errorf("failed to set secret for backend %s: %w", b.Repository, err)
 	}
 
-	tmpDir, err := os.MkdirTemp(w.Config.ScratchDir, fmt.Sprintf("%s-tmp-", b.Repository))
+	tmpDir, err := os.MkdirTemp(w.Config.ScratchDir, fmt.Sprintf("%s-tmp-", filepath.Base(b.Repository)))
 	if err != nil {
 		return fmt.Errorf("failed to create tmp dir: %w", err)
 	}
@@ -92,10 +95,10 @@ func (w *ResticWrapper) setupEnvsForBackend(b *Backend) error {
 
 	case storage.ProviderAzure:
 		b.Envs[RESTIC_REPOSITORY] = fmt.Sprintf("azure:%s:/%s", b.Bucket, filepath.Join(b.Prefix, b.Directory))
-		if b.StorageAccount == "" {
+		if b.AzureStorageAccount == "" {
 			return fmt.Errorf("missing storage account for Azure storage")
 		}
-		b.Envs[AZURE_ACCOUNT_NAME] = b.StorageAccount
+		b.Envs[AZURE_ACCOUNT_NAME] = b.AzureStorageAccount
 		if err := w.setEnvFromSecretIfExists(b.Envs, b.StorageSecret, AZURE_ACCOUNT_KEY, false); err != nil {
 			return fmt.Errorf("failed to set secret for backend %s: %w", b.Repository, err)
 		}
@@ -109,6 +112,8 @@ func (w *ResticWrapper) setupEnvsForBackend(b *Backend) error {
 			}
 			b.Envs[GOOGLE_APPLICATION_CREDENTIALS] = filePath
 		}
+	default:
+		return fmt.Errorf("unsupported storage provider: %s", b.Provider)
 	}
 	return nil
 }

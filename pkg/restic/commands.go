@@ -133,12 +133,15 @@ func (w *ResticWrapper) repositoryExist(repository string) bool {
 }
 
 func (w *ResticWrapper) getMatchedBackend(repository string) *Backend {
-	for _, b := range w.Config.Backends {
-		if b.Repository == repository {
-			return b
-		}
+	// Use index for O(1) lookup if available
+	if b := w.Config.GetBackend(repository); b != nil {
+		return b
 	}
-	return new(Backend)
+	// Return an empty backend to avoid nil pointer dereference
+	return &Backend{
+		StorageConfig: &StorageConfig{},
+		Envs:          make(map[string]string),
+	}
 }
 
 func (w *ResticWrapper) initRepository(repository string) error {
@@ -188,8 +191,7 @@ func (w *ResticWrapper) backup(params backupParams) ([]byte, error) {
 		args = b.appendInsecureTLSFlag(args)
 		args = b.appendMaxConnectionsFlag(args)
 		args = append(args, b.Envs)
-		command := Command{Name: ResticCMD, Args: args}
-		commands = append(commands, command)
+		commands = append(commands, Command{Name: ResticCMD, Args: args})
 	}
 	return w.run(commands...)
 }
