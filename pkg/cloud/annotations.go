@@ -27,31 +27,34 @@ import (
 )
 
 const (
-	AWSIRSARoleAnnotation = "eks.amazonaws.com/role-arn"
+	AWSIRSARoleAnnotationKey         = "eks.amazonaws.com/role-arn"
+	GCPWorkloadIdentityAnnotationKey = "go.klusters.dev/iam-gke-io-workloadIdentity"
 )
 
-func GetIRSARoleAnnotationFromOperator(ctx context.Context, kc client.Client) (map[string]string, error) {
-	val, err := GetIRSARoleAnnotationValue(ctx, kc)
+func GetCloudAnnotationsFromOperator(ctx context.Context, kc client.Client) (map[string]string, error) {
+	annotations, err := GetCloudAnnotationsFromServiceAccount(ctx, kc)
 	if err != nil {
 		return nil, err
 	}
-	if val != "" {
-		return map[string]string{AWSIRSARoleAnnotation: val}, nil
-	}
-	return nil, nil
+	return annotations, nil
 }
 
-func GetIRSARoleAnnotationValue(ctx context.Context, kc client.Client) (string, error) {
+func GetCloudAnnotationsFromServiceAccount(ctx context.Context, kc client.Client) (map[string]string, error) {
 	sa, err := getServiceAccount(ctx, kc, kmapi.ObjectReference{
 		Name:      meta.PodServiceAccount(),
 		Namespace: meta.PodNamespace(),
 	})
 	if err != nil {
-		return "", fmt.Errorf("failed to retrieve service account: %w", err)
+		return nil, fmt.Errorf("failed to retrieve service account: %w", err)
 	}
-
-	val := sa.Annotations[AWSIRSARoleAnnotation]
-	return val, nil
+	annotations := map[string]string{}
+	if val, ok := sa.Annotations[AWSIRSARoleAnnotationKey]; ok {
+		annotations[AWSIRSARoleAnnotationKey] = val
+	}
+	if val, ok := sa.Annotations[GCPWorkloadIdentityAnnotationKey]; ok {
+		annotations[GCPWorkloadIdentityAnnotationKey] = val
+	}
+	return annotations, nil
 }
 
 func getServiceAccount(ctx context.Context, c client.Client, ref kmapi.ObjectReference) (*core.ServiceAccount, error) {
