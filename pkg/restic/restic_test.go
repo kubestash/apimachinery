@@ -23,21 +23,13 @@ import (
 	"testing"
 	"time"
 
-	addonapi "kubestash.dev/apimachinery/apis/addons/v1alpha1"
-	coreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
-	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
-
 	"github.com/stretchr/testify/assert"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/klog/v2"
 	"k8s.io/utils/ptr"
-	kmapi "kmodules.xyz/client-go/api/v1"
 	storage "kmodules.xyz/objectstore-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
 var (
@@ -71,45 +63,11 @@ func setupTest(tempDir string) (*ResticWrapper, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	bs := sampleBackupStorage()
-	// ss := sampleSecret(&kmapi.ObjectReference{Name: bs.Spec.Storage.GCS.Secret, Namespace: bs.Namespace})
-	es := &core.Secret{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "sample-encryptionsecret",
-			Namespace: bs.Namespace,
-		},
-		Data: map[string][]byte{
-			"RESTIC_PASSWORD": []byte(password),
-		},
-	}
-
 	setupOpt := &SetupOptions{
-		Backends: []*Backend{
-			{
-				EncryptionSecret: &kmapi.ObjectReference{
-					Name:      es.Name,
-					Namespace: es.Namespace,
-				},
-				BackupStorage: &kmapi.ObjectReference{
-					Name:      bs.Name,
-					Namespace: bs.Namespace,
-				},
-				backend: backend{
-					provider: storage.ProviderLocal,
-					bucket:   localRepoDir,
-				},
-			},
-		},
+		Backends:    []*Backend{newSampleBackend()},
 		ScratchDir:  scratchDir,
 		EnableCache: false,
 	}
-
-	setupOpt.Client, err = getFakeClient(bs, es)
-	if err != nil {
-		return nil, err
-	}
-
 	w, err := NewResticWrapper(setupOpt)
 	if err != nil {
 		return nil, err
@@ -562,8 +520,6 @@ func setupTestForMultipleBackends(tempDir string, backendsCount int) (*ResticWra
 	if err := os.MkdirAll(setupOpt.ScratchDir, 0o777); err != nil {
 		return nil, err
 	}
-
-	var initObjs []client.Object
 	for idx := range backendsCount {
 		localRepoDir = filepath.Join(tempDir, fmt.Sprintf("repo-%d", idx))
 		targetPath = filepath.Join(tempDir, fmt.Sprintf("target-%d", idx))
@@ -579,44 +535,10 @@ func setupTestForMultipleBackends(tempDir string, backendsCount int) (*ResticWra
 			return nil, err
 		}
 
-		bs := sampleBackupStorage(func(backupStorage *storageapi.BackupStorage) {
-			backupStorage.Name = fmt.Sprintf("sample-backup-storage-%d", idx)
-		})
-		// ss := sampleSecret(&kmapi.ObjectReference{Name: bs.Spec.Storage.GCS.Secret, Namespace: bs.Namespace})
-		es := &core.Secret{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      fmt.Sprintf("sample-encryptionsecret-%d", idx),
-				Namespace: bs.Namespace,
-			},
-			Data: map[string][]byte{
-				"RESTIC_PASSWORD": []byte(password),
-			},
-		}
-		initObjs = append(initObjs, bs, es)
-		setupOpt.Backends = append(setupOpt.Backends, &Backend{
-			Repository: fmt.Sprintf("%s-%s-repository-%d", es.Namespace, storage.ProviderLocal, idx),
-			EncryptionSecret: &kmapi.ObjectReference{
-				Name:      es.Name,
-				Namespace: es.Namespace,
-			},
-			BackupStorage: &kmapi.ObjectReference{
-				Name:      bs.Name,
-				Namespace: bs.Namespace,
-			},
-			backend: backend{
-				provider: storage.ProviderLocal,
-				bucket:   localRepoDir,
-				envs:     map[string]string{},
-			},
-		})
+		setupOpt.Backends = append(setupOpt.Backends, newSampleBackend(func(backend *Backend) {
+			backend.Repository = fmt.Sprintf("%s-%s-repository-%d", "demo", storage.ProviderLocal, idx)
+		}))
 	}
-
-	var err error
-	setupOpt.Client, err = getFakeClient(initObjs...)
-	if err != nil {
-		return nil, err
-	}
-
 	w, err := NewResticWrapper(setupOpt)
 	if err != nil {
 		return nil, err
@@ -684,47 +606,47 @@ func TestMultipleBackedBackupRestoreStdin(t *testing.T) {
 	}
 }
 
-func getFakeClient(initObjs ...client.Object) (client.WithWatch, error) {
-	scheme := runtime.NewScheme()
-	if err := coreapi.AddToScheme(scheme); err != nil {
-		return nil, err
+func newSampleBackend(transformFuncs ...func(backend *Backend)) *Backend {
+	b := &Backend{
+		Repository: fmt.Sprintf("%s-%s-repository", "demo", storage.ProviderLocal),
+		EncryptionSecret: &core.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "sample-encryptionsecret",
+				Namespace: "demo",
+			},
+			Data: map[string][]byte{
+				"RESTIC_PASSWORD": []byte(password),
+			},
+		},
+		ConfigResolver: newBackendResolver(&storage.Backend{
+			Local: &storage.LocalSpec{
+				MountPath: localRepoDir,
+				SubPath:   "",
+			},
+		}),
 	}
-
-	if err := storageapi.AddToScheme(scheme); err != nil {
-		return nil, err
+	for _, fn := range transformFuncs {
+		fn(b)
 	}
-
-	if err := addonapi.AddToScheme(scheme); err != nil {
-		return nil, err
-	}
-
-	if err := core.AddToScheme(scheme); err != nil {
-		return nil, err
-	}
-
-	return fake.NewClientBuilder().WithScheme(scheme).WithObjects(initObjs...).Build(), nil
+	return b
 }
 
-func sampleBackupStorage(transformFuncs ...func(*storageapi.BackupStorage)) *storageapi.BackupStorage {
-	bs := &storageapi.BackupStorage{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "sample-backup-storage",
-			Namespace: "demo",
-		},
-		Spec: storageapi.BackupStorageSpec{
-			Storage: storageapi.Backend{
-				Local: &storageapi.LocalSpec{
-					MountPath: localRepoDir,
-					SubPath:   "",
-				},
-			},
-			DeletionPolicy: storageapi.DeletionPolicyWipeOut,
-		},
+func newBackendResolver(b *storage.Backend) StorageConfigResolver {
+	return func(backend *Backend) error {
+		switch {
+		case b.Local != nil:
+			local := b.Local
+			backend.StorageConfig = &StorageConfig{
+				Provider: storage.ProviderLocal,
+				Bucket:   local.MountPath,
+				Prefix:   local.SubPath,
+			}
+			if backend.MountPath != "" {
+				backend.Bucket = backend.MountPath
+			}
+		default:
+			return fmt.Errorf("unsupported backend type for local testing")
+		}
+		return nil
 	}
-
-	for _, fn := range transformFuncs {
-		fn(bs)
-	}
-
-	return bs
 }
