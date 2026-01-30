@@ -171,7 +171,7 @@ func (w *ResticWrapper) GetEnv(key string) string {
 	return ""
 }
 
-func (w *ResticWrapper)SetShowCMD(showCMD bool) {
+func (w *ResticWrapper) SetShowCMD(showCMD bool) {
 	if w.sh != nil {
 		w.sh.ShowCMD = showCMD
 	}

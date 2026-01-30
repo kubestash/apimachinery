@@ -20,10 +20,10 @@ import (
 	"context"
 	"fmt"
 
+	"gomodules.xyz/restic"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
-	"kubestash.dev/apimachinery/pkg/restic"
 
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
