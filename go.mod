@@ -4,7 +4,6 @@ go 1.25.0
 
 require (
 	github.com/Masterminds/semver/v3 v3.4.0
-	github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2
 	github.com/aws/aws-sdk-go-v2 v1.39.6
 	github.com/aws/aws-sdk-go-v2/config v1.31.17
 	github.com/aws/aws-sdk-go-v2/credentials v1.18.21
@@ -16,7 +15,7 @@ require (
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	gocloud.dev v0.41.0
 	gomodules.xyz/envsubst v0.2.0
-	gomodules.xyz/go-sh v0.2.0
+	gomodules.xyz/restic v0.0.0-20260127113541-2bdea1940793
 	gomodules.xyz/x v0.0.17
 	k8s.io/api v0.34.3
 	k8s.io/apimachinery v0.34.3
@@ -27,7 +26,6 @@ require (
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4
 	kmodules.xyz/client-go v0.34.2
 	kmodules.xyz/crd-schema-fuzz v0.34.1
-	kmodules.xyz/objectstore-api v0.34.0
 	kmodules.xyz/offshoot-api v0.34.0
 	kmodules.xyz/prober v0.34.0
 	kubedb.dev/apimachinery v0.59.0
@@ -61,6 +59,7 @@ require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/sprig/v3 v3.3.0 // indirect
 	github.com/PuerkitoBio/purell v1.2.1 // indirect
+	github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2 // indirect
 	github.com/aws/aws-sdk-go v1.55.6 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.10 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.13 // indirect
@@ -213,6 +212,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	gomodules.xyz/counter v0.0.1 // indirect
 	gomodules.xyz/encoding v0.0.8 // indirect
+	gomodules.xyz/go-sh v0.2.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.5.0 // indirect
 	gomodules.xyz/mergo v0.3.13 // indirect
 	gomodules.xyz/pointer v0.1.0 // indirect
@@ -234,6 +234,7 @@ require (
 	kmodules.xyz/custom-resources v0.34.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.15 // indirect
 	kmodules.xyz/monitoring-agent-api v0.34.0 // indirect
+	kmodules.xyz/objectstore-api v0.34.0 // indirect
 	kmodules.xyz/resource-metadata v0.41.0 // indirect
 	kmodules.xyz/resource-metrics v0.34.0 // indirect
 	kubeops.dev/petset v0.0.15 // indirect
@@ -250,3 +251,5 @@ require (
 )
 
 replace github.com/imdario/mergo => github.com/imdario/mergo v0.3.6
+
+replace gomodules.xyz/restic => github.com/gomodules/restic v0.0.0-20260127113541-2bdea1940793
