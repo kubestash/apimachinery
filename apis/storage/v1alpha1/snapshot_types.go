@@ -216,7 +216,7 @@ type Component struct {
 
 	// ClickHouseStats specifies the ClickHouse Backup specific information for each shard
 	// +optional
-	ClickHouseStats *ClickHouseStats `json:"clickHouseStats,omitempty"`
+	ClickHouseStats map[string]*ClickHouseStats `json:"clickHouseStats,omitempty"`
 }
 
 type Log struct {
@@ -342,7 +342,7 @@ type SolrStats struct {
 }
 
 type ClickHouseStats struct {
-	// Id represents the snapshot id
+	// Id represents the backup id
 	Id string `json:"id,omitempty"`
 
 	// StatusType represents the status of Backup. This can be "IN_PROGRESS","SUCCESS","FAILED" or "UNKNOWN"
