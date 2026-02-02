@@ -216,7 +216,7 @@ type Component struct {
 
 	// ClickHouseStats specifies the ClickHouse Backup specific information for each shard
 	// +optional
-	ClickHouseStats map[string]*ClickHouseStats `json:"clickHouseStats,omitempty"`
+	ClickHouseStats *ClickHouseStats `json:"clickHouseStats,omitempty"`
 }
 
 type Log struct {

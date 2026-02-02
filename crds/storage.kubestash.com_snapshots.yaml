@@ -88,17 +88,15 @@ spec:
                 additionalProperties:
                   properties:
                     clickHouseStats:
-                      additionalProperties:
-                        properties:
-                          finishTime:
-                            type: string
-                          id:
-                            type: string
-                          startTime:
-                            type: string
-                          status:
-                            type: string
-                        type: object
+                      properties:
+                        finishTime:
+                          type: string
+                        id:
+                          type: string
+                        startTime:
+                          type: string
+                        status:
+                          type: string
                       type: object
                     driver:
                       enum:
