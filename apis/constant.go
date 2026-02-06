@@ -62,7 +62,7 @@ const (
 	KubeStashInitializerComponent     = "kubestash-initializer"
 	KubeStashUploaderComponent        = "kubestash-uploader"
 	KubeStashCleanerComponent         = "kubestash-cleaner"
-	KubeStashRetentionPolicyComponent = "kubestash.com/retention-policy"
+	KubeStashRetentionPolicyComponent = "kubestash-retention-policy"
 	KubeStashHookComponent            = "kubestash-hook"
 	KubeStashPopulatorComponent       = "kubestash-populator"
 	KubeStashBackupVerifierComponent  = "kubestash-backup-verifier"
