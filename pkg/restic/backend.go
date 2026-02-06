@@ -42,14 +42,15 @@ type Backend struct {
 	backend
 	storageSecret *core.Secret
 
-	EncryptionSecret *kmapi.ObjectReference
-	Directory        string
-	BackupStorage    *kmapi.ObjectReference
-	MountPath        string
-	MaxConnections   int64
-	CaCertFile       string
-	Repository       string
-	Error            error
+	EncryptionSecret    *kmapi.ObjectReference
+	Directory           string
+	BackupStorage       *kmapi.ObjectReference // Deprecated: use BackupStorageConfig instead
+	BackupStorageConfig *v1alpha1.BackupStorage
+	MountPath           string
+	MaxConnections      int64
+	CaCertFile          string
+	Repository          string
+	Error               error
 }
 
 func (b *Backend) createLocalDir() error {
