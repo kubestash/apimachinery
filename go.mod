@@ -11,11 +11,11 @@ require (
 	github.com/aws/smithy-go v1.23.2
 	github.com/kubernetes-csi/external-snapshotter/client/v8 v8.4.0
 	github.com/stretchr/testify v1.11.1
-	go.bytebuilders.dev/audit v0.0.47
+	go.bytebuilders.dev/audit v0.0.48
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	gocloud.dev v0.41.0
 	gomodules.xyz/envsubst v0.2.0
-	gomodules.xyz/restic v0.0.0-20260127113541-2bdea1940793
+	gomodules.xyz/restic v0.1.0
 	gomodules.xyz/x v0.0.17
 	k8s.io/api v0.34.3
 	k8s.io/apimachinery v0.34.3
@@ -28,7 +28,7 @@ require (
 	kmodules.xyz/crd-schema-fuzz v0.34.1
 	kmodules.xyz/offshoot-api v0.34.0
 	kmodules.xyz/prober v0.34.0
-	kubedb.dev/apimachinery v0.59.0
+	kubedb.dev/apimachinery v0.61.0-rc.0
 	sigs.k8s.io/controller-runtime v0.22.4
 	sigs.k8s.io/randfill v1.0.0
 	sigs.k8s.io/yaml v1.6.0
@@ -77,7 +77,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.39.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
-	github.com/cert-manager/cert-manager v1.18.2 // indirect
+	github.com/cert-manager/cert-manager v1.19.3 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudevents/sdk-go/v2 v2.15.2 // indirect
 	github.com/cncf/xds/go v0.0.0-20250501225837-2ac532fd4443 // indirect
@@ -163,10 +163,10 @@ require (
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.87.1 // indirect
-	github.com/prometheus/client_golang v1.22.0 // indirect
-	github.com/prometheus/client_model v0.6.1 // indirect
-	github.com/prometheus/common v0.62.0 // indirect
-	github.com/prometheus/procfs v0.15.1 // indirect
+	github.com/prometheus/client_golang v1.23.2 // indirect
+	github.com/prometheus/client_model v0.6.2 // indirect
+	github.com/prometheus/common v0.66.1 // indirect
+	github.com/prometheus/procfs v0.17.0 // indirect
 	github.com/rancher/norman v0.5.2 // indirect
 	github.com/rancher/rancher/pkg/client v0.0.0-20250220153925-3abb578f42fe // indirect
 	github.com/rancher/wrangler/v3 v3.2.0-rc.3 // indirect
@@ -233,16 +233,16 @@ require (
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/custom-resources v0.34.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.15 // indirect
-	kmodules.xyz/monitoring-agent-api v0.34.0 // indirect
+	kmodules.xyz/monitoring-agent-api v0.34.1 // indirect
 	kmodules.xyz/objectstore-api v0.34.0 // indirect
-	kmodules.xyz/resource-metadata v0.41.0 // indirect
+	kmodules.xyz/resource-metadata v0.42.1 // indirect
 	kmodules.xyz/resource-metrics v0.34.0 // indirect
 	kubeops.dev/petset v0.0.15 // indirect
 	kubeops.dev/sidekick v0.0.12 // indirect
 	moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 // indirect
 	open-cluster-management.io/api v1.1.1-0.20251222023835-510285203ee6 // indirect
 	sigs.k8s.io/cli-utils v0.37.2 // indirect
-	sigs.k8s.io/gateway-api v1.1.0 // indirect
+	sigs.k8s.io/gateway-api v1.4.0 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
 	sigs.k8s.io/kustomize/api v0.20.1 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.20.1 // indirect
