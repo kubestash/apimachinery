@@ -28,7 +28,7 @@ func TestWorkerPool_AllTasksSucceed(t *testing.T) {
 	wp := NewWorkerPool(context.Background(), 3, 5*time.Second)
 
 	var executed int64
-	for i := 0; i < 5; i++ {
+	for range 5 {
 		wp.Run(func() error {
 			atomic.AddInt64(&executed, 1)
 			time.Sleep(100 * time.Millisecond)
@@ -54,7 +54,7 @@ func TestWorkerPool_ErrorCancelsOthers(t *testing.T) {
 	wp := NewWorkerPool(context.Background(), 3, 5*time.Second)
 
 	var executed int64
-	for i := 0; i < 5; i++ {
+	for i := range 5 {
 		i := i
 		wp.Run(func() error {
 			if i == 2 {
@@ -79,7 +79,7 @@ func TestWorkerPool_TimeoutStopsTasks(t *testing.T) {
 	wp := NewWorkerPool(context.Background(), 2, 500*time.Millisecond)
 
 	var executed int64
-	for i := 0; i < 5; i++ {
+	for range 5 {
 		wp.Run(func() error {
 			select {
 			case <-wp.ctx.Done():
@@ -127,7 +127,7 @@ func TestWorkerPool_CancelManually(t *testing.T) {
 	wp := NewWorkerPool(context.Background(), 2, 5*time.Second)
 
 	var executed int64
-	for i := 0; i < 5; i++ {
+	for range 5 {
 		wp.Run(func() error {
 			select {
 			case <-wp.ctx.Done():
@@ -178,7 +178,7 @@ func TestWorkerPool_WorkerLimit(t *testing.T) {
 	var concurrent int64
 	var maxConcurrent int64
 
-	for i := 0; i < 5; i++ {
+	for range 5 {
 		wp.Run(func() error {
 			cur := atomic.AddInt64(&concurrent, 1)
 			if cur > int64(maxWorkers) {

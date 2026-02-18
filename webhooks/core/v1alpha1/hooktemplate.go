@@ -168,8 +168,8 @@ func (r *HookTemplate) validateExecutorInfo() error {
 			return fmt.Errorf("selector field can not be empty for pod type executor")
 		}
 
-		selectors := strings.Split(r.Spec.Executor.Pod.Selector, ",")
-		for _, sel := range selectors {
+		selectors := strings.SplitSeq(r.Spec.Executor.Pod.Selector, ",")
+		for sel := range selectors {
 			if len(strings.Split(strings.Trim(sel, " "), "=")) < 2 {
 				return fmt.Errorf("invalid selector is provided for pod type executor")
 			}
