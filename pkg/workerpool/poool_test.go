@@ -55,7 +55,6 @@ func TestWorkerPool_ErrorCancelsOthers(t *testing.T) {
 
 	var executed int64
 	for i := range 5 {
-		i := i
 		wp.Run(func() error {
 			if i == 2 {
 				return errors.New("task 2 failed")
