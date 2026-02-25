@@ -32,6 +32,11 @@ const (
 	AWSIRSARoleAnnotationKey         = "eks.amazonaws.com/role-arn"
 	GCPWorkloadIdentityAnnotationKey = "go.klusters.dev/iam-gke-io-workloadIdentity"
 	BucketAnnotationKey              = "go.klusters.dev/bucket-names"
+	GCPClusterNameAnnotationKey      = "go.klusters.dev/iam-gke-cluster-name"
+	GCPClusterRegionAnnotationKey    = "go.klusters.dev/iam-gke-cluster-region"
+	GCPProjectIDAnnotationKey        = "go.klusters.dev/iam-gke-project-id"
+	GCPProjectNumberAnnotationKey    = "go.klusters.dev/iam-gke-project-number"
+	GCPRolesAnnotationKey            = "go.klusters.dev/iam-gke-roles"
 )
 
 func GetCloudAnnotations(ctx context.Context, kc client.Client, storages ...storageapi.BackupStorage) (map[string]string, error) {
@@ -59,6 +64,21 @@ func GetCloudAnnotationsFromServiceAccount(ctx context.Context, kc client.Client
 	}
 	if val, ok := sa.Annotations[GCPWorkloadIdentityAnnotationKey]; ok {
 		annotations[GCPWorkloadIdentityAnnotationKey] = val
+	}
+	if val, ok := sa.Annotations[GCPClusterNameAnnotationKey]; ok {
+		annotations[GCPClusterNameAnnotationKey] = val
+	}
+	if val, ok := sa.Annotations[GCPClusterRegionAnnotationKey]; ok {
+		annotations[GCPClusterRegionAnnotationKey] = val
+	}
+	if val, ok := sa.Annotations[GCPProjectIDAnnotationKey]; ok {
+		annotations[GCPProjectIDAnnotationKey] = val
+	}
+	if val, ok := sa.Annotations[GCPProjectNumberAnnotationKey]; ok {
+		annotations[GCPProjectNumberAnnotationKey] = val
+	}
+	if val, ok := sa.Annotations[GCPRolesAnnotationKey]; ok {
+		annotations[GCPRolesAnnotationKey] = val
 	}
 	return annotations, nil
 }
