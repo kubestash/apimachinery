@@ -889,7 +889,7 @@ github.com/zeebo/xxh3
 ## explicit; go 1.25.0
 go.bytebuilders.dev/audit/api/v1
 go.bytebuilders.dev/audit/lib
-# go.bytebuilders.dev/license-proxyserver v0.0.26
+# go.bytebuilders.dev/license-proxyserver v0.1.0
 ## explicit; go 1.25.0
 go.bytebuilders.dev/license-proxyserver/apis/proxyserver
 go.bytebuilders.dev/license-proxyserver/apis/proxyserver/v1alpha1
