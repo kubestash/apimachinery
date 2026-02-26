@@ -15,7 +15,7 @@ require (
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	gocloud.dev v0.41.0
 	gomodules.xyz/envsubst v0.2.0
-	gomodules.xyz/restic v0.1.0
+	gomodules.xyz/restic v0.2.0
 	gomodules.xyz/x v0.0.17
 	k8s.io/api v0.34.3
 	k8s.io/apimachinery v0.34.3
@@ -28,7 +28,7 @@ require (
 	kmodules.xyz/crd-schema-fuzz v0.34.1
 	kmodules.xyz/offshoot-api v0.34.0
 	kmodules.xyz/prober v0.34.0
-	kubedb.dev/apimachinery v0.61.0-rc.0
+	kubedb.dev/apimachinery v0.61.0
 	sigs.k8s.io/controller-runtime v0.22.4
 	sigs.k8s.io/randfill v1.0.0
 	sigs.k8s.io/yaml v1.6.0
@@ -237,10 +237,11 @@ require (
 	kmodules.xyz/objectstore-api v0.34.0 // indirect
 	kmodules.xyz/resource-metadata v0.42.4 // indirect
 	kmodules.xyz/resource-metrics v0.34.0 // indirect
+	kubeops.dev/operator-shard-manager v0.0.5 // indirect
 	kubeops.dev/petset v0.0.15 // indirect
 	kubeops.dev/sidekick v0.0.12 // indirect
 	moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 // indirect
-	open-cluster-management.io/api v1.1.1-0.20251222023835-510285203ee6 // indirect
+	open-cluster-management.io/api v1.2.0 // indirect
 	sigs.k8s.io/cli-utils v0.37.2 // indirect
 	sigs.k8s.io/gateway-api v1.4.0 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
