@@ -1139,7 +1139,7 @@ gomodules.xyz/mergo
 # gomodules.xyz/pointer v0.1.0
 ## explicit; go 1.15
 gomodules.xyz/pointer
-# gomodules.xyz/restic v0.1.0 => github.com/gomodules/restic v0.0.0-20260127113541-2bdea1940793
+# gomodules.xyz/restic v0.2.0 => github.com/gomodules/restic v0.0.0-20260127113541-2bdea1940793
 ## explicit; go 1.25
 gomodules.xyz/restic
 # gomodules.xyz/x v0.0.17
@@ -1889,6 +1889,7 @@ kmodules.xyz/client-go/dynamic
 kmodules.xyz/client-go/meta
 kmodules.xyz/client-go/policy/secomp
 kmodules.xyz/client-go/tools/clusterid
+kmodules.xyz/client-go/tools/healthchecker
 # kmodules.xyz/crd-schema-fuzz v0.34.1
 ## explicit; go 1.24.0
 kmodules.xyz/crd-schema-fuzz
@@ -1934,7 +1935,7 @@ kmodules.xyz/resource-metrics/kubedb.com/v1
 kmodules.xyz/resource-metrics/kubedb.com/v1alpha2
 kmodules.xyz/resource-metrics/kubevault.com/v1alpha2
 kmodules.xyz/resource-metrics/ops.kubedb.com/v1alpha1
-# kubedb.dev/apimachinery v0.61.0-rc.0
+# kubedb.dev/apimachinery v0.61.0
 ## explicit; go 1.25.0
 kubedb.dev/apimachinery/apis
 kubedb.dev/apimachinery/apis/catalog
@@ -1945,6 +1946,12 @@ kubedb.dev/apimachinery/apis/kubedb/v1alpha2
 kubedb.dev/apimachinery/apis/migrator
 kubedb.dev/apimachinery/apis/migrator/v1alpha1
 kubedb.dev/apimachinery/crds
+kubedb.dev/apimachinery/pkg/utils
+kubedb.dev/apimachinery/pkg/utils/raft
+# kubeops.dev/operator-shard-manager v0.0.5
+## explicit; go 1.25
+kubeops.dev/operator-shard-manager/api/v1alpha1
+kubeops.dev/operator-shard-manager/crds
 # kubeops.dev/petset v0.0.15
 ## explicit; go 1.24.0
 kubeops.dev/petset/apis/apps/v1
@@ -1960,7 +1967,7 @@ kubeops.dev/sidekick/crds
 # moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7
 ## explicit; go 1.13
 moul.io/http2curl/v2
-# open-cluster-management.io/api v1.1.1-0.20251222023835-510285203ee6
+# open-cluster-management.io/api v1.2.0
 ## explicit; go 1.25.0
 open-cluster-management.io/api/work/v1
 # sigs.k8s.io/cli-utils v0.37.2
