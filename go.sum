@@ -112,8 +112,8 @@ github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6r
 github.com/blang/semver/v4 v4.0.0 h1:1PFHFE6yCCTv8C1TeyNNarDzntLi7wMI5i/pzqYIsAM=
 github.com/blang/semver/v4 v4.0.0/go.mod h1:IbckMUScFkM3pff0VJDNKRiT6TG/YpiHIM2yvyW5YoQ=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
-github.com/cert-manager/cert-manager v1.19.3 h1:3d0Nk/HO3BOmAdBJNaBh+6YgaO3Ciey3xCpOjiX5Obs=
-github.com/cert-manager/cert-manager v1.19.3/go.mod h1:e9NzLtOKxTw7y99qLyWGmPo6mrC1Nh0EKKcMkRfK+GE=
+github.com/cert-manager/cert-manager v1.19.4 h1:7lOkSYj+nJNjgGFfAznQzPpOfWX+1Kgz6xUXwTa/K5k=
+github.com/cert-manager/cert-manager v1.19.4/go.mod h1:9uBnn3IK9NxjjuXmQDYhwOwFUU5BtGVB1g/voPvvcVw=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
@@ -709,8 +709,8 @@ kmodules.xyz/resource-metadata v0.42.4 h1:nFVo+PKmwWdzVwk7U3VZuKBQj3tPo6fyY5BC7g
 kmodules.xyz/resource-metadata v0.42.4/go.mod h1:++18wSB28Wrw3ZxnOd8o8IVg7oMyWPwaPfuLw21QnPc=
 kmodules.xyz/resource-metrics v0.34.0 h1:cqscgTx3PONxHj6PIySK3sTlKKv8iKTGzRd+S6YSwXg=
 kmodules.xyz/resource-metrics v0.34.0/go.mod h1:R34IKtp5+NqcQz7AQJheBJK6Iem0LqrCbm/55Mn+ECQ=
-kubedb.dev/apimachinery v0.61.0 h1:gYI8RFr6W9k9+961fwoWz/6DVGmX0NwPXlTzPBYKxB4=
-kubedb.dev/apimachinery v0.61.0/go.mod h1:LaumaEPYGkieolZcvmT75qqZxKbcN0mZ4xIuA85TZaY=
+kubedb.dev/apimachinery v0.63.0 h1:YnHHiNJbpeTk7Y+WInG5NLuLfupF/RT1qTPRa6MONBo=
+kubedb.dev/apimachinery v0.63.0/go.mod h1:l3qXJvsiSUEZZ9DIF539BADcUwVA4Nz2SGdOLTrtDRM=
 kubeops.dev/operator-shard-manager v0.0.5 h1:i7VnyUfIa9u3RQhSTVWNsooXcgmrWWxJyI9gJ10onE8=
 kubeops.dev/operator-shard-manager v0.0.5/go.mod h1:NE6GzlhwLRiwiUUpqi4Uf+J7e/gniITM0uJnE5r1mzY=
 kubeops.dev/petset v0.0.15 h1:iwTRFAp0RNw0A87sw2c97UZ6WIA9H/nhJBpDhXLa7fk=
