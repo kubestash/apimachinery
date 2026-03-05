@@ -349,10 +349,10 @@ type ClickHouseStats struct {
 	StatusType string `json:"status,omitempty"`
 
 	// Starting time of the backup
-	StartTime string `json:"startTime,omitempty"`
+	StartTime *metav1.Time `json:"startTime,omitempty"`
 
 	// Finishing time of the backup
-	FinishTime string `json:"finishTime,omitempty"`
+	FinishTime *metav1.Time `json:"finishTime,omitempty"`
 }
 
 const (
