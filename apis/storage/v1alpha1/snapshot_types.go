@@ -214,9 +214,9 @@ type Component struct {
 	// +optional
 	VolumeSnapshotterStats []VolumeSnapshotterStats `json:"volumeSnapshotterStats,omitempty"`
 
-	// ClickHouseStats specifies the ClickHouse Backup specific information for each shard
+	// ClickHouseStats specifies the ClickHouse Backup specific information
 	// +optional
-	ClickHouseStats map[string]*ClickHouseStats `json:"clickHouseStats,omitempty"`
+	ClickHouseStats *ClickHouseStats `json:"clickHouseStats,omitempty"`
 }
 
 type Log struct {
