@@ -90,10 +90,12 @@ spec:
                     clickHouseStats:
                       properties:
                         finishTime:
+                          format: date-time
                           type: string
                         id:
                           type: string
                         startTime:
+                          format: date-time
                           type: string
                         status:
                           type: string
