@@ -58,8 +58,9 @@ const (
 	googleApplicationCredentials = "GOOGLE_APPLICATION_CREDENTIALS"
 	azureAccountKey              = "AZURE_ACCOUNT_KEY"
 	caCertData                   = "CA_CERT_DATA"
-	awsAccessKeyId               = "AWS_ACCESS_KEY_ID"
-	awsSecretAccessKey           = "AWS_SECRET_ACCESS_KEY"
+	AwsAccessKeyId               = "AWS_ACCESS_KEY_ID"
+	AwsSecretAccessKey           = "AWS_SECRET_ACCESS_KEY"
+	AwsSessionToken              = "AWS_SESSION_TOKEN"
 )
 
 type Blob struct {
@@ -456,13 +457,13 @@ func (b *Blob) getS3Config(ctx context.Context, debug bool) (aws2.Config, error)
 	}
 
 	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
-		id, ok := b.s3Secret.Data[awsAccessKeyId]
+		id, ok := b.s3Secret.Data[AwsAccessKeyId]
 		if !ok {
-			return aws2.Config{}, fmt.Errorf("storage secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsAccessKeyId)
+			return aws2.Config{}, fmt.Errorf("storage secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, AwsAccessKeyId)
 		}
-		key, ok := b.s3Secret.Data[awsSecretAccessKey]
+		key, ok := b.s3Secret.Data[AwsSecretAccessKey]
 		if !ok {
-			return aws2.Config{}, fmt.Errorf("storage Secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, awsSecretAccessKey)
+			return aws2.Config{}, fmt.Errorf("storage Secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, AwsSecretAccessKey)
 		}
 
 		loadOptions = append(loadOptions, config.WithCredentialsProvider(
@@ -485,6 +486,19 @@ func (b *Blob) getS3Config(ctx context.Context, debug bool) (aws2.Config, error)
 	loadOptions = append(loadOptions, config.WithResponseChecksumValidation(aws2.ResponseChecksumValidationWhenRequired))
 
 	return config.LoadDefaultConfig(ctx, loadOptions...)
+}
+
+func (b *Blob) GetS3Credentials(ctx context.Context, debug bool) (*aws2.Credentials, error) {
+	cfg, err := b.getS3Config(ctx, debug)
+	if err != nil {
+		return nil, err
+	}
+
+	creds, err := cfg.Credentials.Retrieve(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &creds, nil
 }
 
 func configureTLS(caCert []byte, insecureTLS bool) (*http.Client, error) {
