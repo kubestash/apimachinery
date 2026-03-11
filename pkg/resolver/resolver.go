@@ -19,13 +19,16 @@ package resolver
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"kubestash.dev/apimachinery/pkg/blob"
+	"kubestash.dev/apimachinery/pkg/retry"
 
 	aws2 "github.com/aws/aws-sdk-go-v2/aws"
 	"gomodules.xyz/restic"
 	core "k8s.io/api/core/v1"
+	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -120,11 +123,24 @@ func getS3Credentials(ctx context.Context, kbClient client.Client, bs *storageap
 	if err != nil {
 		return nil, fmt.Errorf("failed to create blob client for BackupStorage %s/%s: %w", bs.Namespace, bs.Name, err)
 	}
-	cred, err := b.GetS3Credentials(ctx, false)
+	customRetry := func(err error, output string) bool {
+		return strings.Contains(err.Error(), "failed to refresh cached credentials") ||
+			strings.Contains(err.Error(), "failed to retrieve credentials") ||
+			strings.Contains(err.Error(), "AssumeRoleWithWebIdentity")
+	}
+
+	rc := retry.NewRetryConfig(func(config *retry.RetryConfig) {
+		config.ShouldRetry = customRetry
+	})
+	cred, err := rc.RunWithRetry(ctx, func() (any, error) {
+		return b.GetS3Credentials(ctx, false)
+	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to get S3 credentials for BackupStorage %s/%s: %w", bs.Namespace, bs.Name, err)
 	}
-	return cred, nil
+
+	klog.Infof("Successfully got S3 credentials for BackupStorage %s/%s", bs.Namespace, bs.Name)
+	return cred.(*aws2.Credentials), nil
 }
 
 func convertS3CredentialsToEnvMap(creds *aws2.Credentials) map[string]string {
