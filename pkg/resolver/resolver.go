@@ -145,8 +145,8 @@ func getS3Credentials(ctx context.Context, kbClient client.Client, bs *storageap
 
 func convertS3CredentialsToEnvMap(creds *aws2.Credentials) map[string]string {
 	values := make(map[string]string)
-	values[blob.AwsAccessKeyId] = creds.AccessKeyID
-	values[blob.AwsSecretAccessKey] = creds.SecretAccessKey
-	values[blob.AwsSessionToken] = creds.SessionToken
+	values[blob.AWSAccessKeyId] = creds.AccessKeyID
+	values[blob.AWSSecretAccessKey] = creds.SecretAccessKey
+	values[blob.AWSSessionToken] = creds.SessionToken
 	return values
 }

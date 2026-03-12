@@ -58,9 +58,9 @@ const (
 	googleApplicationCredentials = "GOOGLE_APPLICATION_CREDENTIALS"
 	azureAccountKey              = "AZURE_ACCOUNT_KEY"
 	caCertData                   = "CA_CERT_DATA"
-	AwsAccessKeyId               = "AWS_ACCESS_KEY_ID"
-	AwsSecretAccessKey           = "AWS_SECRET_ACCESS_KEY"
-	AwsSessionToken              = "AWS_SESSION_TOKEN"
+	AWSAccessKeyId               = "AWS_ACCESS_KEY_ID"
+	AWSSecretAccessKey           = "AWS_SECRET_ACCESS_KEY"
+	AWSSessionToken              = "AWS_SESSION_TOKEN"
 )
 
 type Blob struct {
@@ -457,13 +457,13 @@ func (b *Blob) getS3Config(ctx context.Context, debug bool) (aws2.Config, error)
 	}
 
 	if b.backupStorage.Spec.Storage.S3.SecretName != "" {
-		id, ok := b.s3Secret.Data[AwsAccessKeyId]
+		id, ok := b.s3Secret.Data[AWSAccessKeyId]
 		if !ok {
-			return aws2.Config{}, fmt.Errorf("storage secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, AwsAccessKeyId)
+			return aws2.Config{}, fmt.Errorf("storage secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, AWSAccessKeyId)
 		}
-		key, ok := b.s3Secret.Data[AwsSecretAccessKey]
+		key, ok := b.s3Secret.Data[AWSSecretAccessKey]
 		if !ok {
-			return aws2.Config{}, fmt.Errorf("storage Secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, AwsSecretAccessKey)
+			return aws2.Config{}, fmt.Errorf("storage Secret %s/%s missing %s key", b.s3Secret.Namespace, b.s3Secret.Name, AWSSecretAccessKey)
 		}
 
 		loadOptions = append(loadOptions, config.WithCredentialsProvider(
