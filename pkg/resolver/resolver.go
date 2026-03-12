@@ -124,6 +124,9 @@ func getS3Credentials(ctx context.Context, kbClient client.Client, bs *storageap
 		return nil, fmt.Errorf("failed to create blob client for BackupStorage %s/%s: %w", bs.Namespace, bs.Name, err)
 	}
 	customRetry := func(err error, output string) bool {
+		if err == nil {
+			return false
+		}
 		return strings.Contains(err.Error(), "failed to refresh cached credentials") ||
 			strings.Contains(err.Error(), "failed to retrieve credentials") ||
 			strings.Contains(err.Error(), "AssumeRoleWithWebIdentity")
