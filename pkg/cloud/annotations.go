@@ -29,7 +29,8 @@ import (
 )
 
 const (
-	AWSIRSARoleAnnotationKey         = "eks.amazonaws.com/role-arn"
+	AWSSeedRoleAnnotationName        = "go.klusters.dev/seed-role-name"
+	AWSIRSARoleAnnotation            = "eks.amazonaws.com/role-arn"
 	GCPWorkloadIdentityAnnotationKey = "go.klusters.dev/iam-gke-io-workloadIdentity"
 	BucketAnnotationKey              = "go.klusters.dev/bucket-names"
 	GCPClusterNameAnnotationKey      = "go.klusters.dev/iam-gke-cluster-name"
@@ -59,8 +60,8 @@ func GetCloudAnnotationsFromServiceAccount(ctx context.Context, kc client.Client
 		return nil, fmt.Errorf("failed to retrieve service account: %w", err)
 	}
 	annotations := map[string]string{}
-	if val, ok := sa.Annotations[AWSIRSARoleAnnotationKey]; ok {
-		annotations[AWSIRSARoleAnnotationKey] = val
+	if val, ok := sa.Annotations[AWSIRSARoleAnnotation]; ok {
+		annotations[AWSSeedRoleAnnotationName] = val
 	}
 	if val, ok := sa.Annotations[GCPWorkloadIdentityAnnotationKey]; ok {
 		annotations[GCPWorkloadIdentityAnnotationKey] = val
@@ -92,7 +93,7 @@ func getServiceAccount(ctx context.Context, c client.Client, ref kmapi.ObjectRef
 }
 
 func setBucketAnnotations(annotations map[string]string, storages ...storageapi.BackupStorage) {
-	if !meta.HasKey(annotations, AWSIRSARoleAnnotationKey) || meta.HasKey(annotations, GCPWorkloadIdentityAnnotationKey) {
+	if !meta.HasKey(annotations, AWSIRSARoleAnnotation) || meta.HasKey(annotations, GCPWorkloadIdentityAnnotationKey) {
 		return
 	}
 
