@@ -93,7 +93,7 @@ func getServiceAccount(ctx context.Context, c client.Client, ref kmapi.ObjectRef
 }
 
 func setBucketAnnotations(annotations map[string]string, storages ...storageapi.BackupStorage) {
-	if !meta.HasKey(annotations, AWSIRSARoleAnnotation) || meta.HasKey(annotations, GCPWorkloadIdentityAnnotationKey) {
+	if !meta.HasKey(annotations, AWSIRSARoleAnnotation) && !meta.HasKey(annotations, GCPWorkloadIdentityAnnotationKey) {
 		return
 	}
 
