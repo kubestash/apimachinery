@@ -41,11 +41,26 @@ func NewBackupStorageResolver(kbClient client.Client, bs *storageapi.BackupStora
 }
 
 func ResolveResticBackend(kbClient client.Client, bs *storageapi.BackupStorage, backend *restic.Backend) error {
-	var storageSecretName string
+	secretName, err := resolveStorageConfig(bs, backend)
+	if err != nil {
+		return fmt.Errorf("failed to resolve storage config for BackupStorage %s/%s: %w", bs.Namespace, bs.Name, err)
+	}
+
+	if secretName != "" {
+		return setSecretIntoBackend(kbClient, bs, backend, secretName)
+	} else if backend.Provider == string(storageapi.ProviderS3) {
+		return setS3SecretsManuallyIntoBackend(kbClient, bs, backend)
+	}
+
+	return nil
+}
+
+func resolveStorageConfig(bs *storageapi.BackupStorage, backend *restic.Backend) (string, error) {
+	var secretName string
 	switch {
 	case bs.Spec.Storage.S3 != nil:
 		s3 := bs.Spec.Storage.S3
-		storageSecretName = s3.SecretName
+		secretName = s3.SecretName
 
 		backend.StorageConfig = &restic.StorageConfig{
 			Provider:       string(storageapi.ProviderS3),
@@ -59,7 +74,7 @@ func ResolveResticBackend(kbClient client.Client, bs *storageapi.BackupStorage, 
 
 	case bs.Spec.Storage.GCS != nil:
 		gcs := bs.Spec.Storage.GCS
-		storageSecretName = gcs.SecretName
+		secretName = gcs.SecretName
 
 		backend.StorageConfig = &restic.StorageConfig{
 			Provider:       string(storageapi.ProviderGCS),
@@ -70,7 +85,7 @@ func ResolveResticBackend(kbClient client.Client, bs *storageapi.BackupStorage, 
 
 	case bs.Spec.Storage.Azure != nil:
 		azure := bs.Spec.Storage.Azure
-		storageSecretName = azure.SecretName
+		secretName = azure.SecretName
 
 		backend.StorageConfig = &restic.StorageConfig{
 			Provider:            string(storageapi.ProviderAzure),
@@ -95,26 +110,28 @@ func ResolveResticBackend(kbClient client.Client, bs *storageapi.BackupStorage, 
 		}
 
 	default:
-		return fmt.Errorf("no storage backend configured in BackupStorage %s/%s", bs.Namespace, bs.Name)
+		return "", fmt.Errorf("no storage backend configured in BackupStorage %s/%s", bs.Namespace, bs.Name)
 	}
+	return secretName, nil
+}
 
-	if storageSecretName != "" {
-		secret := &core.Secret{}
-		if err := kbClient.Get(context.Background(),
-			client.ObjectKey{Name: storageSecretName, Namespace: bs.Namespace},
-			secret); err != nil {
-			return fmt.Errorf("failed to get storage Secret %s/%s: %w", bs.Namespace, storageSecretName, err)
-		}
-
-		backend.StorageSecret = secret
-	} else if backend.Provider == string(storageapi.ProviderS3) {
-		creds, err := getS3Credentials(context.Background(), kbClient, bs)
-		if err != nil {
-			return fmt.Errorf("failed to get S3 credentials for BackupStorage %s/%s: %w", bs.Namespace, bs.Name, err)
-		}
-		backend.Envs = convertS3CredentialsToEnvMap(creds)
+func setSecretIntoBackend(kbClient client.Client, bs *storageapi.BackupStorage, backend *restic.Backend, secretName string) error {
+	secret := &core.Secret{}
+	if err := kbClient.Get(context.Background(),
+		client.ObjectKey{Name: secretName, Namespace: bs.Namespace},
+		secret); err != nil {
+		return fmt.Errorf("failed to get storage Secret %s/%s: %w", bs.Namespace, secretName, err)
 	}
+	backend.StorageSecret = secret
+	return nil
+}
 
+func setS3SecretsManuallyIntoBackend(kbClient client.Client, bs *storageapi.BackupStorage, backend *restic.Backend) error {
+	creds, err := getS3Credentials(context.Background(), kbClient, bs)
+	if err != nil {
+		return fmt.Errorf("failed to get S3 credentials for BackupStorage %s/%s: %w", bs.Namespace, bs.Name, err)
+	}
+	backend.Envs = convertS3CredentialsToEnvMap(creds)
 	return nil
 }
 
