@@ -38,6 +38,12 @@ const (
 	GCPProjectIDAnnotationKey        = "go.klusters.dev/iam-gke-project-id"
 	GCPProjectNumberAnnotationKey    = "go.klusters.dev/iam-gke-project-number"
 	GCPRolesAnnotationKey            = "go.klusters.dev/iam-gke-roles"
+
+	AzureMINameAnnotation         = "klusters.dev/azure-mi-name"
+	AzureResourceGroupAnnotation  = "klusters.dev/azure-rg-name"
+	AzureSubscriptionIDAnnotation = "klusters.dev/azure-subscription-id"
+	AzureMIClientIDAnnotation     = "azure.workload.identity/client-id"
+	AzureMITenantIDAnnotation     = "azure.workload.identity/tenant-id"
 )
 
 func GetCloudAnnotations(ctx context.Context, kc client.Client, storages ...storageapi.BackupStorage) (map[string]string, error) {
@@ -81,6 +87,15 @@ func GetCloudAnnotationsFromServiceAccount(ctx context.Context, kc client.Client
 	if val, ok := sa.Annotations[GCPRolesAnnotationKey]; ok {
 		annotations[GCPRolesAnnotationKey] = val
 	}
+	if val, ok := sa.Annotations[AzureMINameAnnotation]; ok {
+		annotations[AzureMINameAnnotation] = val
+	}
+	if val, ok := sa.Annotations[AzureResourceGroupAnnotation]; ok {
+		annotations[AzureResourceGroupAnnotation] = val
+	}
+	if val, ok := sa.Annotations[AzureSubscriptionIDAnnotation]; ok {
+		annotations[AzureSubscriptionIDAnnotation] = val
+	}
 	return annotations, nil
 }
 
@@ -93,7 +108,8 @@ func getServiceAccount(ctx context.Context, c client.Client, ref kmapi.ObjectRef
 }
 
 func setBucketAnnotations(annotations map[string]string, storages ...storageapi.BackupStorage) {
-	if !meta.HasKey(annotations, AWSIRSARoleAnnotation) && !meta.HasKey(annotations, GCPWorkloadIdentityAnnotationKey) {
+	if !meta.HasKey(annotations, AWSIRSARoleAnnotation) && !meta.HasKey(annotations, GCPWorkloadIdentityAnnotationKey) &&
+		!meta.HasKey(annotations, AzureSubscriptionIDAnnotation) {
 		return
 	}
 
@@ -104,6 +120,9 @@ func setBucketAnnotations(annotations map[string]string, storages ...storageapi.
 			bucketNames = fmt.Sprintf("%s,%s", bucketNames, backupStorage.Spec.Storage.S3.Bucket)
 		case storageapi.ProviderGCS:
 			bucketNames = fmt.Sprintf("%s,%s", bucketNames, backupStorage.Spec.Storage.GCS.Bucket)
+		case storageapi.ProviderAzure:
+			bucketNames = fmt.Sprintf("%s#%s,%s", bucketNames,
+				backupStorage.Spec.Storage.Azure.Container, backupStorage.Spec.Storage.Azure.StorageAccount) // format "container1,storageaccount1#container2,storageaccount2#..."
 		}
 	}
 	if bucketNames != "" {
