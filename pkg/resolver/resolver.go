@@ -19,16 +19,12 @@ package resolver
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
-	"kubestash.dev/apimachinery/pkg/blob"
-	"kubestash.dev/apimachinery/pkg/retry"
+	"kubestash.dev/apimachinery/pkg/cloud"
 
-	aws2 "github.com/aws/aws-sdk-go-v2/aws"
 	"gomodules.xyz/restic"
 	core "k8s.io/api/core/v1"
-	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -127,46 +123,11 @@ func setSecretIntoBackend(kbClient client.Client, bs *storageapi.BackupStorage, 
 }
 
 func setS3SecretsManuallyIntoBackend(kbClient client.Client, bs *storageapi.BackupStorage, backend *restic.Backend) error {
-	creds, err := getS3Credentials(context.Background(), kbClient, bs)
+	credManager := cloud.NewS3CredentialManager(kbClient, bs)
+	creds, err := credManager.GetWithRetry(context.Background())
 	if err != nil {
 		return fmt.Errorf("failed to get S3 credentials for BackupStorage %s/%s: %w", bs.Namespace, bs.Name, err)
 	}
-	backend.Envs = convertS3CredentialsToEnvMap(creds)
+	backend.Envs = cloud.ConvertCredsToEnvMap(creds)
 	return nil
-}
-
-func getS3Credentials(ctx context.Context, kbClient client.Client, bs *storageapi.BackupStorage) (*aws2.Credentials, error) {
-	b, err := blob.NewBlob(ctx, kbClient, bs)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create blob client for BackupStorage %s/%s: %w", bs.Namespace, bs.Name, err)
-	}
-	customRetry := func(err error, output string) bool {
-		if err == nil {
-			return false
-		}
-		return strings.Contains(err.Error(), "failed to refresh cached credentials") ||
-			strings.Contains(err.Error(), "failed to retrieve credentials") ||
-			strings.Contains(err.Error(), "AssumeRoleWithWebIdentity")
-	}
-
-	rc := retry.NewRetryConfig(func(config *retry.RetryConfig) {
-		config.ShouldRetry = customRetry
-	})
-	cred, err := rc.RunWithRetry(ctx, func() (any, error) {
-		return b.GetS3Credentials(ctx, false)
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to get S3 credentials for BackupStorage %s/%s: %w", bs.Namespace, bs.Name, err)
-	}
-
-	klog.Infof("Successfully got S3 credentials for BackupStorage %s/%s", bs.Namespace, bs.Name)
-	return cred.(*aws2.Credentials), nil
-}
-
-func convertS3CredentialsToEnvMap(creds *aws2.Credentials) map[string]string {
-	values := make(map[string]string)
-	values[blob.AWSAccessKeyId] = creds.AccessKeyID
-	values[blob.AWSSecretAccessKey] = creds.SecretAccessKey
-	values[blob.AWSSessionToken] = creds.SessionToken
-	return values
 }

@@ -30,16 +30,16 @@ func TestPruneTypes(t *testing.T) {
 	Install(clientsetscheme.Scheme)
 
 	// v1alpha1
-	if crd := (v1alpha1.BackupStorage{}).CustomResourceDefinition(); crd.V1 != nil {
+	if crd := (&v1alpha1.BackupStorage{}).CustomResourceDefinition(); crd.V1 != nil {
 		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
 	}
-	if crd := (v1alpha1.Repository{}).CustomResourceDefinition(); crd.V1 != nil {
+	if crd := (&v1alpha1.Repository{}).CustomResourceDefinition(); crd.V1 != nil {
 		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
 	}
-	if crd := (v1alpha1.RetentionPolicy{}).CustomResourceDefinition(); crd.V1 != nil {
+	if crd := (&v1alpha1.RetentionPolicy{}).CustomResourceDefinition(); crd.V1 != nil {
 		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
 	}
-	if crd := (v1alpha1.Snapshot{}).CustomResourceDefinition(); crd.V1 != nil {
+	if crd := (&v1alpha1.Snapshot{}).CustomResourceDefinition(); crd.V1 != nil {
 		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
 	}
 }
