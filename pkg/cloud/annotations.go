@@ -24,6 +24,7 @@ import (
 
 	core "k8s.io/api/core/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	kmc "kmodules.xyz/client-go/client"
 	"kmodules.xyz/client-go/meta"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -130,21 +131,24 @@ func setBucketAnnotations(annotations map[string]string, storages ...storageapi.
 	}
 }
 
-func AddCloudAnnotationsToSAIfNeeded(ctx context.Context, kbClient client.Client, bs *storageapi.BackupStorage, saRef *kmapi.ObjectReference, bcRef *kmapi.ObjectReference) error {
+func AddCloudAnnotationsToSAIfNeeded(ctx context.Context, kbClient client.Client,
+	bs *storageapi.BackupStorage, saRef *kmapi.ObjectReference, bcRef *kmapi.ObjectReference,
+) (bool, error) {
 	sa, err := getServiceAccount(ctx, kbClient, saRef)
 	if err != nil {
-		return fmt.Errorf("failed to get service account: %v", err)
+		return true, fmt.Errorf("failed to get service account: %v", err)
 	}
 	if !isCloudAnnotationNeeded(bs, sa) { // Return if not needed
-		return nil
+		return false, nil
 	}
 	if err := addAnnotationsToServiceAccount(kbClient, bs, sa, bcRef); err != nil {
-		return fmt.Errorf("failed to add cloud annotations to database service account: %w", err)
+		return true, fmt.Errorf("failed to add cloud annotations to database service account: %w", err)
 	}
 	if !hasCredLessManagerProvidedAnnotation(bs, sa) {
-		return fmt.Errorf("credential-less cloud annotation for the DB service account does not exist yet")
+		return true, nil
 	}
-	return nil
+
+	return false, nil
 }
 
 func hasCredLessManagerProvidedAnnotation(bs *storageapi.BackupStorage, sa *core.ServiceAccount) bool {
@@ -174,14 +178,25 @@ func addAnnotationsToServiceAccount(kbClient client.Client, bs *storageapi.Backu
 		return nil
 	}
 
-	annotations, err := getLatestSuccessfulBackupAnnotations(context.Background(), kbClient, bcRef)
+	jobAnnotations, err := getLatestSuccessfulBackupJobAnnotations(context.Background(), kbClient, bcRef)
 	if err != nil {
 		return fmt.Errorf("failed to fetch annotations from latest successful backup: %w", err)
 	}
-	if err := annotateRequiredAnnotations(bs, sa, annotations); err != nil {
+	annotations, err := getRequiredAnnotations(bs, jobAnnotations)
+	if err != nil {
 		return fmt.Errorf("failed to annotate required cloud annotations: %w", err)
 	}
-	if err := kbClient.Update(context.Background(), sa); err != nil {
+	_, err = kmc.Patch(context.Background(), kbClient, sa, func(obj client.Object) client.Object {
+		in := obj.(*core.ServiceAccount)
+		if in.Annotations == nil {
+			in.Annotations = map[string]string{}
+		}
+		for k, v := range annotations {
+			in.Annotations[k] = v
+		}
+		return in
+	})
+	if err != nil {
 		return fmt.Errorf("failed to update service account %s/%s with cloud annotations: %w",
 			sa.Namespace, sa.Name, err)
 	}
@@ -190,13 +205,12 @@ func addAnnotationsToServiceAccount(kbClient client.Client, bs *storageapi.Backu
 
 func hasRequiredCloudAnnotations(bs *storageapi.BackupStorage, sa *core.ServiceAccount) bool {
 	if bs.Spec.Storage.Provider == storageapi.ProviderS3 {
-		return sa.Annotations[AWSSeedRoleAnnotationName] != "" &&
-			sa.Annotations[BucketAnnotationKey] != ""
+		return sa.Annotations[AWSSeedRoleAnnotationName] != "" && sa.Annotations[BucketAnnotationKey] != ""
 	}
 	return false
 }
 
-func getLatestSuccessfulBackupAnnotations(ctx context.Context, kbClient client.Client, bcRef *kmapi.ObjectReference) (map[string]string, error) {
+func getLatestSuccessfulBackupJobAnnotations(ctx context.Context, kbClient client.Client, bcRef *kmapi.ObjectReference) (map[string]string, error) {
 	session, err := findLatestSuccessfulBackupSession(ctx, kbClient, bcRef)
 	if err != nil {
 		return nil, err
@@ -222,7 +236,8 @@ func findLatestSuccessfulBackupSession(ctx context.Context, kbClient client.Clie
 
 	for i := range list.Items {
 		session := &list.Items[i]
-		if session.Status.Phase == v1alpha1.BackupSessionSucceeded {
+		if session.Spec.Session == sessionFullBackup &&
+			session.Status.Phase == v1alpha1.BackupSessionSucceeded {
 			return session, nil
 		}
 	}
@@ -254,32 +269,26 @@ func getBackupJobAnnotations(ctx context.Context, kbClient client.Client, sessio
 	return list.Items[0].Annotations, nil
 }
 
-func applyAWSAnnotations(sa *core.ServiceAccount, source map[string]string) error {
+func getAWSAnnotations(source map[string]string) (map[string]string, error) {
 	required := map[string]string{
 		AWSSeedRoleAnnotationName: source[AWSSeedRoleAnnotationName],
 		BucketAnnotationKey:       source[BucketAnnotationKey],
 	}
-
+	annotations := make(map[string]string)
 	for key, val := range required {
-		if val == "" {
-			return fmt.Errorf("required annotation %q missing from backup job annotations", key)
-		}
-		if sa.Annotations == nil {
-			sa.Annotations = make(map[string]string)
-		}
-		sa.Annotations[key] = val
+		annotations[key] = val
 	}
-	return nil
+	return annotations, nil
 }
 
-func annotateRequiredAnnotations(bs *storageapi.BackupStorage, sa *core.ServiceAccount, annotations map[string]string) error {
+func getRequiredAnnotations(bs *storageapi.BackupStorage, annotations map[string]string) (map[string]string, error) {
 	switch bs.Spec.Storage.Provider {
 	case storageapi.ProviderS3:
-		return applyAWSAnnotations(sa, annotations)
+		return getAWSAnnotations(annotations)
 	// case storageapi.ProviderGCS:
 	// 	return applyGCPAnnotations(sa, annotations)
 	default:
-		return fmt.Errorf("unsupported storage provider: %s", bs.Spec.Storage.Provider)
+		return nil, fmt.Errorf("unsupported storage provider: %s", bs.Spec.Storage.Provider)
 
 	}
 }
