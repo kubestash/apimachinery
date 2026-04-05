@@ -27,22 +27,24 @@ import (
 	"path"
 	"strings"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"k8s.io/klog/v2"
 	"kubestash.dev/apimachinery/apis"
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"kubestash.dev/apimachinery/pkg/workerpool"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
 	aws2 "github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"gocloud.dev/blob"
-	_ "gocloud.dev/blob/azureblob"
+	"gocloud.dev/blob/azureblob"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/gcsblob"
 	"gocloud.dev/blob/s3blob"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
@@ -416,6 +418,34 @@ func (b *Blob) openBucketWithDebug(ctx context.Context, dir string, debug bool) 
 		}), b.backupStorage.Spec.Storage.S3.Bucket, nil)
 		if err != nil {
 			return nil, err
+		}
+	} else if b.backupStorage.Spec.Storage.Provider == storageapi.ProviderAzure {
+		federatedTokenFile := os.Getenv("AZURE_FEDERATED_TOKEN_FILE")
+		if federatedTokenFile == "" {
+			bucket, err = blob.OpenBucket(ctx, b.storageURL)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			storageAccountName := b.backupStorage.Spec.Storage.Azure.StorageAccount
+			containerName := b.backupStorage.Spec.Storage.Azure.Container
+			accountURL := fmt.Sprintf("https://%s.blob.core.windows.net", storageAccountName)
+
+			cred, err := azidentity.NewWorkloadIdentityCredential(&azidentity.WorkloadIdentityCredentialOptions{
+				EnableAzureProxy: true,
+			})
+			if err != nil {
+				return nil, fmt.Errorf("failed to create workload identity credential: %w", err)
+			}
+
+			containerClient, err := container.NewClient(accountURL+"/"+containerName, cred, nil)
+			if err != nil {
+				return nil, fmt.Errorf("failed to create container client: %w", err)
+			}
+			bucket, err = azureblob.OpenBucket(ctx, containerClient, nil)
+			if err != nil {
+				return nil, err
+			}
 		}
 	} else {
 		bucket, err = blob.OpenBucket(ctx, b.storageURL)
