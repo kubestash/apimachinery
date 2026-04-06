@@ -141,7 +141,7 @@ func AddCloudAnnotationsToSAIfNeeded(ctx context.Context, kbClient client.Client
 	if !isCloudAnnotationNeeded(bs, sa) { // Return if not needed
 		return false, nil
 	}
-	if err := addAnnotationsToServiceAccount(kbClient, bs, sa, bcRef); err != nil {
+	if err := addAnnotationsToServiceAccount(ctx, kbClient, bs, sa, bcRef); err != nil {
 		return true, fmt.Errorf("failed to add cloud annotations to database service account: %w", err)
 	}
 	if !hasCredLessManagerProvidedAnnotation(bs, sa) {
@@ -173,12 +173,12 @@ func isCloudAnnotationNeeded(bs *storageapi.BackupStorage, sa *core.ServiceAccou
 	return false
 }
 
-func addAnnotationsToServiceAccount(kbClient client.Client, bs *storageapi.BackupStorage, sa *core.ServiceAccount, bcRef *kmapi.ObjectReference) error {
+func addAnnotationsToServiceAccount(ctx context.Context, kbClient client.Client, bs *storageapi.BackupStorage, sa *core.ServiceAccount, bcRef *kmapi.ObjectReference) error {
 	if hasRequiredCloudAnnotations(bs, sa) {
 		return nil
 	}
 
-	jobAnnotations, err := getLatestSuccessfulBackupJobAnnotations(context.Background(), kbClient, bcRef)
+	jobAnnotations, err := getLatestSuccessfulBackupJobAnnotations(ctx, kbClient, bcRef)
 	if err != nil {
 		return fmt.Errorf("failed to fetch annotations from latest successful backup: %w", err)
 	}
@@ -186,7 +186,7 @@ func addAnnotationsToServiceAccount(kbClient client.Client, bs *storageapi.Backu
 	if err != nil {
 		return fmt.Errorf("failed to annotate required cloud annotations: %w", err)
 	}
-	_, err = kmc.Patch(context.Background(), kbClient, sa, func(obj client.Object) client.Object {
+	_, err = kmc.Patch(ctx, kbClient, sa, func(obj client.Object) client.Object {
 		in := obj.(*core.ServiceAccount)
 		if in.Annotations == nil {
 			in.Annotations = map[string]string{}

@@ -110,6 +110,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/blockblob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
+	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/google/wire"
 	"gocloud.dev/blob"
 	"gocloud.dev/blob/driver"
@@ -125,14 +126,6 @@ const (
 	defaultUploadBuffers   = 5               // configure the number of rotating buffers that are used when uploading (for degree of parallelism)
 	defaultUploadBlockSize = 8 * 1024 * 1024 // configure the upload buffer size
 )
-
-// ptrVal returns the value pointed to by p, or the zero value if p is nil.
-func ptrVal[T any](p *T) (v T) {
-	if p != nil {
-		v = *p
-	}
-	return
-}
 
 func init() {
 	blob.DefaultURLMux().RegisterBucket(Scheme, new(lazyOpener))
@@ -195,32 +188,11 @@ type ServiceURLOptions struct {
 func NewDefaultServiceURLOptions() *ServiceURLOptions {
 	isCDN, _ := strconv.ParseBool(os.Getenv("AZURE_STORAGE_IS_CDN"))
 	isLocalEmulator, _ := strconv.ParseBool(os.Getenv("AZURE_STORAGE_IS_LOCAL_EMULATOR"))
-	accountName := os.Getenv("AZURE_STORAGE_ACCOUNT")
-	protocol := os.Getenv("AZURE_STORAGE_PROTOCOL")
-	connectionString := os.Getenv("AZURE_STORAGE_CONNECTION_STRING")
-
-	if connectionString == "" {
-		connectionString = os.Getenv("AZURE_STORAGEBLOB_CONNECTIONSTRING")
-	}
-	if connectionString != "" {
-		// Parse the connection string to get a default account name and protocol.
-		// Format: DefaultEndpointsProtocol=https;AccountName=some-account;AccountKey=very-secure;EndpointSuffix=core.windows.net
-		for part := range strings.SplitSeq(connectionString, ";") {
-			keyval := strings.Split(part, "=")
-			if len(keyval) == 2 {
-				if accountName == "" && keyval[0] == "AccountName" {
-					accountName = keyval[1]
-				} else if protocol == "" && keyval[0] == "DefaultEndpointsProtocol" {
-					protocol = keyval[1]
-				}
-			}
-		}
-	}
 	return &ServiceURLOptions{
-		AccountName:     accountName,
+		AccountName:     os.Getenv("AZURE_STORAGE_ACCOUNT"),
 		SASToken:        os.Getenv("AZURE_STORAGE_SAS_TOKEN"),
 		StorageDomain:   os.Getenv("AZURE_STORAGE_DOMAIN"),
-		Protocol:        protocol,
+		Protocol:        os.Getenv("AZURE_STORAGE_PROTOCOL"),
 		IsCDN:           isCDN,
 		IsLocalEmulator: isLocalEmulator,
 	}
@@ -330,7 +302,6 @@ const (
 	credTypeSharedKey
 	credTypeSASViaNone
 	credTypeConnectionString
-	credTypeIdentityBinding
 )
 
 type credInfoT struct {
@@ -352,7 +323,6 @@ func newCredInfoFromEnv() *credInfoT {
 	if connectionString == "" {
 		connectionString = os.Getenv("AZURE_STORAGEBLOB_CONNECTIONSTRING")
 	}
-	federatedIdentityToken := os.Getenv("AZURE_FEDERATED_TOKEN_FILE")
 	credInfo := &credInfoT{
 		AccountName: accountName,
 	}
@@ -364,8 +334,6 @@ func newCredInfoFromEnv() *credInfoT {
 	} else if connectionString != "" {
 		credInfo.CredType = credTypeConnectionString
 		credInfo.ConnectionString = connectionString
-	} else if federatedIdentityToken != "" {
-		credInfo.CredType = credTypeIdentityBinding
 	} else {
 		credInfo.CredType = credTypeDefault
 	}
@@ -384,14 +352,6 @@ func (i *credInfoT) NewClient(svcURL ServiceURL, containerName ContainerName) (*
 		return nil, err
 	}
 	switch i.CredType {
-	case credTypeIdentityBinding:
-		cred, err := azidentity.NewWorkloadIdentityCredential(&azidentity.WorkloadIdentityCredentialOptions{
-			EnableAzureProxy: true,
-		})
-		if err != nil {
-			return nil, fmt.Errorf("failed azidentity.NewWorkloadIdentityCredential: %v", err)
-		}
-		return container.NewClient(containerURL, cred, azClientOpts)
 	case credTypeDefault:
 		cred, err := azidentity.NewDefaultAzureCredential(nil)
 		if err != nil {
@@ -610,8 +570,8 @@ func (b *bucket) NewRangeReader(ctx context.Context, key string, offset, length 
 		return nil, err
 	}
 	attrs := driver.ReaderAttributes{
-		ContentType: ptrVal(blobDownloadResponse.ContentType),
-		Size:        getSize(blobDownloadResponse.ContentLength, ptrVal(blobDownloadResponse.ContentRange)),
+		ContentType: to.String(blobDownloadResponse.ContentType),
+		Size:        getSize(blobDownloadResponse.ContentLength, to.String(blobDownloadResponse.ContentRange)),
 		ModTime:     *blobDownloadResponse.LastModified,
 	}
 	var body io.ReadCloser
@@ -670,26 +630,22 @@ func (b *bucket) ErrorAs(err error, i any) bool {
 }
 
 func (b *bucket) ErrorCode(err error) gcerrors.ErrorCode {
+	if bloberror.HasCode(err, bloberror.BlobNotFound) {
+		return gcerrors.NotFound
+	}
+	if bloberror.HasCode(err, bloberror.AuthenticationFailed) {
+		return gcerrors.PermissionDenied
+	}
 	var rErr *azcore.ResponseError
 	if errors.As(err, &rErr) {
-		switch bloberror.Code(rErr.ErrorCode) {
-		case bloberror.AuthenticationFailed:
-			return gcerrors.PermissionDenied
-		case bloberror.BlobAlreadyExists,
-			bloberror.ConditionNotMet,
-			bloberror.TargetConditionNotMet,
-			bloberror.SourceConditionNotMet:
-			// the documented error code is a variation of "ConditionNotMet", but "BlobAlreadyExists" has also been observed
-			return gcerrors.FailedPrecondition
-		case bloberror.BlobNotFound:
+		code := bloberror.Code(rErr.ErrorCode)
+		if code == bloberror.BlobNotFound || rErr.StatusCode == 404 {
 			return gcerrors.NotFound
 		}
-
-		if rErr.StatusCode == http.StatusNotFound {
-			return gcerrors.NotFound
+		if code == bloberror.AuthenticationFailed {
+			return gcerrors.PermissionDenied
 		}
 	}
-
 	if strings.Contains(err.Error(), "no such host") {
 		// This happens with an invalid storage account name; the host
 		// is something like invalidstorageaccount.blob.core.windows.net.
@@ -720,12 +676,12 @@ func (b *bucket) Attributes(ctx context.Context, key string) (*driver.Attributes
 		eTag = string(*blobPropertiesResponse.ETag)
 	}
 	return &driver.Attributes{
-		CacheControl:       ptrVal(blobPropertiesResponse.CacheControl),
-		ContentDisposition: ptrVal(blobPropertiesResponse.ContentDisposition),
-		ContentEncoding:    ptrVal(blobPropertiesResponse.ContentEncoding),
-		ContentLanguage:    ptrVal(blobPropertiesResponse.ContentLanguage),
-		ContentType:        ptrVal(blobPropertiesResponse.ContentType),
-		Size:               ptrVal(blobPropertiesResponse.ContentLength),
+		CacheControl:       to.String(blobPropertiesResponse.CacheControl),
+		ContentDisposition: to.String(blobPropertiesResponse.ContentDisposition),
+		ContentEncoding:    to.String(blobPropertiesResponse.ContentEncoding),
+		ContentLanguage:    to.String(blobPropertiesResponse.ContentLanguage),
+		ContentType:        to.String(blobPropertiesResponse.ContentType),
+		Size:               to.Int64(blobPropertiesResponse.ContentLength),
 		CreateTime:         *blobPropertiesResponse.CreationTime,
 		ModTime:            *blobPropertiesResponse.LastModified,
 		MD5:                blobPropertiesResponse.ContentMD5,
@@ -784,8 +740,9 @@ func (b *bucket) ListPaged(ctx context.Context, opts *driver.ListOptions) (*driv
 	page.Objects = []*driver.ListObject{}
 	segment := resp.ListBlobsHierarchySegmentResponse.Segment
 	for _, blobPrefix := range segment.BlobPrefixes {
+		blobPrefix := blobPrefix // capture loop variable for use in AsFunc
 		page.Objects = append(page.Objects, &driver.ListObject{
-			Key:   unescapeKey(ptrVal(blobPrefix.Name)),
+			Key:   unescapeKey(to.String(blobPrefix.Name)),
 			Size:  0,
 			IsDir: true,
 			AsFunc: func(i any) bool {
@@ -798,8 +755,9 @@ func (b *bucket) ListPaged(ctx context.Context, opts *driver.ListOptions) (*driv
 		})
 	}
 	for _, blobInfo := range segment.BlobItems {
+		blobInfo := blobInfo // capture loop variable for use in AsFunc
 		page.Objects = append(page.Objects, &driver.ListObject{
-			Key:     unescapeKey(ptrVal(blobInfo.Name)),
+			Key:     unescapeKey(to.String(blobInfo.Name)),
 			ModTime: *blobInfo.Properties.LastModified,
 			Size:    *blobInfo.Properties.ContentLength,
 			MD5:     blobInfo.Properties.ContentMD5,
@@ -954,14 +912,6 @@ func (b *bucket) NewTypedWriter(ctx context.Context, key, contentType string, op
 			BlobContentMD5:         opts.ContentMD5,
 			BlobContentType:        &contentType,
 		},
-	}
-	if opts.IfNotExist {
-		etagAny := azcore.ETagAny
-		uploadOpts.AccessConditions = &azblob.AccessConditions{
-			ModifiedAccessConditions: &azblobblob.ModifiedAccessConditions{
-				IfNoneMatch: &etagAny,
-			},
-		}
 	}
 	if opts.BeforeWrite != nil {
 		asFunc := func(i any) bool {
