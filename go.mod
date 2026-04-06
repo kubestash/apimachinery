@@ -254,6 +254,4 @@ require (
 
 replace github.com/imdario/mergo => github.com/imdario/mergo v0.3.6
 
-replace gomodules.xyz/restic => github.com/gomodules/restic v0.0.0-20260127113541-2bdea1940793
-
 replace github.com/Azure/azure-sdk-for-go/sdk/azidentity => github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.14.0-beta.3

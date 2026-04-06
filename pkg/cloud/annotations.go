@@ -19,8 +19,10 @@ package cloud
 import (
 	"context"
 	"fmt"
+	"maps"
 	"sort"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/apis/core/v1alpha1"
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
@@ -182,22 +184,20 @@ func addAnnotationsToServiceAccount(ctx context.Context, kbClient client.Client,
 		return nil
 	}
 
-	jobAnnotations, err := getLatestSuccessfulBackupJobAnnotations(ctx, kbClient, bcRef)
+	saAnnotations, err := getLatestBackupSAAnnotations(ctx, kbClient, bcRef)
 	if err != nil {
 		return fmt.Errorf("failed to fetch annotations from latest successful backup: %w", err)
 	}
-	annotations, err := getRequiredAnnotations(bs, jobAnnotations)
+	reqAnnotations, err := getRequiredAnnotations(bs, saAnnotations)
 	if err != nil {
 		return fmt.Errorf("failed to annotate required cloud annotations: %w", err)
 	}
 	_, err = kmc.Patch(ctx, kbClient, sa, func(obj client.Object) client.Object {
 		in := obj.(*core.ServiceAccount)
 		if in.Annotations == nil {
-			in.Annotations = map[string]string{}
+			in.Annotations = make(map[string]string)
 		}
-		for k, v := range annotations {
-			in.Annotations[k] = v
-		}
+		maps.Copy(in.Annotations, reqAnnotations)
 		return in
 	})
 	if err != nil {
@@ -214,12 +214,34 @@ func hasRequiredCloudAnnotations(bs *storageapi.BackupStorage, sa *core.ServiceA
 	return false
 }
 
-func getLatestSuccessfulBackupJobAnnotations(ctx context.Context, kbClient client.Client, bcRef *kmapi.ObjectReference) (map[string]string, error) {
+func getLatestBackupSAAnnotations(ctx context.Context, kbClient client.Client, bcRef *kmapi.ObjectReference) (map[string]string, error) {
 	session, err := findLatestSuccessfulBackupSession(ctx, kbClient, bcRef)
 	if err != nil {
 		return nil, err
 	}
-	return getBackupJobAnnotations(ctx, kbClient, session)
+	job, err := getBackupJobFromSession(ctx, kbClient, session)
+	if err != nil {
+		return nil, err
+	}
+	sa, err := getSAFromJob(ctx, kbClient, job)
+	if err != nil {
+		return nil, err
+	}
+	return sa.Annotations, nil
+
+}
+
+func getSAFromJob(ctx context.Context, kbClient client.Client, job *batchv1.Job) (*core.ServiceAccount, error) {
+	sa := &core.ServiceAccount{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: job.Namespace,
+			Name:      job.Spec.Template.Spec.ServiceAccountName,
+		},
+	}
+	if err := kbClient.Get(ctx, client.ObjectKeyFromObject(sa), sa); err != nil {
+		return nil, fmt.Errorf("failed to get service account %s/%s: %w", sa.Namespace, sa.Name, err)
+	}
+	return sa, nil
 }
 
 func findLatestSuccessfulBackupSession(ctx context.Context, kbClient client.Client, bcRef *kmapi.ObjectReference) (*v1alpha1.BackupSession, error) {
@@ -249,7 +271,7 @@ func findLatestSuccessfulBackupSession(ctx context.Context, kbClient client.Clie
 		bcRef.Namespace, bcRef.Name)
 }
 
-func getBackupJobAnnotations(ctx context.Context, kbClient client.Client, session *v1alpha1.BackupSession) (map[string]string, error) {
+func getBackupJobFromSession(ctx context.Context, kbClient client.Client, session *v1alpha1.BackupSession) (*batchv1.Job, error) {
 	list := &batchv1.JobList{}
 	opts := []client.ListOption{
 		client.MatchingLabels{
@@ -269,8 +291,7 @@ func getBackupJobAnnotations(ctx context.Context, kbClient client.Client, sessio
 		return nil, fmt.Errorf("no backup jobs found for session %s/%s",
 			session.Namespace, session.Name)
 	}
-
-	return list.Items[0].Annotations, nil
+	return &list.Items[0], nil
 }
 
 func getAWSAnnotations(source map[string]string) (map[string]string, error) {
