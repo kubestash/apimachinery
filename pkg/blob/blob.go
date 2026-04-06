@@ -56,6 +56,7 @@ const (
 	credentialsDir               = apis.TempDirMountPath + "/credentials"
 	azureStorageAccount          = "AZURE_STORAGE_ACCOUNT"
 	azureStorageKey              = "AZURE_STORAGE_KEY"
+	AzureFederatedTokenFile      = "AZURE_FEDERATED_TOKEN_FILE"
 	googleServiceAccountJsonKey  = "GOOGLE_SERVICE_ACCOUNT_JSON_KEY"
 	googleApplicationCredentials = "GOOGLE_APPLICATION_CREDENTIALS"
 	azureAccountKey              = "AZURE_ACCOUNT_KEY"
@@ -420,33 +421,14 @@ func (b *Blob) openBucketWithDebug(ctx context.Context, dir string, debug bool) 
 		if err != nil {
 			return nil, err
 		}
-	} else if b.backupStorage.Spec.Storage.Provider == storageapi.ProviderAzure {
-		federatedTokenFile := os.Getenv("AZURE_FEDERATED_TOKEN_FILE")
-		if federatedTokenFile == "" {
-			bucket, err = blob.OpenBucket(ctx, b.storageURL)
-			if err != nil {
-				return nil, err
-			}
-		} else {
-			storageAccountName := b.backupStorage.Spec.Storage.Azure.StorageAccount
-			containerName := b.backupStorage.Spec.Storage.Azure.Container
-			accountURL := fmt.Sprintf("https://%s.blob.core.windows.net", storageAccountName)
-
-			cred, err := azidentity.NewWorkloadIdentityCredential(&azidentity.WorkloadIdentityCredentialOptions{
-				EnableAzureProxy: true,
-			})
-			if err != nil {
-				return nil, fmt.Errorf("failed to create workload identity credential: %w", err)
-			}
-
-			containerClient, err := container.NewClient(accountURL+"/"+containerName, cred, nil)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create container client: %w", err)
-			}
-			bucket, err = azureblob.OpenBucket(ctx, containerClient, nil)
-			if err != nil {
-				return nil, err
-			}
+	} else if b.backupStorage.Spec.Storage.Provider == storageapi.ProviderAzure && os.Getenv(AzureFederatedTokenFile) == "" {
+		azClient, err := b.getAzureClient()
+		if err != nil {
+			return nil, fmt.Errorf("failed to create azure container client: %w", err)
+		}
+		bucket, err = azureblob.OpenBucket(ctx, azClient, nil)
+		if err != nil {
+			return nil, err
 		}
 	} else {
 		bucket, err = blob.OpenBucket(ctx, b.storageURL)
@@ -516,6 +498,21 @@ func (b *Blob) getS3Config(ctx context.Context, debug bool) (aws2.Config, error)
 	loadOptions = append(loadOptions, config.WithResponseChecksumValidation(aws2.ResponseChecksumValidationWhenRequired))
 
 	return config.LoadDefaultConfig(ctx, loadOptions...)
+}
+
+func (b *Blob) getAzureClient() (*container.Client, error) {
+	storageAccountName := b.backupStorage.Spec.Storage.Azure.StorageAccount
+	containerName := b.backupStorage.Spec.Storage.Azure.Container
+	accountURL := fmt.Sprintf("https://%s.blob.core.windows.net", storageAccountName)
+
+	cred, err := azidentity.NewWorkloadIdentityCredential(&azidentity.WorkloadIdentityCredentialOptions{
+		EnableAzureProxy: true,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to create workload identity credential: %w", err)
+	}
+
+	return container.NewClient(accountURL+"/"+containerName, cred, nil)
 }
 
 func (b *Blob) GetS3Credentials(ctx context.Context, debug bool) (*aws2.Credentials, error) {
