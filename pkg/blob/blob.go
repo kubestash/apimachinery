@@ -27,22 +27,24 @@ import (
 	"path"
 	"strings"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"k8s.io/klog/v2"
 	"kubestash.dev/apimachinery/apis"
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"kubestash.dev/apimachinery/pkg/workerpool"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
 	aws2 "github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"gocloud.dev/blob"
-	_ "gocloud.dev/blob/azureblob"
+	"gocloud.dev/blob/azureblob"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/gcsblob"
 	"gocloud.dev/blob/s3blob"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
@@ -54,6 +56,7 @@ const (
 	credentialsDir               = apis.TempDirMountPath + "/credentials"
 	azureStorageAccount          = "AZURE_STORAGE_ACCOUNT"
 	azureStorageKey              = "AZURE_STORAGE_KEY"
+	AzureFederatedTokenFile      = "AZURE_FEDERATED_TOKEN_FILE"
 	googleServiceAccountJsonKey  = "GOOGLE_SERVICE_ACCOUNT_JSON_KEY"
 	googleApplicationCredentials = "GOOGLE_APPLICATION_CREDENTIALS"
 	azureAccountKey              = "AZURE_ACCOUNT_KEY"
@@ -418,6 +421,15 @@ func (b *Blob) openBucketWithDebug(ctx context.Context, dir string, debug bool) 
 		if err != nil {
 			return nil, err
 		}
+	} else if b.backupStorage.Spec.Storage.Provider == storageapi.ProviderAzure && os.Getenv(AzureFederatedTokenFile) == "" {
+		azClient, err := b.getAzureClient()
+		if err != nil {
+			return nil, fmt.Errorf("failed to create azure container client: %w", err)
+		}
+		bucket, err = azureblob.OpenBucket(ctx, azClient, nil)
+		if err != nil {
+			return nil, err
+		}
 	} else {
 		bucket, err = blob.OpenBucket(ctx, b.storageURL)
 		if err != nil {
@@ -486,6 +498,21 @@ func (b *Blob) getS3Config(ctx context.Context, debug bool) (aws2.Config, error)
 	loadOptions = append(loadOptions, config.WithResponseChecksumValidation(aws2.ResponseChecksumValidationWhenRequired))
 
 	return config.LoadDefaultConfig(ctx, loadOptions...)
+}
+
+func (b *Blob) getAzureClient() (*container.Client, error) {
+	storageAccountName := b.backupStorage.Spec.Storage.Azure.StorageAccount
+	containerName := b.backupStorage.Spec.Storage.Azure.Container
+	accountURL := fmt.Sprintf("https://%s.blob.core.windows.net", storageAccountName)
+
+	cred, err := azidentity.NewWorkloadIdentityCredential(&azidentity.WorkloadIdentityCredentialOptions{
+		EnableAzureProxy: true,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to create workload identity credential: %w", err)
+	}
+
+	return container.NewClient(accountURL+"/"+containerName, cred, nil)
 }
 
 func (b *Blob) GetS3Credentials(ctx context.Context, debug bool) (*aws2.Credentials, error) {
