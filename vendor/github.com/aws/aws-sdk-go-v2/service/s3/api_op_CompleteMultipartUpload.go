@@ -131,10 +131,6 @@ import (
 //
 // [ListMultipartUploads]
 //
-// You must URL encode any signed header values that contain spaces. For example,
-// if your header value is my file.txt , containing two spaces after my , you must
-// URL encode this value to my%20%20file.txt .
-//
 // [Uploading Objects Using Multipart Upload]: https://docs.aws.amazon.com/AmazonS3/latest/dev/uploadobjusingmpu.html
 // [Amazon S3 Error Best Practices]: https://docs.aws.amazon.com/AmazonS3/latest/dev/ErrorBestPractices.html
 // [Concepts for directory buckets in Local Zones]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-lzs-for-directory-buckets.html
@@ -177,18 +173,17 @@ type CompleteMultipartUploadInput struct {
 	// amzn-s3-demo-bucket--usw2-az1--x-s3 ). For information about bucket naming
 	// restrictions, see [Directory bucket naming rules]in the Amazon S3 User Guide.
 	//
-	// Access points - When you use this action with an access point for general
-	// purpose buckets, you must provide the alias of the access point in place of the
-	// bucket name or specify the access point ARN. When you use this action with an
-	// access point for directory buckets, you must provide the access point name in
-	// place of the bucket name. When using the access point ARN, you must direct
-	// requests to the access point hostname. The access point hostname takes the form
+	// Access points - When you use this action with an access point, you must provide
+	// the alias of the access point in place of the bucket name or specify the access
+	// point ARN. When using the access point ARN, you must direct requests to the
+	// access point hostname. The access point hostname takes the form
 	// AccessPointName-AccountId.s3-accesspoint.Region.amazonaws.com. When using this
 	// action with an access point through the Amazon Web Services SDKs, you provide
 	// the access point ARN in place of the bucket name. For more information about
 	// access point ARNs, see [Using access points]in the Amazon S3 User Guide.
 	//
-	// Object Lambda access points are not supported by directory buckets.
+	// Access points and Object Lambda access points are not supported by directory
+	// buckets.
 	//
 	// S3 on Outposts - When you use this action with S3 on Outposts, you must direct
 	// requests to the S3 on Outposts hostname. The S3 on Outposts hostname takes the
@@ -314,8 +309,9 @@ type CompleteMultipartUploadInput struct {
 	// Confirms that the requester knows that they will be charged for the request.
 	// Bucket owners need not specify this parameter in their requests. If either the
 	// source or destination S3 bucket has Requester Pays enabled, the requester will
-	// pay for the corresponding charges. For information about downloading objects
-	// from Requester Pays buckets, see [Downloading Objects in Requester Pays Buckets]in the Amazon S3 User Guide.
+	// pay for corresponding charges to copy the object. For information about
+	// downloading objects from Requester Pays buckets, see [Downloading Objects in Requester Pays Buckets]in the Amazon S3 User
+	// Guide.
 	//
 	// This functionality is not supported for directory buckets.
 	//
@@ -373,7 +369,7 @@ type CompleteMultipartUploadOutput struct {
 	BucketKeyEnabled *bool
 
 	// The Base64 encoded, 32-bit CRC32 checksum of the object. This checksum is only
-	// present if the checksum was uploaded with the object. When you use an API
+	// be present if the checksum was uploaded with the object. When you use an API
 	// operation on an object that was uploaded using multipart uploads, this value may
 	// not be a direct checksum value of the full object. Instead, it's a calculation
 	// based on the checksum values of each individual part. For more information about
@@ -402,8 +398,8 @@ type CompleteMultipartUploadOutput struct {
 	// [Checking object integrity in the Amazon S3 User Guide]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
 	ChecksumCRC64NVME *string
 
-	// The Base64 encoded, 160-bit SHA1 digest of the object. This checksum is only
-	// present if the checksum was uploaded with the object. When you use the API
+	// The Base64 encoded, 160-bit SHA1 digest of the object. This will only be
+	// present if the object was uploaded with the object. When you use the API
 	// operation on an object that was uploaded using multipart uploads, this value may
 	// not be a direct checksum value of the full object. Instead, it's a calculation
 	// based on the checksum values of each individual part. For more information about
@@ -413,8 +409,8 @@ type CompleteMultipartUploadOutput struct {
 	// [Checking object integrity]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html#large-object-checksums
 	ChecksumSHA1 *string
 
-	// The Base64 encoded, 256-bit SHA256 digest of the object. This checksum is only
-	// present if the checksum was uploaded with the object. When you use an API
+	// The Base64 encoded, 256-bit SHA256 digest of the object. This will only be
+	// present if the object was uploaded with the object. When you use an API
 	// operation on an object that was uploaded using multipart uploads, this value may
 	// not be a direct checksum value of the full object. Instead, it's a calculation
 	// based on the checksum values of each individual part. For more information about
@@ -457,21 +453,16 @@ type CompleteMultipartUploadOutput struct {
 	Location *string
 
 	// If present, indicates that the requester was successfully charged for the
-	// request. For more information, see [Using Requester Pays buckets for storage transfers and usage]in the Amazon Simple Storage Service user
-	// guide.
+	// request.
 	//
 	// This functionality is not supported for directory buckets.
-	//
-	// [Using Requester Pays buckets for storage transfers and usage]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/RequesterPaysBuckets.html
 	RequestCharged types.RequestCharged
 
 	// If present, indicates the ID of the KMS key that was used for object encryption.
 	SSEKMSKeyId *string
 
-	// The server-side encryption algorithm used when storing this object in Amazon S3.
-	//
-	// When accessing data stored in Amazon FSx file systems using S3 access points,
-	// the only valid server side encryption option is aws:fsx .
+	// The server-side encryption algorithm used when storing this object in Amazon S3
+	// (for example, AES256 , aws:kms ).
 	ServerSideEncryption types.ServerSideEncryption
 
 	// Version ID of the newly created object, in case the bucket has versioning
@@ -595,13 +586,16 @@ func (c *Client) addOperationCompleteMultipartUploadMiddlewares(stack *middlewar
 	if err = addSerializeImmutableHostnameBucketMiddleware(stack, options); err != nil {
 		return err
 	}
-	if err = addInterceptBeforeRetryLoop(stack, options); err != nil {
+	if err = addSpanInitializeStart(stack); err != nil {
 		return err
 	}
-	if err = addInterceptAttempt(stack, options); err != nil {
+	if err = addSpanInitializeEnd(stack); err != nil {
 		return err
 	}
-	if err = addInterceptors(stack, options); err != nil {
+	if err = addSpanBuildRequestStart(stack); err != nil {
+		return err
+	}
+	if err = addSpanBuildRequestEnd(stack); err != nil {
 		return err
 	}
 	return nil

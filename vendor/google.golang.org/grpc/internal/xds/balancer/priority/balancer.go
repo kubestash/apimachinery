@@ -121,7 +121,8 @@ func (b *priorityBalancer) UpdateClientConnState(s balancer.ClientConnState) err
 	if !ok {
 		return fmt.Errorf("unexpected balancer config with type: %T", s.BalancerConfig)
 	}
-	endpointsSplit := hierarchy.Group(s.ResolverState.Endpoints)
+	addressesSplit := hierarchy.Group(s.ResolverState.Addresses)
+	endpointsSplit := hierarchy.GroupEndpoints(s.ResolverState.Endpoints)
 
 	b.mu.Lock()
 	// Create and remove children, since we know all children from the config
@@ -140,6 +141,7 @@ func (b *priorityBalancer) UpdateClientConnState(s balancer.ClientConnState) err
 			// priority. If necessary, it will be built when syncing priorities.
 			cb := newChildBalancer(name, b, bb.Name(), b.cc)
 			cb.updateConfig(newSubConfig, resolver.State{
+				Addresses:     addressesSplit[name],
 				Endpoints:     endpointsSplit[name],
 				ServiceConfig: s.ResolverState.ServiceConfig,
 				Attributes:    s.ResolverState.Attributes,
@@ -161,6 +163,7 @@ func (b *priorityBalancer) UpdateClientConnState(s balancer.ClientConnState) err
 		// updates to non-started child balancers (the child balancer might not
 		// be built, if it's a low priority).
 		currentChild.updateConfig(newSubConfig, resolver.State{
+			Addresses:     addressesSplit[name],
 			Endpoints:     endpointsSplit[name],
 			ServiceConfig: s.ResolverState.ServiceConfig,
 			Attributes:    s.ResolverState.Attributes,

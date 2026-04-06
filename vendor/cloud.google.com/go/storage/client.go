@@ -16,6 +16,7 @@ package storage
 
 import (
 	"context"
+	"io"
 	"time"
 
 	"cloud.google.com/go/iam/apiv1/iampb"
@@ -87,7 +88,7 @@ type storageClient interface {
 	RewriteObject(ctx context.Context, req *rewriteObjectRequest, opts ...storageOption) (*rewriteObjectResponse, error)
 
 	NewRangeReader(ctx context.Context, params *newRangeReaderParams, opts ...storageOption) (*Reader, error)
-	OpenWriter(params *openWriterParams, opts ...storageOption) (internalWriter, error)
+	OpenWriter(params *openWriterParams, opts ...storageOption) (*io.PipeWriter, error)
 
 	// IAM methods.
 
@@ -256,25 +257,15 @@ type openWriterParams struct {
 	// conds - see `Writer.o.conds`.
 	// Optional.
 	conds *Conditions
-	// appendGen -- object generation to write to.
-	// Optional; required for taking over appendable objects only
-	appendGen int64
 	// encryptionKey - see `Writer.o.encryptionKey`
 	// Optional.
 	encryptionKey []byte
 	// sendCRC32C - see `Writer.SendCRC32C`.
 	// Optional.
 	sendCRC32C bool
-	// disableAutoChecksum - see `Writer.DisableAutoChecksum`.
-	// Optional.
-	disableAutoChecksum bool
 	// append - Write with appendable object semantics.
 	// Optional.
 	append bool
-	// finalizeOnClose - Finalize the object when the storage.Writer is closed
-	// successfully.
-	// Optional.
-	finalizeOnClose bool
 
 	// Writer callbacks
 
@@ -290,10 +281,11 @@ type openWriterParams struct {
 	// setObj callback for reporting the resulting object - see `Writer.obj`.
 	// Required.
 	setObj func(*ObjectAttrs)
-	// setSize callback for updated the persisted size in Writer.obj.
-	setSize func(int64)
-	// setTakeoverOffset callback for returning offset to start writing from to Writer.
-	setTakeoverOffset func(int64)
+	// setFlush callback for providing a Flush function implementation - see `Writer.Flush`.
+	// Required.
+	setFlush func(func() (int64, error))
+	// setPipeWriter callback for reseting `Writer.pw` if needed.
+	setPipeWriter func(*io.PipeWriter)
 }
 
 type newMultiRangeDownloaderParams struct {
@@ -303,12 +295,6 @@ type newMultiRangeDownloaderParams struct {
 	gen           int64
 	object        string
 	handle        *ReadHandle
-
-	// Multistream settings.
-	minConnections      int
-	maxConnections      int
-	targetPendingRanges int
-	targetPendingBytes  int
 }
 
 type newRangeReaderParams struct {

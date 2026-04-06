@@ -28,8 +28,6 @@ import (
 	"google.golang.org/grpc/serviceconfig"
 )
 
-var timeAfterFunc = time.AfterFunc
-
 type childBalancer struct {
 	name         string
 	parent       *priorityBalancer
@@ -150,7 +148,7 @@ func (cb *childBalancer) startInitTimer() {
 	// to check the stopped boolean.
 	timerW := &timerWrapper{}
 	cb.initTimer = timerW
-	timerW.timer = timeAfterFunc(DefaultPriorityInitTimeout, func() {
+	timerW.timer = time.AfterFunc(DefaultPriorityInitTimeout, func() {
 		cb.parent.mu.Lock()
 		defer cb.parent.mu.Unlock()
 		if timerW.stopped {

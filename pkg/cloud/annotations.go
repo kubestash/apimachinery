@@ -19,9 +19,13 @@ package cloud
 import (
 	"context"
 	"fmt"
+	"sort"
 
+	"kubestash.dev/apimachinery/apis"
+	"kubestash.dev/apimachinery/apis/core/v1alpha1"
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 
+	batchv1 "k8s.io/api/batch/v1"
 	core "k8s.io/api/core/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	kmc "kmodules.xyz/client-go/client"
@@ -236,7 +240,7 @@ func findLatestSuccessfulBackupSession(ctx context.Context, kbClient client.Clie
 
 	for i := range list.Items {
 		session := &list.Items[i]
-		if session.Spec.Session == sessionFullBackup &&
+		if session.Spec.Session == apis.SessionFullBackup &&
 			session.Status.Phase == v1alpha1.BackupSessionSucceeded {
 			return session, nil
 		}
@@ -249,7 +253,7 @@ func getBackupJobAnnotations(ctx context.Context, kbClient client.Client, sessio
 	list := &batchv1.JobList{}
 	opts := []client.ListOption{
 		client.MatchingLabels{
-			apis.KubeStashSessionName:      sessionFullBackup,
+			apis.KubeStashSessionName:      apis.SessionFullBackup,
 			meta.ComponentLabelKey:         apis.KubeStashBackupComponent,
 			apis.KubeStashInvokerName:      session.Name,
 			apis.KubeStashInvokerNamespace: session.Namespace,

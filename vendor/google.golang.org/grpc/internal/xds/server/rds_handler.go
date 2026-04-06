@@ -135,7 +135,7 @@ type rdsWatcher struct {
 	canceled bool // eats callbacks if true
 }
 
-func (rw *rdsWatcher) ResourceChanged(update *xdsresource.RouteConfigUpdate, onDone func()) {
+func (rw *rdsWatcher) ResourceChanged(update *xdsresource.RouteConfigResourceData, onDone func()) {
 	defer onDone()
 	rw.mu.Lock()
 	if rw.canceled {
@@ -144,11 +144,11 @@ func (rw *rdsWatcher) ResourceChanged(update *xdsresource.RouteConfigUpdate, onD
 	}
 	rw.mu.Unlock()
 	if rw.logger.V(2) {
-		rw.logger.Infof("RDS watch for resource %q received update: %#v", rw.routeName, update)
+		rw.logger.Infof("RDS watch for resource %q received update: %#v", rw.routeName, update.Resource)
 	}
 
 	routeName := rw.routeName
-	rwu := rdsWatcherUpdate{data: update}
+	rwu := rdsWatcherUpdate{data: &update.Resource}
 	rw.parent.updates[routeName] = rwu
 	rw.parent.callback(routeName, rwu)
 }

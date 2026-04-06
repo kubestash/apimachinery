@@ -33,7 +33,6 @@ import (
 
 	"google.golang.org/grpc/balancer"
 	"google.golang.org/grpc/connectivity"
-	estats "google.golang.org/grpc/experimental/stats"
 	"google.golang.org/grpc/internal/balancer/gracefulswitch"
 	"google.golang.org/grpc/internal/buffer"
 	"google.golang.org/grpc/internal/channelz"
@@ -53,24 +52,6 @@ var (
 // Name is the name of the outlier detection balancer.
 const Name = "outlier_detection_experimental"
 
-var (
-	ejectionsEnforcedMetric = estats.RegisterInt64Count(estats.MetricDescriptor{
-		Name:        "grpc.lb.outlier_detection.ejections_enforced",
-		Description: "EXPERIMENTAL. Number of outlier ejections enforced by detection method",
-		Unit:        "{ejection}",
-		Labels:      []string{"grpc.target", "grpc.lb.outlier_detection.detection_method"},
-		Default:     false,
-	})
-
-	ejectionsUnenforcedMetric = estats.RegisterInt64Count(estats.MetricDescriptor{
-		Name:        "grpc.lb.outlier_detection.ejections_unenforced",
-		Description: "EXPERIMENTAL. Number of unenforced outlier ejections due to either `max_ejection_percentage` or `enforcement_percentage`",
-		Unit:        "{ejection}",
-		Labels:      []string{"grpc.target", "grpc.lb.outlier_detection.detection_method", "grpc.lb.outlier_detection.unenforced_reason"},
-		Default:     false,
-	})
-)
-
 func init() {
 	balancer.Register(bb{})
 }
@@ -79,16 +60,14 @@ type bb struct{}
 
 func (bb) Build(cc balancer.ClientConn, bOpts balancer.BuildOptions) balancer.Balancer {
 	b := &outlierDetectionBalancer{
-		ClientConn:      cc,
-		closed:          grpcsync.NewEvent(),
-		done:            grpcsync.NewEvent(),
-		addrs:           make(map[string]*endpointInfo),
-		scUpdateCh:      buffer.NewUnbounded(),
-		pickerUpdateCh:  buffer.NewUnbounded(),
-		channelzParent:  bOpts.ChannelzParent,
-		endpoints:       resolver.NewEndpointMap[*endpointInfo](),
-		metricsRecorder: cc.MetricsRecorder(), // we use an explicit field instead of using cc.MetricsRecorder() so we can override the metric recorder in tests.
-		target:          bOpts.Target.String(),
+		ClientConn:     cc,
+		closed:         grpcsync.NewEvent(),
+		done:           grpcsync.NewEvent(),
+		addrs:          make(map[string]*endpointInfo),
+		scUpdateCh:     buffer.NewUnbounded(),
+		pickerUpdateCh: buffer.NewUnbounded(),
+		channelzParent: bOpts.ChannelzParent,
+		endpoints:      resolver.NewEndpointMap[*endpointInfo](),
 	}
 	b.logger = prefixLogger(b)
 	b.logger.Infof("Created")
@@ -190,12 +169,10 @@ type outlierDetectionBalancer struct {
 	// to suppress redundant picker updates.
 	recentPickerNoop bool
 
-	closed          *grpcsync.Event
-	done            *grpcsync.Event
-	logger          *grpclog.PrefixLogger
-	channelzParent  channelz.Identifier
-	metricsRecorder estats.MetricsRecorder
-	target          string
+	closed         *grpcsync.Event
+	done           *grpcsync.Event
+	logger         *grpclog.PrefixLogger
+	channelzParent channelz.Identifier
 
 	child synchronizingBalancerWrapper
 
@@ -457,11 +434,19 @@ func incrementCounter(sc balancer.SubConn, info balancer.DoneInfo) {
 		return
 	}
 
-	// After reading callCounter.activeBucket in this picker a swap call can
-	// concurrently change what activeBucket points to. A50 says to swap the
-	// pointer, which will cause this race to write to deprecated memory the
-	// interval timer algorithm will never read, which makes this race alright.
-	epInfo := scw.endpointInfo
+	// scw.endpointInfo and callCounter.activeBucket can be written to
+	// concurrently (the pointers themselves). Thus, protect the reads here with
+	// atomics to prevent data corruption. There exists a race in which you read
+	// the endpointInfo or active bucket pointer and then that pointer points to
+	// deprecated memory. If this goroutine yields the processor, in between
+	// reading the endpointInfo pointer and writing to the active bucket,
+	// UpdateAddresses can switch the endpointInfo the scw points to. Writing to
+	// an outdated endpoint is a very small race and tolerable. After reading
+	// callCounter.activeBucket in this picker a swap call can concurrently
+	// change what activeBucket points to. A50 says to swap the pointer, which
+	// will cause this race to write to deprecated memory the interval timer
+	// algorithm will never read, which makes this race alright.
+	epInfo := scw.endpointInfo.Load()
 	if epInfo == nil {
 		return
 	}
@@ -502,7 +487,7 @@ func (b *outlierDetectionBalancer) NewSubConn(addrs []resolver.Address, opts bal
 		return scw, nil
 	}
 	epInfo.sws = append(epInfo.sws, scw)
-	scw.endpointInfo = epInfo
+	scw.endpointInfo.Store(epInfo)
 	if !epInfo.latestEjectionTimestamp.IsZero() {
 		scw.eject()
 	}
@@ -513,12 +498,28 @@ func (b *outlierDetectionBalancer) RemoveSubConn(sc balancer.SubConn) {
 	b.logger.Errorf("RemoveSubConn(%v) called unexpectedly", sc)
 }
 
+// appendIfPresent appends the scw to the endpoint, if the address is present in
+// the Outlier Detection balancers address map. Returns nil if not present, and
+// the map entry if present.
+//
+// Caller must hold b.mu.
+func (b *outlierDetectionBalancer) appendIfPresent(addr string, scw *subConnWrapper) *endpointInfo {
+	epInfo, ok := b.addrs[addr]
+	if !ok {
+		return nil
+	}
+
+	epInfo.sws = append(epInfo.sws, scw)
+	scw.endpointInfo.Store(epInfo)
+	return epInfo
+}
+
 // removeSubConnFromEndpointMapEntry removes the scw from its map entry if
 // present.
 //
 // Caller must hold b.mu.
 func (b *outlierDetectionBalancer) removeSubConnFromEndpointMapEntry(scw *subConnWrapper) {
-	epInfo := scw.endpointInfo
+	epInfo := scw.endpointInfo.Load()
 	if epInfo == nil {
 		return
 	}
@@ -530,20 +531,61 @@ func (b *outlierDetectionBalancer) removeSubConnFromEndpointMapEntry(scw *subCon
 	}
 }
 
-func (b *outlierDetectionBalancer) UpdateAddresses(sc balancer.SubConn, _ []resolver.Address) {
-	b.logger.Errorf("UpdateAddresses(%v) called unexpectedly", sc)
+func (b *outlierDetectionBalancer) UpdateAddresses(sc balancer.SubConn, addrs []resolver.Address) {
+	scw, ok := sc.(*subConnWrapper)
+	if !ok {
+		// Return, shouldn't happen if passed up scw
+		return
+	}
+
+	b.ClientConn.UpdateAddresses(scw.SubConn, addrs)
+	b.mu.Lock()
+	defer b.mu.Unlock()
+
+	// Note that 0 addresses is a valid update/state for a SubConn to be in.
+	// This is correctly handled by this algorithm (handled as part of a non singular
+	// old address/new address).
+	switch {
+	case len(scw.addresses) == 1 && len(addrs) == 1: // single address to single address
+		// If the updated address is the same, then there is nothing to do
+		// past this point.
+		if scw.addresses[0].Addr == addrs[0].Addr {
+			return
+		}
+		b.removeSubConnFromEndpointMapEntry(scw)
+		endpointInfo := b.appendIfPresent(addrs[0].Addr, scw)
+		if endpointInfo == nil { // uneject unconditionally because could have come from an ejected endpoint
+			scw.uneject()
+			break
+		}
+		if endpointInfo.latestEjectionTimestamp.IsZero() { // relay new updated subconn state
+			scw.uneject()
+		} else {
+			scw.eject()
+		}
+	case len(scw.addresses) == 1: // single address to multiple/no addresses
+		b.removeSubConnFromEndpointMapEntry(scw)
+		addrInfo := scw.endpointInfo.Load()
+		if addrInfo != nil {
+			addrInfo.callCounter.clear()
+		}
+		scw.uneject()
+	case len(addrs) == 1: // multiple/no addresses to single address
+		endpointInfo := b.appendIfPresent(addrs[0].Addr, scw)
+		if endpointInfo != nil && !endpointInfo.latestEjectionTimestamp.IsZero() {
+			scw.eject()
+		}
+	} // otherwise multiple/no addresses to multiple/no addresses; ignore
+
+	scw.addresses = addrs
 }
 
-// handleSubConnUpdate stores the recent state and forward the update.
+// handleSubConnUpdate stores the recent state and forward the update
+// if the SubConn is not ejected.
 func (b *outlierDetectionBalancer) handleSubConnUpdate(u *scUpdate) {
 	scw := u.scw
 	scw.clearHealthListener()
 	b.child.updateSubConnState(scw, u.state)
-	if u.state.ConnectivityState == connectivity.Shutdown {
-		b.mu.Lock()
-		b.removeSubConnFromEndpointMapEntry(scw)
-		b.mu.Unlock()
-	}
 }
 
 func (b *outlierDetectionBalancer) handleSubConnHealthUpdate(u *scHealthUpdate) {
@@ -746,24 +788,18 @@ func (b *outlierDetectionBalancer) successRateAlgorithm() {
 		return
 	}
 	mean, stddev := b.meanAndStdDev(endpointsToConsider)
-	ejectionCfg := b.cfg.SuccessRateEjection
 	for _, epInfo := range endpointsToConsider {
 		bucket := epInfo.callCounter.inactiveBucket
+		ejectionCfg := b.cfg.SuccessRateEjection
+		if float64(b.numEndpointsEjected)/float64(b.endpoints.Len())*100 >= float64(b.cfg.MaxEjectionPercent) {
+			return
+		}
 		successRate := float64(bucket.numSuccesses) / float64(bucket.numSuccesses+bucket.numFailures)
 		requiredSuccessRate := mean - stddev*(float64(ejectionCfg.StdevFactor)/1000)
 		if successRate < requiredSuccessRate {
 			channelz.Infof(logger, b.channelzParent, "SuccessRate algorithm detected outlier: %s. Parameters: successRate=%f, mean=%f, stddev=%f, requiredSuccessRate=%f", epInfo, successRate, mean, stddev, requiredSuccessRate)
-			// Check if max ejection percentage would prevent ejection.
-			if float64(b.numEndpointsEjected)/float64(b.endpoints.Len())*100 >= float64(b.cfg.MaxEjectionPercent) {
-				// Record unenforced ejection due to max ejection percentage.
-				ejectionsUnenforcedMetric.Record(b.metricsRecorder, 1, b.target, "success_rate", "max_ejection_overflow")
-				continue
-			}
 			if uint32(rand.Int32N(100)) < ejectionCfg.EnforcementPercentage {
-				b.ejectEndpoint(epInfo, "success_rate")
-			} else {
-				// Record unenforced ejection due to enforcement percentage.
-				ejectionsUnenforcedMetric.Record(b.metricsRecorder, 1, b.target, "success_rate", "enforcement_percentage")
+				b.ejectEndpoint(epInfo)
 			}
 		}
 	}
@@ -780,30 +816,24 @@ func (b *outlierDetectionBalancer) failurePercentageAlgorithm() {
 		return
 	}
 
-	ejectionCfg := b.cfg.FailurePercentageEjection
 	for _, epInfo := range endpointsToConsider {
 		bucket := epInfo.callCounter.inactiveBucket
+		ejectionCfg := b.cfg.FailurePercentageEjection
+		if float64(b.numEndpointsEjected)/float64(b.endpoints.Len())*100 >= float64(b.cfg.MaxEjectionPercent) {
+			return
+		}
 		failurePercentage := (float64(bucket.numFailures) / float64(bucket.numSuccesses+bucket.numFailures)) * 100
 		if failurePercentage > float64(b.cfg.FailurePercentageEjection.Threshold) {
 			channelz.Infof(logger, b.channelzParent, "FailurePercentage algorithm detected outlier: %s, failurePercentage=%f", epInfo, failurePercentage)
-			// Check if max ejection percentage would prevent ejection.
-			if float64(b.numEndpointsEjected)/float64(b.endpoints.Len())*100 >= float64(b.cfg.MaxEjectionPercent) {
-				// Record unenforced ejection due to max ejection percentage.
-				ejectionsUnenforcedMetric.Record(b.metricsRecorder, 1, b.target, "failure_percentage", "max_ejection_overflow")
-				continue
-			}
 			if uint32(rand.Int32N(100)) < ejectionCfg.EnforcementPercentage {
-				b.ejectEndpoint(epInfo, "failure_percentage")
-			} else {
-				// Record unenforced ejection due to enforcement percentage.
-				ejectionsUnenforcedMetric.Record(b.metricsRecorder, 1, b.target, "failure_percentage", "enforcement_percentage")
+				b.ejectEndpoint(epInfo)
 			}
 		}
 	}
 }
 
 // Caller must hold b.mu.
-func (b *outlierDetectionBalancer) ejectEndpoint(epInfo *endpointInfo, detectionMethod string) {
+func (b *outlierDetectionBalancer) ejectEndpoint(epInfo *endpointInfo) {
 	b.numEndpointsEjected++
 	epInfo.latestEjectionTimestamp = b.timerStartTime
 	epInfo.ejectionTimeMultiplier++
@@ -812,8 +842,6 @@ func (b *outlierDetectionBalancer) ejectEndpoint(epInfo *endpointInfo, detection
 		channelz.Infof(logger, b.channelzParent, "Subchannel ejected: %s", sbw)
 	}
 
-	// Record the enforced ejection metric.
-	ejectionsEnforcedMetric.Record(b.metricsRecorder, 1, b.target, detectionMethod)
 }
 
 // Caller must hold b.mu.

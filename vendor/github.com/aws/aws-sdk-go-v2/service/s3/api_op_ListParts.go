@@ -77,10 +77,6 @@ import (
 //
 // [ListMultipartUploads]
 //
-// You must URL encode any signed header values that contain spaces. For example,
-// if your header value is my file.txt , containing two spaces after my , you must
-// URL encode this value to my%20%20file.txt .
-//
 // [Uploading Objects Using Multipart Upload]: https://docs.aws.amazon.com/AmazonS3/latest/dev/uploadobjusingmpu.html
 // [Concepts for directory buckets in Local Zones]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-lzs-for-directory-buckets.html
 // [AbortMultipartUpload]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_AbortMultipartUpload.html
@@ -121,18 +117,17 @@ type ListPartsInput struct {
 	// amzn-s3-demo-bucket--usw2-az1--x-s3 ). For information about bucket naming
 	// restrictions, see [Directory bucket naming rules]in the Amazon S3 User Guide.
 	//
-	// Access points - When you use this action with an access point for general
-	// purpose buckets, you must provide the alias of the access point in place of the
-	// bucket name or specify the access point ARN. When you use this action with an
-	// access point for directory buckets, you must provide the access point name in
-	// place of the bucket name. When using the access point ARN, you must direct
-	// requests to the access point hostname. The access point hostname takes the form
+	// Access points - When you use this action with an access point, you must provide
+	// the alias of the access point in place of the bucket name or specify the access
+	// point ARN. When using the access point ARN, you must direct requests to the
+	// access point hostname. The access point hostname takes the form
 	// AccessPointName-AccountId.s3-accesspoint.Region.amazonaws.com. When using this
 	// action with an access point through the Amazon Web Services SDKs, you provide
 	// the access point ARN in place of the bucket name. For more information about
 	// access point ARNs, see [Using access points]in the Amazon S3 User Guide.
 	//
-	// Object Lambda access points are not supported by directory buckets.
+	// Access points and Object Lambda access points are not supported by directory
+	// buckets.
 	//
 	// S3 on Outposts - When you use this action with S3 on Outposts, you must direct
 	// requests to the S3 on Outposts hostname. The S3 on Outposts hostname takes the
@@ -173,8 +168,9 @@ type ListPartsInput struct {
 	// Confirms that the requester knows that they will be charged for the request.
 	// Bucket owners need not specify this parameter in their requests. If either the
 	// source or destination S3 bucket has Requester Pays enabled, the requester will
-	// pay for the corresponding charges. For information about downloading objects
-	// from Requester Pays buckets, see [Downloading Objects in Requester Pays Buckets]in the Amazon S3 User Guide.
+	// pay for corresponding charges to copy the object. For information about
+	// downloading objects from Requester Pays buckets, see [Downloading Objects in Requester Pays Buckets]in the Amazon S3 User
+	// Guide.
 	//
 	// This functionality is not supported for directory buckets.
 	//
@@ -260,7 +256,7 @@ type ListPartsOutput struct {
 	// Container element that identifies who initiated the multipart upload. If the
 	// initiator is an Amazon Web Services account, this element provides the same
 	// information as the Owner element. If the initiator is an IAM User, this element
-	// provides the user ARN.
+	// provides the user ARN and display name.
 	Initiator *types.Initiator
 
 	//  Indicates whether the returned list of parts is truncated. A true value
@@ -281,7 +277,7 @@ type ListPartsOutput struct {
 
 	// Container element that identifies the object owner, after the object is
 	// created. If multipart upload is initiated by an IAM user, this element provides
-	// the parent account ID.
+	// the parent account ID and display name.
 	//
 	// Directory buckets - The bucket owner is returned as the object owner for all
 	// the parts.
@@ -296,19 +292,15 @@ type ListPartsOutput struct {
 	Parts []types.Part
 
 	// If present, indicates that the requester was successfully charged for the
-	// request. For more information, see [Using Requester Pays buckets for storage transfers and usage]in the Amazon Simple Storage Service user
-	// guide.
+	// request.
 	//
 	// This functionality is not supported for directory buckets.
-	//
-	// [Using Requester Pays buckets for storage transfers and usage]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/RequesterPaysBuckets.html
 	RequestCharged types.RequestCharged
 
 	// The class of storage used to store the uploaded object.
 	//
-	// Directory buckets - Directory buckets only support EXPRESS_ONEZONE (the S3
-	// Express One Zone storage class) in Availability Zones and ONEZONE_IA (the S3
-	// One Zone-Infrequent Access storage class) in Dedicated Local Zones.
+	// Directory buckets - Only the S3 Express One Zone storage class is supported by
+	// directory buckets to store objects.
 	StorageClass types.StorageClass
 
 	// Upload ID identifying the multipart upload whose parts are being listed.
@@ -426,13 +418,16 @@ func (c *Client) addOperationListPartsMiddlewares(stack *middleware.Stack, optio
 	if err = addSerializeImmutableHostnameBucketMiddleware(stack, options); err != nil {
 		return err
 	}
-	if err = addInterceptBeforeRetryLoop(stack, options); err != nil {
+	if err = addSpanInitializeStart(stack); err != nil {
 		return err
 	}
-	if err = addInterceptAttempt(stack, options); err != nil {
+	if err = addSpanInitializeEnd(stack); err != nil {
 		return err
 	}
-	if err = addInterceptors(stack, options); err != nil {
+	if err = addSpanBuildRequestStart(stack); err != nil {
+		return err
+	}
+	if err = addSpanBuildRequestEnd(stack); err != nil {
 		return err
 	}
 	return nil

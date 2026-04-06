@@ -27,12 +27,11 @@ import (
 	"path"
 	"strings"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
-	"k8s.io/klog/v2"
 	"kubestash.dev/apimachinery/apis"
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"kubestash.dev/apimachinery/pkg/workerpool"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
 	aws2 "github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -45,6 +44,7 @@ import (
 	"gocloud.dev/blob/s3blob"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )

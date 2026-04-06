@@ -106,7 +106,8 @@ func (b *weightedTargetBalancer) UpdateClientConnState(s balancer.ClientConnStat
 	if !ok {
 		return fmt.Errorf("unexpected balancer config with type: %T", s.BalancerConfig)
 	}
-	endpointsSplit := hierarchy.Group(s.ResolverState.Endpoints)
+	addressesSplit := hierarchy.Group(s.ResolverState.Addresses)
+	endpointsSplit := hierarchy.GroupEndpoints(s.ResolverState.Endpoints)
 
 	b.stateAggregator.PauseStateUpdates()
 	defer b.stateAggregator.ResumeStateUpdates()
@@ -153,6 +154,7 @@ func (b *weightedTargetBalancer) UpdateClientConnState(s balancer.ClientConnStat
 		// TODO: handle error? How to aggregate errors and return?
 		_ = b.bg.UpdateClientConnState(name, balancer.ClientConnState{
 			ResolverState: resolver.State{
+				Addresses:     addressesSplit[name],
 				Endpoints:     endpointsSplit[name],
 				ServiceConfig: s.ResolverState.ServiceConfig,
 				Attributes:    s.ResolverState.Attributes.WithValue(localityKey, name),

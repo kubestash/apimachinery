@@ -33,7 +33,6 @@ import (
 	internalgrpclog "google.golang.org/grpc/internal/grpclog"
 	"google.golang.org/grpc/internal/grpcsync"
 	"google.golang.org/grpc/internal/xds/bootstrap"
-	"google.golang.org/grpc/internal/xds/clients/xdsclient"
 	"google.golang.org/grpc/internal/xds/xdsclient/xdsresource"
 )
 
@@ -59,7 +58,7 @@ type ServingModeCallback func(addr net.Addr, mode connectivity.ServingMode, err 
 // XDSClient wraps the methods on the XDSClient which are required by
 // the listenerWrapper.
 type XDSClient interface {
-	WatchResource(typeURL, resourceName string, watcher xdsclient.ResourceWatcher) (cancel func())
+	WatchResource(rType xdsresource.Type, resourceName string, watcher xdsresource.ResourceWatcher) (cancel func())
 	BootstrapConfig() *bootstrap.Config
 }
 
@@ -387,17 +386,17 @@ type ldsWatcher struct {
 	name   string
 }
 
-func (lw *ldsWatcher) ResourceChanged(update *xdsresource.ListenerUpdate, onDone func()) {
+func (lw *ldsWatcher) ResourceChanged(update *xdsresource.ListenerResourceData, onDone func()) {
 	defer onDone()
 	if lw.parent.closed.HasFired() {
 		lw.logger.Warningf("Resource %q received update: %#v after listener was closed", lw.name, update)
 		return
 	}
 	if lw.logger.V(2) {
-		lw.logger.Infof("LDS watch for resource %q received update: %#v", lw.name, update)
+		lw.logger.Infof("LDS watch for resource %q received update: %#v", lw.name, update.Resource)
 	}
 	l := lw.parent
-	ilc := update.InboundListenerCfg
+	ilc := update.Resource.InboundListenerCfg
 	// Make sure that the socket address on the received Listener resource
 	// matches the address of the net.Listener passed to us by the user. This
 	// check is done here instead of at the XDSClient layer because of the

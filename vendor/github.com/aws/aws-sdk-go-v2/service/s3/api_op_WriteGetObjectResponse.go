@@ -63,10 +63,6 @@ import (
 // For information on how to view and use these functions, see [Using Amazon Web Services built Lambda functions] in the Amazon S3
 // User Guide.
 //
-// You must URL encode any signed header values that contain spaces. For example,
-// if your header value is my file.txt , containing two spaces after my , you must
-// URL encode this value to my%20%20file.txt .
-//
 // [Transforming objects with Object Lambda access points]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/transforming-objects.html
 // [Using Amazon Web Services built Lambda functions]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/olap-examples.html
 // [GetObject]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html
@@ -261,12 +257,9 @@ type WriteGetObjectResponseInput struct {
 	ReplicationStatus types.ReplicationStatus
 
 	// If present, indicates that the requester was successfully charged for the
-	// request. For more information, see [Using Requester Pays buckets for storage transfers and usage]in the Amazon Simple Storage Service user
-	// guide.
+	// request.
 	//
 	// This functionality is not supported for directory buckets.
-	//
-	// [Using Requester Pays buckets for storage transfers and usage]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/RequesterPaysBuckets.html
 	RequestCharged types.RequestCharged
 
 	// Provides information about object restoration operation and expiration time of
@@ -289,10 +282,7 @@ type WriteGetObjectResponseInput struct {
 	SSEKMSKeyId *string
 
 	//  The server-side encryption algorithm used when storing requested object in
-	// Amazon S3 or Amazon FSx.
-	//
-	// When accessing data stored in Amazon FSx file systems using S3 access points,
-	// the only valid server side encryption option is aws:fsx .
+	// Amazon S3 (for example, AES256, aws:kms ).
 	ServerSideEncryption types.ServerSideEncryption
 
 	// The integer status code for an HTTP response of a corresponding GetObject
@@ -468,13 +458,16 @@ func (c *Client) addOperationWriteGetObjectResponseMiddlewares(stack *middleware
 	if err = addSerializeImmutableHostnameBucketMiddleware(stack, options); err != nil {
 		return err
 	}
-	if err = addInterceptBeforeRetryLoop(stack, options); err != nil {
+	if err = addSpanInitializeStart(stack); err != nil {
 		return err
 	}
-	if err = addInterceptAttempt(stack, options); err != nil {
+	if err = addSpanInitializeEnd(stack); err != nil {
 		return err
 	}
-	if err = addInterceptors(stack, options); err != nil {
+	if err = addSpanBuildRequestStart(stack); err != nil {
+		return err
+	}
+	if err = addSpanBuildRequestEnd(stack); err != nil {
 		return err
 	}
 	return nil

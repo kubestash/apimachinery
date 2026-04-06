@@ -66,22 +66,17 @@ import (
 //     versioning-enabled bucket, you must specify the s3:DeleteObjectVersion
 //     permission.
 //
-// If the s3:DeleteObject or s3:DeleteObjectVersion permissions are explicitly
-//
-//	denied in your bucket policy, attempts to delete any unversioned objects result
-//	in a 403 Access Denied error.
-//
-//	- Directory bucket permissions - To grant access to this API operation on a
-//	directory bucket, we recommend that you use the [CreateSession]CreateSession API operation
-//	for session-based authorization. Specifically, you grant the
-//	s3express:CreateSession permission to the directory bucket in a bucket policy
-//	or an IAM identity-based policy. Then, you make the CreateSession API call on
-//	the bucket to obtain a session token. With the session token in your request
-//	header, you can make API requests to this operation. After the session token
-//	expires, you make another CreateSession API call to generate a new session
-//	token for use. Amazon Web Services CLI or SDKs create session and refresh the
-//	session token automatically to avoid service interruptions when a session
-//	expires. For more information about authorization, see [CreateSession]CreateSession .
+//   - Directory bucket permissions - To grant access to this API operation on a
+//     directory bucket, we recommend that you use the [CreateSession]CreateSession API operation
+//     for session-based authorization. Specifically, you grant the
+//     s3express:CreateSession permission to the directory bucket in a bucket policy
+//     or an IAM identity-based policy. Then, you make the CreateSession API call on
+//     the bucket to obtain a session token. With the session token in your request
+//     header, you can make API requests to this operation. After the session token
+//     expires, you make another CreateSession API call to generate a new session
+//     token for use. Amazon Web Services CLI or SDKs create session and refresh the
+//     session token automatically to avoid service interruptions when a session
+//     expires. For more information about authorization, see [CreateSession]CreateSession .
 //
 // Content-MD5 request header
 //
@@ -109,20 +104,15 @@ import (
 //
 // [AbortMultipartUpload]
 //
-// You must URL encode any signed header values that contain spaces. For example,
-// if your header value is my file.txt , containing two spaces after my , you must
-// URL encode this value to my%20%20file.txt .
-//
 // [Concepts for directory buckets in Local Zones]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-lzs-for-directory-buckets.html
 // [ListParts]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListParts.html
 // [AbortMultipartUpload]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_AbortMultipartUpload.html
 // [UploadPart]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_UploadPart.html
+// [CreateSession]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_CreateSession.html
 // [CompleteMultipartUpload]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_CompleteMultipartUpload.html
 // [Regional and Zonal endpoints for directory buckets in Availability Zones]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/endpoint-directory-buckets-AZ.html
 // [MFA Delete]: https://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html#MultiFactorAuthenticationDelete
 // [CreateMultipartUpload]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_CreateMultipartUpload.html
-//
-// [CreateSession]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_CreateSession.html
 func (c *Client) DeleteObjects(ctx context.Context, params *DeleteObjectsInput, optFns ...func(*Options)) (*DeleteObjectsOutput, error) {
 	if params == nil {
 		params = &DeleteObjectsInput{}
@@ -151,18 +141,17 @@ type DeleteObjectsInput struct {
 	// amzn-s3-demo-bucket--usw2-az1--x-s3 ). For information about bucket naming
 	// restrictions, see [Directory bucket naming rules]in the Amazon S3 User Guide.
 	//
-	// Access points - When you use this action with an access point for general
-	// purpose buckets, you must provide the alias of the access point in place of the
-	// bucket name or specify the access point ARN. When you use this action with an
-	// access point for directory buckets, you must provide the access point name in
-	// place of the bucket name. When using the access point ARN, you must direct
-	// requests to the access point hostname. The access point hostname takes the form
+	// Access points - When you use this action with an access point, you must provide
+	// the alias of the access point in place of the bucket name or specify the access
+	// point ARN. When using the access point ARN, you must direct requests to the
+	// access point hostname. The access point hostname takes the form
 	// AccessPointName-AccountId.s3-accesspoint.Region.amazonaws.com. When using this
 	// action with an access point through the Amazon Web Services SDKs, you provide
 	// the access point ARN in place of the bucket name. For more information about
 	// access point ARNs, see [Using access points]in the Amazon S3 User Guide.
 	//
-	// Object Lambda access points are not supported by directory buckets.
+	// Access points and Object Lambda access points are not supported by directory
+	// buckets.
 	//
 	// S3 on Outposts - When you use this action with S3 on Outposts, you must direct
 	// requests to the S3 on Outposts hostname. The S3 on Outposts hostname takes the
@@ -248,8 +237,9 @@ type DeleteObjectsInput struct {
 	// Confirms that the requester knows that they will be charged for the request.
 	// Bucket owners need not specify this parameter in their requests. If either the
 	// source or destination S3 bucket has Requester Pays enabled, the requester will
-	// pay for the corresponding charges. For information about downloading objects
-	// from Requester Pays buckets, see [Downloading Objects in Requester Pays Buckets]in the Amazon S3 User Guide.
+	// pay for corresponding charges to copy the object. For information about
+	// downloading objects from Requester Pays buckets, see [Downloading Objects in Requester Pays Buckets]in the Amazon S3 User
+	// Guide.
 	//
 	// This functionality is not supported for directory buckets.
 	//
@@ -276,12 +266,9 @@ type DeleteObjectsOutput struct {
 	Errors []types.Error
 
 	// If present, indicates that the requester was successfully charged for the
-	// request. For more information, see [Using Requester Pays buckets for storage transfers and usage]in the Amazon Simple Storage Service user
-	// guide.
+	// request.
 	//
 	// This functionality is not supported for directory buckets.
-	//
-	// [Using Requester Pays buckets for storage transfers and usage]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/RequesterPaysBuckets.html
 	RequestCharged types.RequestCharged
 
 	// Metadata pertaining to the operation's result.
@@ -405,13 +392,16 @@ func (c *Client) addOperationDeleteObjectsMiddlewares(stack *middleware.Stack, o
 	if err = s3cust.AddExpressDefaultChecksumMiddleware(stack); err != nil {
 		return err
 	}
-	if err = addInterceptBeforeRetryLoop(stack, options); err != nil {
+	if err = addSpanInitializeStart(stack); err != nil {
 		return err
 	}
-	if err = addInterceptAttempt(stack, options); err != nil {
+	if err = addSpanInitializeEnd(stack); err != nil {
 		return err
 	}
-	if err = addInterceptors(stack, options); err != nil {
+	if err = addSpanBuildRequestStart(stack); err != nil {
+		return err
+	}
+	if err = addSpanBuildRequestEnd(stack); err != nil {
 		return err
 	}
 	return nil

@@ -198,7 +198,7 @@ type TapConfigMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m TapConfigMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -716,7 +716,7 @@ type MatchPredicateMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m MatchPredicateMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -850,7 +850,7 @@ type HttpHeadersMatchMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m HttpHeadersMatchMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -997,7 +997,7 @@ type HttpGenericBodyMatchMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m HttpGenericBodyMatchMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1190,35 +1190,6 @@ func (m *OutputConfig) validate(all bool) error {
 
 	// no validation rules for Streaming
 
-	if all {
-		switch v := interface{}(m.GetMinStreamedSentBytes()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, OutputConfigValidationError{
-					field:  "MinStreamedSentBytes",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, OutputConfigValidationError{
-					field:  "MinStreamedSentBytes",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetMinStreamedSentBytes()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return OutputConfigValidationError{
-				field:  "MinStreamedSentBytes",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
 	if len(errors) > 0 {
 		return OutputConfigMultiError(errors)
 	}
@@ -1232,7 +1203,7 @@ type OutputConfigMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m OutputConfigMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1568,7 +1539,7 @@ type OutputSinkMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m OutputSinkMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1668,7 +1639,7 @@ type StreamingAdminSinkMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m StreamingAdminSinkMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1810,7 +1781,7 @@ type BufferedAdminSinkMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m BufferedAdminSinkMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1923,7 +1894,7 @@ type FilePerTapSinkMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m FilePerTapSinkMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -2065,7 +2036,7 @@ type StreamingGrpcSinkMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m StreamingGrpcSinkMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -2212,7 +2183,7 @@ type MatchPredicate_MatchSetMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m MatchPredicate_MatchSetMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -2380,7 +2351,7 @@ type HttpGenericBodyMatch_GenericTextMatchMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m HttpGenericBodyMatch_GenericTextMatchMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

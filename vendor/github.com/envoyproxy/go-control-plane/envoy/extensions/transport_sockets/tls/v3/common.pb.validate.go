@@ -80,17 +80,6 @@ func (m *TlsParameters) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if len(m.GetCompliancePolicies()) > 1 {
-		err := TlsParametersValidationError{
-			field:  "CompliancePolicies",
-			reason: "value must contain no more than 1 item(s)",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if len(errors) > 0 {
 		return TlsParametersMultiError(errors)
 	}
@@ -105,7 +94,7 @@ type TlsParametersMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m TlsParametersMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -264,7 +253,7 @@ type PrivateKeyProviderMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m PrivateKeyProviderMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -603,7 +592,7 @@ type TlsCertificateMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m TlsCertificateMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -748,7 +737,7 @@ type TlsSessionTicketKeysMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m TlsSessionTicketKeysMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -865,7 +854,7 @@ type CertificateProviderPluginInstanceMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CertificateProviderPluginInstanceMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1032,7 +1021,7 @@ type SubjectAltNameMatcherMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m SubjectAltNameMatcherMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1493,7 +1482,7 @@ type CertificateValidationContextMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CertificateValidationContextMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1599,7 +1588,7 @@ type CertificateValidationContext_SystemRootCertsMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CertificateValidationContext_SystemRootCertsMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
+	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

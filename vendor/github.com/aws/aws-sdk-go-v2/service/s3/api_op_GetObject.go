@@ -92,11 +92,10 @@ import (
 // copy using [RestoreObject]. Otherwise, this operation returns an InvalidObjectState error. For
 // information about restoring archived objects, see [Restoring Archived Objects]in the Amazon S3 User Guide.
 //
-// Directory buckets - Directory buckets only support EXPRESS_ONEZONE (the S3
-// Express One Zone storage class) in Availability Zones and ONEZONE_IA (the S3
-// One Zone-Infrequent Access storage class) in Dedicated Local Zones. Unsupported
-// storage class values won't write a destination object and will respond with the
-// HTTP status code 400 Bad Request .
+// Directory buckets - For directory buckets, only the S3 Express One Zone storage
+// class is supported to store newly created objects. Unsupported storage class
+// values won't write a destination object and will respond with the HTTP status
+// code 400 Bad Request .
 //
 // Encryption Encryption request headers, like x-amz-server-side-encryption ,
 // should not be sent for the GetObject requests, if your object uses server-side
@@ -153,10 +152,6 @@ import (
 //
 // [GetObjectAcl]
 //
-// You must URL encode any signed header values that contain spaces. For example,
-// if your header value is my file.txt , containing two spaces after my , you must
-// URL encode this value to my%20%20file.txt .
-//
 // [Concepts for directory buckets in Local Zones]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-lzs-for-directory-buckets.html
 // [RestoreObject]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_RestoreObject.html
 // [Protecting data with server-side encryption]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-express-serv-side-encryption.html
@@ -196,12 +191,10 @@ type GetObjectInput struct {
 	// amzn-s3-demo-bucket--usw2-az1--x-s3 ). For information about bucket naming
 	// restrictions, see [Directory bucket naming rules]in the Amazon S3 User Guide.
 	//
-	// Access points - When you use this action with an access point for general
-	// purpose buckets, you must provide the alias of the access point in place of the
-	// bucket name or specify the access point ARN. When you use this action with an
-	// access point for directory buckets, you must provide the access point name in
-	// place of the bucket name. When using the access point ARN, you must direct
-	// requests to the access point hostname. The access point hostname takes the form
+	// Access points - When you use this action with an access point, you must provide
+	// the alias of the access point in place of the bucket name or specify the access
+	// point ARN. When using the access point ARN, you must direct requests to the
+	// access point hostname. The access point hostname takes the form
 	// AccessPointName-AccountId.s3-accesspoint.Region.amazonaws.com. When using this
 	// action with an access point through the Amazon Web Services SDKs, you provide
 	// the access point ARN in place of the bucket name. For more information about
@@ -212,7 +205,8 @@ type GetObjectInput struct {
 	// hostname. The Object Lambda access point hostname takes the form
 	// AccessPointName-AccountId.s3-object-lambda.Region.amazonaws.com.
 	//
-	// Object Lambda access points are not supported by directory buckets.
+	// Access points and Object Lambda access points are not supported by directory
+	// buckets.
 	//
 	// S3 on Outposts - When you use this action with S3 on Outposts, you must direct
 	// requests to the S3 on Outposts hostname. The S3 on Outposts hostname takes the
@@ -309,8 +303,9 @@ type GetObjectInput struct {
 	// Confirms that the requester knows that they will be charged for the request.
 	// Bucket owners need not specify this parameter in their requests. If either the
 	// source or destination S3 bucket has Requester Pays enabled, the requester will
-	// pay for the corresponding charges. For information about downloading objects
-	// from Requester Pays buckets, see [Downloading Objects in Requester Pays Buckets]in the Amazon S3 User Guide.
+	// pay for corresponding charges to copy the object. For information about
+	// downloading objects from Requester Pays buckets, see [Downloading Objects in Requester Pays Buckets]in the Amazon S3 User
+	// Guide.
 	//
 	// This functionality is not supported for directory buckets.
 	//
@@ -453,8 +448,8 @@ type GetObjectOutput struct {
 	// [Checking object integrity]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
 	ChecksumCRC32 *string
 
-	// The Base64 encoded, 32-bit CRC32C checksum of the object. This checksum is only
-	// present if the checksum was uploaded with the object. For more information, see [Checking object integrity]
+	// The Base64 encoded, 32-bit CRC32C checksum of the object. This will only be
+	// present if the object was uploaded with the object. For more information, see [Checking object integrity]
 	// in the Amazon S3 User Guide.
 	//
 	// [Checking object integrity]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
@@ -466,15 +461,15 @@ type GetObjectOutput struct {
 	// [Checking object integrity in the Amazon S3 User Guide]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
 	ChecksumCRC64NVME *string
 
-	// The Base64 encoded, 160-bit SHA1 digest of the object. This checksum is only
-	// present if the checksum was uploaded with the object. For more information, see [Checking object integrity]
+	// The Base64 encoded, 160-bit SHA1 digest of the object. This will only be
+	// present if the object was uploaded with the object. For more information, see [Checking object integrity]
 	// in the Amazon S3 User Guide.
 	//
 	// [Checking object integrity]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
 	ChecksumSHA1 *string
 
-	// The Base64 encoded, 256-bit SHA256 digest of the object. This checksum is only
-	// present if the checksum was uploaded with the object. For more information, see [Checking object integrity]
+	// The Base64 encoded, 256-bit SHA256 digest of the object. This will only be
+	// present if the object was uploaded with the object. For more information, see [Checking object integrity]
 	// in the Amazon S3 User Guide.
 	//
 	// [Checking object integrity]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
@@ -597,21 +592,16 @@ type GetObjectOutput struct {
 	ReplicationStatus types.ReplicationStatus
 
 	// If present, indicates that the requester was successfully charged for the
-	// request. For more information, see [Using Requester Pays buckets for storage transfers and usage]in the Amazon Simple Storage Service user
-	// guide.
+	// request.
 	//
 	// This functionality is not supported for directory buckets.
-	//
-	// [Using Requester Pays buckets for storage transfers and usage]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/RequesterPaysBuckets.html
 	RequestCharged types.RequestCharged
 
 	// Provides information about object restoration action and expiration time of the
 	// restored object copy.
 	//
-	// This functionality is not supported for directory buckets. Directory buckets
-	// only support EXPRESS_ONEZONE (the S3 Express One Zone storage class) in
-	// Availability Zones and ONEZONE_IA (the S3 One Zone-Infrequent Access storage
-	// class) in Dedicated Local Zones.
+	// This functionality is not supported for directory buckets. Only the S3 Express
+	// One Zone storage class is supported by directory buckets to store objects.
 	Restore *string
 
 	// If server-side encryption with a customer-provided encryption key was
@@ -632,18 +622,14 @@ type GetObjectOutput struct {
 	SSEKMSKeyId *string
 
 	// The server-side encryption algorithm used when you store this object in Amazon
-	// S3 or Amazon FSx.
-	//
-	// When accessing data stored in Amazon FSx file systems using S3 access points,
-	// the only valid server side encryption option is aws:fsx .
+	// S3.
 	ServerSideEncryption types.ServerSideEncryption
 
 	// Provides storage class information of the object. Amazon S3 returns this header
 	// for all objects except for S3 Standard storage class objects.
 	//
-	// Directory buckets - Directory buckets only support EXPRESS_ONEZONE (the S3
-	// Express One Zone storage class) in Availability Zones and ONEZONE_IA (the S3
-	// One Zone-Infrequent Access storage class) in Dedicated Local Zones.
+	// Directory buckets - Only the S3 Express One Zone storage class is supported by
+	// directory buckets to store objects.
 	StorageClass types.StorageClass
 
 	// The number of tags, if any, on the object, when you have the relevant
@@ -783,13 +769,16 @@ func (c *Client) addOperationGetObjectMiddlewares(stack *middleware.Stack, optio
 	if err = addSerializeImmutableHostnameBucketMiddleware(stack, options); err != nil {
 		return err
 	}
-	if err = addInterceptBeforeRetryLoop(stack, options); err != nil {
+	if err = addSpanInitializeStart(stack); err != nil {
 		return err
 	}
-	if err = addInterceptAttempt(stack, options); err != nil {
+	if err = addSpanInitializeEnd(stack); err != nil {
 		return err
 	}
-	if err = addInterceptors(stack, options); err != nil {
+	if err = addSpanBuildRequestStart(stack); err != nil {
+		return err
+	}
+	if err = addSpanBuildRequestEnd(stack); err != nil {
 		return err
 	}
 	return nil
