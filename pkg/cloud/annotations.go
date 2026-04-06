@@ -22,13 +22,13 @@ import (
 	"maps"
 	"sort"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/apis/core/v1alpha1"
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 
 	batchv1 "k8s.io/api/batch/v1"
 	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	kmc "kmodules.xyz/client-go/client"
 	"kmodules.xyz/client-go/meta"
@@ -228,7 +228,6 @@ func getLatestBackupSAAnnotations(ctx context.Context, kbClient client.Client, b
 		return nil, err
 	}
 	return sa.Annotations, nil
-
 }
 
 func getSAFromJob(ctx context.Context, kbClient client.Client, job *batchv1.Job) (*core.ServiceAccount, error) {
