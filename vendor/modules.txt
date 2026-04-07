@@ -81,7 +81,7 @@ github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime
 github.com/Azure/azure-sdk-for-go/sdk/azcore/streaming
 github.com/Azure/azure-sdk-for-go/sdk/azcore/to
 github.com/Azure/azure-sdk-for-go/sdk/azcore/tracing
-# github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.13.0 => github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.14.0-beta.3
+# github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.14.0-beta.3
 ## explicit; go 1.24.0
 github.com/Azure/azure-sdk-for-go/sdk/azidentity
 github.com/Azure/azure-sdk-for-go/sdk/azidentity/internal
@@ -2132,4 +2132,3 @@ x-helm.dev/apimachinery/apis/releases/v1alpha1
 x-helm.dev/apimachinery/apis/shared
 x-helm.dev/apimachinery/crds
 # github.com/imdario/mergo => github.com/imdario/mergo v0.3.6
-# github.com/Azure/azure-sdk-for-go/sdk/azidentity => github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.14.0-beta.3

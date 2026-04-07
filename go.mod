@@ -3,7 +3,7 @@ module kubestash.dev/apimachinery
 go 1.25.0
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.13.0
+	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.14.0-beta.3
 	github.com/Azure/azure-sdk-for-go/sdk/storage/azblob v1.6.3
 	github.com/Masterminds/semver/v3 v3.4.0
 	github.com/aws/aws-sdk-go-v2 v1.39.6
@@ -253,5 +253,3 @@ require (
 )
 
 replace github.com/imdario/mergo => github.com/imdario/mergo v0.3.6
-
-replace github.com/Azure/azure-sdk-for-go/sdk/azidentity => github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.14.0-beta.3
