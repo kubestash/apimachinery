@@ -156,10 +156,10 @@ func AddCloudAnnotationsToSAIfNeeded(ctx context.Context, kbClient client.Client
 	case v1alpha1.ResourceKindRestoreSession:
 		err = addAnnotationsToServiceAccountForRestore(ctx, kbClient, bs, sa, invRef)
 	default:
-		return false, fmt.Errorf("unsupported invoker type: %T", invTypRef.Kind)
+		return false, fmt.Errorf("unsupported invoker type: %s", invTypRef.Kind)
 	}
 	if err != nil {
-		return false, fmt.Errorf("failed to add annotations to service account: %v", err)
+		return false, fmt.Errorf("failed to add annotations to service account: %w", err)
 	}
 	if !hasCredLessManagerProvidedAnnotation(bs, sa) {
 		return true, nil
@@ -224,7 +224,8 @@ func addAnnotationsToServiceAccountForBackup(ctx context.Context, kbClient clien
 }
 
 func addAnnotationsToServiceAccountForRestore(ctx context.Context, kbClient client.Client, bs *storageapi.BackupStorage,
-	sa *core.ServiceAccount, rsRef *kmapi.ObjectReference) error {
+	sa *core.ServiceAccount, rsRef *kmapi.ObjectReference,
+) error {
 	if hasRequiredCloudAnnotations(bs, sa) {
 		return nil
 	}
@@ -346,7 +347,7 @@ func findLatestSuccessfulBackupSession(ctx context.Context, kbClient client.Clie
 		return nil, fmt.Errorf("no successful backup session found for configuration %s/%s",
 			bcRef.Namespace, bcRef.Name)
 	}
-	klog.Infof("waiting for a successful backup, no backups are successful found for configuration %s/%s", bcRef.Namespace, bcRef.Name)
+	klog.Infof("waiting for a successful backup, no successful backups found for configuration %s/%s", bcRef.Namespace, bcRef.Name)
 
 	return nil, nil
 }
