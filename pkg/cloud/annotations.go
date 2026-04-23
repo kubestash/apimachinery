@@ -153,15 +153,8 @@ func AddCloudAnnotationsToSAIfNeeded(ctx context.Context, kbClient client.Client
 		return true, fmt.Errorf("failed to get service account: %v", err)
 	}
 
-	if bs.IsCredentialLessModeEnabled() && bs.Spec.Storage.Provider == storageapi.ProviderAzure {
-		if sidekick.Labels == nil {
-			sidekick.Labels = make(map[string]string)
-		}
-		sidekick.Labels[AzureWorkloadIdentityUseLabel] = "true"
-		if sidekick.Annotations == nil {
-			sidekick.Annotations = make(map[string]string)
-		}
-		sidekick.Annotations[AzureWorkloadIdentityUseAnnotation] = "true"
+	if bs.IsCredentialLessModeEnabled() {
+		addSidekickAnnotationsIfNeeded(sidekick, bs)
 	}
 
 	if !isCloudAnnotationNeeded(bs, sa) { // Return if not needed
@@ -185,6 +178,19 @@ func AddCloudAnnotationsToSAIfNeeded(ctx context.Context, kbClient client.Client
 	}
 
 	return false, nil
+}
+
+func addSidekickAnnotationsIfNeeded(sidekick *sidekickapi.Sidekick, bs *storageapi.BackupStorage) {
+	if bs.Spec.Storage.Provider == storageapi.ProviderAzure {
+		if sidekick.Labels == nil {
+			sidekick.Labels = make(map[string]string)
+		}
+		sidekick.Labels[AzureWorkloadIdentityUseLabel] = "true"
+		if sidekick.Annotations == nil {
+			sidekick.Annotations = make(map[string]string)
+		}
+		sidekick.Annotations[AzureWorkloadIdentityUseAnnotation] = "true"
+	}
 }
 
 func hasCredLessManagerProvidedAnnotation(bs *storageapi.BackupStorage, sa *core.ServiceAccount) bool {
