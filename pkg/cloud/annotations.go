@@ -469,9 +469,10 @@ func getAWSAnnotations(source map[string]string) (map[string]string, error) {
 
 func getAzureAnnotations(source map[string]string) (map[string]string, error) {
 	required := map[string]string{
-		AzureMIClientIDAnnotation: source[AzureMIClientIDAnnotation],
-		AzureMITenantIDAnnotation: source[AzureMITenantIDAnnotation],
-		BucketAnnotationKey:       source[BucketAnnotationKey],
+		AzureSubscriptionIDAnnotation: source[AzureSubscriptionIDAnnotation],
+		AzureMINameAnnotation:         source[AzureMINameAnnotation],
+		AzureResourceGroupAnnotation:  source[AzureResourceGroupAnnotation],
+		BucketAnnotationKey:           source[BucketAnnotationKey],
 	}
 	annotations := make(map[string]string)
 	for key, val := range required {
