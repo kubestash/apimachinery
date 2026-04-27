@@ -264,7 +264,7 @@ func hasRequiredCloudAnnotations(bs *storageapi.BackupStorage, sa *core.ServiceA
 }
 
 func getLatestBackupSAAnnotations(ctx context.Context, kbClient client.Client, bcRef *kmapi.ObjectReference) (map[string]string, error) {
-	session, err := findLatestSuccessfulBackupSession(ctx, kbClient, bcRef)
+	session, err := FindLatestSuccessfulBackupSession(ctx, kbClient, bcRef)
 	if err != nil {
 		return nil, err
 	}
@@ -314,7 +314,7 @@ func getSAFromJob(ctx context.Context, kbClient client.Client, job *batchv1.Job)
 	return sa, nil
 }
 
-func findLatestSuccessfulBackupSession(ctx context.Context, kbClient client.Client, bcRef *kmapi.ObjectReference) (*v1alpha1.BackupSession, error) {
+func FindLatestSuccessfulBackupSession(ctx context.Context, kbClient client.Client, bcRef *kmapi.ObjectReference) (*v1alpha1.BackupSession, error) {
 	list := &v1alpha1.BackupSessionList{}
 	opts := []client.ListOption{
 		client.MatchingLabels{apis.KubeStashInvokerName: bcRef.Name},
