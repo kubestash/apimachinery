@@ -117,7 +117,7 @@ func (s *Snapshot) GetTotalBackupSizeInBytes() (uint64, error) {
 	var totalSizeInByte uint64
 	for componentName, component := range s.Status.Components {
 		for _, stats := range component.ResticStats {
-			if stats.Size == "" {
+			if stats.Summary.Size == "" {
 				return 0, fmt.Errorf("resticStats size of component %s is empty for the snapshot %s/%s", componentName, s.Namespace, s.Name)
 			}
 

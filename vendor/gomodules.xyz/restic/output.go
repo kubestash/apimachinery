@@ -133,6 +133,17 @@ type BackupSummary struct {
 	SnapshotID          string  `json:"snapshot_id"`
 }
 
+type BackupStatus struct {
+	MessageType      string   `json:"message_type"`
+	SecondsElapsed   int64    `json:"seconds_elapsed"`
+	SecondsRemaining int64    `json:"seconds_remaining"`
+	PercentDone      float64  `json:"percent_done"`
+	TotalFiles       int      `json:"total_files"`
+	TotalBytes       int      `json:"total_bytes"`
+	BytesDone        int64    `json:"bytes_done"`
+	CurrentFiles     []string `json:"current_files"`
+}
+
 type ForgetGroup struct {
 	Keep   []json.RawMessage `json:"keep"`
 	Remove []json.RawMessage `json:"remove"`
@@ -171,4 +182,47 @@ func extractLockIDs(r io.Reader) ([]string, error) {
 		}
 	}
 	return ids, sc.Err()
+}
+
+func extractBackupStatus(output []byte) ([]BackupStatus, error) {
+	data := sanitizeFromStart(output)
+	if data == nil {
+		return nil, fmt.Errorf("cannot extract backup summary from JSON")
+	}
+
+	data = sanitizeFromEnd(data)
+	if data == nil {
+		return nil, fmt.Errorf("cannot extract backup summary from JSON")
+	}
+
+	var results []BackupStatus
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	for {
+		var s BackupStatus
+		err := decoder.Decode(&s)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			continue
+		}
+		results = append(results, s)
+	}
+	return results, nil
+}
+
+func sanitizeFromStart(data []byte) []byte {
+	start := bytes.IndexByte(data, '{')
+	if start == -1 {
+		return nil
+	}
+	return data[start:]
+}
+
+func sanitizeFromEnd(data []byte) []byte {
+	end := bytes.LastIndexByte(data, '}')
+	if end == -1 {
+		return nil
+	}
+	return data[:end+1]
 }

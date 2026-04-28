@@ -278,6 +278,17 @@ const (
 
 // ResticStats specifies the "Restic" driver specific information
 type ResticStats struct {
+	// Summary specifies the summary of the restic backup
+	// +optional
+	Summary *ResticSummary `json:"summary,omitempty"`
+
+	// Progress specifies the progress of the restic backup
+	// +optional
+	Progress *ResticProgress `json:"progress,omitempty"`
+}
+
+// ResticSummary specifies the summary of the Restic backup
+type ResticSummary struct {
 	// Id represents the restic snapshot id
 	Id string `json:"id,omitempty"`
 
@@ -300,6 +311,36 @@ type ResticStats struct {
 	// EndTime represents the timestamp at which the restic command successfully executed
 	// +optional
 	EndTime *metav1.Time `json:"endTime,omitempty"`
+}
+
+// ResticProgress specifies the progress of the Restic backup
+type ResticProgress struct {
+	// SecondsElapsed represents the seconds elapsed during the backup
+	// +optional
+	SecondsElapsed int64 `json:"secondsElapsed,omitempty"`
+
+	// PercentDone represents the percentage of the backup that has been completed
+	//+optional
+	PercentDone string `json:"percentDone,omitempty"`
+
+	// TotalFiles represents the total number of files to backup
+	// +optional
+	TotalFiles int64 `json:"totalFiles,omitempty"`
+
+	// FilesDone represents the number of files done
+	// +optional
+	FilesDone int64 `json:"filesDone,omitempty"`
+
+	// Transferred represents the amount of data that has been transferred during the backup
+	// +optional
+	Transferred string `json:"transferred,omitempty"`
+
+	// Total represents the total amount of data that needs to be transferred during the backup
+	// +optional
+	Total string `json:"total,omitempty"`
+
+	// Speed represents the transfer speed during the backup
+	Speed string `json:"speed,omitempty"`
 }
 
 // VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
