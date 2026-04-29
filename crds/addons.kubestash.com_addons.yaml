@@ -54,6 +54,7 @@ spec:
                         - VolumeSnapshotter
                         - Solr
                         - ClickHouseBackup
+                        - Neo4jAdmin
                       type: string
                     executor:
                       enum:
@@ -1081,6 +1082,7 @@ spec:
                         - VolumeSnapshotter
                         - Solr
                         - ClickHouseBackup
+                        - Neo4jAdmin
                       type: string
                     executor:
                       enum:
