@@ -24,7 +24,7 @@ import (
 )
 
 // Driver specifies the name of underlying tool that is being used to upload the backed up data.
-// +kubebuilder:validation:Enum=Restic;WalG;VolumeSnapshotter;Solr;Medusa;ClickHouseBackup;DriverNeo4jAdmin
+// +kubebuilder:validation:Enum=Restic;WalG;VolumeSnapshotter;Solr;Medusa;ClickHouseBackup;Neo4jAdmin
 type Driver string
 
 const (

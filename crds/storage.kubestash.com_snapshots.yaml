@@ -108,7 +108,7 @@ spec:
                       - Solr
                       - Medusa
                       - ClickHouseBackup
-                      - DriverNeo4jAdmin
+                      - Neo4jAdmin
                       type: string
                     duration:
                       type: string
