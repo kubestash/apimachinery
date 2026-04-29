@@ -46,6 +46,7 @@ spec:
                         - Solr
                         - Medusa
                         - ClickHouseBackup
+                        - DriverNeo4jAdmin
                       - enum:
                         - Restic
                         - WalG
@@ -1072,6 +1073,7 @@ spec:
                         - Solr
                         - Medusa
                         - ClickHouseBackup
+                        - DriverNeo4jAdmin
                       - enum:
                         - Restic
                         - WalG
