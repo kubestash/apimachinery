@@ -284,7 +284,7 @@ type ResticStats struct {
 
 	// Progress specifies the progress of the restic backup
 	// +optional
-	Progress *ResticProgress `json:"progress,omitempty"`
+	Progress *BackupProgress `json:"progress,omitempty"`
 }
 
 // ResticSummary specifies the summary of the Restic backup
@@ -313,8 +313,8 @@ type ResticSummary struct {
 	EndTime *metav1.Time `json:"endTime,omitempty"`
 }
 
-// ResticProgress specifies the progress of the Restic backup
-type ResticProgress struct {
+// BackupProgress specifies the progress of the Restic backup
+type BackupProgress struct {
 	// SecondsElapsed represents the seconds elapsed during the backup
 	// +optional
 	SecondsElapsed int64 `json:"secondsElapsed,omitempty"`
@@ -331,9 +331,9 @@ type ResticProgress struct {
 	// +optional
 	FilesDone int64 `json:"filesDone,omitempty"`
 
-	// Transferred represents the amount of data that has been transferred during the backup
+	// BackupDone represents the amount of data that has been backup so far
 	// +optional
-	Transferred string `json:"transferred,omitempty"`
+	BackupDone string `json:"backupDone,omitempty"`
 
 	// Total represents the total amount of data that needs to be transferred during the backup
 	// +optional

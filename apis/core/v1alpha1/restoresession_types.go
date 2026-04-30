@@ -380,6 +380,35 @@ type RestoreSessionStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
+// RestoreProgress specifies the progress of the Restic restore
+type RestoreProgress struct {
+	// SecondsElapsed represents the seconds elapsed during the backup
+	// +optional
+	SecondsElapsed int64 `json:"secondsElapsed,omitempty"`
+
+	// PercentDone represents the percentage of the backup that has been completed
+	//+optional
+	PercentDone string `json:"percentDone,omitempty"`
+
+	// TotalFiles represents the total number of files to backup
+	// +optional
+	TotalFiles int64 `json:"totalFiles,omitempty"`
+
+	// FilesDone represents the number of files done
+	// +optional
+	FilesDone int64 `json:"filesDone,omitempty"`
+
+	// RestoreDone represents the amount of data that has been restored
+	RestoreDone string `json:"restoreDone,omitempty"`
+
+	// Total represents the total amount of data that needs to be transferred during the backup
+	// +optional
+	Total string `json:"total,omitempty"`
+
+	// Speed represents the transfer speed during the backup
+	Speed string `json:"speed,omitempty"`
+}
+
 // RestorePhase represents the current state of the restore process
 // +kubebuilder:validation:Enum=Pending;Running;Failed;Succeeded;Invalid;Unknown
 type RestorePhase string
@@ -398,6 +427,10 @@ type ComponentRestoreStatus struct {
 	// Phase represents the restore phase of the component
 	// +optional
 	Phase RestorePhase `json:"phase,omitempty"`
+
+	// Progress specifies the progress of the restic restore process for this component.
+	// +optional
+	Progress *RestoreProgress `json:"progress,omitempty"`
 
 	// Duration specifies the total time taken to complete the restore process for this component
 	// +optional

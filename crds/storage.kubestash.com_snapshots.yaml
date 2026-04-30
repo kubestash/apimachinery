@@ -195,6 +195,8 @@ spec:
                         properties:
                           progress:
                             properties:
+                              backupDone:
+                                type: string
                               filesDone:
                                 format: int64
                                 type: integer
@@ -210,8 +212,6 @@ spec:
                               totalFiles:
                                 format: int64
                                 type: integer
-                              transferred:
-                                type: string
                             type: object
                           summary:
                             properties:

@@ -27,6 +27,7 @@ import (
 	"time"
 
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
+	"k8s.io/klog/v2"
 )
 
 const FileModeRWXAll = 0o777
@@ -133,13 +134,14 @@ type BackupSummary struct {
 	SnapshotID          string  `json:"snapshot_id"`
 }
 
-type BackupStatus struct {
+type ResticStatus struct {
 	MessageType      string   `json:"message_type"`
 	SecondsElapsed   int64    `json:"seconds_elapsed"`
 	SecondsRemaining int64    `json:"seconds_remaining"`
 	PercentDone      float64  `json:"percent_done"`
 	TotalFiles       int      `json:"total_files"`
 	TotalBytes       int      `json:"total_bytes"`
+	BytesRestored    int      `json:"bytes_restored"`
 	BytesDone        int64    `json:"bytes_done"`
 	CurrentFiles     []string `json:"current_files"`
 }
@@ -184,7 +186,7 @@ func extractLockIDs(r io.Reader) ([]string, error) {
 	return ids, sc.Err()
 }
 
-func extractBackupStatus(output []byte) ([]BackupStatus, error) {
+func extractStatus(output []byte) ([]ResticStatus, error) {
 	data := sanitizeFromStart(output)
 	if data == nil {
 		return nil, fmt.Errorf("cannot extract backup summary from JSON")
@@ -194,16 +196,22 @@ func extractBackupStatus(output []byte) ([]BackupStatus, error) {
 	if data == nil {
 		return nil, fmt.Errorf("cannot extract backup summary from JSON")
 	}
-
-	var results []BackupStatus
+	if !json.Valid(data) {
+		klog.Infoln("Data is not a type of a Restic Status, ignoring it..")
+		return nil, nil
+	}
+	var results []ResticStatus
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	for {
-		var s BackupStatus
-		err := decoder.Decode(&s)
-		if err != nil {
+		var raw json.RawMessage
+		if err := decoder.Decode(&raw); err != nil {
 			if err == io.EOF {
 				break
 			}
+			continue
+		}
+		var s ResticStatus
+		if err := json.Unmarshal(raw, &s); err != nil {
 			continue
 		}
 		results = append(results, s)

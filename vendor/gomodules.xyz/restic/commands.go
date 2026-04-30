@@ -254,6 +254,7 @@ func (w *ResticWrapper) restore(repository string, params restoreParams) ([]byte
 		args = append(args, "--exclude")
 		args = append(args, exclude)
 	}
+	args = append(args, "--json")
 	// add additional arguments passed by user to the restore process
 	for i := range params.args {
 		args = append(args, params.args[i])
