@@ -97,7 +97,6 @@ func (b *BackupStorage) IsCredentialLessModeEnabled() bool {
 	switch b.Spec.Storage.Provider {
 	case ProviderS3:
 		return b.Spec.Storage.S3.SecretName == ""
-		// case ProviderGCS:
 	case ProviderAzure:
 		return b.Spec.Storage.Azure.SecretName == ""
 	default:
