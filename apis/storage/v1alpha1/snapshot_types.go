@@ -220,7 +220,7 @@ type Component struct {
 	ClickHouseStats *ClickHouseStats `json:"clickHouseStats,omitempty"`
 
 	// Neo4jStats specifies the Neo4j Admin specific information
-	Neo4jStats *[]Neo4jStats `json:"neo4jStats,omitempty"`
+	Neo4jStats []Neo4jStats `json:"neo4jStats,omitempty"`
 }
 
 type Neo4jStats struct {
