@@ -217,7 +217,7 @@ type Component struct {
 	LogStats *LogStats `json:"logStats,omitempty"`
 
 	// ClickHouseStats specifies the ClickHouse Backup specific information
-	ClickHouseStats []*ClickHouseStats `json:"clickHouseStats,omitempty"`
+	ClickHouseStats []ClickHouseStats `json:"clickHouseStats,omitempty"`
 }
 
 type LogStats struct {
