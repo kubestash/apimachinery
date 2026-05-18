@@ -46,7 +46,7 @@ spec:
                         - Solr
                         - Medusa
                         - ClickHouseBackup
-                        - Oracle
+                        - OracleBackup
                       - enum:
                         - Restic
                         - WalG
@@ -1074,7 +1074,7 @@ spec:
                         - Solr
                         - Medusa
                         - ClickHouseBackup
-                        - Oracle
+                        - OracleBackup
                       - enum:
                         - Restic
                         - WalG
