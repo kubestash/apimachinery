@@ -108,6 +108,7 @@ spec:
                       - Solr
                       - Medusa
                       - ClickHouseBackup
+                      - OracleBackup
                       type: string
                     duration:
                       type: string
