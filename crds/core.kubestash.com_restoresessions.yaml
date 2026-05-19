@@ -10150,6 +10150,26 @@ spec:
                       - Invalid
                       - Unknown
                       type: string
+                    progress:
+                      properties:
+                        filesDone:
+                          format: int64
+                          type: integer
+                        percentDone:
+                          type: string
+                        restoreDone:
+                          type: string
+                        secondsElapsed:
+                          format: int64
+                          type: integer
+                        speed:
+                          type: string
+                        total:
+                          type: string
+                        totalFiles:
+                          format: int64
+                          type: integer
+                      type: object
                   type: object
                 type: object
                 x-kubernetes-map-type: granular
