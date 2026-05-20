@@ -1418,6 +1418,11 @@ func (in *ManifestRestoreOptions) DeepCopyInto(out *ManifestRestoreOptions) {
 		*out = new(KubeDBManifestOptions)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ClickHouse != nil {
+		in, out := &in.ClickHouse, &out.ClickHouse
+		*out = new(KubeDBManifestOptions)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.MariaDB != nil {
 		in, out := &in.MariaDB, &out.MariaDB
 		*out = new(KubeDBManifestOptions)

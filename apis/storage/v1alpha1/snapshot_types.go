@@ -217,7 +217,7 @@ type Component struct {
 	LogStats *LogStats `json:"logStats,omitempty"`
 
 	// ClickHouseStats specifies the ClickHouse Backup specific information
-	ClickHouseStats *ClickHouseStats `json:"clickHouseStats,omitempty"`
+	ClickHouseStats []ClickHouseStats `json:"clickHouseStats,omitempty"`
 }
 
 type LogStats struct {
@@ -387,6 +387,9 @@ type ClickHouseStats struct {
 
 	// StatusType represents the status of Backup. This can be "IN_PROGRESS","SUCCESS","FAILED" or "UNKNOWN"
 	StatusType string `json:"status,omitempty"`
+
+	// host represents the host for which backup has been taken
+	Host string `json:"host,omitempty"`
 
 	// Starting time of the backup
 	StartTime *metav1.Time `json:"startTime,omitempty"`
