@@ -186,19 +186,17 @@ func extractLockIDs(r io.Reader) ([]string, error) {
 	return ids, sc.Err()
 }
 
-func extractStatus(output []byte) ([]ResticStatus, error) {
+func extractStatus(output []byte) []ResticStatus {
 	data := sanitizeFromStart(output)
 	if data == nil {
-		return nil, fmt.Errorf("cannot extract backup summary from JSON")
+		klog.Infoln("status can not sanitize from start, data is not valid, ignoring it...")
+		return nil
 	}
 
 	data = sanitizeFromEnd(data)
 	if data == nil {
-		return nil, fmt.Errorf("cannot extract backup summary from JSON")
-	}
-	if !json.Valid(data) {
-		klog.Infoln("Data is not a type of a Restic Status, ignoring it..")
-		return nil, nil
+		klog.Infoln("status can not sanitize from end, data is not valid, ignoring it...")
+		return nil
 	}
 	var results []ResticStatus
 	decoder := json.NewDecoder(bytes.NewReader(data))
@@ -216,7 +214,7 @@ func extractStatus(output []byte) ([]ResticStatus, error) {
 		}
 		results = append(results, s)
 	}
-	return results, nil
+	return results
 }
 
 func sanitizeFromStart(data []byte) []byte {

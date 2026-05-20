@@ -638,10 +638,7 @@ func (w *ResticWrapper) StatusSince(repository string, since int) (int, []Restic
 	out = out[int(math.Min(float64(since), float64(len(out)))):]
 	var status []ResticStatus
 	if len(out) != 0 {
-		status, err = extractStatus(out)
-		if err != nil {
-			return 0, nil, fmt.Errorf("error extracting leaf output for repository %s: %v", repository, err)
-		}
+		status = extractStatus(out)
 	}
 	return length, status, nil
 }

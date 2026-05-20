@@ -54,6 +54,9 @@ type BackupOptions struct {
 	StdinFileName     string // default "stdin"
 	Exclude           []string
 	Args              []string
+
+	OnComplete      func()
+	OverrideWrapper *ResticWrapper
 }
 
 // RestoreOptions specifies restore information

@@ -161,8 +161,16 @@ func (w *ResticWrapper) RunParallelBackup(backupOptions []BackupOptions, maxConc
 
 			// sh field in ResticWrapper is a pointer. we must not use same w in multiple go routine.
 			// otherwise they might enter in racing condition.
-			nw := w.Copy()
+			var nw *ResticWrapper
+			if opt.OverrideWrapper != nil {
+				nw = opt.OverrideWrapper
+			} else {
+				nw = w.Copy()
+			}
 			hostStats, err := nw.runBackup(opt)
+			if opt.OnComplete != nil {
+				opt.OnComplete()
+			}
 			for idx, hostStat := range hostStats {
 				if err != nil {
 					hostStat.Phase = HostBackupFailed
