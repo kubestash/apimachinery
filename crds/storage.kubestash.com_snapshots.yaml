@@ -88,18 +88,22 @@ spec:
                 additionalProperties:
                   properties:
                     clickHouseStats:
-                      properties:
-                        finishTime:
-                          format: date-time
-                          type: string
-                        id:
-                          type: string
-                        startTime:
-                          format: date-time
-                          type: string
-                        status:
-                          type: string
-                      type: object
+                      items:
+                        properties:
+                          finishTime:
+                            format: date-time
+                            type: string
+                          host:
+                            type: string
+                          id:
+                            type: string
+                          startTime:
+                            format: date-time
+                            type: string
+                          status:
+                            type: string
+                        type: object
+                      type: array
                     driver:
                       enum:
                       - Restic

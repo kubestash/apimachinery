@@ -269,8 +269,10 @@ func (in *Component) DeepCopyInto(out *Component) {
 	}
 	if in.ClickHouseStats != nil {
 		in, out := &in.ClickHouseStats, &out.ClickHouseStats
-		*out = new(ClickHouseStats)
-		(*in).DeepCopyInto(*out)
+		*out = make([]ClickHouseStats, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
 	}
 }
 

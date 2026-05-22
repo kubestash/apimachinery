@@ -89,6 +89,10 @@ type ManifestRestoreOptions struct {
 	// +optional
 	MySQL *KubeDBManifestOptions `json:"mySQL,omitempty"`
 
+	// ClickHouse specifies the options for selecting particular ClickHouse components to restore in manifest restore
+	// +optional
+	ClickHouse *KubeDBManifestOptions `json:"clickhouse,omitempty"`
+
 	// MariaDB specifies the options for selecting particular MariaDB components to restore in manifest restore
 	// +optional
 	MariaDB *KubeDBManifestOptions `json:"mariaDB,omitempty"`
