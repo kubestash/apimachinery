@@ -217,6 +217,29 @@ func extractStatus(output []byte) []ResticStatus {
 	return results
 }
 
+func statusSince(output []byte, since int) (int, []ResticStatus) {
+	start := since
+	if start < 0 {
+		start = 0
+	}
+	if start > len(output) {
+		start = len(output)
+	}
+
+	data := output[start:]
+	if len(data) == 0 {
+		return start, nil
+	}
+
+	end := bytes.LastIndexByte(data, '}')
+	if end == -1 {
+		return start, nil
+	}
+
+	cursor := start + end + 1
+	return cursor, extractStatus(data[:end+1])
+}
+
 func sanitizeFromStart(data []byte) []byte {
 	start := bytes.IndexByte(data, '{')
 	if start == -1 {

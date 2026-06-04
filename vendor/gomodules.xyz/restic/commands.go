@@ -22,7 +22,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"math"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -634,11 +633,6 @@ func (w *ResticWrapper) StatusSince(repository string, since int) (int, []Restic
 	if err != nil {
 		return 0, nil, fmt.Errorf("error getting leaf output for repository %s: %v", repository, err)
 	}
-	length := len(out)
-	out = out[int(math.Min(float64(since), float64(len(out)))):]
-	var status []ResticStatus
-	if len(out) != 0 {
-		status = extractStatus(out)
-	}
-	return length, status, nil
+	cursor, status := statusSince(out, since)
+	return cursor, status, nil
 }
