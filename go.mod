@@ -19,7 +19,7 @@ require (
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	gocloud.dev v0.41.0
 	gomodules.xyz/envsubst v0.2.0
-	gomodules.xyz/restic v0.2.1-0.20260520064053-e4e42e807e1e
+	gomodules.xyz/restic v0.2.1-0.20260604060455-406e3ae273f2
 	gomodules.xyz/x v0.0.17
 	k8s.io/api v0.34.3
 	k8s.io/apimachinery v0.34.3
@@ -90,7 +90,6 @@ require (
 	github.com/docker/cli v29.2.0+incompatible // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.9.4 // indirect
-	github.com/docker/go-units v0.5.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.13.0 // indirect
 	github.com/envoyproxy/go-control-plane/envoy v1.36.0 // indirect
 	github.com/envoyproxy/protoc-gen-validate v1.3.0 // indirect

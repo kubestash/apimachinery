@@ -50,12 +50,13 @@ func (w *ResticWrapper) setupEnv() error {
 }
 
 func (w *ResticWrapper) setupEnvsForBackend(b *Backend) error {
-	// Use the injected ConfigResolver to get storage configuration
-	if b.ConfigResolver == nil {
-		return fmt.Errorf("ConfigResolver is not set for backend %s", b.Repository)
+	if b.ConfigResolver != nil {
+		if err := b.ConfigResolver(b); err != nil {
+			return fmt.Errorf("failed to resolve storage config: %w", err)
+		}
 	}
-	if err := b.ConfigResolver(b); err != nil {
-		return fmt.Errorf("failed to resolve storage config: %w", err)
+	if b.StorageConfig == nil {
+		return fmt.Errorf("storage config is not set for backend %s", b.Repository)
 	}
 
 	if b.Envs == nil {

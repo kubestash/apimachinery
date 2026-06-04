@@ -18,6 +18,7 @@ package restic
 
 import (
 	"math"
+	"strings"
 	"sync"
 	"time"
 
@@ -236,21 +237,37 @@ func (w *ResticWrapper) InitializeRepository(repository string) error {
 
 func (w *ResticWrapper) VerifyRepositoryIntegrity(repository string) (*RepositoryStats, error) {
 	// Check repository integrity
-	out, err := w.check(repository)
-	if err != nil {
-		return nil, err
-	}
-	// Extract information from output of "check" command
+	out, checkErr := w.check(repository)
 	integrity := extractCheckInfo(out)
-	// Read repository statics after cleanup
-	out, err = w.stats(repository, "")
-	if err != nil {
-		return nil, err
+	if checkErr != nil && !isRepositoryIntegrityFailure(out, checkErr) {
+		// Not isRepositoryIntegrityFailure error. Return the error for further handling.
+		return nil, checkErr
 	}
+
+	out, statErr := w.stats(repository, "")
+	if statErr != nil {
+		if checkErr != nil {
+			return &RepositoryStats{Integrity: ptr.To(false)}, nil
+		}
+		return nil, statErr
+	}
+
 	// Extract information from output of "stats" command
-	repoSize, err := extractStatsInfo(out)
-	if err != nil {
-		return nil, err
+	repoSize, extractErr := extractStatsInfo(out)
+	if extractErr != nil {
+		if checkErr != nil {
+			return &RepositoryStats{Integrity: ptr.To(false)}, nil
+		}
+		return nil, extractErr
 	}
 	return &RepositoryStats{Integrity: ptr.To(integrity), Size: repoSize}, nil
+}
+
+func isRepositoryIntegrityFailure(out []byte, err error) bool {
+	if err == nil {
+		return false
+	}
+	msg := strings.ToLower(string(out) + " " + err.Error())
+	return strings.Contains(msg, "repository contains errors") ||
+		strings.Contains(msg, "repository is damaged")
 }
