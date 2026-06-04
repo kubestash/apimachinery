@@ -14,7 +14,7 @@ require (
 	github.com/cenkalti/backoff/v4 v4.3.0
 	github.com/kubernetes-csi/external-snapshotter/client/v8 v8.4.0
 	github.com/stretchr/testify v1.11.1
-	go.bytebuilders.dev/audit v0.0.51
+	go.bytebuilders.dev/audit v0.0.52
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	gocloud.dev v0.41.0
 	gomodules.xyz/envsubst v0.2.0
