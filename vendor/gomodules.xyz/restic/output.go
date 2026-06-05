@@ -140,8 +140,8 @@ type ResticStatus struct {
 	SecondsRemaining int64    `json:"seconds_remaining"`
 	PercentDone      float64  `json:"percent_done"`
 	TotalFiles       int      `json:"total_files"`
-	TotalBytes       int      `json:"total_bytes"`
-	BytesRestored    int      `json:"bytes_restored"`
+	TotalBytes       uint64   `json:"total_bytes"`
+	BytesRestored    uint64   `json:"bytes_restored"`
 	BytesDone        int64    `json:"bytes_done"`
 	CurrentFiles     []string `json:"current_files"`
 }
@@ -189,13 +189,13 @@ func extractLockIDs(r io.Reader) ([]string, error) {
 func extractStatus(output []byte) []ResticStatus {
 	data := sanitizeFromStart(output)
 	if data == nil {
-		klog.Infoln("status can not sanitize from start, data is not valid, ignoring it...")
+		klog.Infoln("status cannot be sanitized from start, data is not valid, ignoring it...")
 		return nil
 	}
 
 	data = sanitizeFromEnd(data)
 	if data == nil {
-		klog.Infoln("status can not sanitize from end, data is not valid, ignoring it...")
+		klog.Infoln("status cannot be sanitized from end, data is not valid, ignoring it...")
 		return nil
 	}
 	var results []ResticStatus
@@ -203,13 +203,15 @@ func extractStatus(output []byte) []ResticStatus {
 	for {
 		var raw json.RawMessage
 		if err := decoder.Decode(&raw); err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				break
 			}
+			klog.Infoln("cannot decode status JSON", "error", err)
 			continue
 		}
 		var s ResticStatus
 		if err := json.Unmarshal(raw, &s); err != nil {
+			klog.Infoln("cannot decode status JSON", "error", err)
 			continue
 		}
 		results = append(results, s)

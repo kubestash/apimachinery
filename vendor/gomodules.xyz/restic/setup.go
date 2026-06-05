@@ -29,7 +29,7 @@ import (
 
 func (w *ResticWrapper) setupEnv() error {
 	// Set progress report frequency.
-	// 0.1 is for one report per ten second.
+	// 0.1 is for one report per ten seconds.
 	// ref: https://restic.readthedocs.io/en/stable/manual_rest.html
 	w.sh.SetEnv(RESTIC_PROGRESS_FPS, "0.1")
 	if w.Config.EnableCache {

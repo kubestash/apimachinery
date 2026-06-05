@@ -63,10 +63,9 @@ Each backend needs a populated `StorageConfig` before setup:
 from `StorageSecret` when needed. CA data is read from `CA_CERT_DATA`, written to
 a temporary file under the backend temp directory, and used with `--cacert`.
 
-There is a `ConfigResolver StorageConfigResolver` field on `Backend`, but
-`setupEnvsForBackend` currently does not invoke it. Do not assume resolvers run
-automatically unless the implementation is changed. Existing callers should
-populate `Backend.StorageConfig` directly before calling `NewResticWrapper`.
+There is a `ConfigResolver StorageConfigResolver` field on `Backend`, and
+`setupEnvsForBackend` invokes it when present before validating
+`Backend.StorageConfig`.
 
 ## Command Execution
 
