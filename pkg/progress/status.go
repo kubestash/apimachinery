@@ -42,6 +42,9 @@ func (pg *Progress) setBackupProgress(repoName string, status *restic.ResticStat
 	if status.PercentDone*100 > 0 {
 		progress.PercentDone = fmt.Sprintf("%.2f%%", status.PercentDone*100)
 	}
+	if status.SecondsElapsed > 0 {
+		progress.Speed = units.HumanSize(float64(status.BytesDone)/float64(status.SecondsElapsed)) + "/s"
+	}
 
 	for idx := range pg.snapshots {
 		snap := &pg.snapshots[idx]
@@ -71,9 +74,16 @@ func (pg *Progress) setRestoreProgress(status *restic.ResticStatus) error {
 	progress := &coreapi.RestoreProgress{
 		SecondsElapsed: status.SecondsElapsed,
 		TotalFiles:     int64(status.TotalFiles),
-		Total:          units.HumanSize(float64(status.TotalBytes)),
 		RestoreDone:    units.HumanSize(float64(status.BytesRestored)),
-		PercentDone:    fmt.Sprintf("%.2f%%", status.PercentDone*100),
+	}
+	if status.TotalBytes > 0 {
+		progress.Total = units.HumanSize(float64(status.TotalBytes))
+	}
+	if status.PercentDone*100 > 0 {
+		progress.PercentDone = fmt.Sprintf("%.2f%%", status.PercentDone*100)
+	}
+	if status.SecondsElapsed > 0 {
+		progress.Speed = units.HumanSize(float64(status.BytesRestored)/float64(status.SecondsElapsed)) + "/s"
 	}
 
 	var comp coreapi.ComponentRestoreStatus
