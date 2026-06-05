@@ -1131,7 +1131,7 @@ gomodules.xyz/encoding/json
 gomodules.xyz/envsubst
 gomodules.xyz/envsubst/parse
 gomodules.xyz/envsubst/path
-# gomodules.xyz/go-sh v0.2.1-0.20260604154808-57b6d2e3a871
+# gomodules.xyz/go-sh v0.3.0
 ## explicit; go 1.25
 gomodules.xyz/go-sh
 # gomodules.xyz/jsonpatch/v2 v2.5.0
@@ -1143,8 +1143,8 @@ gomodules.xyz/mergo
 # gomodules.xyz/pointer v0.1.0
 ## explicit; go 1.15
 gomodules.xyz/pointer
-# gomodules.xyz/restic v0.2.1-0.20260605045743-c526438ff6c5
-## explicit; go 1.25
+# gomodules.xyz/restic v0.3.0
+## explicit; go 1.25.0
 gomodules.xyz/restic
 # gomodules.xyz/x v0.0.17
 ## explicit; go 1.22.0

@@ -19,7 +19,7 @@ require (
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	gocloud.dev v0.41.0
 	gomodules.xyz/envsubst v0.2.0
-	gomodules.xyz/restic v0.2.1-0.20260605045743-c526438ff6c5
+	gomodules.xyz/restic v0.3.0
 	gomodules.xyz/x v0.0.17
 	k8s.io/api v0.34.3
 	k8s.io/apimachinery v0.34.3
@@ -213,7 +213,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	gomodules.xyz/counter v0.0.1 // indirect
 	gomodules.xyz/encoding v0.0.8 // indirect
-	gomodules.xyz/go-sh v0.2.1-0.20260604154808-57b6d2e3a871 // indirect
+	gomodules.xyz/go-sh v0.3.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.5.0 // indirect
 	gomodules.xyz/mergo v0.3.13 // indirect
 	gomodules.xyz/pointer v0.1.0 // indirect
