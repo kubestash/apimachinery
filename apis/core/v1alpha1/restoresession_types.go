@@ -386,30 +386,32 @@ type RestoreSessionStatus struct {
 
 // RestoreProgress specifies the progress of the Restic restore
 type RestoreProgress struct {
-	// SecondsElapsed represents the seconds elapsed during the backup
+	// SecondsElapsed represents the seconds elapsed during the restore
 	// +optional
 	SecondsElapsed int64 `json:"secondsElapsed,omitempty"`
 
-	// PercentDone represents the percentage of the backup that has been completed
-	//+optional
+	// PercentDone represents the percentage of the restore that has been completed
+	// +optional
 	PercentDone string `json:"percentDone,omitempty"`
 
-	// TotalFiles represents the total number of files to backup
+	// TotalFiles represents the total number of files to restore
 	// +optional
 	TotalFiles int64 `json:"totalFiles,omitempty"`
 
-	// FilesDone represents the number of files done
+	// FilesDone represents the number of files that have been restored
 	// +optional
 	FilesDone int64 `json:"filesDone,omitempty"`
 
 	// RestoreDone represents the amount of data that has been restored
+	// +optional
 	RestoreDone string `json:"restoreDone,omitempty"`
 
-	// Total represents the total amount of data that needs to be transferred during the backup
+	// Total represents the total amount of data that needs to be transferred during the restore
 	// +optional
 	Total string `json:"total,omitempty"`
 
-	// Speed represents the transfer speed during the backup
+	// Speed represents the transfer speed during the restore
+	// +optional
 	Speed string `json:"speed,omitempty"`
 }
 

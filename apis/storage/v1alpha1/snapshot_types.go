@@ -320,7 +320,7 @@ type BackupProgress struct {
 	SecondsElapsed int64 `json:"secondsElapsed,omitempty"`
 
 	// PercentDone represents the percentage of the backup that has been completed
-	//+optional
+	// +optional
 	PercentDone string `json:"percentDone,omitempty"`
 
 	// TotalFiles represents the total number of files to backup
@@ -340,6 +340,7 @@ type BackupProgress struct {
 	Total string `json:"total,omitempty"`
 
 	// Speed represents the transfer speed during the backup
+	// +optional
 	Speed string `json:"speed,omitempty"`
 }
 
