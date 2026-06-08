@@ -112,6 +112,7 @@ spec:
                       - Solr
                       - Medusa
                       - ClickHouseBackup
+                      - QdrantBackup
                       type: string
                     duration:
                       type: string
@@ -194,6 +195,19 @@ spec:
                       - Succeeded
                       - Failed
                       type: string
+                    qdrantStats:
+                      properties:
+                        finishTime:
+                          format: date-time
+                          type: string
+                        host:
+                          type: string
+                        id:
+                          type: string
+                        startTime:
+                          format: date-time
+                          type: string
+                      type: object
                     resticStats:
                       items:
                         properties:

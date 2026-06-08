@@ -218,6 +218,10 @@ type Component struct {
 
 	// ClickHouseStats specifies the ClickHouse Backup specific information
 	ClickHouseStats []ClickHouseStats `json:"clickHouseStats,omitempty"`
+
+	// QdrantStats specifies the Qdrant backup specific information
+	// +optional
+	QdrantStats *QdrantStats `json:"qdrantStats,omitempty"`
 }
 
 type LogStats struct {
@@ -379,6 +383,23 @@ type SolrStats struct {
 
 	// Finishing time of the backup
 	UploadedIndexFileMB float64 `json:"uploadedIndexFileMB,omitempty"`
+}
+
+// QdrantStats specifies the information specific to the "QdrantBackup" driver.
+type QdrantStats struct {
+	// Id represents the backup id (metadata key path)
+	Id string `json:"id,omitempty"`
+
+	// Host represents the host for which backup has been taken
+	Host string `json:"host,omitempty"`
+
+	// StartTime represents the backup start time.
+	// +optional
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+
+	// FinishTime represents the backup finish time.
+	// +optional
+	FinishTime *metav1.Time `json:"finishTime,omitempty"`
 }
 
 type ClickHouseStats struct {
