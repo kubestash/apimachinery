@@ -147,7 +147,6 @@ const (
 	ComponentVolumeSnapshot = "volumesnapshot"
 	ComponentDashboard      = "dashboard"
 	ComponentPhysical       = "physical"
-	ComponentDatabase       = "database"
 )
 
 const (
