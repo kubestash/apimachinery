@@ -140,6 +140,39 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			expectedPhase: RestoreFailed,
 		},
 		{
+			name: "RestoreSession should be Failed if a component Failed and the rest were never reported",
+			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
+				setPostRestoreHooksExecutionSucceededConditionToTrue(r)
+				r.Status.TotalComponents = 2
+				r.Status.Components = map[string]ComponentRestoreStatus{
+					"dump": {
+						Phase: RestoreFailed,
+						Error: "component dump not found in snapshot",
+					},
+				}
+
+				r.Status.Conditions = cutil.SetCondition(r.Status.Conditions, cond)
+			}),
+
+			expectedPhase: RestoreFailed,
+		},
+		{
+			name: "RestoreSession should be Running if a component Failed but another is still in progress",
+			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
+				r.Status.TotalComponents = 3
+				r.Status.Components = map[string]ComponentRestoreStatus{
+					"manifest": {
+						Phase: RestoreFailed,
+					},
+					"dump": {
+						Phase: RestoreRunning,
+					},
+				}
+			}),
+
+			expectedPhase: RestoreRunning,
+		},
+		{
 			name: "RestoreSession should be Succeeded if all components Succeeded",
 			restoreSession: sampleRestoreSession(func(r *RestoreSession) {
 				setPostRestoreHooksExecutionSucceededConditionToTrue(r)
@@ -171,6 +204,20 @@ func TestRestoreSessionPhaseBasedOnComponentsPhase(t *testing.T) {
 			assert.Equal(t, test.expectedPhase, test.restoreSession.CalculatePhase())
 		})
 	}
+}
+
+func TestAllComponentsCompletedIfAFailedComponentCanNeverBeFollowedByTheRest(t *testing.T) {
+	rs := sampleRestoreSession(func(r *RestoreSession) {
+		r.Status.TotalComponents = 2
+		r.Status.Components = map[string]ComponentRestoreStatus{
+			"dump": {
+				Phase: RestoreFailed,
+				Error: "component dump not found in snapshot",
+			},
+		}
+	})
+
+	assert.True(t, rs.AllComponentsCompleted())
 }
 
 func TestRestoreSessionPhaseIsFailedIfPreRestoreHooksExecutionSucceededConditionIsFalse(t *testing.T) {
