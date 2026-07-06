@@ -120,6 +120,10 @@ type ManifestRestoreOptions struct {
 	// RedisSentinel specifies the options for selecting particular RedisSentinel components to restore in manifest restore
 	// +optional
 	RedisSentinel *RedisSentinelManifestOptions `json:"redisSentinel,omitempty"`
+
+	// Neo4j specifies the options for selecting particular Neo4j components to restore in manifest restore
+	// +optional
+	Neo4j *KubeDBManifestOptions `json:"neo4j,omitempty"`
 }
 
 type RedisSentinelManifestOptions struct {
