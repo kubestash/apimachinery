@@ -1143,7 +1143,7 @@ gomodules.xyz/mergo
 # gomodules.xyz/pointer v0.1.0
 ## explicit; go 1.15
 gomodules.xyz/pointer
-# gomodules.xyz/restic v0.4.0
+# gomodules.xyz/restic v0.4.1-0.20260703045401-b7ea66c7a7fd
 ## explicit; go 1.25.0
 gomodules.xyz/restic
 # gomodules.xyz/x v0.0.17
