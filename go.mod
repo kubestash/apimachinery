@@ -19,7 +19,7 @@ require (
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	gocloud.dev v0.41.0
 	gomodules.xyz/envsubst v0.2.0
-	gomodules.xyz/restic v0.4.0
+	gomodules.xyz/restic v0.4.1-0.20260703045401-b7ea66c7a7fd
 	gomodules.xyz/x v0.0.17
 	k8s.io/api v0.34.3
 	k8s.io/apimachinery v0.34.3
