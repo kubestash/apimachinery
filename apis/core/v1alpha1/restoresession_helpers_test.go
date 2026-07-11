@@ -222,7 +222,8 @@ func TestAllComponentsCompletedIfAFailedComponentCanNeverBeFollowedByTheRest(t *
 
 func TestRestoreSessionPhaseIsFailedIfPreRestoreHooksExecutionSucceededConditionIsFalse(t *testing.T) {
 	rs := sampleRestoreSession(func(r *RestoreSession) {
-		r.Status.Conditions = append(r.Status.Conditions,
+		r.Status.Conditions = append(
+			r.Status.Conditions,
 			kmapi.Condition{
 				Type:   TypePreRestoreHooksExecutionSucceeded,
 				Status: metav1.ConditionFalse,
@@ -241,7 +242,8 @@ func TestRestoreSessionPhaseIsFailedIfPreRestoreHooksExecutionSucceededCondition
 
 func TestRestoreSessionPhaseIsFailedIfPostRestoreHooksExecutionSucceededConditionIsFalse(t *testing.T) {
 	rs := sampleRestoreSession(func(r *RestoreSession) {
-		r.Status.Conditions = append(r.Status.Conditions,
+		r.Status.Conditions = append(
+			r.Status.Conditions,
 			kmapi.Condition{
 				Type:   TypePostRestoreHooksExecutionSucceeded,
 				Status: metav1.ConditionFalse,
@@ -260,7 +262,8 @@ func TestRestoreSessionPhaseIsFailedIfPostRestoreHooksExecutionSucceededConditio
 
 func TestRestoreSessionPhaseIsFailedIfRestoreExecutorEnsuredConditionIsFalse(t *testing.T) {
 	rs := sampleRestoreSession(func(r *RestoreSession) {
-		r.Status.Conditions = append(r.Status.Conditions,
+		r.Status.Conditions = append(
+			r.Status.Conditions,
 			kmapi.Condition{
 				Type:   TypeRestoreExecutorEnsured,
 				Status: metav1.ConditionFalse,
