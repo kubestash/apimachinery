@@ -250,6 +250,27 @@ func TestFindAppropriateAddonVersion(t *testing.T) {
 			},
 			want: "17.2",
 		},
+		// Percona pg_tde. The suffixed db version is resolved via the hard-coded
+		// map against the RAW dbVersion, and "17.9-percona" is intentionally NOT
+		// present in availableVersions.
+		{
+			name: "pg-17.9-percona-backup",
+			args: args{
+				addonVersions: []string{"12.17", "14.10", "16.1", "17.2"},
+				dbVersion:     "17.9-percona",
+				funcName:      "postgres-backup",
+			},
+			want: "17.9-percona",
+		},
+		{
+			name: "pg-17.9-percona-restore",
+			args: args{
+				addonVersions: []string{"12.17", "14.10", "16.1", "17.2"},
+				dbVersion:     "17.9-percona",
+				funcName:      "postgres-restore",
+			},
+			want: "17.9-percona",
+		},
 		// No Addons
 		{
 			name: "no-addons",
