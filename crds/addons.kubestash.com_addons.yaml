@@ -48,6 +48,7 @@ spec:
                         - ClickHouseBackup
                         - Neo4jAdmin
                         - Weaviate
+                        - Milvus
                       - enum:
                         - Restic
                         - WalG
@@ -57,6 +58,7 @@ spec:
                         - ClickHouseBackup
                         - Neo4jAdmin
                         - Weaviate
+                        - Milvus
                       type: string
                     executor:
                       enum:
@@ -1078,6 +1080,7 @@ spec:
                         - ClickHouseBackup
                         - Neo4jAdmin
                         - Weaviate
+                        - Milvus
                       - enum:
                         - Restic
                         - WalG
@@ -1087,6 +1090,7 @@ spec:
                         - ClickHouseBackup
                         - Neo4jAdmin
                         - Weaviate
+                        - Milvus
                       type: string
                     executor:
                       enum:

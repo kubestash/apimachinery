@@ -114,6 +114,7 @@ spec:
                       - ClickHouseBackup
                       - Neo4jAdmin
                       - Weaviate
+                      - Milvus
                       type: string
                     duration:
                       type: string
