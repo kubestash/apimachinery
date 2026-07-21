@@ -573,15 +573,30 @@ func configureTLS(caCert []byte, insecureTLS bool) (*http.Client, error) {
 	}, nil
 }
 
-func (b *Blob) SetPathAsDir(ctx context.Context, path string) error {
-	bucket, err := b.openBucket(ctx, path)
+// SetPathAsDir writes the empty "<dirPath>/" object that object stores use to
+// represent a directory. Some consumers require it before they will write into a
+// location; Solr's backup repositories, for example, reject a backup with
+// "specified location ... does not exist" unless the marker is present.
+//
+// dirPath is relative to the storage prefix, like every other method here.
+// The bucket is opened on the parent of dirPath and only the final segment is
+// written, matching how Exists and UploadFromReader split a path. Opening the
+// bucket on the whole of dirPath and then writing dirPath again would place the
+// marker a level too deep, at "<prefix>/<dirPath>/<dirPath>/".
+func (b *Blob) SetPathAsDir(ctx context.Context, dirPath string) error {
+	trimmed := strings.Trim(dirPath, "/")
+	if trimmed == "" {
+		return fmt.Errorf("cannot mark an empty path as a directory")
+	}
+
+	parent, name := path.Split(trimmed)
+	bucket, err := b.openBucket(ctx, parent)
 	if err != nil {
 		return err
 	}
-	if !strings.HasSuffix(path, "/") {
-		path = fmt.Sprintf("%s/", path)
-	}
-	w, err := bucket.NewWriter(ctx, path, nil)
+	defer closeBucket(ctx, bucket)
+
+	w, err := bucket.NewWriter(ctx, name+"/", nil)
 	if err != nil {
 		return err
 	}
@@ -589,9 +604,6 @@ func (b *Blob) SetPathAsDir(ctx context.Context, path string) error {
 	closeErr := w.Close()
 	if writeErr != nil {
 		return writeErr
-	}
-	if closeErr != nil {
-		return closeErr
 	}
 	return closeErr
 }
