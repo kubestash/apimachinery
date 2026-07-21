@@ -24,7 +24,7 @@ import (
 )
 
 // Driver specifies the name of underlying tool that is being used to upload the backed up data.
-// +kubebuilder:validation:Enum=Restic;WalG;VolumeSnapshotter;Solr;Medusa;ClickHouseBackup;Neo4jAdmin
+// +kubebuilder:validation:Enum=Restic;WalG;VolumeSnapshotter;Solr;Medusa;ClickHouseBackup;Neo4jAdmin;Weaviate
 type Driver string
 
 const (
@@ -35,6 +35,7 @@ const (
 	DriverSolr              Driver = "Solr"
 	DriverClickHouseBackup  Driver = "ClickHouseBackup"
 	DriverNeo4jAdmin        Driver = "Neo4jAdmin"
+	DriverWeaviate          Driver = "Weaviate"
 )
 
 // VolumeSource specifies the source of volume to mount in the backup/restore executor

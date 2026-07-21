@@ -47,6 +47,7 @@ spec:
                         - Medusa
                         - ClickHouseBackup
                         - Neo4jAdmin
+                        - Weaviate
                       - enum:
                         - Restic
                         - WalG
@@ -55,6 +56,7 @@ spec:
                         - Solr
                         - ClickHouseBackup
                         - Neo4jAdmin
+                        - Weaviate
                       type: string
                     executor:
                       enum:
@@ -1075,6 +1077,7 @@ spec:
                         - Medusa
                         - ClickHouseBackup
                         - Neo4jAdmin
+                        - Weaviate
                       - enum:
                         - Restic
                         - WalG
@@ -1083,6 +1086,7 @@ spec:
                         - Solr
                         - ClickHouseBackup
                         - Neo4jAdmin
+                        - Weaviate
                       type: string
                     executor:
                       enum:

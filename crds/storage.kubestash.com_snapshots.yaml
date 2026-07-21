@@ -113,6 +113,7 @@ spec:
                       - Medusa
                       - ClickHouseBackup
                       - Neo4jAdmin
+                      - Weaviate
                       type: string
                     duration:
                       type: string
