@@ -191,7 +191,7 @@ const (
 const (
 	ClusterScopedDir   = "cluster"
 	NamespaceScopedDir = "namespaces"
-	SnapshotsDirectory = "snapshots"
+	DirSnapshots = "snapshots"
 )
 
 // GroupResources for various Kubernetes resources
