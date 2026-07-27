@@ -162,6 +162,7 @@ const (
 	OwnerKey              = ".metadata.controller"
 	SnapshotVersionV1     = "v1"
 	DirRepository         = "repository"
+	DirSnapshots          = "snapshots"
 
 	SessionFullBackup     = "full-backup"
 	SessionManifestBackup = "manifest-backup"
@@ -191,7 +192,6 @@ const (
 const (
 	ClusterScopedDir   = "cluster"
 	NamespaceScopedDir = "namespaces"
-	DirSnapshots = "snapshots"
 )
 
 // GroupResources for various Kubernetes resources
