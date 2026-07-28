@@ -316,6 +316,27 @@ spec:
                           format: date-time
                           type: string
                       type: object
+                    weaviateStats:
+                      properties:
+                        backend:
+                          type: string
+                        classes:
+                          items:
+                            type: string
+                          type: array
+                        id:
+                          type: string
+                        path:
+                          type: string
+                        startTime:
+                          format: date-time
+                          type: string
+                        status:
+                          type: string
+                        stopTime:
+                          format: date-time
+                          type: string
+                      type: object
                   type: object
                 type: object
                 x-kubernetes-map-type: granular

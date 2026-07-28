@@ -221,6 +221,10 @@ type Component struct {
 
 	// Neo4jStats specifies the Neo4j Admin specific information
 	Neo4jStats []Neo4jStats `json:"neo4jStats,omitempty"`
+
+	// WeaviateStats specifies the "Weaviate" driver specific information
+	// +optional
+	WeaviateStats *WeaviateStats `json:"weaviateStats,omitempty"`
 }
 
 type Neo4jStats struct {
@@ -454,6 +458,33 @@ type ClickHouseStats struct {
 
 	// Finishing time of the backup
 	FinishTime *metav1.Time `json:"finishTime,omitempty"`
+}
+
+// WeaviateStats specifies the information specific to the "Weaviate" driver.
+type WeaviateStats struct {
+	// Id represents the Backup ID.
+	Id string `json:"id,omitempty"`
+
+	// Backend represents the storage backend (s3, gcs, azure, filesystem)
+	Backend string `json:"backend,omitempty"`
+
+	// StatusType represents backup status (STARTED, TRANSFERRING, SUCCESS, FAILED)
+	StatusType string `json:"status,omitempty"`
+
+	// Classes represents the list of classes included in backup
+	// +optional
+	Classes []string `json:"classes,omitempty"`
+
+	// Path represents backup location
+	Path string `json:"path,omitempty"`
+
+	// StartTime of backup
+	// +optional
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+
+	// StopTime represents the Weaviate backup stop time.
+	// +optional
+	StopTime *metav1.Time `json:"stopTime,omitempty"`
 }
 
 const (
