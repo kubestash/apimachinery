@@ -573,11 +573,15 @@ func configureTLS(caCert []byte, insecureTLS bool) (*http.Client, error) {
 	}, nil
 }
 
+// SetPathAsDir creates an empty object with a trailing slash to represent an
+// otherwise empty directory in object storage.
 func (b *Blob) SetPathAsDir(ctx context.Context, path string) error {
-	bucket, err := b.openBucket(ctx, path)
+	bucket, err := b.openBucket(ctx, "")
 	if err != nil {
 		return err
 	}
+	defer closeBucket(ctx, bucket)
+
 	if !strings.HasSuffix(path, "/") {
 		path = fmt.Sprintf("%s/", path)
 	}
