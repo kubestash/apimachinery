@@ -58,7 +58,7 @@ const (
 	azureStorageAccount          = "AZURE_STORAGE_ACCOUNT"
 	azureStorageKey              = "AZURE_STORAGE_KEY"
 	AzureFederatedTokenFile      = "AZURE_FEDERATED_TOKEN_FILE"
-	googleServiceAccountJsonKey  = "GOOGLE_SERVICE_ACCOUNT_JSON_KEY"
+	GoogleServiceAccountJSONKey  = "GOOGLE_SERVICE_ACCOUNT_JSON_KEY"
 	googleApplicationCredentials = "GOOGLE_APPLICATION_CREDENTIALS"
 	azureAccountKey              = "AZURE_ACCOUNT_KEY"
 	caCertData                   = "CA_CERT_DATA"
@@ -183,10 +183,10 @@ func getStorageSecret(ctx context.Context, c client.Client, bs *storageapi.Backu
 }
 
 func setGcsCredentialsToEnv(secret *v1.Secret) error {
-	if val, ok := secret.Data[googleServiceAccountJsonKey]; !ok {
-		return fmt.Errorf("storage secret missing %s key", googleServiceAccountJsonKey)
+	if val, ok := secret.Data[GoogleServiceAccountJSONKey]; !ok {
+		return fmt.Errorf("storage secret missing %s key", GoogleServiceAccountJSONKey)
 	} else {
-		filePath := path.Join(credentialsDir, googleServiceAccountJsonKey)
+		filePath := path.Join(credentialsDir, GoogleServiceAccountJSONKey)
 		if err := writeDataIntoFile(filePath, val); err != nil {
 			return err
 		}
