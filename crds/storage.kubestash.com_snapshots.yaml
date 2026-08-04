@@ -182,6 +182,19 @@ spec:
                         status:
                           type: string
                       type: object
+                    oracleStats:
+                      properties:
+                        dbid:
+                          type: string
+                        incarnation:
+                          type: string
+                        pieceCount:
+                          type: integer
+                        tag:
+                          type: string
+                        untilSCN:
+                          type: string
+                      type: object
                     path:
                       type: string
                     phase:
