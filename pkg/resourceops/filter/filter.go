@@ -17,10 +17,16 @@ limitations under the License.
 package filter
 
 import (
+	"encoding/json"
+	"fmt"
 	"slices"
 	"strings"
 
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/klog/v2"
 	"k8s.io/utils/ptr"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type IncludeExclude struct {
@@ -135,4 +141,92 @@ func (g *GlobalIncludeExclude) ShouldIncludeResource(groupResource string, names
 
 func (g *GlobalIncludeExclude) ShouldIncludeNamespace(namespace string) bool {
 	return g.namespaceFilter.ShouldInclude(namespace)
+}
+
+func IsPVCPassedTheFilter(object client.Object, params *runtime.RawExtension) bool {
+	strParams := make(map[string]string)
+	if params != nil && params.Raw != nil {
+		if err := json.Unmarshal(params.Raw, &strParams); err != nil {
+			klog.Warningf("failed to unmarshal filter parameters: %v", err)
+			return true
+		}
+	}
+
+	IncludeResources := trimSpaceFromList(strParams["IncludeResources"])
+	IncludeNamespaces := trimSpaceFromList(strParams["IncludeNamespaces"])
+	ExcludeNamespaces := trimSpaceFromList(strParams["ExcludeNamespaces"])
+	ExcludeResources := trimSpaceFromList(strParams["ExcludeResources"])
+	ORedLabelSelectors := trimSpaceFromList(strParams["ORedLabelSelectors"])
+	ANDedLabelSelectors := trimSpaceFromList(strParams["ANDedLabelSelectors"])
+
+	resFilter := NewIncludeExclude().Includes(IncludeResources...).Excludes(ExcludeResources...)
+	nsFilter := NewIncludeExclude().Includes(IncludeNamespaces...).Excludes(ExcludeNamespaces...)
+	globalFilter := NewGlobalIncludeExclude(resFilter, nsFilter, false)
+
+	if isFilteredOutByLabelSelectors(object, ORedLabelSelectors, ANDedLabelSelectors) {
+		return false
+	}
+	groupResource := fmt.Sprintf("%s.%s", "persistentvolumeclaims", "")
+	if !globalFilter.ShouldIncludeResource(groupResource, true) {
+		return false
+	}
+	return true
+}
+
+func isFilteredOutByLabelSelectors(object client.Object, ORedLabelSelectors, ANDedLabelSelectors []string) bool {
+	labels := labelsToStrings(object.GetLabels())
+
+	if !matchesAny(labels, ORedLabelSelectors) {
+		klog.Infof("no OR labels match, skipped\n")
+		return false
+	}
+	if !matchesAll(labels, ANDedLabelSelectors) {
+		klog.Infof("not all AND labels match, skipped\n")
+		return false
+	}
+	return true
+}
+
+func labelsToStrings(labels map[string]string) []string {
+	out := make([]string, 0, len(labels))
+	for k, v := range labels {
+		out = append(out, fmt.Sprintf("%s:%s", k, v))
+		out = append(out, fmt.Sprintf("%s=%s", k, v))
+		out = append(out, k)
+	}
+	return out
+}
+
+func matchesAny(labels, selectors []string) bool {
+	if len(selectors) == 0 {
+		return true
+	}
+	set := sets.NewString(labels...)
+	for _, sel := range selectors {
+		if set.Has(sel) {
+			return true
+		}
+	}
+	return false
+}
+
+func matchesAll(labels, selectors []string) bool {
+	if len(selectors) == 0 {
+		return true
+	}
+	set := sets.NewString(labels...)
+	for _, sel := range selectors {
+		if !set.Has(sel) {
+			return false
+		}
+	}
+	return true
+}
+
+func trimSpaceFromList(input string) []string {
+	inputs := strings.Split(input, ",")
+	for i, val := range inputs {
+		inputs[i] = strings.TrimSpace(val)
+	}
+	return inputs
 }
