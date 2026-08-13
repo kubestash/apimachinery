@@ -221,6 +221,10 @@ type Component struct {
 
 	// Neo4jStats specifies the Neo4j Admin specific information
 	Neo4jStats []Neo4jStats `json:"neo4jStats,omitempty"`
+
+	// Neo4jCompositeDatabases contains the catalog definitions required to recreate Neo4j composite databases.
+	// It intentionally excludes credentials and other secret material.
+	Neo4jCompositeDatabases []Neo4jCompositeDatabase `json:"neo4jCompositeDatabases,omitempty"`
 }
 
 type Neo4jStats struct {
@@ -234,6 +238,38 @@ type Neo4jStats struct {
 	HighestTX   int64  `json:"highestTX,omitempty"`
 	StoreIDHash string `json:"storeIDHash,omitempty"`
 	Recovered   *bool  `json:"recovered,omitempty"`
+}
+
+// Neo4jCompositeDatabase describes a Neo4j composite database and its constituent aliases.
+type Neo4jCompositeDatabase struct {
+	Name            string               `json:"name"`
+	DefaultLanguage string               `json:"defaultLanguage,omitempty"`
+	Aliases         []Neo4jDatabaseAlias `json:"aliases,omitempty"`
+}
+
+// Neo4jDatabaseAlias describes a local or remote alias belonging to a composite database.
+type Neo4jDatabaseAlias struct {
+	Name           string                `json:"name"`
+	Database       string                `json:"database"`
+	Location       string                `json:"location"`
+	URL            string                `json:"url,omitempty"`
+	CredentialType string                `json:"credentialType,omitempty"`
+	User           string                `json:"user,omitempty"`
+	Driver         map[string]Neo4jValue `json:"driver,omitempty"`
+	Properties     map[string]Neo4jValue `json:"properties,omitempty"`
+}
+
+// Neo4jValue is a recursively typed value used for Neo4j alias properties and driver settings.
+// Type is one of null, string, boolean, integer, float, list, map, duration, date, time,
+// localTime, dateTime, localDateTime, or point.
+type Neo4jValue struct {
+	Type    string                `json:"type"`
+	String  string                `json:"string,omitempty"`
+	Boolean *bool                 `json:"boolean,omitempty"`
+	Integer *int64                `json:"integer,omitempty"`
+	Float   *float64              `json:"float,omitempty"`
+	List    []Neo4jValue          `json:"list,omitempty"`
+	Map     map[string]Neo4jValue `json:"map,omitempty"`
 }
 
 type LogStats struct {

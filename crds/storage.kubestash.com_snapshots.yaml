@@ -186,6 +186,88 @@ spec:
                         status:
                           type: string
                       type: object
+                    neo4jCompositeDatabases:
+                      items:
+                        properties:
+                          aliases:
+                            items:
+                              properties:
+                                credentialType:
+                                  type: string
+                                database:
+                                  type: string
+                                driver:
+                                  additionalProperties:
+                                    properties:
+                                      boolean:
+                                        type: boolean
+                                      float:
+                                        format: double
+                                        type: number
+                                      integer:
+                                        format: int64
+                                        type: integer
+                                      list:
+                                        items: {}
+                                        type: array
+                                      map:
+                                        additionalProperties: {}
+                                        type: object
+                                      string:
+                                        type: string
+                                      type:
+                                        type: string
+                                    required:
+                                    - type
+                                    type: object
+                                  type: object
+                                location:
+                                  type: string
+                                name:
+                                  type: string
+                                properties:
+                                  additionalProperties:
+                                    properties:
+                                      boolean:
+                                        type: boolean
+                                      float:
+                                        format: double
+                                        type: number
+                                      integer:
+                                        format: int64
+                                        type: integer
+                                      list:
+                                        items: {}
+                                        type: array
+                                      map:
+                                        additionalProperties: {}
+                                        type: object
+                                      string:
+                                        type: string
+                                      type:
+                                        type: string
+                                    required:
+                                    - type
+                                    type: object
+                                  type: object
+                                url:
+                                  type: string
+                                user:
+                                  type: string
+                              required:
+                              - database
+                              - location
+                              - name
+                              type: object
+                            type: array
+                          defaultLanguage:
+                            type: string
+                          name:
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      type: array
                     neo4jStats:
                       items:
                         properties:
