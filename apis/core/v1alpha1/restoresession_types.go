@@ -305,6 +305,13 @@ type RestoreDataSource struct {
 	// +optional
 	PITR *PITR `json:"pitr,omitempty"`
 
+	// PointInTime selects the newest restorable point at or before the given time.
+	// The addon resolves it against its own history — for a KubeVirtArchiver, the checkpoint
+	// index the resident CBT loop writes — so it can address states no Snapshot object names.
+	// A time preceding everything restorable is an error, never a silently older restore.
+	// +optional
+	PointInTime *metav1.Time `json:"pointInTime,omitempty"`
+
 	// Components specifies the components that will be restored. If you keep this field empty, then all
 	// the components that were backed up in the desired Snapshot will be restored.
 	// +optional

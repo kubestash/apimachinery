@@ -2062,6 +2062,10 @@ func (in *RestoreDataSource) DeepCopyInto(out *RestoreDataSource) {
 		*out = new(PITR)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.PointInTime != nil {
+		in, out := &in.PointInTime, &out.PointInTime
+		*out = (*in).DeepCopy()
+	}
 	if in.Components != nil {
 		in, out := &in.Components, &out.Components
 		*out = make([]string, len(*in))
