@@ -56,6 +56,7 @@ spec:
                         - Solr
                         - ClickHouseBackup
                         - Neo4jAdmin
+                        - BlockCAS
                       type: string
                     executor:
                       enum:
@@ -1085,6 +1086,7 @@ spec:
                         - Solr
                         - ClickHouseBackup
                         - Neo4jAdmin
+                        - BlockCAS
                       type: string
                     executor:
                       enum:
