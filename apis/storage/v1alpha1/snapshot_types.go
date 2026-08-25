@@ -498,8 +498,51 @@ func init() {
 type BlockCASStats struct {
 	// ManifestKey is the object key of this component's manifest, which lists
 	// the block hash of every slot. A restore needs only this one key.
+	//
+	// Set by a scheduled backup, which captures a single point in time. A
+	// resident archiver records a series of Checkpoints instead.
 	// +optional
 	ManifestKey string `json:"manifestKey,omitempty"`
+
+	// CheckpointIndexKey is the object key of the full checkpoint index a
+	// resident archiver appends to.
+	//
+	// The index lives in the backend rather than in this status because it is
+	// unbounded and cannot be trimmed: a ten-minute interval writes 144 entries
+	// a day and a point-in-time restore may need any of them, so the object
+	// would outgrow the API server well before the retention period expires.
+	// RecentCheckpoints below is a bounded window for humans; a restore reads
+	// the index.
+	// +optional
+	CheckpointIndexKey string `json:"checkpointIndexKey,omitempty"`
+
+	// RecentCheckpoints is the tail of the checkpoint index, kept short so the
+	// object stays a fixed size.
+	// +optional
+	// +listType=atomic
+	RecentCheckpoints []BlockCASCheckpoint `json:"recentCheckpoints,omitempty"`
+
+	// FirstCheckpointTime and LastCheckpointTime bound the window this
+	// component can be restored to.
+	// +optional
+	FirstCheckpointTime *metav1.Time `json:"firstCheckpointTime,omitempty"`
+	// +optional
+	LastCheckpointTime *metav1.Time `json:"lastCheckpointTime,omitempty"`
+
+	// TotalCheckpoints counts every checkpoint taken, including those no longer
+	// in RecentCheckpoints.
+	// +optional
+	TotalCheckpoints int64 `json:"totalCheckpoints,omitempty"`
+
+	// FailedCheckpoints counts iterations that did not produce a checkpoint. A
+	// resident archiver keeps running through failures, so this is the only
+	// signal that it is unhealthy.
+	// +optional
+	FailedCheckpoints int64 `json:"failedCheckpoints,omitempty"`
+
+	// LastFailure describes the most recent failed iteration.
+	// +optional
+	LastFailure string `json:"lastFailure,omitempty"`
 
 	// BlockSize is the fixed grid the disk was cut on, in bytes.
 	// +optional
@@ -532,6 +575,27 @@ type BlockCASStats struct {
 	ZeroSlots int64 `json:"zeroSlots,omitempty"`
 
 	// BytesUploaded is how many bytes were actually written to the backend.
+	// +optional
+	BytesUploaded int64 `json:"bytesUploaded,omitempty"`
+}
+
+// BlockCASCheckpoint is one restorable point in time captured by a resident
+// archiver. Each carries its own complete manifest, so restoring to a
+// checkpoint reads exactly one manifest and never replays a chain.
+type BlockCASCheckpoint struct {
+	// Name is the KubeVirt checkpoint this was taken at.
+	Name string `json:"name,omitempty"`
+
+	// Time is when the checkpoint was captured, and what a point-in-time
+	// restore selects on.
+	Time *metav1.Time `json:"time,omitempty"`
+
+	// ManifestKey is the complete slot-to-block map at this point in time.
+	ManifestKey string `json:"manifestKey,omitempty"`
+
+	// BlocksUploaded and BytesUploaded record what this checkpoint cost.
+	// +optional
+	BlocksUploaded int64 `json:"blocksUploaded,omitempty"`
 	// +optional
 	BytesUploaded int64 `json:"bytesUploaded,omitempty"`
 }
