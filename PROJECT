@@ -25,6 +25,15 @@ resources:
     namespaced: true
   controller: true
   domain: kubestash.com
+  group: archiver
+  kind: KubeVirtArchiver
+  path: kubestash.dev/apimachinery/apis/archiver/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubestash.com
   group: core
   kind: BackupBatch
   path: kubestash.dev/apimachinery/apis/core/v1alpha1
