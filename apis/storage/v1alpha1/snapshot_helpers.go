@@ -186,6 +186,9 @@ var backupSessionRegex = regexp.MustCompile("(.*)-([0-9]+)$")
 // callers indexed blindly and panicked on.
 func SplitBackupSessionName(backupSession string) (base, suffix string) {
 	subMatches := backupSessionRegex.FindStringSubmatch(backupSession)
+	// A BackupSession name does not always end in a numeric suffix (e.g. one
+	// created via generateName). Guard against a nil match instead of panicking
+	// on the index, and fall back to the full name with an empty suffix.
 	if len(subMatches) < 3 {
 		return backupSession, ""
 	}

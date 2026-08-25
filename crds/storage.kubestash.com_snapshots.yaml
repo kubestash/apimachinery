@@ -299,6 +299,8 @@ spec:
                         properties:
                           backupId:
                             type: integer
+                          backupName:
+                            type: string
                           collection:
                             type: string
                           indexFileCount:
