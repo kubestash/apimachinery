@@ -23,7 +23,6 @@ import (
 
 	"kubestash.dev/apimachinery/apis"
 	addonapi "kubestash.dev/apimachinery/apis/addons/v1alpha1"
-	archiverapi "kubestash.dev/apimachinery/apis/archiver/v1alpha1"
 	coreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 
@@ -62,7 +61,6 @@ func NewUncachedClient(clientGetter ...genericclioptions.RESTClientGetter) (clie
 		storageapi.AddToScheme,
 		coreapi.AddToScheme,
 		addonapi.AddToScheme,
-		archiverapi.AddToScheme,
 		vsapi.AddToScheme,
 		core.AddToScheme,
 		apps.AddToScheme,

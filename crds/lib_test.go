@@ -43,17 +43,6 @@ func TestCustomResourceDefinition(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "archiver",
-			args: args{
-				gvr: schema.GroupVersionResource{
-					Group:    "archiver.kubestash.com",
-					Version:  "v1alpha1",
-					Resource: "kubevirtarchivers",
-				},
-			},
-			wantErr: false,
-		},
-		{
 			name: "core",
 			args: args{
 				gvr: schema.GroupVersionResource{

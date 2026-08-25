@@ -4,9 +4,9 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubestash
-  name: kubevirtarchivers.archiver.kubestash.com
+  name: kubevirtarchivers.core.kubestash.com
 spec:
-  group: archiver.kubestash.com
+  group: core.kubestash.com
   names:
     categories:
     - archiver
