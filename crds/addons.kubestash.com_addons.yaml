@@ -47,6 +47,7 @@ spec:
                         - Medusa
                         - ClickHouseBackup
                         - Neo4jAdmin
+                        - BlockCAS
                       - enum:
                         - Restic
                         - WalG
@@ -1075,6 +1076,7 @@ spec:
                         - Medusa
                         - ClickHouseBackup
                         - Neo4jAdmin
+                        - BlockCAS
                       - enum:
                         - Restic
                         - WalG

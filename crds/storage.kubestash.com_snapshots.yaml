@@ -87,6 +87,33 @@ spec:
               components:
                 additionalProperties:
                   properties:
+                    blockCASStats:
+                      properties:
+                        blockSize:
+                          format: int64
+                          type: integer
+                        blocksDeduped:
+                          format: int64
+                          type: integer
+                        blocksUploaded:
+                          format: int64
+                          type: integer
+                        bytesUploaded:
+                          format: int64
+                          type: integer
+                        checkpoint:
+                          type: string
+                        manifestKey:
+                          type: string
+                        parentSnapshotID:
+                          type: string
+                        slotsConsidered:
+                          format: int64
+                          type: integer
+                        zeroSlots:
+                          format: int64
+                          type: integer
+                      type: object
                     clickHouseStats:
                       items:
                         properties:
@@ -113,6 +140,7 @@ spec:
                       - Medusa
                       - ClickHouseBackup
                       - Neo4jAdmin
+                      - BlockCAS
                       type: string
                     duration:
                       type: string

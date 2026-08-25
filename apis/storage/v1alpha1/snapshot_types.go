@@ -219,6 +219,10 @@ type Component struct {
 	// ClickHouseStats specifies the ClickHouse Backup specific information
 	ClickHouseStats []ClickHouseStats `json:"clickHouseStats,omitempty"`
 
+	// BlockCASStats specifies the "BlockCAS" driver specific information
+	// +optional
+	BlockCASStats *BlockCASStats `json:"blockCASStats,omitempty"`
+
 	// Neo4jStats specifies the Neo4j Admin specific information
 	Neo4jStats []Neo4jStats `json:"neo4jStats,omitempty"`
 }
@@ -480,4 +484,48 @@ type SnapshotList struct {
 
 func init() {
 	SchemeBuilder.Register(&Snapshot{}, &SnapshotList{})
+}
+
+// BlockCASStats specifies the information for a component stored in a
+// content-addressed block store, where a disk is cut on a fixed grid and each
+// block is kept once under the hash of its contents.
+type BlockCASStats struct {
+	// ManifestKey is the object key of this component's manifest, which lists
+	// the block hash of every slot. A restore needs only this one key.
+	// +optional
+	ManifestKey string `json:"manifestKey,omitempty"`
+
+	// BlockSize is the fixed grid the disk was cut on, in bytes.
+	// +optional
+	BlockSize int64 `json:"blockSize,omitempty"`
+
+	// ParentSnapshotID is the snapshot this component built on. Empty for a
+	// full backup.
+	// +optional
+	ParentSnapshotID string `json:"parentSnapshotID,omitempty"`
+
+	// Checkpoint identifies the point in time the source was read at, so the
+	// next incremental knows where to continue from.
+	// +optional
+	Checkpoint string `json:"checkpoint,omitempty"`
+
+	// SlotsConsidered is how many grid slots this run examined.
+	// +optional
+	SlotsConsidered int64 `json:"slotsConsidered,omitempty"`
+
+	// BlocksUploaded is how many blocks were new and therefore stored.
+	// +optional
+	BlocksUploaded int64 `json:"blocksUploaded,omitempty"`
+
+	// BlocksDeduped is how many slots resolved to a block already present.
+	// +optional
+	BlocksDeduped int64 `json:"blocksDeduped,omitempty"`
+
+	// ZeroSlots is how many slots were entirely zero and therefore not stored.
+	// +optional
+	ZeroSlots int64 `json:"zeroSlots,omitempty"`
+
+	// BytesUploaded is how many bytes were actually written to the backend.
+	// +optional
+	BytesUploaded int64 `json:"bytesUploaded,omitempty"`
 }
