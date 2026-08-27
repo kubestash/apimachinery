@@ -35,6 +35,16 @@ func (Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefiniti
 }
 
 func (s *Snapshot) CalculatePhase() SnapshotPhase {
+	// A long-lived incremental snapshot is appended to continuously by a
+	// resident archiver and deliberately never completes: its component stays
+	// Running until archiving stops. Its metadata therefore cannot have been
+	// uploaded yet, and a transient upload failure must not latch it to Failed
+	// — nothing would ever retry, and a healthy archiver would read as broken
+	// forever. While its components are still running, they are the phase.
+	if s.Spec.Type == BackupTypeIncremental && s.GetComponentsPhase() == SnapshotRunning {
+		return SnapshotRunning
+	}
+
 	if cutil.IsConditionFalse(s.Status.Conditions, TypeSnapshotMetadataUploaded) ||
 		cutil.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) ||
 		cutil.IsConditionTrue(s.Status.Conditions, TypeBackupIncomplete) {
