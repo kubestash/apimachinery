@@ -87,6 +87,68 @@ spec:
               components:
                 additionalProperties:
                   properties:
+                    blockCASStats:
+                      properties:
+                        blockSize:
+                          format: int64
+                          type: integer
+                        blocksDeduped:
+                          format: int64
+                          type: integer
+                        blocksUploaded:
+                          format: int64
+                          type: integer
+                        bytesUploaded:
+                          format: int64
+                          type: integer
+                        checkpoint:
+                          type: string
+                        checkpointIndexKey:
+                          type: string
+                        failedCheckpoints:
+                          format: int64
+                          type: integer
+                        firstCheckpointTime:
+                          format: date-time
+                          type: string
+                        lastCheckpointTime:
+                          format: date-time
+                          type: string
+                        lastFailure:
+                          type: string
+                        manifestKey:
+                          type: string
+                        parentSnapshotID:
+                          type: string
+                        recentCheckpoints:
+                          items:
+                            properties:
+                              blocksUploaded:
+                                format: int64
+                                type: integer
+                              bytesUploaded:
+                                format: int64
+                                type: integer
+                              manifestKey:
+                                type: string
+                              name:
+                                type: string
+                              time:
+                                format: date-time
+                                type: string
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: atomic
+                        slotsConsidered:
+                          format: int64
+                          type: integer
+                        totalCheckpoints:
+                          format: int64
+                          type: integer
+                        zeroSlots:
+                          format: int64
+                          type: integer
+                      type: object
                     clickHouseStats:
                       items:
                         properties:
@@ -113,6 +175,7 @@ spec:
                       - Medusa
                       - ClickHouseBackup
                       - Neo4jAdmin
+                      - BlockCAS
                       type: string
                     duration:
                       type: string

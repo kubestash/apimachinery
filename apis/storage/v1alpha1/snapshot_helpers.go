@@ -35,6 +35,16 @@ func (Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefiniti
 }
 
 func (s *Snapshot) CalculatePhase() SnapshotPhase {
+	// A long-lived incremental snapshot is appended to continuously by a
+	// resident archiver and deliberately never completes: its component stays
+	// Running until archiving stops. Its metadata therefore cannot have been
+	// uploaded yet, and a transient upload failure must not latch it to Failed
+	// — nothing would ever retry, and a healthy archiver would read as broken
+	// forever. While its components are still running, they are the phase.
+	if s.Spec.Type == BackupTypeIncremental && s.GetComponentsPhase() == SnapshotRunning {
+		return SnapshotRunning
+	}
+
 	if cutil.IsConditionFalse(s.Status.Conditions, TypeSnapshotMetadataUploaded) ||
 		cutil.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) ||
 		cutil.IsConditionTrue(s.Status.Conditions, TypeBackupIncomplete) {
@@ -178,16 +188,26 @@ func (s *Snapshot) GetSize() string {
 	return ""
 }
 
-func GenerateSnapshotName(repoName, backupSession string) string {
-	backupSessionRegex := regexp.MustCompile("(.*)-([0-9]+)$")
+var backupSessionRegex = regexp.MustCompile("(.*)-([0-9]+)$")
+
+// SplitBackupSessionName splits a BackupSession name into its base and its
+// numeric suffix. A name without one — any BackupSession a user creates by hand
+// — yields the whole name and an empty suffix rather than a nil match, which
+// callers indexed blindly and panicked on.
+func SplitBackupSessionName(backupSession string) (base, suffix string) {
 	subMatches := backupSessionRegex.FindStringSubmatch(backupSession)
 	// A BackupSession name does not always end in a numeric suffix (e.g. one
 	// created via generateName). Guard against a nil match instead of panicking
-	// on the index, and fall back to the full backupSession name as the suffix.
+	// on the index, and fall back to the full name with an empty suffix.
 	if len(subMatches) < 3 {
-		return meta.ValidNameWithPrefixNSuffix(repoName, backupSession, "")
+		return backupSession, ""
 	}
-	return meta.ValidNameWithPrefixNSuffix(repoName, subMatches[1], subMatches[2])
+	return subMatches[1], subMatches[2]
+}
+
+func GenerateSnapshotName(repoName, backupSession string) string {
+	base, suffix := SplitBackupSessionName(backupSession)
+	return meta.ValidNameWithPrefixNSuffix(repoName, base, suffix)
 }
 
 func (s *Snapshot) OffshootLabels() map[string]string {
