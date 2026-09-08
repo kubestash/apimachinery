@@ -188,6 +188,17 @@ spec:
                         status:
                           type: string
                       type: object
+                    milvusStats:
+                      properties:
+                        id:
+                          type: string
+                        startTime:
+                          format: date-time
+                          type: string
+                        stopTime:
+                          format: date-time
+                          type: string
+                      type: object
                     neo4jStats:
                       items:
                         properties:

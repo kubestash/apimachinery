@@ -225,6 +225,10 @@ type Component struct {
 	// WeaviateStats specifies the "Weaviate" driver specific information
 	// +optional
 	WeaviateStats *WeaviateStats `json:"weaviateStats,omitempty"`
+
+	// MilvusStats specifies the "Milvus" driver specific information
+	// +optional
+	MilvusStats *MilvusStats `json:"milvusStats,omitempty"`
 }
 
 type Neo4jStats struct {
@@ -476,6 +480,20 @@ type WeaviateStats struct {
 	StartTime *metav1.Time `json:"startTime,omitempty"`
 
 	// StopTime represents the Weaviate backup stop time.
+	// +optional
+	StopTime *metav1.Time `json:"stopTime,omitempty"`
+}
+
+// MilvusStats specifies the information specific to the "Milvus" driver.
+type MilvusStats struct {
+	// Id represents the Backup ID.
+	Id string `json:"id,omitempty"`
+
+	// StartTime of backup
+	// +optional
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+
+	// StopTime represents the Milvus backup stop time.
 	// +optional
 	StopTime *metav1.Time `json:"stopTime,omitempty"`
 }
