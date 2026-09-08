@@ -113,6 +113,8 @@ spec:
                       - Medusa
                       - ClickHouseBackup
                       - Neo4jAdmin
+                      - Weaviate
+                      - Milvus
                       type: string
                     duration:
                       type: string
@@ -309,6 +311,17 @@ spec:
                           items:
                             type: string
                           type: array
+                        id:
+                          type: string
+                        startTime:
+                          format: date-time
+                          type: string
+                        stopTime:
+                          format: date-time
+                          type: string
+                      type: object
+                    weaviateStats:
+                      properties:
                         id:
                           type: string
                         startTime:
