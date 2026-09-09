@@ -221,6 +221,14 @@ type Component struct {
 
 	// Neo4jStats specifies the Neo4j Admin specific information
 	Neo4jStats []Neo4jStats `json:"neo4jStats,omitempty"`
+
+	// WeaviateStats specifies the "Weaviate" driver specific information
+	// +optional
+	WeaviateStats *WeaviateStats `json:"weaviateStats,omitempty"`
+
+	// MilvusStats specifies the "Milvus" driver specific information
+	// +optional
+	MilvusStats *MilvusStats `json:"milvusStats,omitempty"`
 }
 
 type Neo4jStats struct {
@@ -228,12 +236,12 @@ type Neo4jStats struct {
 	Database    string `json:"database,omitempty"`
 	DatabaseID  string `json:"databaseID,omitempty"`
 	Time        string `json:"time,omitempty"`
-	Full        bool   `json:"full,omitempty"`
-	Compressed  bool   `json:"compressed,omitempty"`
+	Full        *bool  `json:"full,omitempty"`
+	Compressed  *bool  `json:"compressed,omitempty"`
 	LowestTX    int64  `json:"lowestTX,omitempty"`
 	HighestTX   int64  `json:"highestTX,omitempty"`
 	StoreIDHash string `json:"storeIDHash,omitempty"`
-	Recovered   bool   `json:"recovered,omitempty"`
+	Recovered   *bool  `json:"recovered,omitempty"`
 }
 
 type LogStats struct {
@@ -420,6 +428,12 @@ type SolrStats struct {
 	// BackupId represents the ID of the backup
 	BackupId int `json:"backupId,omitempty"`
 
+	// BackupName is the name Solr filed this backup under, which is also the
+	// directory it occupies inside the repository. Restore needs it to locate the
+	// data, and retention needs it to delete only this snapshot's objects, so it
+	// is recorded rather than reconstructed from a naming convention.
+	BackupName string `json:"backupName,omitempty"`
+
 	// collection represents the collection for which backup has been taken
 	Collection string `json:"collection,omitempty"`
 
@@ -454,6 +468,34 @@ type ClickHouseStats struct {
 
 	// Finishing time of the backup
 	FinishTime *metav1.Time `json:"finishTime,omitempty"`
+}
+
+// WeaviateStats specifies the information specific to the "Weaviate" driver.
+type WeaviateStats struct {
+	// Id represents the Backup ID.
+	Id string `json:"id,omitempty"`
+
+	// StartTime of backup
+	// +optional
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+
+	// StopTime represents the Weaviate backup stop time.
+	// +optional
+	StopTime *metav1.Time `json:"stopTime,omitempty"`
+}
+
+// MilvusStats specifies the information specific to the "Milvus" driver.
+type MilvusStats struct {
+	// Id represents the Backup ID.
+	Id string `json:"id,omitempty"`
+
+	// StartTime of backup
+	// +optional
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+
+	// StopTime represents the Milvus backup stop time.
+	// +optional
+	StopTime *metav1.Time `json:"stopTime,omitempty"`
 }
 
 const (

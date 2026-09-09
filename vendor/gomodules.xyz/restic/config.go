@@ -170,6 +170,12 @@ func (w *ResticWrapper) SetEnv(key, value string) {
 	}
 }
 
+func (w *ResticWrapper) SetStdin(r io.Reader) {
+	if w.sh != nil {
+		w.sh.SetStdin(r)
+	}
+}
+
 func (w *ResticWrapper) GetEnv(key string) string {
 	if w.sh != nil {
 		return w.sh.Env[key]
