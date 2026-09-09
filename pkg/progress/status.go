@@ -112,7 +112,8 @@ func (pg *Progress) updateSnapshotComponentStatus(snap *storageapi.Snapshot, com
 			}
 			in.Status.Components[pg.component] = comp
 			return in
-		})
+		},
+	)
 	return err
 }
 
