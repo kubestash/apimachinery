@@ -115,6 +115,7 @@ spec:
                       - Neo4jAdmin
                       - Weaviate
                       - Milvus
+                      - OracleBackup
                       type: string
                     duration:
                       type: string
@@ -226,6 +227,19 @@ spec:
                             type: string
                         type: object
                       type: array
+                    oracleStats:
+                      properties:
+                        dbid:
+                          type: string
+                        incarnation:
+                          type: string
+                        pieceCount:
+                          type: integer
+                        tag:
+                          type: string
+                        untilSCN:
+                          type: string
+                      type: object
                     path:
                       type: string
                     phase:

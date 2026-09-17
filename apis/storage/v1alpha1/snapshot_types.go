@@ -219,6 +219,10 @@ type Component struct {
 	// ClickHouseStats specifies the ClickHouse Backup specific information
 	ClickHouseStats []ClickHouseStats `json:"clickHouseStats,omitempty"`
 
+	// OracleStats specifies the "OracleBackup" driver specific information
+	// +optional
+	OracleStats *OracleStats `json:"oracleStats,omitempty"`
+
 	// Neo4jStats specifies the Neo4j Admin specific information
 	Neo4jStats []Neo4jStats `json:"neo4jStats,omitempty"`
 
@@ -468,6 +472,24 @@ type ClickHouseStats struct {
 
 	// Finishing time of the backup
 	FinishTime *metav1.Time `json:"finishTime,omitempty"`
+}
+
+// OracleStats specifies the information specific to the "OracleBackup" driver.
+type OracleStats struct {
+	// Tag represents the RMAN tag shared by every backup piece of this session
+	Tag string `json:"tag,omitempty"`
+
+	// DBID represents the identifier of the database the backup was taken from
+	DBID string `json:"dbid,omitempty"`
+
+	// PieceCount represents the number of available backup pieces carrying the tag
+	PieceCount int `json:"pieceCount,omitempty"`
+
+	// UntilSCN represents the recovery boundary of this backup
+	UntilSCN string `json:"untilSCN,omitempty"`
+
+	// Incarnation represents the database incarnation the backup was taken in
+	Incarnation string `json:"incarnation,omitempty"`
 }
 
 // WeaviateStats specifies the information specific to the "Weaviate" driver.
