@@ -20,6 +20,7 @@ import (
 	"kubestash.dev/apimachinery/apis"
 	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
@@ -37,6 +38,8 @@ const (
 // +kubebuilder:resource:path=kubevirtarchivers,singular=kubevirtarchiver,shortName=kvarchiver,categories={archiver,kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Paused",type="boolean",JSONPath=".spec.pause"
 // +kubebuilder:printcolumn:name="VMs",type="integer",JSONPath=".status.virtualMachinesMatched"
+// +kubebuilder:printcolumn:name="Last-Incremental",type="string",JSONPath=".status.virtualMachines[*].lastIncrementalBackupTime"
+// +kubebuilder:printcolumn:name="Incremental-Failures",type="string",JSONPath=".status.virtualMachines[*].incrementalBackupFailures"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // KubeVirtArchiver ties together the two halves of incremental VirtualMachine backup:
@@ -199,6 +202,11 @@ type CBTBackupOptions struct {
 	// +optional
 	ScratchStorageClass string `json:"scratchStorageClass,omitempty"`
 
+	// ScratchSize is the size of the scratch PVC, 2Gi when unset. Size it for
+	// the data the guest overwrites while one export is open.
+	// +optional
+	ScratchSize *resource.Quantity `json:"scratchSize,omitempty"`
+
 	// SkipQuiesce skips guest filesystem quiescing for each native Pull export.
 	// Set this for guests without a QEMU guest agent. Keeping the default false
 	// preserves application-consistent backups when a guest agent is available.
@@ -281,6 +289,44 @@ type VirtualMachineArchiverStatus struct {
 	// LastObservedTime is when the controller last looked at this VM.
 	// +optional
 	LastObservedTime *metav1.Time `json:"lastObservedTime,omitempty"`
+
+	// LastIncrementalBackupTime is when the resident loop last stored a complete
+	// checkpoint for this VM.
+	// +optional
+	LastIncrementalBackupTime *metav1.Time `json:"lastIncrementalBackupTime,omitempty"`
+
+	// LastIncrementalBackupError is why the loop's latest attempt failed. It is
+	// empty once an attempt succeeds.
+	// +optional
+	LastIncrementalBackupError string `json:"lastIncrementalBackupError,omitempty"`
+
+	// IncrementalBackupFailures counts the loop's failed attempts since its last
+	// success. A failed attempt is retried at the next interval.
+	// +optional
+	IncrementalBackupFailures int32 `json:"incrementalBackupFailures,omitempty"`
+}
+
+// AnnotationIncrementalBackupReport is where the resident loop reports its
+// latest attempt on the Snapshot it appends to. The loop owns no status of its
+// own; the controller mirrors the report into the KubeVirtArchiver's status.
+const AnnotationIncrementalBackupReport = "kubevirtarchiver.kubestash.com/incremental-backup-report"
+
+// IncrementalBackupReport is the value of AnnotationIncrementalBackupReport.
+type IncrementalBackupReport struct {
+	// ReportedAt is when the attempt ended.
+	ReportedAt metav1.Time `json:"reportedAt"`
+
+	// LastSuccessTime is when a checkpoint was last stored on this Snapshot.
+	// +optional
+	LastSuccessTime *metav1.Time `json:"lastSuccessTime,omitempty"`
+
+	// LastError is the latest attempt's failure, empty when it succeeded.
+	// +optional
+	LastError string `json:"lastError,omitempty"`
+
+	// Failures counts failed attempts since the last success.
+	// +optional
+	Failures int32 `json:"failures,omitempty"`
 }
 
 const (

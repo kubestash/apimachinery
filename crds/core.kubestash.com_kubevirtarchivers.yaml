@@ -28,6 +28,12 @@ spec:
     - jsonPath: .status.virtualMachinesMatched
       name: VMs
       type: integer
+    - jsonPath: .status.virtualMachines[*].lastIncrementalBackupTime
+      name: Last-Incremental
+      type: string
+    - jsonPath: .status.virtualMachines[*].incrementalBackupFailures
+      name: Incremental-Failures
+      type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
@@ -1229,6 +1235,12 @@ spec:
                             x-kubernetes-list-type: map
                         type: object
                     type: object
+                  scratchSize:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                    x-kubernetes-int-or-string: true
                   scratchStorageClass:
                     type: string
                   skipQuiesce:
@@ -12432,6 +12444,14 @@ spec:
                     changedBlockTrackingReady:
                       type: boolean
                     changedBlockTrackingState:
+                      type: string
+                    incrementalBackupFailures:
+                      format: int32
+                      type: integer
+                    lastIncrementalBackupError:
+                      type: string
+                    lastIncrementalBackupTime:
+                      format: date-time
                       type: string
                     lastObservedTime:
                       format: date-time
