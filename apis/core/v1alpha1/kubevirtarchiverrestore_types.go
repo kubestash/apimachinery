@@ -48,15 +48,19 @@ type KubeVirtArchiverRestore struct {
 }
 
 type KubeVirtArchiverRestoreSpec struct {
-	// ArchiverRef identifies the same-namespace archiver that owns the source VM.
+	// ArchiverRef identifies the archiver that owns the source VM. Its namespace
+	// defaults to the restore's own. An archiver in another namespace restores
+	// the VM into the restore's namespace, which the archiver's BackupStorage
+	// must allow in its usage policy.
 	ArchiverRef v1.ObjectReference `json:"archiverRef"`
 
-	// Source identifies a VirtualMachine selected by ArchiverRef. Namespace is
-	// omitted because v1 restores are deliberately same-namespace only.
+	// Source identifies a VirtualMachine selected by ArchiverRef, in the
+	// archiver's namespace. The VM need not exist any more.
 	Source v1.ObjectReference `json:"source"`
 
-	// Target is the name of a new VirtualMachine. The controller fails rather
-	// than overwriting an existing target.
+	// Target is the name of a new VirtualMachine, created in the restore's
+	// namespace. It may keep the source's name when that namespace differs. The
+	// controller fails rather than overwriting an existing target.
 	Target v1.ObjectReference `json:"target"`
 
 	// RecoveryPoint selects the newest complete checkpoint at or before the
