@@ -191,13 +191,32 @@ spec:
                       type: object
                     milvusStats:
                       properties:
+                        bytesCopied:
+                          format: int64
+                          type: integer
+                        fenceTime:
+                          format: date-time
+                          type: string
                         id:
+                          type: string
+                        metaRevision:
+                          format: int64
+                          type: integer
+                        objectCount:
+                          format: int64
+                          type: integer
+                        quiesce:
                           type: string
                         startTime:
                           format: date-time
                           type: string
                         stopTime:
                           format: date-time
+                          type: string
+                        tso:
+                          format: int64
+                          type: integer
+                        woodpeckerMetaVersion:
                           type: string
                       type: object
                     neo4jStats:

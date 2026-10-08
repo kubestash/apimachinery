@@ -518,6 +518,35 @@ type MilvusStats struct {
 	// StopTime represents the Milvus backup stop time.
 	// +optional
 	StopTime *metav1.Time `json:"stopTime,omitempty"`
+
+	// MetaRevision is the etcd revision at which the metadata was captured.
+	// +optional
+	MetaRevision int64 `json:"metaRevision,omitempty"`
+
+	// TSO is the Milvus timestamp high-water mark at MetaRevision.
+	// +optional
+	TSO uint64 `json:"tso,omitempty"`
+
+	// FenceTime is the wall-clock time of the metadata capture. It is the point
+	// in time this full backup restores to, and the base of point-in-time recovery.
+	// +optional
+	FenceTime *metav1.Time `json:"fenceTime,omitempty"`
+
+	// Quiesce records how the Milvus was quiesced: DenyWrites, Flush or None.
+	// +optional
+	Quiesce string `json:"quiesce,omitempty"`
+
+	// WoodpeckerMetaVersion identifies the Woodpecker metadata schema of the capture.
+	// +optional
+	WoodpeckerMetaVersion string `json:"woodpeckerMetaVersion,omitempty"`
+
+	// ObjectCount is the number of object versions archived by this backup.
+	// +optional
+	ObjectCount int64 `json:"objectCount,omitempty"`
+
+	// BytesCopied is the number of object bytes archived by this backup.
+	// +optional
+	BytesCopied int64 `json:"bytesCopied,omitempty"`
 }
 
 const (
