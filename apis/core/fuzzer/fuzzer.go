@@ -42,6 +42,9 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 		func(s *v1alpha1.HookTemplate, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
+		func(s *v1alpha1.KubeVirtArchiver, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
 		func(s *v1alpha1.RestoreSession, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
