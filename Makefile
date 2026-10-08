@@ -76,6 +76,39 @@ label-crds:
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="hack/license/go.txt" paths="./..."
 
+CODE_GENERATOR_IMAGE ?= ghcr.io/appscode/gengo:release-1.34
+
+# The ui group is served by an aggregated apiserver, which needs OpenAPI definitions for every type it returns.
+.PHONY: openapi
+openapi: ## Generate OpenAPI definitions for the ui API group.
+	@mkdir -p .config/api-rules
+	@docker run --rm                                     \
+		-u $$(id -u):$$(id -g)                           \
+		-v /tmp:/.cache                                  \
+		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
+		-w $(DOCKER_REPO_ROOT)                           \
+		--env HTTP_PROXY=$(HTTP_PROXY)                   \
+		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
+		$(CODE_GENERATOR_IMAGE)                          \
+		openapi-gen                                      \
+			--v 1 --logtostderr                          \
+			--go-header-file "./hack/license/go.txt"     \
+			--output-dir "$(DOCKER_REPO_ROOT)/apis/ui/v1alpha1" \
+			--output-pkg "$(GO_PKG)/$(REPO)/apis/ui/v1alpha1" \
+			--output-file "openapi_generated.go"         \
+			--report-filename .config/api-rules/violation_exceptions.list \
+			$(GO_PKG)/$(REPO)/apis/ui/v1alpha1           \
+			$(GO_PKG)/$(REPO)/apis/storage/v1alpha1      \
+			k8s.io/apimachinery/pkg/apis/meta/v1         \
+			k8s.io/apimachinery/pkg/api/resource         \
+			k8s.io/apimachinery/pkg/runtime              \
+			k8s.io/apimachinery/pkg/util/intstr          \
+			k8s.io/apimachinery/pkg/version              \
+			k8s.io/api/core/v1                           \
+			kmodules.xyz/client-go/api/v1                \
+			kmodules.xyz/offshoot-api/api/v1             \
+			kmodules.xyz/prober/api/v1
+
 .PHONY: fmt
 fmt: $(BUILD_DIRS) ## Run go fmt against code.
 	@docker run                                                 \
