@@ -258,7 +258,7 @@ BUILD_DIRS  := bin         \
                .go/bin     \
                .go/cache
 
-GO_VERSION       ?= 1.25
+GO_VERSION       ?= 1.27
 BUILD_IMAGE      ?= ghcr.io/appscode/golang-dev:$(GO_VERSION)
 
 DOCKER_REPO_ROOT := /go/src/$(GO_PKG)/$(REPO)
