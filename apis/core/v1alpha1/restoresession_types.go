@@ -130,10 +130,8 @@ type ManifestRestoreOptions struct {
 	DocumentDB *DocumentDBManifestOptions `json:"documentDB,omitempty"`
 }
 
-// DocumentDBManifestOptions mirrors KubeDBManifestOptions field for field, plus AdminAuthSecret/
-// AdminAuthSecretName: DocumentDB's backend is genuinely PostgreSQL, so unlike every other engine
-// here it carries a second credential distinct from the gateway's own AuthSecret - the Postgres
-// superuser secret, with no equivalent in any other KubeDBManifestOptions-shaped engine.
+// DocumentDBManifestOptions mirrors KubeDBManifestOptions, plus the backend Postgres superuser
+// credential, which no other engine here has.
 type DocumentDBManifestOptions struct {
 	// RestoreNamespace specifies the Namespace where the restored files will be applied
 	// +optional
