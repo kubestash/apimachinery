@@ -85,6 +85,49 @@ type BackupStorageSpec struct {
 	// for the storage initializer/cleaner job.
 	// +optional
 	RuntimeSettings ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
+
+	// ObjectLock specifies how KubeStash should use the Object Lock (WORM) feature of the bucket.
+	// KubeStash always detects whether the bucket has Object Lock enabled and, if it has, keeps the
+	// objects that are still used by the backups locked. This field lets you make Object Lock mandatory
+	// and tune the retention period. Currently, only the S3 provider supports Object Lock.
+	// +optional
+	ObjectLock *ObjectLockSpec `json:"objectLock,omitempty"`
+}
+
+// ObjectLockMode specifies the Object Lock retention mode of a bucket.
+// +kubebuilder:validation:Enum=Governance;Compliance
+type ObjectLockMode string
+
+const (
+	// ObjectLockModeGovernance allows a user with special permission to shorten or remove the retention of an object.
+	ObjectLockModeGovernance ObjectLockMode = "Governance"
+	// ObjectLockModeCompliance does not allow anyone, including the root user, to shorten or remove the retention of an object.
+	ObjectLockModeCompliance ObjectLockMode = "Compliance"
+)
+
+type ObjectLockSpec struct {
+	// Required specifies whether the bucket must have Object Lock enabled with a default retention.
+	// If it is true and the bucket does not have Object Lock enabled, the BackupStorage will not be Ready.
+	// +optional
+	Required bool `json:"required,omitempty"`
+
+	// Mode specifies the Object Lock mode the bucket must use. If it is set and the bucket uses a
+	// different mode, the BackupStorage will not be Ready. Use "Compliance" for ransomware protection,
+	// as the retention of an object in "Governance" mode can be removed by a user with bypass permission.
+	// +optional
+	Mode ObjectLockMode `json:"mode,omitempty"`
+
+	// RetentionPeriod specifies how long the objects that are still used by the backups stay locked.
+	// After each backup, KubeStash extends the retain-until date of these objects to now + RetentionPeriod.
+	// The objects removed by the retention policy are not extended, so they become deletable once
+	// their retention expires. If it is not set, the default retention period of the bucket is used.
+	// +optional
+	RetentionPeriod *metav1.Duration `json:"retentionPeriod,omitempty"`
+
+	// DisableRetentionExtension disables extending the retention of the objects that are still used by the backups.
+	// Note that, if it is disabled, an old object that is still used by a new backup can be deleted once its retention expires.
+	// +optional
+	DisableRetentionExtension bool `json:"disableRetentionExtension,omitempty"`
 }
 
 // BackupStorageStatus defines the observed state of BackupStorage
@@ -106,6 +149,23 @@ type BackupStorageStatus struct {
 	// Conditions represents list of conditions regarding this BackupStorage
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+
+	// ObjectLock shows the Object Lock (WORM) configuration found on the bucket.
+	// +optional
+	ObjectLock *ObjectLockStatus `json:"objectLock,omitempty"`
+}
+
+type ObjectLockStatus struct {
+	// Enabled specifies whether Object Lock is enabled on the bucket.
+	Enabled bool `json:"enabled"`
+
+	// Mode specifies the default retention mode of the bucket.
+	// +optional
+	Mode ObjectLockMode `json:"mode,omitempty"`
+
+	// DefaultRetention specifies the default retention period of the bucket.
+	// +optional
+	DefaultRetention *metav1.Duration `json:"defaultRetention,omitempty"`
 }
 
 // RepositoryInfo specifies information regarding a Repository using the BackupStorage
@@ -142,6 +202,13 @@ const (
 	TypeBackendSecretFound          = "BackendSecretFound"
 	ReasonBackendSecretNotAvailable = "BackendSecretNotAvailable"
 	ReasonBackendSecretAvailable    = "BackendSecretAvailable"
+
+	TypeObjectLockVerified         = "ObjectLockVerified"
+	ReasonObjectLockEnabled        = "ObjectLockEnabled"
+	ReasonObjectLockNotEnabled     = "ObjectLockNotEnabled"
+	ReasonObjectLockModeMismatched = "ObjectLockModeMismatched"
+	ReasonObjectLockCheckFailed    = "ObjectLockCheckFailed"
+	ReasonObjectLockNotSupported   = "ObjectLockNotSupported"
 )
 
 //+kubebuilder:object:root=true
