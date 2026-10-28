@@ -57,6 +57,20 @@ spec:
                 - Delete
                 - WipeOut
                 type: string
+              objectLock:
+                properties:
+                  disableRetentionExtension:
+                    type: boolean
+                  mode:
+                    enum:
+                    - Governance
+                    - Compliance
+                    type: string
+                  required:
+                    type: boolean
+                  retentionPeriod:
+                    type: string
+                type: object
               runtimeSettings:
                 properties:
                   container:
@@ -2161,6 +2175,20 @@ spec:
                   - type
                   type: object
                 type: array
+              objectLock:
+                properties:
+                  defaultRetention:
+                    type: string
+                  enabled:
+                    type: boolean
+                  mode:
+                    enum:
+                    - Governance
+                    - Compliance
+                    type: string
+                required:
+                - enabled
+                type: object
               phase:
                 type: string
               repositories:

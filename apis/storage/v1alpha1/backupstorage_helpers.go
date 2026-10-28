@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"time"
+
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
@@ -34,6 +36,9 @@ func (*BackupStorage) CustomResourceDefinition() *apiextensions.CustomResourceDe
 }
 
 func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
+	if b.ObjectLockEnforced() && !cutil.IsConditionTrue(b.Status.Conditions, TypeObjectLockVerified) {
+		return BackupStorageNotReady
+	}
 	if cutil.IsConditionTrue(b.Status.Conditions, TypeBackendInitialized) {
 		if !cutil.HasCondition(b.Status.Conditions, TypeBackendSecretFound) {
 			return BackupStorageReady
@@ -43,6 +48,47 @@ func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
 		}
 	}
 	return BackupStorageNotReady
+}
+
+// ObjectLockEnforced returns true if the user requires the bucket to have Object Lock enabled.
+func (b *BackupStorage) ObjectLockEnforced() bool {
+	return b.Spec.ObjectLock != nil && (b.Spec.ObjectLock.Required || b.Spec.ObjectLock.Mode != "")
+}
+
+// ObjectLockEnabled returns true if Object Lock was found enabled on the bucket.
+func (b *BackupStorage) ObjectLockEnabled() bool {
+	return b.Status.ObjectLock != nil && b.Status.ObjectLock.Enabled
+}
+
+// ObjectLockRetentionPeriod returns how long the objects still used by the backups should stay locked.
+// It returns 0 if Object Lock is not enabled on the bucket or the retention extension is disabled.
+func (b *BackupStorage) ObjectLockRetentionPeriod() time.Duration {
+	if !b.ObjectLockEnabled() {
+		return 0
+	}
+	if b.Spec.ObjectLock != nil {
+		if b.Spec.ObjectLock.DisableRetentionExtension {
+			return 0
+		}
+		if b.Spec.ObjectLock.RetentionPeriod != nil {
+			return b.Spec.ObjectLock.RetentionPeriod.Duration
+		}
+	}
+	if b.Status.ObjectLock.DefaultRetention != nil {
+		return b.Status.ObjectLock.DefaultRetention.Duration
+	}
+	return 0
+}
+
+// ObjectLockMode returns the retention mode to use when extending the retention of an object.
+func (b *BackupStorage) ObjectLockMode() ObjectLockMode {
+	if b.Spec.ObjectLock != nil && b.Spec.ObjectLock.Mode != "" {
+		return b.Spec.ObjectLock.Mode
+	}
+	if b.Status.ObjectLock != nil {
+		return b.Status.ObjectLock.Mode
+	}
+	return ""
 }
 
 func (b *BackupStorage) UsageAllowed(srcNamespace *core.Namespace) bool {
