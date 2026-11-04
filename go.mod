@@ -80,7 +80,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.39.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
-	github.com/cert-manager/cert-manager v1.19.4 // indirect
+	github.com/cert-manager/cert-manager v1.19.6 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudevents/sdk-go/v2 v2.15.2 // indirect
 	github.com/cncf/xds/go v0.0.0-20260202195803-dba9d589def2 // indirect
