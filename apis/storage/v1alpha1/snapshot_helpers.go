@@ -196,26 +196,10 @@ func (s *Snapshot) GetSize() string {
 	return ""
 }
 
-var backupSessionRegex = regexp.MustCompile("(.*)-([0-9]+)$")
-
-// SplitBackupSessionName splits a BackupSession name into its base and its
-// numeric suffix. A name without one — any BackupSession a user creates by hand
-// — yields the whole name and an empty suffix rather than a nil match, which
-// callers indexed blindly and panicked on.
-func SplitBackupSessionName(backupSession string) (base, suffix string) {
-	subMatches := backupSessionRegex.FindStringSubmatch(backupSession)
-	// A BackupSession name does not always end in a numeric suffix (e.g. one
-	// created via generateName). Guard against a nil match instead of panicking
-	// on the index, and fall back to the full name with an empty suffix.
-	if len(subMatches) < 3 {
-		return backupSession, ""
-	}
-	return subMatches[1], subMatches[2]
-}
-
 func GenerateSnapshotName(repoName, backupSession string) string {
-	base, suffix := SplitBackupSessionName(backupSession)
-	return meta.ValidNameWithPrefixNSuffix(repoName, base, suffix)
+	backupSessionRegex := regexp.MustCompile("(.*)-([0-9]+)$")
+	subMatches := backupSessionRegex.FindStringSubmatch(backupSession)
+	return meta.ValidNameWithPrefixNSuffix(repoName, subMatches[1], subMatches[2])
 }
 
 func (s *Snapshot) OffshootLabels() map[string]string {
