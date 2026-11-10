@@ -34,10 +34,6 @@ func (Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefiniti
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralSnapshot))
 }
 
-// kubeVirtGroup is the API group of the VirtualMachines a KubeVirtArchiver
-// backs up.
-const kubeVirtGroup = "kubevirt.io"
-
 func (s *Snapshot) CalculatePhase() SnapshotPhase {
 	// A KubeVirtArchiver's resident incremental snapshot is appended to
 	// continuously and deliberately never completes: its components stay
@@ -48,7 +44,7 @@ func (s *Snapshot) CalculatePhase() SnapshotPhase {
 	//
 	// This is scoped to KubeVirt on purpose: other archivers' incremental
 	// snapshots (e.g. KubeDB WAL/binlog archiving) keep the generic rules.
-	if s.Spec.Type == BackupTypeIncremental && s.Spec.AppRef.APIGroup == kubeVirtGroup &&
+	if s.Spec.Type == BackupTypeIncremental && s.Spec.AppRef.APIGroup == apis.KubeVirtGroup &&
 		s.GetComponentsPhase() == SnapshotRunning {
 		return SnapshotRunning
 	}

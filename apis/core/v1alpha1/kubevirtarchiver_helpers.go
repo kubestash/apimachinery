@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"time"
 
+	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -27,7 +28,7 @@ import (
 const (
 	// DefaultCBTInterval mirrors the +kubebuilder:default on CBTBackupOptions.Interval,
 	// for the paths that read a spec the API server never defaulted.
-	DefaultCBTInterval = 10 * time.Minute
+	DefaultCBTInterval = apis.DefaultCBTInterval
 )
 
 func (KubeVirtArchiver) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
