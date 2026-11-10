@@ -43,29 +43,27 @@ spec:
             type: object
           spec:
             properties:
-              archiverRef:
-                properties:
-                  name:
-                    type: string
-                  namespace:
-                    type: string
-                required:
-                - name
-                type: object
               recoveryPoint:
                 properties:
+                  checkpoint:
+                    type: string
                   targetTime:
                     format: date-time
                     type: string
                 type: object
               source:
                 properties:
-                  name:
-                    type: string
-                  namespace:
-                    type: string
+                  repositoryRef:
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
+                    type: object
                 required:
-                - name
+                - repositoryRef
                 type: object
               target:
                 properties:
@@ -77,7 +75,6 @@ spec:
                 - name
                 type: object
             required:
-            - archiverRef
             - source
             - target
             type: object
@@ -134,6 +131,15 @@ spec:
               recoveryTime:
                 format: date-time
                 type: string
+              repository:
+                properties:
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
               snapshot:
                 properties:
                   name:

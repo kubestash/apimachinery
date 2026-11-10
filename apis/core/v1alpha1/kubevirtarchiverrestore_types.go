@@ -36,9 +36,9 @@ const (
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // KubeVirtArchiverRestore restores one VirtualMachine from the complete CBT
-// recovery points maintained by a KubeVirtArchiver. It is intentionally a
-// KubeVirt-specific entrypoint: generic RestoreSession continues to restore an
-// explicitly supplied source without understanding live checkpoint chains.
+// recovery points in a KubeVirt Repository. It is intentionally a KubeVirt-
+// specific entrypoint: generic RestoreSession continues to restore an
+// explicitly supplied source without understanding checkpoint chains.
 type KubeVirtArchiverRestore struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -48,28 +48,33 @@ type KubeVirtArchiverRestore struct {
 }
 
 type KubeVirtArchiverRestoreSpec struct {
-	// ArchiverRef identifies the archiver that owns the source VM. Its namespace
-	// defaults to the restore's own. An archiver in another namespace restores
-	// the VM into the restore's namespace, which the archiver's BackupStorage
-	// must allow in its usage policy.
-	ArchiverRef v1.ObjectReference `json:"archiverRef"`
-
-	// Source identifies a VirtualMachine selected by ArchiverRef, in the
-	// archiver's namespace. The VM need not exist any more.
-	Source v1.ObjectReference `json:"source"`
+	// Source identifies the Repository that contains the archived VM. The
+	// Repository is imported with its Snapshot metadata when its BackupStorage
+	// is initialized in another cluster, so it is also the cross-cluster restore
+	// identity. Its namespace defaults to the restore's own.
+	Source KubeVirtArchiveSource `json:"source"`
 
 	// Target is the name of a new VirtualMachine, created in the restore's
 	// namespace. It may keep the source's name when that namespace differs. The
 	// controller fails rather than overwriting an existing target.
 	Target v1.ObjectReference `json:"target"`
 
-	// RecoveryPoint selects the newest complete checkpoint at or before the
-	// requested time. An omitted targetTime selects the newest complete point.
+	// RecoveryPoint selects a complete checkpoint. An omitted recoveryPoint
+	// selects the newest complete point in the Repository.
 	// +optional
 	RecoveryPoint *KubeVirtRecoveryPoint `json:"recoveryPoint,omitempty"`
 }
 
+type KubeVirtArchiveSource struct {
+	// RepositoryRef identifies the Repository that contains the archived VM.
+	RepositoryRef v1.ObjectReference `json:"repositoryRef"`
+}
+
 type KubeVirtRecoveryPoint struct {
+	// Checkpoint selects one exact complete checkpoint.
+	// +optional
+	Checkpoint string `json:"checkpoint,omitempty"`
+
 	// TargetTime is an RFC3339 timestamp. The selection is inclusive.
 	// +optional
 	TargetTime *metav1.Time `json:"targetTime,omitempty"`
@@ -91,6 +96,10 @@ type KubeVirtArchiverRestoreStatus struct {
 	// Snapshot is the resident Snapshot frozen for this restore.
 	// +optional
 	Snapshot *v1.ObjectReference `json:"snapshot,omitempty"`
+
+	// Repository is the Repository selected for this restore.
+	// +optional
+	Repository *v1.ObjectReference `json:"repository,omitempty"`
 
 	// Checkpoint and RecoveryTime identify the immutable recovery point selected.
 	// +optional
