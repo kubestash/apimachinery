@@ -34,7 +34,25 @@ func (Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefiniti
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralSnapshot))
 }
 
+// kubeVirtGroup is the API group of the VirtualMachines a KubeVirtArchiver
+// backs up.
+const kubeVirtGroup = "kubevirt.io"
+
 func (s *Snapshot) CalculatePhase() SnapshotPhase {
+	// A KubeVirtArchiver's resident incremental snapshot is appended to
+	// continuously and deliberately never completes: its components stay
+	// Running until archiving stops. A transient metadata upload failure must
+	// not latch it to Failed -- nothing would ever retry, and retention would
+	// treat the live checkpoint chain as a failed snapshot. While its
+	// components are still running, they are the phase.
+	//
+	// This is scoped to KubeVirt on purpose: other archivers' incremental
+	// snapshots (e.g. KubeDB WAL/binlog archiving) keep the generic rules.
+	if s.Spec.Type == BackupTypeIncremental && s.Spec.AppRef.APIGroup == kubeVirtGroup &&
+		s.GetComponentsPhase() == SnapshotRunning {
+		return SnapshotRunning
+	}
+
 	if cutil.IsConditionFalse(s.Status.Conditions, TypeSnapshotMetadataUploaded) ||
 		cutil.IsConditionFalse(s.Status.Conditions, TypeRecentSnapshotListUpdated) ||
 		cutil.IsConditionTrue(s.Status.Conditions, TypeBackupIncomplete) {
@@ -181,12 +199,6 @@ func (s *Snapshot) GetSize() string {
 func GenerateSnapshotName(repoName, backupSession string) string {
 	backupSessionRegex := regexp.MustCompile("(.*)-([0-9]+)$")
 	subMatches := backupSessionRegex.FindStringSubmatch(backupSession)
-	// A BackupSession name does not always end in a numeric suffix (e.g. one
-	// created via generateName). Guard against a nil match instead of panicking
-	// on the index, and fall back to the full backupSession name as the suffix.
-	if len(subMatches) < 3 {
-		return meta.ValidNameWithPrefixNSuffix(repoName, backupSession, "")
-	}
 	return meta.ValidNameWithPrefixNSuffix(repoName, subMatches[1], subMatches[2])
 }
 
