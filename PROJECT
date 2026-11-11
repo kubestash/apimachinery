@@ -87,6 +87,15 @@ resources:
   controller: true
   domain: kubestash.com
   group: core
+  kind: KubeVirtArchiver
+  path: kubestash.dev/apimachinery/apis/core/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubestash.com
+  group: core
   kind: RestoreSession
   path: kubestash.dev/apimachinery/apis/core/v1alpha1
   version: v1alpha1
