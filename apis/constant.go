@@ -84,6 +84,14 @@ const (
 	KubeStashAppRefName      = "kubestash.com/app-ref-name"
 )
 
+// Keys for snapshots annotations
+const (
+	// KubeStashParentSnapshot names the Snapshot that an incremental backup was taken on top of.
+	// Such a backup can only be restored together with every backup before it in its chain, so
+	// retention never prunes a Snapshot that a retained Snapshot depends on.
+	KubeStashParentSnapshot = "kubestash.com/parent-snapshot"
+)
+
 // Keys for structure logging
 const (
 	KeyTargetKind      = "target_kind"
