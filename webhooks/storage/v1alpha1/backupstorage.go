@@ -100,7 +100,12 @@ func (*BackupStorageCustomWebhook) ValidateCreate(ctx context.Context, obj runti
 		return nil, err
 	}
 
-	return nil, b.validateUniqueDirectory(ctx, c)
+	warnings, err := b.validateObjectLock()
+	if err != nil {
+		return nil, err
+	}
+
+	return warnings, b.validateUniqueDirectory(ctx, c)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -133,7 +138,12 @@ func (*BackupStorageCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, n
 		return nil, err
 	}
 
-	return nil, bNew.validateUniqueDirectory(ctx, c)
+	warnings, err := bNew.validateObjectLock()
+	if err != nil {
+		return nil, err
+	}
+
+	return warnings, bNew.validateUniqueDirectory(ctx, c)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -196,6 +206,23 @@ func (b *BackupStorage) validateUsagePolicy() error {
 		return fmt.Errorf("selector cannot be empty for usage policy of type %q", apis.NamespacesFromSelector)
 	}
 	return nil
+}
+
+func (b *BackupStorage) validateObjectLock() (admission.Warnings, error) {
+	ol := b.Spec.ObjectLock
+	if ol == nil {
+		return nil, nil
+	}
+	if b.Spec.Storage.Provider != v1alpha1.ProviderS3 {
+		return nil, fmt.Errorf("objectLock is supported only for %q provider", v1alpha1.ProviderS3)
+	}
+	if ol.RetentionPeriod != nil && ol.RetentionPeriod.Duration <= 0 {
+		return nil, fmt.Errorf("objectLock.retentionPeriod must be positive")
+	}
+	if ol.Mode == v1alpha1.ObjectLockModeGovernance {
+		return admission.Warnings{"Object Lock retention in Governance mode can be removed by a user with the bypass governance retention permission. Use Compliance mode for ransomware protection."}, nil
+	}
+	return nil, nil
 }
 
 func (b *BackupStorage) isSameBackupStorage(bs v1alpha1.BackupStorage) bool {
