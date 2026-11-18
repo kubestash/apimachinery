@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -75,60 +74,4 @@ func TestBackupStorageCalculatePhaseWithObjectLock(t *testing.T) {
 			assert.Equal(t, tt.expected, bs.CalculatePhase())
 		})
 	}
-}
-
-func TestBackupStorageObjectLockRetentionPeriod(t *testing.T) {
-	day := 24 * time.Hour
-	enabled := &ObjectLockStatus{Enabled: true, Mode: ObjectLockModeCompliance, DefaultRetention: &metav1.Duration{Duration: day}}
-
-	tests := []struct {
-		name     string
-		spec     *ObjectLockSpec
-		status   *ObjectLockStatus
-		expected time.Duration
-	}{
-		{
-			name:     "Object Lock not detected",
-			expected: 0,
-		},
-		{
-			name:     "Object Lock not enabled on the bucket",
-			spec:     &ObjectLockSpec{Required: true},
-			status:   &ObjectLockStatus{Enabled: false},
-			expected: 0,
-		},
-		{
-			name:     "Bucket has Object Lock but spec.objectLock is not set",
-			status:   enabled,
-			expected: 0,
-		},
-		{
-			name:     "Bucket default retention when spec.objectLock is set",
-			spec:     &ObjectLockSpec{Required: true},
-			status:   enabled,
-			expected: day,
-		},
-		{
-			name:     "No default retention and no retention period",
-			status:   &ObjectLockStatus{Enabled: true},
-			expected: 0,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			bs := &BackupStorage{
-				Spec:   BackupStorageSpec{ObjectLock: tt.spec},
-				Status: BackupStorageStatus{ObjectLock: tt.status},
-			}
-			assert.Equal(t, tt.expected, bs.ObjectLockRetentionPeriod())
-		})
-	}
-}
-
-func TestBackupStorageObjectLockMode(t *testing.T) {
-	bs := &BackupStorage{Status: BackupStorageStatus{ObjectLock: &ObjectLockStatus{Enabled: true, Mode: ObjectLockModeGovernance}}}
-	assert.Equal(t, ObjectLockModeGovernance, bs.ObjectLockMode())
-
-	bs.Spec.ObjectLock = &ObjectLockSpec{Mode: ObjectLockModeCompliance}
-	assert.Equal(t, ObjectLockModeCompliance, bs.ObjectLockMode())
 }

@@ -17,8 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"time"
-
 	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
@@ -58,32 +56,6 @@ func (b *BackupStorage) ObjectLockEnforced() bool {
 // ObjectLockEnabled returns true if Object Lock was found enabled on the bucket.
 func (b *BackupStorage) ObjectLockEnabled() bool {
 	return b.Status.ObjectLock != nil && b.Status.ObjectLock.Enabled
-}
-
-// ObjectLockRetentionPeriod returns how long the objects still used by the backups should stay locked.
-// It is the default retention of the bucket. It returns 0 if Object Lock is not enabled on the bucket,
-// the bucket has no default retention, or the user has not opted in by setting spec.objectLock.
-func (b *BackupStorage) ObjectLockRetentionPeriod() time.Duration {
-	// The retention extension is opt-in. A bucket that has Object Lock enabled outside of KubeStash
-	// must not have its retention changed unless the user asks for it.
-	if !b.ObjectLockEnabled() || b.Spec.ObjectLock == nil {
-		return 0
-	}
-	if b.Status.ObjectLock.DefaultRetention != nil {
-		return b.Status.ObjectLock.DefaultRetention.Duration
-	}
-	return 0
-}
-
-// ObjectLockMode returns the retention mode to use when extending the retention of an object.
-func (b *BackupStorage) ObjectLockMode() ObjectLockMode {
-	if b.Spec.ObjectLock != nil && b.Spec.ObjectLock.Mode != "" {
-		return b.Spec.ObjectLock.Mode
-	}
-	if b.Status.ObjectLock != nil {
-		return b.Status.ObjectLock.Mode
-	}
-	return ""
 }
 
 func (b *BackupStorage) UsageAllowed(srcNamespace *core.Namespace) bool {
