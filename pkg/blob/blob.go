@@ -520,7 +520,15 @@ func (b *Blob) getS3Config(ctx context.Context, debug bool) (aws2.Config, error)
 	}
 
 	// S3 client behavior is updated to always calculate a checksum by default for operations, so it's needed
-	loadOptions = append(loadOptions, config.WithRequestChecksumCalculation(aws2.RequestChecksumCalculationWhenRequired))
+	// to calculate it only when required. The exception is a BackupStorage that uses Object Lock: S3 rejects
+	// the upload to a bucket with a default retention unless a Content-MD5 or checksum header is sent.
+	// Keep the behavior unchanged for the BackupStorages that do not set spec.objectLock, because some
+	// S3 compatible storages do not support the checksum headers.
+	checksumCalculation := aws2.RequestChecksumCalculationWhenRequired
+	if b.backupStorage.Spec.ObjectLock != nil {
+		checksumCalculation = aws2.RequestChecksumCalculationWhenSupported
+	}
+	loadOptions = append(loadOptions, config.WithRequestChecksumCalculation(checksumCalculation))
 	loadOptions = append(loadOptions, config.WithResponseChecksumValidation(aws2.ResponseChecksumValidationWhenRequired))
 
 	return config.LoadDefaultConfig(ctx, loadOptions...)
