@@ -98,7 +98,13 @@ func TestBackupStorageObjectLockRetentionPeriod(t *testing.T) {
 			expected: 0,
 		},
 		{
-			name:     "Bucket default retention",
+			name:     "Bucket has Object Lock but spec.objectLock is not set",
+			status:   enabled,
+			expected: 0,
+		},
+		{
+			name:     "Bucket default retention when spec.objectLock has no retention period",
+			spec:     &ObjectLockSpec{Required: true},
 			status:   enabled,
 			expected: day,
 		},
