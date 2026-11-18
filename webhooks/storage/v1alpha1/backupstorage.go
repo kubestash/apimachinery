@@ -216,9 +216,6 @@ func (b *BackupStorage) validateObjectLock() (admission.Warnings, error) {
 	if b.Spec.Storage.Provider != v1alpha1.ProviderS3 {
 		return nil, fmt.Errorf("objectLock is supported only for %q provider", v1alpha1.ProviderS3)
 	}
-	if ol.RetentionPeriod != nil && ol.RetentionPeriod.Duration <= 0 {
-		return nil, fmt.Errorf("objectLock.retentionPeriod must be positive")
-	}
 	if ol.Mode == v1alpha1.ObjectLockModeGovernance {
 		return admission.Warnings{"Object Lock retention in Governance mode can be removed by a user with the bypass governance retention permission. Use Compliance mode for ransomware protection."}, nil
 	}

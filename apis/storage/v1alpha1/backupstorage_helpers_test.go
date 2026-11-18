@@ -43,7 +43,7 @@ func TestBackupStorageCalculatePhaseWithObjectLock(t *testing.T) {
 		},
 		{
 			name:       "Object Lock not required and not verified",
-			objectLock: &ObjectLockSpec{RetentionPeriod: &metav1.Duration{Duration: time.Hour}},
+			objectLock: &ObjectLockSpec{},
 			conditions: []kmapi.Condition{initialized, lockNotVerified},
 			expected:   BackupStorageReady,
 		},
@@ -93,7 +93,7 @@ func TestBackupStorageObjectLockRetentionPeriod(t *testing.T) {
 		},
 		{
 			name:     "Object Lock not enabled on the bucket",
-			spec:     &ObjectLockSpec{RetentionPeriod: &metav1.Duration{Duration: 7 * day}},
+			spec:     &ObjectLockSpec{Required: true},
 			status:   &ObjectLockStatus{Enabled: false},
 			expected: 0,
 		},
@@ -103,22 +103,10 @@ func TestBackupStorageObjectLockRetentionPeriod(t *testing.T) {
 			expected: 0,
 		},
 		{
-			name:     "Bucket default retention when spec.objectLock has no retention period",
+			name:     "Bucket default retention when spec.objectLock is set",
 			spec:     &ObjectLockSpec{Required: true},
 			status:   enabled,
 			expected: day,
-		},
-		{
-			name:     "Retention period from spec",
-			spec:     &ObjectLockSpec{RetentionPeriod: &metav1.Duration{Duration: 7 * day}},
-			status:   enabled,
-			expected: 7 * day,
-		},
-		{
-			name:     "Retention extension disabled",
-			spec:     &ObjectLockSpec{DisableRetentionExtension: true},
-			status:   enabled,
-			expected: 0,
 		},
 		{
 			name:     "No default retention and no retention period",

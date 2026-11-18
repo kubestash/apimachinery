@@ -116,18 +116,6 @@ type ObjectLockSpec struct {
 	// as the retention of an object in "Governance" mode can be removed by a user with bypass permission.
 	// +optional
 	Mode ObjectLockMode `json:"mode,omitempty"`
-
-	// RetentionPeriod specifies how long the objects that are still used by the backups stay locked.
-	// After each backup, KubeStash extends the retain-until date of these objects to now + RetentionPeriod.
-	// The objects removed by the retention policy are not extended, so they become deletable once
-	// their retention expires. If it is not set, the default retention period of the bucket is used.
-	// +optional
-	RetentionPeriod *metav1.Duration `json:"retentionPeriod,omitempty"`
-
-	// DisableRetentionExtension disables extending the retention of the objects that are still used by the backups.
-	// Note that, if it is disabled, an old object that is still used by a new backup can be deleted once its retention expires.
-	// +optional
-	DisableRetentionExtension bool `json:"disableRetentionExtension,omitempty"`
 }
 
 // BackupStorageStatus defines the observed state of BackupStorage

@@ -61,19 +61,13 @@ func (b *BackupStorage) ObjectLockEnabled() bool {
 }
 
 // ObjectLockRetentionPeriod returns how long the objects still used by the backups should stay locked.
-// It returns 0 if Object Lock is not enabled on the bucket, the user has not opted in by setting
-// spec.objectLock, or the retention extension is disabled.
+// It is the default retention of the bucket. It returns 0 if Object Lock is not enabled on the bucket,
+// the bucket has no default retention, or the user has not opted in by setting spec.objectLock.
 func (b *BackupStorage) ObjectLockRetentionPeriod() time.Duration {
 	// The retention extension is opt-in. A bucket that has Object Lock enabled outside of KubeStash
 	// must not have its retention changed unless the user asks for it.
 	if !b.ObjectLockEnabled() || b.Spec.ObjectLock == nil {
 		return 0
-	}
-	if b.Spec.ObjectLock.DisableRetentionExtension {
-		return 0
-	}
-	if b.Spec.ObjectLock.RetentionPeriod != nil {
-		return b.Spec.ObjectLock.RetentionPeriod.Duration
 	}
 	if b.Status.ObjectLock.DefaultRetention != nil {
 		return b.Status.ObjectLock.DefaultRetention.Duration

@@ -59,8 +59,6 @@ spec:
                 type: string
               objectLock:
                 properties:
-                  disableRetentionExtension:
-                    type: boolean
                   mode:
                     enum:
                     - Governance
@@ -68,8 +66,6 @@ spec:
                     type: string
                   required:
                     type: boolean
-                  retentionPeriod:
-                    type: string
                 type: object
               runtimeSettings:
                 properties:
