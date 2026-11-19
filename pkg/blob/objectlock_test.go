@@ -39,6 +39,9 @@ const testBucket = "worm"
 type fakeObjectLockS3 struct {
 	mu         sync.Mutex
 	lockConfig string
+	// objects holds the uploaded objects. Like a bucket with a default retention, the server rejects
+	// an upload without a Content-MD5 or a checksum header.
+	objects map[string][]byte
 }
 
 func (f *fakeObjectLockS3) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -54,9 +57,31 @@ func (f *fakeObjectLockS3) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		_, _ = io.WriteString(w, f.lockConfig)
+	case key != "" && r.Method == http.MethodPut:
+		if !hasChecksumHeader(r) {
+			writeS3Error(w, http.StatusBadRequest, "InvalidRequest")
+			return
+		}
+		body, _ := io.ReadAll(r.Body)
+		if f.objects == nil {
+			f.objects = map[string][]byte{}
+		}
+		f.objects[key] = body
 	default:
 		writeS3Error(w, http.StatusNotImplemented, "NotImplemented")
 	}
+}
+
+func hasChecksumHeader(r *http.Request) bool {
+	if r.Header.Get("Content-MD5") != "" {
+		return true
+	}
+	for k := range r.Header {
+		if strings.HasPrefix(strings.ToLower(k), "x-amz-checksum-") {
+			return true
+		}
+	}
+	return false
 }
 
 func writeS3Error(w http.ResponseWriter, status int, code string) {
@@ -133,4 +158,23 @@ func TestGetObjectLockConfigNotSupported(t *testing.T) {
 	b := newObjectLockTestBlob(t, &fakeObjectLockS3{}, storageapi.ProviderGCS)
 	_, err := b.GetObjectLockConfig(context.Background())
 	assert.ErrorIs(t, err, ErrObjectLockNotSupported)
+}
+
+func TestUploadSendsContentMD5(t *testing.T) {
+	f := &fakeObjectLockS3{}
+	b := newObjectLockTestBlob(t, f, storageapi.ProviderS3)
+
+	// the bucket does not set spec.objectLock, the upload must still be accepted
+	assert.NoError(t, b.Upload(context.Background(), "metadata.yaml", []byte("data"), "application/x-yaml"))
+	assert.Equal(t, []byte("data"), f.objects["prefix/metadata.yaml"])
+
+	assert.NoError(t, b.SetPathAsDir(context.Background(), "repo"))
+	assert.Contains(t, f.objects, "prefix/repo/")
+}
+
+func TestUploadFromReaderHasNoContentMD5(t *testing.T) {
+	// A stream has no known MD5, so a bucket that requires a checksum rejects it.
+	b := newObjectLockTestBlob(t, &fakeObjectLockS3{}, storageapi.ProviderS3)
+	err := b.UploadFromReader(context.Background(), "metadata.yaml", strings.NewReader("data"), "application/x-yaml")
+	assert.Error(t, err)
 }
