@@ -17,7 +17,6 @@ limitations under the License.
 package blob
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"crypto/x509"
@@ -274,9 +273,25 @@ func (b *Blob) Download(ctx context.Context, filepath string) (io.ReadCloser, er
 	}, nil
 }
 
+// Upload writes data to filepath. WriteAll computes the MD5 of the data and sends it as the Content-MD5 header.
+// S3 requires Content-MD5 (or a checksum header) for the uploads to a bucket that has a default Object Lock
+// retention. Content-MD5 is supported by all the S3 compatible storages, so it is sent for every bucket.
 func (b *Blob) Upload(ctx context.Context, filepath string, data []byte, contentType string) error {
-	return b.UploadFromReader(ctx, filepath, bytes.NewReader(data), contentType)
+	dir, fileName := path.Split(filepath)
+	bucket, err := b.openBucket(ctx, dir)
+	if err != nil {
+		return err
+	}
+	defer closeBucket(ctx, bucket)
+
+	return bucket.WriteAll(ctx, fileName, data, &blob.WriterOptions{
+		ContentType:                 contentType,
+		DisableContentTypeDetection: true,
+	})
 }
+
+// UploadFromReader streams r to filepath. The MD5 of a stream is not known before it is read,
+// so Content-MD5 is not sent. Use Upload for the data that is already in memory.
 
 func (b *Blob) UploadFromReader(ctx context.Context, filepath string, r io.Reader, contentType string) error {
 	dir, fileName := path.Split(filepath)
@@ -314,20 +329,11 @@ func (b *Blob) Debug(ctx context.Context, filepath string, data []byte, contentT
 	defer closeBucket(ctx, bucket)
 
 	klog.Infof("Uploading data to backend...")
-	w, err := bucket.NewWriter(ctx, fileName, &blob.WriterOptions{
+	if err := bucket.WriteAll(ctx, fileName, data, &blob.WriterOptions{
 		ContentType:                 contentType,
 		DisableContentTypeDetection: true,
-	})
-	if err != nil {
+	}); err != nil {
 		return err
-	}
-	_, writeErr := w.Write(data)
-	closeErr := w.Close()
-	if writeErr != nil {
-		return writeErr
-	}
-	if closeErr != nil {
-		return closeErr
 	}
 
 	klog.Infof("Cleaning up data from backend...")
@@ -585,19 +591,7 @@ func (b *Blob) SetPathAsDir(ctx context.Context, path string) error {
 	if !strings.HasSuffix(path, "/") {
 		path = fmt.Sprintf("%s/", path)
 	}
-	w, err := bucket.NewWriter(ctx, path, nil)
-	if err != nil {
-		return err
-	}
-	_, writeErr := w.Write([]byte(""))
-	closeErr := w.Close()
-	if writeErr != nil {
-		return writeErr
-	}
-	if closeErr != nil {
-		return closeErr
-	}
-	return closeErr
+	return bucket.WriteAll(ctx, path, []byte{}, nil)
 }
 
 type bucketReader struct {

@@ -34,6 +34,9 @@ func (*BackupStorage) CustomResourceDefinition() *apiextensions.CustomResourceDe
 }
 
 func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
+	if b.ObjectLockEnforced() && !cutil.IsConditionTrue(b.Status.Conditions, TypeObjectLockVerified) {
+		return BackupStorageNotReady
+	}
 	if cutil.IsConditionTrue(b.Status.Conditions, TypeBackendInitialized) {
 		if !cutil.HasCondition(b.Status.Conditions, TypeBackendSecretFound) {
 			return BackupStorageReady
@@ -43,6 +46,16 @@ func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
 		}
 	}
 	return BackupStorageNotReady
+}
+
+// ObjectLockEnforced returns true if the user requires the bucket to have Object Lock enabled.
+func (b *BackupStorage) ObjectLockEnforced() bool {
+	return b.Spec.ObjectLock != nil && (b.Spec.ObjectLock.Required || b.Spec.ObjectLock.Mode != "")
+}
+
+// ObjectLockEnabled returns true if Object Lock was found enabled on the bucket.
+func (b *BackupStorage) ObjectLockEnabled() bool {
+	return b.Status.ObjectLock != nil && b.Status.ObjectLock.Enabled
 }
 
 func (b *BackupStorage) UsageAllowed(srcNamespace *core.Namespace) bool {
