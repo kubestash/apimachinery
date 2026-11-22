@@ -132,6 +132,10 @@ type ManifestRestoreOptions struct {
 	// DocumentDB specifies the options for selecting particular DocumentDB components to restore in manifest restore
 	// +optional
 	DocumentDB *DocumentDBManifestOptions `json:"documentDB,omitempty"`
+
+	// YugabyteDB specifies the options for selecting particular YugabyteDB components to restore in manifest restore
+	// +optional
+	YugabyteDB *KubeDBManifestOptions `json:"yugabyteDB,omitempty"`
 }
 
 // DocumentDBManifestOptions mirrors KubeDBManifestOptions, plus the backend Postgres superuser credential

@@ -5,6 +5,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
   name: restoresessions.core.kubestash.com
+  name: restoresessions.core.kubestash.com
 spec:
   group: core.kubestash.com
   names:
@@ -10243,6 +10244,54 @@ spec:
                     properties:
                       restoreNamespace:
                         type: string
+                    type: object
+                  yugabyteDB:
+                    properties:
+                      archiver:
+                        default: false
+                        type: boolean
+                      archiverRef:
+                        properties:
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      authSecret:
+                        default: true
+                        type: boolean
+                      authSecretName:
+                        type: string
+                      configSecret:
+                        default: true
+                        type: boolean
+                      configSecretName:
+                        type: string
+                      db:
+                        default: true
+                        type: boolean
+                      dbName:
+                        type: string
+                      initScript:
+                        default: true
+                        type: boolean
+                      restoreNamespace:
+                        type: string
+                      tlsIssuerRef:
+                        properties:
+                          apiGroup:
+                            type: string
+                          kind:
+                            type: string
+                          name:
+                            type: string
+                        required:
+                        - kind
+                        - name
+                        type: object
+                        x-kubernetes-map-type: atomic
                     type: object
                   zooKeeper:
                     properties:
