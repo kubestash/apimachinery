@@ -131,6 +131,13 @@ func ReadStaleSnapshotListFromFile() (map[string][]kmapi.ObjectReference, error)
 
 func ReadPruneErrorsFromFile() (map[string][]string, error) {
 	bytes, err := os.ReadFile(pruneErrorsFilePath)
+	if os.IsNotExist(err) {
+		// A cleaner only creates this file when it has an error to record, and
+		// not every driver's cleaner writes one at all. Absence means "no prune
+		// errors", not a failure — the job's own exit code covers a cleaner that
+		// died before it could report.
+		return map[string][]string{}, nil
+	}
 	if err != nil {
 		return nil, fmt.Errorf("failed to read %s file: %w", pruneErrorsFilePath, err)
 	}
