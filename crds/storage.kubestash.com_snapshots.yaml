@@ -116,6 +116,7 @@ spec:
                       - Weaviate
                       - Milvus
                       - OracleBackup
+                      - BlockCAS
                       type: string
                     duration:
                       type: string
@@ -281,6 +282,8 @@ spec:
                             format: int64
                             type: integer
                           kind:
+                            type: string
+                          manifestKey:
                             type: string
                           mapChecksum:
                             type: string

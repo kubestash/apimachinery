@@ -428,6 +428,13 @@ func checkIfObjectFile(obj *blob.ListObject) bool {
 	return false
 }
 
+// OpenBucket opens the bucket rooted at dir and keeps it open, so a caller
+// that touches many objects reuses one client and its connections instead of
+// paying for a new client per object. The caller must Close it.
+func (b *Blob) OpenBucket(ctx context.Context, dir string) (*blob.Bucket, error) {
+	return b.openBucket(ctx, dir)
+}
+
 func (b *Blob) openBucket(ctx context.Context, dir string) (*blob.Bucket, error) {
 	return b.openBucketWithDebug(ctx, dir, false)
 }

@@ -50,6 +50,7 @@ spec:
                         - Weaviate
                         - Milvus
                         - OracleBackup
+                        - BlockCAS
                       - enum:
                         - Restic
                         - WalG
@@ -1084,6 +1085,7 @@ spec:
                         - Weaviate
                         - Milvus
                         - OracleBackup
+                        - BlockCAS
                       - enum:
                         - Restic
                         - WalG

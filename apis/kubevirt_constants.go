@@ -39,6 +39,8 @@ const (
 	ParamCBTScratchStorage      = "cbtScratchStorageClass"
 	ParamCBTScratchSize         = "cbtScratchSize"
 	ParamCBTArtifact            = "cbtArtifact"
+	// ParamCBTDriver selects how CBT disk data is stored: Restic or BlockCAS.
+	ParamCBTDriver = "cbtDriver"
 	ArchiverBackendName         = "archiver-backend"
 	ArchiverFullSessionName     = "full-backup"
 	ArchiverManifestSessionName = "manifest-backup"

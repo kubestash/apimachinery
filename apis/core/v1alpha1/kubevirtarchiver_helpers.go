@@ -81,3 +81,12 @@ func (s *KubeVirtArchiverStatus) AllVirtualMachinesReady() bool {
 	}
 	return true
 }
+
+// CBTDriver returns the driver that stores this archiver's disk data,
+// defaulting to Restic when the field is unset.
+func (in *KubeVirtArchiver) CBTDriver() apis.Driver {
+	if in.Spec.FullBackup != nil && in.Spec.FullBackup.Driver != "" {
+		return in.Spec.FullBackup.Driver
+	}
+	return apis.DriverRestic
+}

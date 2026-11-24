@@ -128,9 +128,20 @@ type ArchiverBackupStorage struct {
 // A full re-reads every allocated extent, so it depends on no earlier data and
 // becomes the point the checkpoint chain can be pruned back to.
 type FullBackupOptions struct {
-	// Driver specifies the tool that moves the data. KubeVirt native CBT
-	// archivers store map-and-extent artifacts in Restic; the resident loop and
-	// scheduled full must use the same driver so a chain is recoverable.
+	// Driver selects how disk data is stored, for both the scheduled full and
+	// the resident incremental loop:
+	//
+	//   - Restic (default) stores each checkpoint as a Restic snapshot of a
+	//     map-and-extent artifact. Restoring a point replays the chain from its
+	//     full base.
+	//   - BlockCAS stores 4 MiB content-addressed blocks plus a complete block
+	//     manifest per checkpoint. Restoring a point reads one manifest, so
+	//     restore time does not grow with the chain. Experimental.
+	//
+	// VM manifests are always stored with Restic. The driver cannot change
+	// after creation; create a new archiver to switch.
+	// +kubebuilder:validation:Enum=Restic;BlockCAS
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="driver is immutable"
 	// +kubebuilder:default:=Restic
 	// +optional
 	Driver apis.Driver `json:"driver,omitempty"`

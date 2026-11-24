@@ -634,4 +634,24 @@ type ResticCBTStats struct {
 	// files and their declared lengths.
 	// +optional
 	PayloadChecksum string `json:"payloadChecksum,omitempty"`
+
+	// ManifestKey is set when the BlockCAS driver stored this checkpoint. It
+	// is the repository-relative key of a complete block manifest for the
+	// disk, so the checkpoint restores on its own without replaying its
+	// ancestors; ResticSnapshotID and ArtifactPath are then empty. The
+	// parent fields are still recorded so chain completeness is checked the
+	// same way for both drivers.
+	// +optional
+	ManifestKey string `json:"manifestKey,omitempty"`
+}
+
+// IsBlockCAS reports whether the BlockCAS driver stored this checkpoint.
+func (s ResticCBTStats) IsBlockCAS() bool {
+	return s.ManifestKey != ""
+}
+
+// IsStored reports whether this entry points at durable data: a Restic
+// artifact, or a BlockCAS block manifest.
+func (s ResticCBTStats) IsStored() bool {
+	return s.IsBlockCAS() || (s.ResticSnapshotID != "" && (s.ArtifactPath != "" || s.Kind == "manifest"))
 }

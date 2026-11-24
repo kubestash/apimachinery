@@ -1266,19 +1266,27 @@ spec:
               fullBackup:
                 properties:
                   driver:
+                    allOf:
+                    - enum:
+                      - Restic
+                      - WalG
+                      - VolumeSnapshotter
+                      - Solr
+                      - Medusa
+                      - ClickHouseBackup
+                      - Neo4jAdmin
+                      - Weaviate
+                      - Milvus
+                      - OracleBackup
+                      - BlockCAS
+                    - enum:
+                      - Restic
+                      - BlockCAS
                     default: Restic
-                    enum:
-                    - Restic
-                    - WalG
-                    - VolumeSnapshotter
-                    - Solr
-                    - Medusa
-                    - ClickHouseBackup
-                    - Neo4jAdmin
-                    - Weaviate
-                    - Milvus
-                    - OracleBackup
                     type: string
+                    x-kubernetes-validations:
+                    - message: driver is immutable
+                      rule: self == oldSelf
                   jobTemplate:
                     properties:
                       controller:
